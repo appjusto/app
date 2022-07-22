@@ -1,11 +1,14 @@
 import { WithId } from '@appjusto/types';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Invoice } from '../../../../../../types';
 import { ApiContext } from '../../../../app/context';
+import { getConsumer } from '../../../consumer/selectors';
 
 export const useObservePendingOrderInvoice = (orderId: string) => {
   // context
   const api = React.useContext(ApiContext);
+  const consumer = useSelector(getConsumer)!;
   // state
   const [invoice, setInvoice] = React.useState<WithId<Invoice> | null>();
   // side effects
@@ -15,7 +18,7 @@ export const useObservePendingOrderInvoice = (orderId: string) => {
         .order()
         .invoice()
         .observeInvoices(
-          { orderId, invoiceType: 'order', status: 'pending', limit: 1 },
+          { orderId, consumerId: consumer.id, invoiceType: 'order', status: 'pending', limit: 1 },
           (invoices) => setInvoice(invoices.length ? invoices[0] : null)
         );
     })();
