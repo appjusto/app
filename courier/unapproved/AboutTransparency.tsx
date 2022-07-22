@@ -35,12 +35,12 @@ export const AboutTransparency = () => {
         <Text style={{ ...texts.md, marginTop: 24, ...texts.bold }}>{t('Sobre as taxas:')}</Text>
         <Text style={{ ...texts.md, marginTop: 24 }}>
           {t(
-            'A taxa financeira é de 2,21% + R$ 0,09 via cartão de crédito, ou 0,99% no Pix. Por exemplo: em uma corridade de R$ 10,00 paga com cartão, você recebe R$ 9,68. Essa diferença não fica pra gente, é o custo da transação na instituição financeira.'
+            'A taxa financeira é de 2,42% + R$ 0,09 via cartão de crédito, ou 0,99% no Pix. Por exemplo: em uma corridade de R$ 10,00 paga com cartão, você recebe R$ 9,67. Essa diferença não fica pra gente, é o custo da transação na instituição financeira.'
           )}
         </Text>
         <Text style={{ ...texts.md, marginTop: 24 }}>
           {t(
-            'Os pagamentos por cartão de crédito serão recebidos em 30 dias e os feitos com Pix no mesmo dia.'
+            'Os pagamentos por cartão de crédito serão recebidos em 30 dias e os feitos com Pix em 24h.'
           )}
         </Text>
         <Text style={{ ...texts.md, marginTop: 24 }}>
@@ -49,11 +49,11 @@ export const AboutTransparency = () => {
           )}
         </Text>
         <Text style={{ ...texts.md, marginTop: 24 }}>
-          {t('Antecipações dos valores podem ser feitas com uma taxa de 2,5%.')}
+          {t('Antecipações dos valores podem ser feitas com uma taxa de 3,45%.')}
         </Text>
         <Text style={{ ...texts.md, marginTop: 24 }}>
           {t(
-            'Para transferir para a sua conta, o custo é de R$ 2,00. Em breve, teremos transferências grátis por Pix!'
+            'Para transferir para a sua conta, o custo é de R$ 2,00!'
           )}
         </Text>
       </PaddedView>
