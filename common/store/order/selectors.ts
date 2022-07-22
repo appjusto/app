@@ -59,6 +59,7 @@ export const getOrdersSince = (orders: WithId<Order>[], date: Date) =>
 
 export const OngoingOrdersStatuses: OrderStatus[] = [
   'scheduled',
+  'confirming',
   'confirmed',
   'preparing',
   'ready',
@@ -77,6 +78,7 @@ export const summarizeOrders = memoize((orders: WithId<Order>[]) =>
       ongoing: isOrderOngoing(order) ? result.ongoing + 1 : result.ongoing,
       quote: order.status === 'quote' ? result.quote + 1 : result.quote,
       scheduled: order.status === 'scheduled' ? result.scheduled + 1 : result.scheduled,
+      confirming: order.status === 'confirming' ? result.confirming + 1 : result.confirming,
       total:
         order.status === 'delivered' ||
         order.status === 'canceled' ||
@@ -91,7 +93,16 @@ export const summarizeOrders = memoize((orders: WithId<Order>[]) =>
             ((order.tip?.value ?? 0) - getFinancialFee(order.tip?.value ?? 0))
           : result.courierFee,
     }),
-    { delivered: 0, canceled: 0, ongoing: 0, quote: 0, scheduled: 0, total: 0, courierFee: 0 }
+    {
+      delivered: 0,
+      canceled: 0,
+      ongoing: 0,
+      quote: 0,
+      scheduled: 0,
+      confirming: 0,
+      total: 0,
+      courierFee: 0,
+    }
   )
 );
 
