@@ -95,7 +95,7 @@ Como o processamento do pagamento e custódia é feito por uma operadora finance
 
 Atualmente temos como parceira a [Iugu](https://www.iugu.com/) que atua operadora de pagamentos e ao aceitar esses Termos você também aceita os [termos](https://www.iugu.com/juridico/termos-de-servico/), [a política de privacidade](https://www.iugu.com/juridico/politica-de-privacidade/) e a [política de segurança](https://www.iugu.com/juridico/politica-de-seguranca) da Iugu.
 
-A taxa cobrada pela a Iugu para pagamentos no crédito é 2,21% (dois vírgula vinte e um por cento) do pedido realizado mais R$ 0,09 (nove centavos de real) por pedido. Caso o pagamento do cliente seja feito via PIX, a taxa cobrada pela [Iugu](https://www.iugu.com/) é 0,99% (zero ponto noventa e nove por cento). Caso as taxas mudem, informaremos a você.
+A taxa cobrada pela a Iugu para pagamentos no crédito é 2,42% (dois vírgula vinte e um por cento) do pedido realizado mais R$ 0,09 (nove centavos de real) por pedido. Caso o pagamento do cliente seja feito via PIX, a taxa cobrada pela [Iugu](https://www.iugu.com/) é 0,99% (zero ponto noventa e nove por cento). Caso as taxas mudem, informaremos a você.
 
 Para viabilizar os pagamentos precisaremos criar uma conta na plataforma da Iugu para recebimentos e para tal haverá um custo de R$ 0,50 (cinquenta centavos) nos meses que houver qualquer movimentação nesta conta e R$ 2,00 (dois reais) por saque (temos a promessa da Iugu de que em breve o saque via Pix será gratuito).
 

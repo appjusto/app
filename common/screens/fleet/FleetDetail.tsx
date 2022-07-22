@@ -158,7 +158,7 @@ export default function ({ navigation, route }: Props) {
           }}
         >
           <Text style={{ ...texts.md, color: colors.red }}>{t('Tarifa bancária por corrida')}</Text>
-          <RoundedText color={colors.red}>2.21%</RoundedText>
+          <RoundedText color={colors.red}>2,42%</RoundedText>
         </View>
         <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
           {t(

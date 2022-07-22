@@ -66,7 +66,7 @@ export const OngoingOrdersStatuses: OrderStatus[] = [
 
 export const isOrderOngoing = (order: Order) => OngoingOrdersStatuses.includes(order.status);
 
-export const getFinancialFee = (value: number) => Math.floor(value * (2.21 / 100));
+export const getFinancialFee = (value: number) => Math.floor(value * (2.42 / 100));
 
 export const summarizeOrders = memoize((orders: WithId<Order>[]) =>
   orders.reduce(

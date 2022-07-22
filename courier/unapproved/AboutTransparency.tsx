@@ -35,7 +35,7 @@ export const AboutTransparency = () => {
         <Text style={{ ...texts.md, marginTop: 24, ...texts.bold }}>{t('Sobre as taxas:')}</Text>
         <Text style={{ ...texts.md, marginTop: 24 }}>
           {t(
-            'A taxa financeira é de 2,21% + R$ 0,09 via cartão de crédito, ou 0,99% no Pix. Por exemplo: em uma corridade de R$ 10,00 paga com cartão, você recebe R$ 9,68. Essa diferença não fica pra gente, é o custo da transação na instituição financeira.'
+            'A taxa financeira é de 2,42% + R$ 0,09 via cartão de crédito, ou 0,99% no Pix. Por exemplo: em uma corridade de R$ 10,00 paga com cartão, você recebe R$ 9,68. Essa diferença não fica pra gente, é o custo da transação na instituição financeira.'
           )}
         </Text>
         <Text style={{ ...texts.md, marginTop: 24 }}>

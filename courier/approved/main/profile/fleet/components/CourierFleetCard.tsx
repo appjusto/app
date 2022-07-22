@@ -95,7 +95,7 @@ export const CourierFleetCard = ({ fleet, listItem, onPress }: Props) => {
           }}
         >
           <Text style={{ ...texts.xs, color: colors.red }}>{t('Tarifa bancária por corrida')}</Text>
-          <RoundedText color={colors.red}>2.21%</RoundedText>
+          <RoundedText color={colors.red}>2,42%</RoundedText>
         </View>
         <View
           style={{
