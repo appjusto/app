@@ -89,7 +89,10 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
         {payableWithPix ? (
           <PaymentBoxSelector
             variant="pix"
-            selected={order.paymentMethod === 'pix'}
+            selected={
+              order.paymentMethod === 'pix' ||
+              consumer?.paymentChannel?.mostRecentPaymentMethod === 'pix'
+            }
             onSelectPayment={() => navigation.navigate('FoodOrderCheckout', { payMethod: 'pix' })}
           />
         ) : null}

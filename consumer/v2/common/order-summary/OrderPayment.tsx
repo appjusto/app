@@ -10,7 +10,7 @@ import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixE
 import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { useContextActiveOrder } from '../../../../common/store/context/order';
-import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
+import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
 interface Props {
@@ -51,29 +51,27 @@ export const OrderPayment = ({
   return (
     <View style={{ backgroundColor: colors.white }}>
       {Boolean(selectedPaymentMethod) && payMethod === 'credit_card' ? (
-        <View style={{ marginVertical: padding, paddingHorizontal: padding }}>
-          <TouchableOpacity onPress={onEditPaymentMethod}>
-            <View style={{ marginBottom: halfPadding }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <Text style={{ ...texts.md }}>{t('Forma de pagamento')}</Text>
-                <Feather
-                  name="edit-3"
-                  size={12}
-                  style={{ ...borders.default, borderColor: colors.grey50, padding: 8 }}
-                />
-              </View>
-              <Text style={{ ...texts.sm, color: colors.grey700 }}>
-                {`${t('Cartão de crédito')}: ${selectedPaymentMethod!.data.display_number}`}
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={{ marginTop: halfPadding }} onPress={navigateToAboutCharges}>
+        <View>
+          <SingleHeader title={t('Forma de pagamento')} />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingHorizontal: padding,
+            }}
+          >
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>
+              {`${t('Cartão de crédito')}: ${selectedPaymentMethod!.data.display_number}`}
+            </Text>
+            <TouchableOpacity onPress={navigateToSelectPayment}>
+              <Text style={{ ...texts.md, color: colors.green600 }}>{t('Trocar')}</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            style={{ marginTop: halfPadding, paddingHorizontal: padding, marginBottom: padding }}
+            onPress={navigateToAboutCharges}
+          >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Feather name="info" size={14} />
               <Text
