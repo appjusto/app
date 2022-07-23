@@ -14,12 +14,20 @@ import {
 } from 'react-native';
 import { ApiContext } from '../../../../../common/app/context';
 import CheckField from '../../../../../common/components/buttons/CheckField';
+import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import { DayBoxListItem } from '../../../../../common/components/list items/DayBoxListItem';
 import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTimeContext';
 import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
 import { scheduleFromDate } from '../../../../../common/store/api/business/selectors';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
-import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
+import {
+  colors,
+  doublePadding,
+  halfPadding,
+  padding,
+  screens,
+  texts,
+} from '../../../../../common/styles';
 import { getETAWithMargin } from '../../../../../common/utils/formatters/datetime';
 import { Dayjs, t } from '../../../../../strings';
 import { LoggedNavigatorParamList } from '../../../types';
@@ -56,12 +64,8 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   const [selectedDay, setSelectedDay] = React.useState<Date[]>(nextDateSlots[0] ?? undefined);
   const [selectedSlot, setSelectedSlot] = React.useState<Timestamp>();
   const [loading, setLoading] = React.useState(false);
-  // side effects
-  // React.useEffect(() => {
-  //   if (business?.schedules) {
-  //     setSelectedDay(nextDateSlots[0]);
-  //   }
-  // }, [business?.schedules]);
+
+  // TODO: load the screen with the first day selected already
 
   // UI
   if (!order) return null; // shouldn't happen
@@ -100,10 +104,6 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                       nextWeek: 'dddd'.slice(0, 3),
                     })
                   )}
-                  // selected={
-                  //   selectedDay !== undefined &&
-                  //   Timestamp.fromDate(day[0]).isEqual(Timestamp.fromDate(selectedDay[0]))
-                  // }
                   selected={
                     Boolean(day) &&
                     Boolean(selectedDay) &&
@@ -118,29 +118,37 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
       </View>
       <View style={{ flex: 3 }}>
         <FlatList
+          showsVerticalScrollIndicator={false}
           ListHeaderComponent={
-            realTimeDelivery ? (
-              <View style={{ flex: 0.5 }}>
-                <Text style={{ ...texts.md }}>{t('Entregar hoje')}</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('FoodOrderCheckout')}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginTop: halfPadding,
-                    }}
-                  >
-                    {order.arrivals?.destination?.estimate ? (
-                      <Text style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}>
-                        {getETAWithMargin(order.arrivals.destination.estimate)}
-                      </Text>
-                    ) : null}
-                    <CheckField checked={!order.scheduledTo} />
-                  </View>
-                </TouchableOpacity>
-              </View>
-            ) : null
+            <View>
+              {realTimeDelivery ? (
+                <View style={{ flex: 0.5, marginBottom: doublePadding }}>
+                  <Text style={{ ...texts.md }}>{t('Entregar hoje')}</Text>
+                  <TouchableOpacity onPress={() => navigation.navigate('FoodOrderCheckout')}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginTop: halfPadding,
+                      }}
+                    >
+                      {order.arrivals?.destination?.estimate ? (
+                        <Text
+                          style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}
+                        >
+                          {getETAWithMargin(order.arrivals.destination.estimate)}
+                        </Text>
+                      ) : null}
+                      <CheckField checked={!order.scheduledTo} />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              ) : null}
+              {selectedDay && selectedDay.length ? (
+                <Text style={{ ...texts.md, marginBottom: padding }}>{t('Agendamento')}</Text>
+              ) : null}
+            </View>
           }
           data={selectedDay}
           keyExtractor={(item) => item.toString()}
@@ -172,86 +180,18 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
               </View>
             </TouchableOpacity>
           )}
+          ListFooterComponent={
+            <View style={{ flex: 1 }}>
+              <DefaultButton
+                title={t('Confirmar')}
+                onPress={() => navigation.navigate('FoodOrderCheckout')}
+                activityIndicator={loading}
+                style={{ marginTop: doublePadding }}
+              />
+            </View>
+          }
         />
       </View>
-
-      {/* {realTimeDelivery ? (
-        <View style={{ flex: 0.5 }}>
-          <Text style={{ ...texts.md }}>{t('Entregar hoje')}</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('FoodOrderCheckout')}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginTop: halfPadding,
-              }}
-            >
-              {order.arrivals?.destination?.estimate ? (
-                <Text style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}>
-                  {getETAWithMargin(order.arrivals.destination.estimate)}
-                </Text>
-              ) : null}
-              <CheckField checked={!order.scheduledTo} />
-            </View>
-          </TouchableOpacity>
-        </View>
-      ) : null}
-      <View
-        style={{
-          flex: 1,
-
-          marginBottom: halfPadding,
-          paddingBottom: 24,
-        }}
-      >
-        {selectedDay && selectedDay.length > 0 ? (
-          <View style={{ flex: 1 }}>
-            <Text style={{ ...texts.md, marginBottom: padding }}>{t('Agendamento')}</Text>
-            <ScrollView
-              style={{ flex: 1 }}
-              contentContainerStyle={{ flexGrow: 1, flex: 1, paddingBottom: 32 }}
-            >
-              {selectedDay?.map((slot, i) => (
-                <TouchableOpacity
-                  key={i}
-                  onPress={() => {
-                    setLoading(true);
-                    api.order().updateOrder(order.id, { scheduledTo: Timestamp.fromDate(slot) });
-                    setLoading(false);
-                    setSelectedSlot(Timestamp.fromDate(slot));
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginTop: i !== 0 ? padding : 0,
-                    }}
-                  >
-                    <Text style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}>
-                      {getETAWithMargin(slot)}
-                    </Text>
-                    <CheckField
-                      checked={
-                        selectedSlot !== undefined && Timestamp.fromDate(slot).isEqual(selectedSlot)
-                      }
-                    />
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        ) : (
-          <View style={{ flex: 1 }} />
-        )}
-      </View>
-      <DefaultButton
-        title={t('Confirmar')}
-        onPress={() => navigation.navigate('FoodOrderCheckout')}
-        activityIndicator={loading}
-      /> */}
     </View>
   );
 };
