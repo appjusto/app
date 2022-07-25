@@ -61,11 +61,20 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   const daySchedules = business?.schedules ? scheduleFromDate(business.schedules, now) : [];
   const nextDateSlots: Date[][] = getNextDateSlots(daySchedules, now, 60);
   // state
-  const [selectedDay, setSelectedDay] = React.useState<Date[]>(nextDateSlots[0] ?? undefined);
+  const [selectedDay, setSelectedDay] = React.useState<Date[]>();
   const [selectedSlot, setSelectedSlot] = React.useState<Timestamp>();
   const [loading, setLoading] = React.useState(false);
 
-  // TODO: load the screen with the first day selected already
+  //side effects
+  // loading the first Date[] with slots as selectedDay
+  // using business.id as a dependency because it will only change in the first render,
+  // when business turns from undefined to true
+  React.useEffect(() => {
+    if (business) {
+      const firsDayWithSlots = nextDateSlots?.find((slot) => slot.length > 0);
+      setSelectedDay(firsDayWithSlots);
+    }
+  }, [business?.id]);
 
   // UI
   if (!order) return null; // shouldn't happen
@@ -145,7 +154,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                   </TouchableOpacity>
                 </View>
               ) : null}
-              {selectedDay && selectedDay.length ? (
+              {Boolean(selectedDay) && selectedDay.length ? (
                 <Text style={{ ...texts.md, marginBottom: padding }}>{t('Agendamento')}</Text>
               ) : null}
             </View>
@@ -181,14 +190,16 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
             </TouchableOpacity>
           )}
           ListFooterComponent={
-            <View style={{ flex: 1 }}>
-              <DefaultButton
-                title={t('Confirmar')}
-                onPress={() => navigation.navigate('FoodOrderCheckout')}
-                activityIndicator={loading}
-                style={{ marginTop: doublePadding }}
-              />
-            </View>
+            Boolean(selectedDay) && selectedDay.length ? (
+              <View style={{ flex: 1 }}>
+                <DefaultButton
+                  title={t('Confirmar')}
+                  onPress={() => navigation.navigate('FoodOrderCheckout')}
+                  activityIndicator={loading}
+                  style={{ marginTop: doublePadding }}
+                />
+              </View>
+            ) : null
           }
         />
       </View>
