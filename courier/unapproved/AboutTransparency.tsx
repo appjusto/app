@@ -49,7 +49,7 @@ export const AboutTransparency = () => {
           )}
         </Text>
         <Text style={{ ...texts.md, marginTop: 24 }}>
-          {t('Antecipações dos valores podem ser feitas com uma taxa de 2,5%.')}
+          {t('Antecipações dos valores podem ser feitas com uma taxa de 2,75%.')}
         </Text>
         <Text style={{ ...texts.md, marginTop: 24 }}>
           {t(
