@@ -116,7 +116,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                   selected={
                     Boolean(day) &&
                     Boolean(selectedDay) &&
-                    day.toString() === selectedDay.toString()
+                    day.toString() === selectedDay?.toString()
                   }
                   onSelect={() => setSelectedDay(day)}
                 />
@@ -154,7 +154,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                   </TouchableOpacity>
                 </View>
               ) : null}
-              {Boolean(selectedDay) && selectedDay.length ? (
+              {Boolean(selectedDay) && selectedDay?.length ? (
                 <Text style={{ ...texts.md, marginBottom: padding }}>{t('Agendamento')}</Text>
               ) : null}
             </View>
@@ -190,7 +190,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
             </TouchableOpacity>
           )}
           ListFooterComponent={
-            Boolean(selectedDay) && selectedDay.length ? (
+            Boolean(selectedDay) && selectedDay?.length ? (
               <View style={{ flex: 1 }}>
                 <DefaultButton
                   title={t('Confirmar')}
