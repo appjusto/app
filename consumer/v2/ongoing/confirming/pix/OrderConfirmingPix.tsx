@@ -101,10 +101,14 @@ export const OrderConfirmingPix = ({ order, onCancel }: Props) => {
         </View>
         <View>
           <DefaultButton
-            title={t('Copiar chave de pagamento')}
+            title={
+              pendingInvoice?.pix?.qrcodeText
+                ? t('Copiar chave de pagamento')
+                : t('Criando pedido...')
+            }
             style={{ marginTop: padding, marginHorizontal: padding }}
             onPress={copyToClipboard}
-            // disabled={!pendingInvoice?.pix?.qrcodeText}
+            disabled={!pendingInvoice?.pix?.qrcodeText}
           />
           <DefaultButton
             title={t('Cancelar pedido')}
