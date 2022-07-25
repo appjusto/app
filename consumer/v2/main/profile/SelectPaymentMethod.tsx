@@ -66,7 +66,7 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
             <View style={{ marginBottom: padding }} key={card.id}>
               <PaymentBoxSelector
                 variant="card"
-                selected={card.id === selectedPayment?.id}
+                selected={card.id === selectedPayment?.id && order.paymentMethod === 'credit_card'}
                 onSelectPayment={() => {
                   setSelectedPayment(card);
                   navigation.navigate('FoodOrderCheckout', { paymentMethodId: card.id });
@@ -89,10 +89,7 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
         {payableWithPix ? (
           <PaymentBoxSelector
             variant="pix"
-            selected={
-              order.paymentMethod === 'pix' ||
-              consumer?.paymentChannel?.mostRecentPaymentMethod === 'pix'
-            }
+            selected={order.paymentMethod === 'pix'}
             onSelectPayment={() => navigation.navigate('FoodOrderCheckout', { payMethod: 'pix' })}
           />
         ) : null}
