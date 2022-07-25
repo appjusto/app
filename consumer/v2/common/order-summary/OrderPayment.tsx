@@ -48,7 +48,6 @@ export const OrderPayment = ({
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId); // only for credit cards
   const canPlaceOrder = isProfileComplete && !shouldVerifyPhone;
   if (!order) return null;
-  console.log('canPlaceOrder', canPlaceOrder);
   return (
     <View style={{ backgroundColor: colors.white }}>
       {Boolean(selectedPaymentMethod) && payMethod === 'credit_card' ? (
@@ -120,11 +119,13 @@ export const OrderPayment = ({
             onPress={navigateToSelectPayment}
           />
         ) : null}
-        {canPlaceOrder && selectedPaymentMethod && !activityIndicator ? (
+        {canPlaceOrder &&
+        (payMethod === 'pix' || (payMethod === 'credit_card' && selectedPaymentMethod)) &&
+        !activityIndicator ? (
           <DefaultButton
             variant="primary"
             title={t('Confirmar pedido')}
-            // style={{ marginTop: padding }}
+            style={{ marginTop: padding }}
             onPress={onSubmit}
           />
         ) : null}

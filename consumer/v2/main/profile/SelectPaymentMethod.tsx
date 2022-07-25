@@ -34,7 +34,7 @@ type Props = {
 
 export const SelectPaymentMethod = ({ navigation, route }: Props) => {
   // params
-  const { selectedPaymentMethodId } = route.params ?? {};
+  const { selectedPaymentMethodId, payMethod } = route.params ?? {};
   // context
   const order = useContextActiveOrder();
   // redux
@@ -66,7 +66,7 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
             <View style={{ marginBottom: padding }} key={card.id}>
               <PaymentBoxSelector
                 variant="card"
-                selected={card.id === selectedPayment?.id && order.paymentMethod === 'credit_card'}
+                selected={card.id === selectedPayment?.id && payMethod === 'credit_card'}
                 onSelectPayment={() => {
                   setSelectedPayment(card);
                   navigation.navigate('FoodOrderCheckout', { paymentMethodId: card.id });
@@ -89,22 +89,20 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
         {payableWithPix ? (
           <PaymentBoxSelector
             variant="pix"
-            selected={order.paymentMethod === 'pix'}
+            selected={payMethod === 'pix'}
             onSelectPayment={() => navigation.navigate('FoodOrderCheckout', { payMethod: 'pix' })}
           />
         ) : null}
       </PaddedView>
       <View style={{ flex: 1 }} />
-      {cards.length ? (
-        <PaddedView>
-          <DefaultButton
-            title={t('Adicionar cartão')}
-            onPress={() =>
-              navigation.navigate('ProfileAddCard', { returnScreen: 'FoodOrderCheckout' })
-            }
-          />
-        </PaddedView>
-      ) : null}
+      <PaddedView>
+        <DefaultButton
+          title={t('Adicionar cartão')}
+          onPress={() =>
+            navigation.navigate('ProfileAddCard', { returnScreen: 'FoodOrderCheckout' })
+          }
+        />
+      </PaddedView>
     </ScrollView>
   );
 };

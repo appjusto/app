@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import { useModalToastContext } from '../../../../../common/contexts/ModalToastContext';
 import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
+import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
 import { useQuotes } from '../../../../../common/store/api/order/hooks/useQuotes';
 import { useProfileSummary } from '../../../../../common/store/api/profile/useProfileSummary';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
@@ -56,6 +57,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const order = useContextActiveOrder();
   const dispatch = useDispatch<AppDispatch>();
   const { showModalToast } = useModalToastContext();
+  const business = useObserveBusiness(order?.business?.id);
   // redux store
   const consumer = useSelector(getConsumer)!;
   // state
@@ -85,6 +87,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     selectedFare !== undefined &&
     !isLoading &&
     isEmpty(order?.route?.issue);
+  const closedButCanAcceptOrder =
+    Boolean(business) && business?.status === 'closed' && Boolean(order?.scheduledTo);
   // side effects
   // whenever quotes are updated
   // select first fare
@@ -117,6 +121,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
     if (params?.paymentMethodId) {
       setSelectedPaymentMethodId(params?.paymentMethodId);
+      setPayMethod('credit_card');
       navigation.setParams({
         paymentMethodId: undefined,
       });
@@ -152,10 +157,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       navigation.navigate('MainNavigator', { screen: 'Home' });
     }
   }, [order, navigation]);
-  // opening DestinationModal if user selects pix as payMethod
-  React.useEffect(() => {
-    if (payMethod === 'pix') setDestinationModalVisible(true);
-  }, [payMethod]);
   // tracking
   useSegmentScreen('FoodOrderCheckout');
   // handlers
@@ -387,12 +388,12 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             navigateToSelectPayment={() =>
               navigation.navigate('SelectPaymentMethod', {
                 selectedPaymentMethodId,
+                payMethod,
               })
             }
             payMethod={payMethod}
             onPayWithPix={() => {
               setPayMethod('pix');
-              setDestinationModalVisible(true);
             }}
           />
         }
@@ -417,7 +418,12 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         onChangeComplement={(text) => setComplement(text)}
         checked={!addressComplement}
         toggleAddressComplement={() => setAddressComplement(!addressComplement)}
-        disabled={!canSubmit || isLoading || (addressComplement && complement.length === 0)}
+        disabled={
+          !canSubmit ||
+          isLoading ||
+          (addressComplement && complement.length === 0) ||
+          !closedButCanAcceptOrder
+        }
       />
     </KeyboardAwareScrollView>
   );

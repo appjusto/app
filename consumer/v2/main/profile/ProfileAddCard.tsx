@@ -108,7 +108,15 @@ export default function ({ navigation, route }: Props) {
       );
       setLoading(false);
       if (returnScreen) {
-        navigation.navigate(returnScreen, { paymentMethodId: result.paymentMethodId });
+        if (returnScreen === 'FoodOrderCheckout') {
+          navigation.navigate(returnScreen, {
+            paymentMethodId: result.paymentMethodId,
+            payMethod: 'credit_card',
+          });
+        } else
+          navigation.navigate(returnScreen, {
+            paymentMethodId: result.paymentMethodId,
+          });
       } else navigation.pop();
     } catch (error: any) {
       setLoading(false);
