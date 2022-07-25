@@ -109,7 +109,7 @@ Quando os valores estiverem compensados você verá em &quot;Disponível para sa
 
 **3.2. Adiantamento**
 
-Caso não queira esperar a compensação dos valores pagos com cartão de crédito pelos seus clientes é possível fazer um adiantamento dos valores ainda não compensados mediante um pagamento de uma taxa de 2,5% ao mês e esse percentual é reduzido de forma proporcional aos dias antecipados).
+Caso não queira esperar a compensação dos valores pagos com cartão de crédito pelos seus clientes é possível fazer um adiantamento dos valores ainda não compensados mediante um pagamento de uma taxa de 2,75% ao mês e esse percentual é reduzido de forma proporcional aos dias antecipados).
 
 É importante destacar que essas operações financeiras são feitas por uma empresa que possui taxas e essas taxas não são destinadas ao AppJusto).
 
