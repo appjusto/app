@@ -147,6 +147,7 @@ export default function ({ navigation }: Props) {
               }}
             />
             <DefaultButton
+              variant="danger"
               title={t('Tenho certeza, pode excluir')}
               onPress={eraseHandler}
               disabled={busy}

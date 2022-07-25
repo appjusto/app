@@ -48,6 +48,7 @@ export const OrderPayment = ({
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId); // only for credit cards
   const canPlaceOrder = isProfileComplete && !shouldVerifyPhone;
   if (!order) return null;
+  console.log('canPlaceOrder', canPlaceOrder);
   return (
     <View style={{ backgroundColor: colors.white }}>
       {Boolean(selectedPaymentMethod) && payMethod === 'credit_card' ? (

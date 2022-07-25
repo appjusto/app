@@ -12,7 +12,7 @@ import FeedbackView from '../../../../common/components/views/FeedbackView';
 import ShowIf from '../../../../common/components/views/ShowIf';
 import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
 import { defaultScreenOptions } from '../../../../common/screens/options';
-import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
+import { useObserveUnexpiredConsumerOrders } from '../../../../common/store/api/order/hooks/useObserveUnexpiredConsumerOrders';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
   getMonthsWithOrdersInYear,
@@ -45,7 +45,7 @@ export default function ({ navigation, route }: Props) {
   const user = useSelector(getUser);
   // screen state
   const options = React.useMemo(() => ({ consumerId: user?.uid }), [user?.uid]);
-  const orders = useObserveOrders(options);
+  const orders = useObserveUnexpiredConsumerOrders();
   const yearsWithOrders = getYearsWithOrders(orders ?? []);
   const monthsWithOrdersInYears = getMonthsWithOrdersInYear(orders ?? []);
   const months = React.useMemo(() => {

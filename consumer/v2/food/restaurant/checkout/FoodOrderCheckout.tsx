@@ -14,7 +14,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import { useModalToastContext } from '../../../../../common/contexts/ModalToastContext';
-import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTimeContext';
 import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
 import { useQuotes } from '../../../../../common/store/api/order/hooks/useQuotes';
 import { useProfileSummary } from '../../../../../common/store/api/profile/useProfileSummary';
@@ -55,7 +54,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const order = useContextActiveOrder();
-  const getServerTime = useContextGetSeverTime();
   const dispatch = useDispatch<AppDispatch>();
   const { showModalToast } = useModalToastContext();
   // redux store
@@ -98,12 +96,19 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   React.useEffect(() => {
     if (params?.destination) {
       if (
-        order &&
-        params.destination.address.description !== order.destination?.address.description
+        (order &&
+          params.destination.address.description !== order.destination?.address.description) ||
+        // for the cases when only the complement is changed
+        (order && params.destination.additionalInfo !== order.destination?.additionalInfo)
       ) {
         api.order().updateOrder(order.id, { destination: params.destination });
         if (params.destination.additionalInfo) {
           setComplement(params.destination.additionalInfo);
+          setAddressComplement(true);
+        }
+        if (params.destination.additionalInfo?.length === 0) {
+          setComplement('');
+          setAddressComplement(false);
         }
       }
       navigation.setParams({
@@ -158,9 +163,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     Keyboard.dismiss();
     if (!order) return;
     if (!selectedFare) return;
-    if (!selectedPaymentMethodId) return;
     let paymentPayload;
     if (payMethod === 'credit_card') {
+      if (!selectedPaymentMethodId) return;
       paymentPayload = {
         payableWith: 'credit_card',
         paymentMethodId: selectedPaymentMethodId,
@@ -412,7 +417,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         onChangeComplement={(text) => setComplement(text)}
         checked={!addressComplement}
         toggleAddressComplement={() => setAddressComplement(!addressComplement)}
-        disabled={isLoading || (addressComplement && complement.length === 0)}
+        disabled={!canSubmit || isLoading || (addressComplement && complement.length === 0)}
       />
     </KeyboardAwareScrollView>
   );
