@@ -86,9 +86,12 @@ export default function ({ navigation, route }: Props) {
         renderItem={({ item }) => {
           const time = getOrderTime(item);
           const courierFee = item.fare?.courier
-            ? item.fare.courier.value - getFinancialFee(item.fare.courier.value)
+            ? item.fare.courier.value -
+              (item.fare.courier.processingFee ?? getFinancialFee(item.fare.courier.value))
             : 0;
-          const tip = item.tip ? item.tip.value - getFinancialFee(item.tip.value) : 0;
+          const tip = item.tip
+            ? item.tip.value - (item.tip.processingFee ?? getFinancialFee(item.tip.value))
+            : 0;
           const totalFee = courierFee + tip;
           const title = formatCurrency(totalFee);
           const subtitle = `Pedido ${item.code}\n${separateWithDot(

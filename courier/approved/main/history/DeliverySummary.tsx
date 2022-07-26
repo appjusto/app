@@ -46,9 +46,12 @@ export default function ({ navigation, route }: Props) {
     );
   }
   const courierFee = order.fare?.courier
-    ? order.fare.courier.value - getFinancialFee(order.fare.courier.value)
+    ? order.fare.courier.value -
+      (order.fare.courier.processingFee ?? getFinancialFee(order.fare.courier.value))
     : 0;
-  const tip = order.tip ? order.tip.value - getFinancialFee(order.tip.value) : 0;
+  const tip = order.tip
+    ? order.tip.value - (order.tip.processingFee ?? getFinancialFee(order.tip.value))
+    : 0;
   const fee = courierFee + tip;
   // UI
   return (
