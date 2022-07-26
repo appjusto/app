@@ -41,7 +41,6 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
 
   return (
     <View style={{ ...screens.default, width: '100%', paddingBottom: padding }}>
-      {/* add this back when business.preparationModes[] is not empty */}
       {isEqual(business.preparationModes, ['scheduled'] as PreparationMode[]) ? (
         <View style={{ paddingHorizontal: padding }}>
           <View

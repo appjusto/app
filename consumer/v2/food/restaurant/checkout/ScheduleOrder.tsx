@@ -10,7 +10,7 @@ import {
   FlatList,
   ScrollView,
   Text,
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -24,6 +24,7 @@ import { scheduleFromDate } from '../../../../../common/store/api/business/selec
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { showToast } from '../../../../../common/store/ui/actions';
 import {
+  borders,
   colors,
   doublePadding,
   halfPadding,
@@ -73,14 +74,19 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   //side effects
   // loading the first Date[] with slots as selectedDay
   // using business.id as a dependency because it will only change in the first render,
-  // when business turns from undefined to true. also setting prepMode after the business is loaded
+  // when business turns from undefined to true. order.id is also used because we need to check
+  // if there is an order.scheduledTo.
+  // also setting prepMode after the business is loaded
   React.useEffect(() => {
-    if (business) {
+    if (business && order) {
       const firsDayWithSlots = nextDateSlots?.find((slot) => slot.length > 0);
       setSelectedDay(firsDayWithSlots);
-      setPrepMode(realTimeDelivery ? 'realtime' : undefined);
+      if (order?.scheduledTo) {
+        setPrepMode('scheduled');
+        setSelectedSlot(order.scheduledTo as Timestamp);
+      } else setPrepMode(realTimeDelivery ? 'realtime' : undefined);
     }
-  }, [business?.id]);
+  }, [business?.id, order?.id]);
 
   // UI
   if (!order) return null; // shouldn't happen
@@ -110,13 +116,8 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
 
   return (
     <View style={{ ...screens.default, padding }}>
-      <View style={{ flex: 1 }}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{ flex: 1 }}
-          contentContainerStyle={{ flexGrow: 1 }}
-        >
+      <View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {nextDateSlots.map((day, i) => {
             return (
               <View style={{ marginRight: padding }} key={i}>
@@ -147,15 +148,18 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
           })}
         </ScrollView>
       </View>
-      <View style={{ flex: 3 }}>
+      <View style={{ flex: 1 }}>
         <FlatList
           showsVerticalScrollIndicator={false}
+          style={{ marginTop: 24 }}
           ListHeaderComponent={
             <View>
               {realTimeDelivery ? (
-                <View style={{ flex: 0.5, marginBottom: doublePadding }}>
+                <View style={{ marginBottom: doublePadding }}>
                   <Text style={{ ...texts.md }}>{t('Entregar hoje')}</Text>
-                  <TouchableOpacity onPress={() => navigation.navigate('FoodOrderCheckout')}>
+                  <TouchableWithoutFeedback
+                    onPress={() => navigation.navigate('FoodOrderCheckout')}
+                  >
                     <View
                       style={{
                         flexDirection: 'row',
@@ -176,7 +180,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                         variant="circle"
                       />
                     </View>
-                  </TouchableOpacity>
+                  </TouchableWithoutFeedback>
                 </View>
               ) : null}
               {Boolean(selectedDay) && selectedDay?.length ? (
@@ -187,12 +191,12 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
           data={selectedDay}
           keyExtractor={(item) => item.toString()}
           renderItem={({ item, index }) => (
-            <TouchableOpacity
+            <TouchableWithoutFeedback
               onPress={() => {
                 setPrepMode('scheduled');
                 setSelectedSlot(Timestamp.fromDate(item));
               }}
-              style={{ paddingVertical: 2 }}
+              style={{ paddingVertical: 2, ...borders.default }}
             >
               <View
                 style={{
@@ -210,9 +214,13 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                     selectedSlot !== undefined && Timestamp.fromDate(item).isEqual(selectedSlot)
                   }
                   variant="circle"
+                  onPress={() => {
+                    setPrepMode('scheduled');
+                    setSelectedSlot(Timestamp.fromDate(item));
+                  }}
                 />
               </View>
-            </TouchableOpacity>
+            </TouchableWithoutFeedback>
           )}
         />
         {Boolean(selectedDay) && selectedDay?.length ? (
@@ -221,7 +229,6 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
               title={t('Confirmar')}
               onPress={confirmSlotHandler}
               activityIndicator={loading}
-              style={{ marginTop: doublePadding }}
               disabled={prepMode === 'scheduled' && !selectedSlot}
             />
           </View>
