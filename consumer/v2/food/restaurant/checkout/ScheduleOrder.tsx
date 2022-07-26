@@ -1,4 +1,5 @@
 import { getNextDateSlots } from '@appjusto/dates';
+import { PreparationMode } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Timestamp } from 'firebase/firestore';
@@ -12,7 +13,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { ApiContext } from '../../../../../common/app/context';
+import { useDispatch } from 'react-redux';
+import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import CheckField from '../../../../../common/components/buttons/CheckField';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import { DayBoxListItem } from '../../../../../common/components/list items/DayBoxListItem';
@@ -20,6 +22,7 @@ import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTim
 import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
 import { scheduleFromDate } from '../../../../../common/store/api/business/selectors';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
+import { showToast } from '../../../../../common/store/ui/actions';
 import {
   colors,
   doublePadding,
@@ -55,6 +58,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   const api = React.useContext(ApiContext);
   const now = getServerTime();
   const business = useObserveBusiness(order?.business?.id);
+  const dispatch = useDispatch<AppDispatch>();
   // helpers
   const realTimeDelivery =
     business?.status === 'open' && business?.preparationModes?.includes('realtime');
@@ -64,15 +68,17 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   const [selectedDay, setSelectedDay] = React.useState<Date[]>();
   const [selectedSlot, setSelectedSlot] = React.useState<Timestamp>();
   const [loading, setLoading] = React.useState(false);
+  const [prepMode, setPrepMode] = React.useState<PreparationMode | undefined>();
 
   //side effects
   // loading the first Date[] with slots as selectedDay
   // using business.id as a dependency because it will only change in the first render,
-  // when business turns from undefined to true
+  // when business turns from undefined to true. also setting prepMode after the business is loaded
   React.useEffect(() => {
     if (business) {
       const firsDayWithSlots = nextDateSlots?.find((slot) => slot.length > 0);
       setSelectedDay(firsDayWithSlots);
+      setPrepMode(realTimeDelivery ? 'realtime' : undefined);
     }
   }, [business?.id]);
 
@@ -85,6 +91,22 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
       </View>
     );
   }
+  // handler
+  const confirmSlotHandler = async () => {
+    if (prepMode === 'realtime') navigation.navigate('FoodOrderCheckout');
+    else {
+      if (!selectedSlot) return;
+      try {
+        setLoading(true);
+        await api.order().updateOrder(order?.id, { scheduledTo: selectedSlot });
+        setLoading(false);
+        navigation.navigate('FoodOrderCheckout');
+      } catch (error: any) {
+        setLoading(false);
+        dispatch(showToast(error.toString(), 'error'));
+      }
+    }
+  };
 
   return (
     <View style={{ ...screens.default, padding }}>
@@ -149,7 +171,10 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                           {getETAWithMargin(order.arrivals.destination.estimate)}
                         </Text>
                       ) : null}
-                      <CheckField checked={!order.scheduledTo} />
+                      <CheckField
+                        checked={!order.scheduledTo && prepMode === 'realtime'}
+                        variant="circle"
+                      />
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -164,11 +189,10 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
           renderItem={({ item, index }) => (
             <TouchableOpacity
               onPress={() => {
-                setLoading(true);
-                api.order().updateOrder(order.id, { scheduledTo: Timestamp.fromDate(item) });
-                setLoading(false);
+                setPrepMode('scheduled');
                 setSelectedSlot(Timestamp.fromDate(item));
               }}
+              style={{ paddingVertical: 2 }}
             >
               <View
                 style={{
@@ -185,23 +209,23 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                   checked={
                     selectedSlot !== undefined && Timestamp.fromDate(item).isEqual(selectedSlot)
                   }
+                  variant="circle"
                 />
               </View>
             </TouchableOpacity>
           )}
-          ListFooterComponent={
-            Boolean(selectedDay) && selectedDay?.length ? (
-              <View style={{ flex: 1 }}>
-                <DefaultButton
-                  title={t('Confirmar')}
-                  onPress={() => navigation.navigate('FoodOrderCheckout')}
-                  activityIndicator={loading}
-                  style={{ marginTop: doublePadding }}
-                />
-              </View>
-            ) : null
-          }
         />
+        {Boolean(selectedDay) && selectedDay?.length ? (
+          <View style={{ marginTop: padding }}>
+            <DefaultButton
+              title={t('Confirmar')}
+              onPress={confirmSlotHandler}
+              activityIndicator={loading}
+              style={{ marginTop: doublePadding }}
+              disabled={prepMode === 'scheduled' && !selectedSlot}
+            />
+          </View>
+        ) : null}
       </View>
     </View>
   );

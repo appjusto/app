@@ -6,9 +6,10 @@ interface Props extends ViewProps {
   text?: string;
   checked?: boolean;
   onPress?: () => void;
+  variant?: 'square' | 'circle';
 }
 
-export default ({ text, checked = false, style, onPress }: Props) => {
+export default ({ text, checked = false, style, onPress, variant = 'square' }: Props) => {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View
@@ -23,7 +24,8 @@ export default ({ text, checked = false, style, onPress }: Props) => {
         <View
           style={{
             borderWidth: 2,
-            borderRadius: 4,
+            // borderRadius: 4,
+            borderRadius: variant === 'square' ? 4 : 12,
             padding: 2,
             width: 24,
             height: 24,

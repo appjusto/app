@@ -31,15 +31,12 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
     if (!business?.id) return;
     const { schedules } = business;
     const scheduleFromNow = scheduleFromDate(schedules, now);
-    console.log('schedules', schedules);
-    console.log('scheduleFromNow', scheduleFromNow);
     setNextDateSlots(getNextDateSlots(scheduleFromNow, now, 60, 5));
   }, [business?.id]);
   // UI
   if (!order) return null; // shouldn't happen
   if (!business) return null; // shouldn't happen
   if (!business.preparationModes?.includes('scheduled')) return null;
-  console.log('nextDateSlots', nextDateSlots);
   if (!nextDateSlots) return null;
 
   return (
@@ -74,7 +71,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
           </View>
         ) : null} */}
         <TouchableOpacity onPress={onCheckSchedules}>
-          <Text style={{ ...texts.sm, color: colors.green600 }}>{t('Ver horários')}</Text>
+          <Text style={{ ...texts.sm, color: colors.green600 }}>{t('Ver mais horários')}</Text>
         </TouchableOpacity>
       </View>
       <ScrollView

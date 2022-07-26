@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, TextProps, TouchableOpacity } from 'react-native';
-import { colors, halfPadding, texts } from '../../styles';
+import { colors, halfPadding, padding, texts } from '../../styles';
 
 interface Props extends TextProps {
   text: string | number;
@@ -20,7 +20,7 @@ export const RectangularListItemText = ({
       onPress={onSelect}
       style={{
         flex: 1,
-        borderRadius: halfPadding,
+        borderRadius: padding,
         paddingHorizontal: halfPadding,
         paddingVertical: 6,
         backgroundColor: selected ? colors.green100 : colors.white,
