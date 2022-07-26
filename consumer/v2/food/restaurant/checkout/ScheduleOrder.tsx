@@ -129,13 +129,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                       nextWeek: 'dddd'.slice(0, 3),
                     })
                   )}
-                  day={capitalize(
-                    Dayjs(day[0]).calendar(now, {
-                      sameDay: '[hoje]',
-                      nextDay: 'dddd'.slice(0, 3),
-                      nextWeek: 'dddd'.slice(0, 3),
-                    })
-                  )}
+                  day={day[0].getDate().toString()}
                   selected={
                     Boolean(day) &&
                     Boolean(selectedDay) &&
