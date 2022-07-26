@@ -116,9 +116,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   }, [product, complements]);
   // business can take scheduled orders
   const canScheduleOrder =
-    business?.preparationModes?.length &&
-    business?.preparationModes?.includes('scheduled') &&
-    acceptingStatus !== 'out-of-range';
+    business?.preparationModes?.includes('scheduled') && acceptingStatus !== 'out-of-range';
   // side effects
   // when product is loaded
   React.useLayoutEffect(() => {
@@ -212,7 +210,66 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         </PaddedView>
       );
     }
-    if (acceptingStatus === 'accepting' || canScheduleOrder) {
+    if (acceptingStatus === 'out-of-range' || acceptingStatus === 'unsupported') {
+      let header = '';
+      let body = '';
+      if (acceptingStatus === 'out-of-range') {
+        header = t('Restaurante fora da área de entrega');
+        body = t(
+          'Infelizmente ainda não atendemos seu endereço, mas você pode continuar explorando o cardápio'
+        );
+      } else if (acceptingStatus === 'unsupported') {
+        header = t('Fora do horário de atendimento');
+        body = t(
+          `O horário de atendimento da plataforma atualmente é entre ${formatHour(
+            platformParams?.consumer.support.starts ?? '1000'
+          )} e ${formatHour(platformParams?.consumer.support.ends ?? '2300')}.`
+        );
+      }
+      return (
+        <View
+          style={{
+            margin: padding,
+            paddingHorizontal: padding,
+            paddingVertical: 24,
+            alignItems: 'center',
+            backgroundColor: colors.grey50,
+            ...borders.default,
+          }}
+        >
+          <IconSemaphoreSmall />
+          <Text style={{ ...texts.sm, marginTop: halfPadding }}>{header}</Text>
+          <Text style={{ ...texts.xs, color: colors.grey700, textAlign: 'center' }}>{body}</Text>
+        </View>
+      );
+    } else if (
+      (acceptingStatus === 'closed' || acceptingStatus === 'disconnected') &&
+      !canScheduleOrder
+    ) {
+      const nextOpeningDay = getNextAvailableDate(business.schedules, new Date());
+      return (
+        <View
+          style={{
+            margin: padding,
+            padding: 25,
+            alignItems: 'center',
+            backgroundColor: colors.grey50,
+            ...borders.default,
+          }}
+        >
+          <Feather name="clock" size={26} />
+          <Text style={texts.sm}>{t('Desculpe, estamos fechados agora')}</Text>
+          {acceptingStatus === 'closed' && nextOpeningDay ? (
+            <>
+              <Text style={{ ...texts.xs, color: colors.grey700 }}>
+                {`${t('Abriremos')} ${nextOpeningDay![0]} ${t('às')}`}
+              </Text>
+              <Text style={texts.x2l}>{formatHour(nextOpeningDay![1])}</Text>
+            </>
+          ) : null}
+        </View>
+      );
+    } else {
       return (
         <View style={{ flex: 1 }}>
           <ItemComplements
@@ -252,62 +309,6 @@ export const ItemDetail = ({ navigation, route }: Props) => {
             />
           </View>
           <View style={{ flex: 1 }} />
-        </View>
-      );
-    } else if (acceptingStatus === 'closed' || acceptingStatus === 'disconnected') {
-      const nextOpeningDay = getNextAvailableDate(business.schedules, new Date());
-      return (
-        <View
-          style={{
-            margin: padding,
-            padding: 25,
-            alignItems: 'center',
-            backgroundColor: colors.grey50,
-            ...borders.default,
-          }}
-        >
-          <Feather name="clock" size={26} />
-          <Text style={texts.sm}>{t('Desculpe, estamos fechados agora')}</Text>
-          {acceptingStatus === 'closed' && nextOpeningDay ? (
-            <>
-              <Text style={{ ...texts.xs, color: colors.grey700 }}>
-                {`${t('Abriremos')} ${nextOpeningDay![0]} ${t('às')}`}
-              </Text>
-              <Text style={texts.x2l}>{formatHour(nextOpeningDay![1])}</Text>
-            </>
-          ) : null}
-        </View>
-      );
-    } else {
-      let header = '';
-      let body = '';
-      if (acceptingStatus === 'out-of-range') {
-        header = t('Restaurante fora da área de entrega');
-        body = t(
-          'Infelizmente ainda não atendemos seu endereço, mas você pode continuar explorando o cardápio'
-        );
-      } else if (acceptingStatus === 'unsupported') {
-        header = t('Fora do horário de atendimento');
-        body = t(
-          `O horário de atendimento da plataforma atualmente é entre ${formatHour(
-            platformParams?.consumer.support.starts ?? '1000'
-          )} e ${formatHour(platformParams?.consumer.support.ends ?? '2300')}.`
-        );
-      }
-      return (
-        <View
-          style={{
-            margin: padding,
-            paddingHorizontal: padding,
-            paddingVertical: 24,
-            alignItems: 'center',
-            backgroundColor: colors.grey50,
-            ...borders.default,
-          }}
-        >
-          <IconSemaphoreSmall />
-          <Text style={{ ...texts.sm, marginTop: halfPadding }}>{header}</Text>
-          <Text style={{ ...texts.xs, color: colors.grey700, textAlign: 'center' }}>{body}</Text>
         </View>
       );
     }

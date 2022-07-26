@@ -1,12 +1,13 @@
 import { formatRelativeDate, getNextDateSlots, scheduleFromDate } from '@appjusto/dates';
+import { PreparationMode } from '@appjusto/types';
 import { Timestamp } from 'firebase/firestore';
-import { capitalize } from 'lodash';
+import { capitalize, isEqual } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { ApiContext } from '../../../../common/app/context';
 import { RectangularListItemText } from '../../../../common/components/list items/RectangularListItemText';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
-import { useObserveBusiness } from '../../../../common/store/api/business/hooks/useObserveBusiness';
+import { useContextBusiness } from '../../../../common/store/context/business';
 import { useContextActiveOrder } from '../../../../common/store/context/order';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { getETAWithMargin } from '../../../../common/utils/formatters/datetime';
@@ -20,28 +21,31 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
   // context
   const getServerTime = useContextGetSeverTime();
   const order = useContextActiveOrder();
+  const business = useContextBusiness();
   const api = React.useContext(ApiContext);
   const now = getServerTime();
   // state
-  const business = useObserveBusiness(order?.business?.id);
-
+  const [nextDateSlots, setNextDateSlots] = React.useState<Date[][]>();
+  // side effects
+  React.useEffect(() => {
+    if (!business?.id) return;
+    const { schedules } = business;
+    const scheduleFromNow = scheduleFromDate(schedules, now);
+    console.log('schedules', schedules);
+    console.log('scheduleFromNow', scheduleFromNow);
+    setNextDateSlots(getNextDateSlots(scheduleFromNow, now, 60, 5));
+  }, [business?.id]);
+  // UI
   if (!order) return null; // shouldn't happen
-  if (!business) {
-    return (
-      <View style={screens.centered}>
-        <ActivityIndicator size="large" color={colors.green500} />
-      </View>
-    );
-  }
+  if (!business) return null; // shouldn't happen
   if (!business.preparationModes?.includes('scheduled')) return null;
-  const { schedules } = business;
-  const scheduleFromNow = scheduleFromDate(schedules, now);
-  const nextDateSlots: Date[][] = getNextDateSlots(scheduleFromNow, now, 60);
+  console.log('nextDateSlots', nextDateSlots);
+  if (!nextDateSlots) return null;
 
   return (
     <View style={{ ...screens.default, width: '100%', paddingBottom: padding }}>
       {/* add this back when business.preparationModes[] is not empty */}
-      {/* {canDeliver ? null : (
+      {isEqual(business.preparationModes, ['scheduled'] as PreparationMode[]) ? (
         <View style={{ paddingHorizontal: padding }}>
           <View
             style={{
@@ -55,7 +59,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
             </Text>
           </View>
         </View>
-      )} */}
+      ) : null}
       <View
         style={{
           flexDirection: 'row',
@@ -80,7 +84,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
       >
         {order.arrivals?.destination?.estimate &&
         business.status === 'open' &&
-        business.preparationModes?.includes('realtime') ? (
+        (!business.preparationModes || business.preparationModes.includes('realtime')) ? (
           <RectangularListItemText
             text={`Hoje, ${getETAWithMargin(order.arrivals.destination.estimate)}`}
             selected={!order.scheduledTo}

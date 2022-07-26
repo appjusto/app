@@ -15,10 +15,10 @@
     "postversion": "git push && git push --tags && git fetch"
   },
   "dependencies": {
-    "@appjusto/dates": "^0.4.1",
+    "@appjusto/dates": "^0.5.2",
     "@appjusto/firebase-refs": "^0.2.0",
     "@appjusto/menu": "^0.1.4",
-    "@appjusto/types": "^7.6.7",
+    "@appjusto/types": "^7.6.9",
     "@expo/react-native-action-sheet": "^3.13.0",
     "@expo/vector-icons": "^13.0.0",
     "@fnando/cnpj": "^1.0.2",
