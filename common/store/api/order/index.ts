@@ -144,45 +144,18 @@ export default class OrderApi {
     options: ObserveOrdersOptions,
     resultHandler: (orders: WithId<Order>[]) => void
   ): Unsubscribe {
-    const { consumerId, courierId, statuses, businessId, orderField } = options;
+    const { consumerId, courierId, statuses, businessId, orderField, from, to } = options;
     const constraints = [orderBy(orderField ?? 'createdOn', 'desc')];
     if (!isEmpty(statuses)) constraints.push(where('status', 'in', statuses));
     if (consumerId) constraints.push(where('consumer.id', '==', consumerId));
     if (courierId) constraints.push(where('courier.id', '==', courierId));
     if (businessId) constraints.push(where('business.id', '==', businessId));
+    if (from) constraints.push(where('createdOn', '>', Timestamp.fromDate(from)));
+    if (to) constraints.push(where('createdOn', '<', Timestamp.fromDate(to)));
     if (options.limit) constraints.push(limit(options.limit));
     return onSnapshot(
       query(this.firestoreRefs.getOrdersRef(), ...constraints),
       (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
-      (error) => {
-        console.error(error);
-        Sentry.Native.captureException(error);
-      }
-    );
-  }
-  observeUnexpiredConsumerOrders(
-    consumerId: string,
-    resultHandler: (orders: WithId<Order>[]) => void
-  ): Unsubscribe {
-    const constraints = [
-      where('status', 'not-in', ['expired'] as OrderStatus[]),
-      where('consumer.id', '==', consumerId),
-      orderBy('status', 'desc'),
-    ];
-    return onSnapshot(
-      query(this.firestoreRefs.getOrdersRef(), ...constraints),
-      (querySnapshot) => {
-        if (querySnapshot.empty) resultHandler([]);
-        else {
-          resultHandler(
-            documentsAs<Order>(querySnapshot.docs).sort(
-              (a, b) =>
-                ((b.createdOn as Timestamp)?.seconds ?? 0) -
-                ((a.createdOn as Timestamp)?.seconds ?? 0)
-            )
-          );
-        }
-      },
       (error) => {
         console.error(error);
         Sentry.Native.captureException(error);

@@ -1,29 +1,29 @@
+import { Dayjs, formatRelativeDate } from '@appjusto/dates';
 import { MaterialIcons } from '@expo/vector-icons';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import { Order, WithId } from '../../../../../types';
 import { ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import StatusBadge from '../../../../common/components/views/StatusBadge';
-import { useObserveUnexpiredConsumerOrders } from '../../../../common/store/api/order/hooks/useObserveUnexpiredConsumerOrders';
+import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
+import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
+import { ObserveOrdersOptions } from '../../../../common/store/api/order/types';
 import { track, useSegmentScreen } from '../../../../common/store/api/track';
-import {
-  getOrdersWithFilter,
-  getOrderTime,
-  isOrderOngoing,
-} from '../../../../common/store/order/selectors';
+import { getFlavor } from '../../../../common/store/config/selectors';
+import { getOrderTime, isOrderOngoing } from '../../../../common/store/order/selectors';
+import { getUser } from '../../../../common/store/user/selectors';
 import { colors, screens } from '../../../../common/styles';
 import {
   formatAddress,
   formatDate,
   formatTime,
-  getMonthName,
   separateWithDot,
 } from '../../../../common/utils/formatters';
-import { t } from '../../../../strings';
 import { DeliveredOrderNavigatorParamList } from '../../delivered/types';
 import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
@@ -43,21 +43,33 @@ type Props = {
 };
 
 export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
-  // params
-  const { year, month } = route.params;
   // context
+  const getServerTime = useContextGetSeverTime();
   const api = React.useContext(ApiContext);
+  // redux
+  const user = useSelector(getUser)!;
+  const flavor = useSelector(getFlavor);
+  // refs
   // state
-  const orders = useObserveUnexpiredConsumerOrders();
-  const filteredOrders = getOrdersWithFilter(orders ?? [], year, month).filter(
-    (order) => getOrderTime(order).getMonth() === month
+  const [from, setFrom] = React.useState<Date>(Dayjs(getServerTime()).startOf('w').toDate());
+  const options = React.useMemo(
+    (): ObserveOrdersOptions => ({
+      from,
+      ...(flavor === 'consumer'
+        ? { consumerId: user.uid }
+        : {
+            courierId: user.uid,
+          }),
+    }),
+    [from]
   );
+  const orders = useObserveOrders(options);
   // side effects
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title: `${t('Pedidos em ')}${getMonthName(month)}`,
+      title: `${formatRelativeDate(from, getServerTime())}`,
     });
-  }, [navigation, month]);
+  }, [navigation, from]);
   // tracking
   useSegmentScreen('Order History by Month');
   // handlers
@@ -127,7 +139,7 @@ export const OrderHistoryByMonth = ({ navigation, route }: Props) => {
     <View style={{ ...screens.config }}>
       <FlatList
         style={{ flex: 1 }}
-        data={filteredOrders}
+        data={orders}
         keyExtractor={(item) => item.id!}
         renderItem={({ item }) => {
           const time = getOrderTime(item);

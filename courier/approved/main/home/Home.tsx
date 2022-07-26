@@ -29,7 +29,7 @@ import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
 import { FreshDeskCard } from './FreshDeskCard';
 import HomeControls from './HomeControls';
-import HomeDeliveriesSummary from './HomeDeliveriesSummary';
+import { HomeDeliveriesSummary } from './HomeDeliveriesSummary';
 import { LocationDisclosureModal } from './LocationDisclosureModal';
 
 type ScreenNavigationProp = CompositeNavigationProp<
