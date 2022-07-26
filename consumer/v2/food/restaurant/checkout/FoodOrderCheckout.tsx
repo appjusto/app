@@ -83,12 +83,11 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     consumer.paymentChannel?.mostRecentPaymentMethod ?? 'credit_card'
   );
   const canSubmit =
+    (business?.status === 'open' || !isEmpty(order?.scheduledTo)) &&
     (payMethod !== 'credit_card' || selectedPaymentMethodId !== undefined) &&
     selectedFare !== undefined &&
     !isLoading &&
     isEmpty(order?.route?.issue);
-  const closedButCanAcceptOrder =
-    Boolean(business) && business?.status === 'closed' && Boolean(order?.scheduledTo);
   // side effects
   // whenever quotes are updated
   // select first fare
@@ -418,12 +417,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         onChangeComplement={(text) => setComplement(text)}
         checked={!addressComplement}
         toggleAddressComplement={() => setAddressComplement(!addressComplement)}
-        disabled={
-          !canSubmit ||
-          isLoading ||
-          (addressComplement && complement.length === 0) ||
-          !closedButCanAcceptOrder
-        }
+        disabled={!canSubmit || (addressComplement && complement.length === 0)}
       />
     </KeyboardAwareScrollView>
   );
