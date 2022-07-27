@@ -1,8 +1,8 @@
 import React from 'react';
-import { Text, TextProps, TouchableOpacity } from 'react-native';
-import { colors, halfPadding, texts } from '../../styles';
+import { Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
+import { colors, padding, texts } from '../../styles';
 
-interface Props extends TextProps {
+interface Props extends TouchableOpacityProps {
   text: string | number;
   textColor?: string;
   selected: boolean;
@@ -14,19 +14,24 @@ export const RectangularListItemText = ({
   textColor = colors.black,
   selected,
   onSelect,
+  style,
 }: Props) => {
   return (
     <TouchableOpacity
       onPress={onSelect}
-      style={{
-        flex: 1,
-        borderRadius: halfPadding,
-        paddingHorizontal: halfPadding,
-        paddingVertical: 6,
-        backgroundColor: selected ? colors.green100 : colors.white,
-        borderWidth: 1,
-        borderColor: selected ? colors.green100 : colors.grey500,
-      }}
+      style={[
+        {
+          flex: 1,
+          borderRadius: padding,
+          paddingHorizontal: padding,
+          paddingVertical: 6,
+          backgroundColor: selected ? colors.green100 : colors.white,
+          borderWidth: 1,
+          borderColor: selected ? colors.green100 : colors.grey500,
+          alignItems: 'center',
+        },
+        style,
+      ]}
     >
       <Text style={{ ...texts.sm, color: textColor }}>{text}</Text>
     </TouchableOpacity>

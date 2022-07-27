@@ -7,17 +7,18 @@ import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
+import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
-import { useContextActiveOrder } from '../../../../common/store/context/order';
 import { colors, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { PaymentBoxSelector } from '../../common/order-summary/PaymentBoxSelector';
 import { RestaurantNavigatorParamList } from '../../food/restaurant/types';
+import { P2POrderNavigatorParamList } from '../../p2p/types';
 import { ProfileParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<
-  ProfileParamList & RestaurantNavigatorParamList,
+  ProfileParamList & RestaurantNavigatorParamList & P2POrderNavigatorParamList,
   // we might need this later
   //  & OngoingOrderNavigatorParamList
   'SelectPaymentMethod'
@@ -34,9 +35,9 @@ type Props = {
 
 export const SelectPaymentMethod = ({ navigation, route }: Props) => {
   // params
-  const { selectedPaymentMethodId, payMethod } = route.params ?? {};
+  const { selectedPaymentMethodId, payMethod, orderId, returnScreen } = route.params ?? {};
   // context
-  const order = useContextActiveOrder();
+  const order = useObserveOrder(orderId);
   // redux
   const consumer = useSelector(getConsumer);
   const cards = consumer?.paymentChannel?.methods ?? [];
@@ -69,7 +70,7 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
                 selected={card.id === selectedPayment?.id && payMethod === 'credit_card'}
                 onSelectPayment={() => {
                   setSelectedPayment(card);
-                  navigation.navigate('FoodOrderCheckout', { paymentMethodId: card.id });
+                  navigation.navigate(returnScreen, { paymentMethodId: card.id });
                 }}
                 creditCard={card}
               />
@@ -80,9 +81,7 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
             <PaymentBoxSelector
               variant="card"
               selected={false}
-              onSelectPayment={() =>
-                navigation.navigate('ProfileAddCard', { returnScreen: 'FoodOrderCheckout' })
-              }
+              onSelectPayment={() => navigation.navigate('ProfileAddCard', { returnScreen })}
             />
           </View>
         )}
@@ -90,7 +89,7 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
           <PaymentBoxSelector
             variant="pix"
             selected={payMethod === 'pix'}
-            onSelectPayment={() => navigation.navigate('FoodOrderCheckout', { payMethod: 'pix' })}
+            onSelectPayment={() => navigation.navigate(returnScreen, { payMethod: 'pix' })}
           />
         ) : null}
       </PaddedView>
@@ -98,9 +97,7 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
       <PaddedView>
         <DefaultButton
           title={t('Adicionar cartão')}
-          onPress={() =>
-            navigation.navigate('ProfileAddCard', { returnScreen: 'FoodOrderCheckout' })
-          }
+          onPress={() => navigation.navigate('ProfileAddCard', { returnScreen })}
         />
       </PaddedView>
     </ScrollView>

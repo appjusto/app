@@ -34,6 +34,8 @@ export type RestaurantNavigatorParamList = {
   SelectPaymentMethod: {
     selectedPaymentMethodId?: string;
     payMethod?: PayableWith;
+    returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
+    orderId?: string;
   };
 } & PixParamList &
   FleetDetailParamList &

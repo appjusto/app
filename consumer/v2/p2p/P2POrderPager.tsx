@@ -1,4 +1,4 @@
-import { Fare, Order, Place, WithId } from '@appjusto/types';
+import { Fare, Order, PayableWith, Place, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import {
@@ -51,6 +51,10 @@ type Props = {
   onFareSelect: (fare: Fare) => void;
   total: number;
   navigateToAvailableFleets: () => void;
+  navigateToCompleteProfile: () => void;
+  navigateToSelectPayment: () => void;
+  payMethod: PayableWith;
+  onPayWithPix: () => void;
 };
 
 export default function ({
@@ -74,6 +78,10 @@ export default function ({
   onFareSelect,
   total,
   navigateToAvailableFleets,
+  navigateToCompleteProfile,
+  navigateToSelectPayment,
+  payMethod,
+  onPayWithPix,
 }: Props) {
   // params
   const { origin, destination } = order ?? {};
@@ -349,8 +357,12 @@ export default function ({
                   isSubmitEnabled={canSubmit}
                   onSubmit={onSubmit}
                   activityIndicator={isLoading}
-                  navigateToPayWithPix={navigateToPixPayment}
                   navigateToAboutCharges={navigateToAboutCharges}
+                  orderId={order.id}
+                  navigateToCompleteProfile={navigateToCompleteProfile}
+                  navigateToSelectPayment={navigateToSelectPayment}
+                  payMethod={payMethod}
+                  onPayWithPix={onPayWithPix}
                 />
               }
               orderFulfillment={

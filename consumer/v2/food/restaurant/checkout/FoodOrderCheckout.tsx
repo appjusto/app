@@ -372,6 +372,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         }
         payment={
           <OrderPayment
+            orderId={order.id}
             selectedPaymentMethodId={selectedPaymentMethodId}
             isSubmitEnabled={canSubmit}
             activityIndicator={isLoading}
@@ -388,6 +389,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
               navigation.navigate('SelectPaymentMethod', {
                 selectedPaymentMethodId,
                 payMethod,
+                returnScreen: 'FoodOrderCheckout',
+                orderId: order.id,
               })
             }
             payMethod={payMethod}

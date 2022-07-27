@@ -28,7 +28,7 @@ type Props = {
   costBreakdown: React.ReactNode;
   totalCost: React.ReactNode;
   payment: React.ReactNode;
-  onCheckSchedules: () => void;
+  onCheckSchedules?: () => void;
 };
 
 export const OrderSummary = ({
@@ -69,7 +69,7 @@ export const OrderSummary = ({
       ) : null}
       <View style={{ paddingTop: tallerDevice ? padding : 0 }}>
         <OrderPlacesSummary order={order} onEditStep={onEditStep} />
-        <OrderScheduling onCheckSchedules={onCheckSchedules} />
+        {order.type === 'food' ? <OrderScheduling onCheckSchedules={onCheckSchedules} /> : null}
       </View>
 
       {!isEmpty(order.items) ? (
