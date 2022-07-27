@@ -283,6 +283,7 @@ export default function ({ navigation, route }: Props) {
             selectedPaymentMethodId,
             payMethod,
             returnScreen: 'CreateOrderP2P',
+            orderId: order.id,
           })
         }
         payMethod={payMethod}

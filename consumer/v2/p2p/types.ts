@@ -26,7 +26,8 @@ export type P2POrderNavigatorParamList = {
   SelectPaymentMethod: {
     selectedPaymentMethodId?: string;
     payMethod?: PayableWith;
-    returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P';
+    returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
+    orderId?: string;
   };
 } & AddressCompleteParamList &
   PixParamList &

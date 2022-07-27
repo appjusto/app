@@ -17,6 +17,8 @@ export type ProfileParamList = {
   SelectPaymentMethod: {
     selectedPaymentMethodId?: string;
     payMethod?: PayableWith;
+    returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
+    orderId?: string;
   };
 } & ProfileEraseParamList &
   ProfilePaymentMethodsParamList &

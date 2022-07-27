@@ -390,6 +390,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
                 selectedPaymentMethodId,
                 payMethod,
                 returnScreen: 'FoodOrderCheckout',
+                orderId: order.id,
               })
             }
             payMethod={payMethod}

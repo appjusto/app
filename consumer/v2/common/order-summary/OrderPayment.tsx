@@ -49,7 +49,7 @@ export const OrderPayment = ({
   const { isProfileComplete, shouldVerifyPhone } = useProfileSummary();
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId); // only for credit cards
   const canPlaceOrder = isProfileComplete && !shouldVerifyPhone;
-  console.log('ORDER', order);
+  if (!order) return null;
   return (
     <View style={{ backgroundColor: colors.white }}>
       {Boolean(selectedPaymentMethod) && payMethod === 'credit_card' ? (
@@ -117,7 +117,7 @@ export const OrderPayment = ({
           <DefaultButton
             variant="secondary"
             title={t('Escolher forma de pagamento')}
-            // style={{ marginVertical: padding }}
+            style={{ marginBottom: order.type === 'p2p' ? padding : undefined }}
             onPress={navigateToSelectPayment}
           />
         ) : null}
@@ -127,7 +127,7 @@ export const OrderPayment = ({
           <DefaultButton
             variant="primary"
             title={t('Confirmar pedido')}
-            style={{ marginTop: padding }}
+            style={{ marginTop: padding, marginBottom: order.type === 'p2p' ? padding : undefined }}
             onPress={onSubmit}
           />
         ) : null}
