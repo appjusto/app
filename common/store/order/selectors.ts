@@ -31,21 +31,6 @@ export const getMonthsWithOrdersInYear = (orders: WithId<Order>[]) =>
     )
   );
 
-export const getOrdersWithFilter = (
-  orders: WithId<Order>[],
-  year: number,
-  month?: number,
-  day?: number
-) =>
-  orders.filter((order) => {
-    const time = getOrderTime(order);
-    if (!time) return false;
-    if (year !== time.getFullYear()) return false;
-    if (month && month !== time.getMonth()) return false;
-    if (day && day !== time.getDate()) return false;
-    return true;
-  });
-
 export const getDeliveredOrders = (orders: WithId<Order>[]) =>
   orders.filter((order) => order.status === 'delivered');
 

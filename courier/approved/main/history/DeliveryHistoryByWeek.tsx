@@ -1,61 +1,73 @@
+import { Dayjs } from '@appjusto/dates';
 import { Order, WithId } from '@appjusto/types';
+import { MaterialIcons } from '@expo/vector-icons';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { capitalize } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, FlatList, View } from 'react-native';
+import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import StatusBadge from '../../../../common/components/views/StatusBadge';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
+import { ObserveOrdersOptions } from '../../../../common/store/api/order/types';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
   getFinancialFee,
-  getOrdersWithFilter,
   getOrderTime,
   isOrderOngoing,
 } from '../../../../common/store/order/selectors';
 import { getUser } from '../../../../common/store/user/selectors';
-import { colors, screens } from '../../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import {
   formatCurrency,
   formatDate,
   formatTime,
   separateWithDot,
 } from '../../../../common/utils/formatters';
+import { useServerTime } from '../../../../common/utils/platform/useServerTime';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
 import { DeliveriesNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<DeliveriesNavigatorParamList, 'DeliveryHistoryByMonth'>,
+  StackNavigationProp<DeliveriesNavigatorParamList, 'DeliveryHistoryByWeek'>,
   CompositeNavigationProp<
     BottomTabNavigationProp<MainParamList, 'DeliveryHistory'>,
     StackNavigationProp<ApprovedParamList, 'MainNavigator'>
   >
 >;
-type ScreenRoute = RouteProp<DeliveriesNavigatorParamList, 'DeliveryHistoryByMonth'>;
+type ScreenRoute = RouteProp<DeliveriesNavigatorParamList, 'DeliveryHistoryByWeek'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
   route: ScreenRoute;
 };
 
-export default function ({ navigation, route }: Props) {
-  // params
-  const { year, month } = route.params;
-  // app state
-  const user = useSelector(getUser);
-  // screen state
-  // TO-DO: filter by date
-  const options = React.useMemo(() => ({ courierId: user?.uid }), [user?.uid]);
-  const orders = useObserveOrders(options);
-  const filteredOrders = getOrdersWithFilter(orders ?? [], year, month).filter(
-    (order) => getOrderTime(order).getMonth() === month
+export const DeliveryHistoryByWeek = ({ navigation, route }: Props) => {
+  // context
+  const getServerTime = useServerTime();
+  // redux
+  const user = useSelector(getUser)!;
+  // state
+  const [from, setFrom] = React.useState(Dayjs(getServerTime()).startOf('w').toDate());
+  const to = Dayjs(from).add(7, 'day').toDate();
+  const options = React.useMemo(
+    () =>
+      ({
+        from,
+        to,
+        courierId: user.uid,
+      } as ObserveOrdersOptions),
+    [from, user.uid]
   );
+  console.log(options);
+  const orders = useObserveOrders(options);
   // side effects
   // tracking
-  useSegmentScreen('DeliveryHistoryByMonth');
+  useSegmentScreen('DeliveryHistoryByWeek');
   // handlers
   const orderPressHandler = (order: WithId<Order>) => {
     if (isOrderOngoing(order)) {
@@ -81,7 +93,7 @@ export default function ({ navigation, route }: Props) {
     <View style={{ ...screens.config }}>
       <FlatList
         style={{ flex: 1 }}
-        data={filteredOrders}
+        data={orders}
         keyExtractor={(item) => item.id!}
         renderItem={({ item }) => {
           const time = getOrderTime(item);
@@ -104,7 +116,36 @@ export default function ({ navigation, route }: Props) {
             </ConfigItem>
           );
         }}
+        ListHeaderComponent={() => (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: padding,
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => setFrom((value) => Dayjs(value).subtract(7, 'day').toDate())}
+            >
+              <MaterialIcons name="arrow-back-ios" size={24} color="black" />
+            </TouchableOpacity>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialIcons name="calendar-today" size={24} color="black" />
+              <Text style={{ marginLeft: halfPadding, ...texts.md }}>{`${from.getDate()}${
+                from.getMonth() != to.getMonth()
+                  ? ` de ${capitalize(Dayjs(from).format('MMMM'))}`
+                  : ''
+              } a ${to.getDate()} de ${capitalize(Dayjs(to).format('MMMM'))}`}</Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => setFrom((value) => Dayjs(value).add(7, 'day').toDate())}
+            >
+              <MaterialIcons name="arrow-forward-ios" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+        )}
       />
     </View>
   );
-}
+};

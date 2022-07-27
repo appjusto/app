@@ -9,7 +9,6 @@ import OrderMap from '../../../../common/screens/orders/OrderMap';
 import PlaceSummary from '../../../../common/screens/orders/summary/PlaceSummary';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../../common/store/api/track';
-import { getFinancialFee } from '../../../../common/store/order/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import {
   formatCurrency,
@@ -45,14 +44,9 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
-  const courierFee = order.fare?.courier
-    ? order.fare.courier.value -
-      (order.fare.courier.processingFee ?? getFinancialFee(order.fare.courier.value))
-    : 0;
-  const tip = order.tip
-    ? order.tip.value - (order.tip.processingFee ?? getFinancialFee(order.tip.value))
-    : 0;
-  const fee = courierFee + tip;
+  const delivery = order.fare.courier.value - (order.fare.courier.processingFee ?? 0);
+  const tip = (order.tip?.value ?? 0) - (order.tip?.processingFee ?? 0);
+  const total = delivery + tip;
   // UI
   return (
     <View style={{ ...screens.default }}>
@@ -85,7 +79,7 @@ export default function ({ navigation, route }: Props) {
             }}
           >
             <Text style={{ ...texts.md, ...texts.bold }}>{t('Valor recebido')}</Text>
-            <Text style={{ ...texts.xl }}>{formatCurrency(fee)}</Text>
+            <Text style={{ ...texts.xl }}>{formatCurrency(total)}</Text>
           </View>
         </PaddedView>
         <HR height={padding} />
