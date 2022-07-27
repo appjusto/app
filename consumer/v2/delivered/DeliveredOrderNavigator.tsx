@@ -4,7 +4,6 @@ import Chat from '../../../common/screens/Chat';
 import { defaultScreenOptions } from '../../../common/screens/options';
 import { ReportIssue } from '../../../common/screens/ReportIssue';
 import { t } from '../../../strings';
-import { OrderHistoryByMonth } from '../main/history/OrderHistoryByMonth';
 import { OrderProblemFeedback } from '../ongoing/OrderProblemFeedback';
 import { DeliveredOrderDetail } from './DeliveredOrderDetail';
 import { DeliveredOrderNavigatorParamList } from './types';
@@ -29,7 +28,6 @@ export const DeliveredOrderNavigator = () => {
         component={OrderProblemFeedback}
         options={{ title: t('Tive um problema') }}
       />
-      <Stack.Screen name="OrderHistoryByMonth" component={OrderHistoryByMonth} />
       <Stack.Screen name="DeliveredOrderChat" component={Chat} options={{ title: t('Chat') }} />
     </Stack.Navigator>
   );

@@ -63,7 +63,6 @@ export const DeliveryHistoryByWeek = ({ navigation, route }: Props) => {
       } as ObserveOrdersOptions),
     [from, user.uid]
   );
-  console.log(options);
   const orders = useObserveOrders(options);
   // side effects
   // tracking
