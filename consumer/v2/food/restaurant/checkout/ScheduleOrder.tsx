@@ -67,7 +67,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   const nextDateSlots: Date[][] = getNextDateSlots(daySchedules, now, 60);
   // state
   const [selectedDay, setSelectedDay] = React.useState<Date[]>();
-  const [selectedSlot, setSelectedSlot] = React.useState<Timestamp>(null);
+  const [selectedSlot, setSelectedSlot] = React.useState<Timestamp | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [prepMode, setPrepMode] = React.useState<PreparationMode | undefined>();
 
@@ -82,7 +82,11 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
       const firsDayWithSlots = nextDateSlots?.find((slot) => slot.length > 0);
       setSelectedDay(firsDayWithSlots);
       if (order?.scheduledTo) {
+        const dayScheduled = nextDateSlots.find(
+          (slot) => slot[0].getDate() === (order.scheduledTo as Timestamp).toDate().getDate()
+        );
         setPrepMode('scheduled');
+        setSelectedDay(dayScheduled);
         setSelectedSlot(order.scheduledTo as Timestamp);
       } else setPrepMode(realTimeDelivery ? 'realtime' : undefined);
     }
@@ -149,8 +153,9 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                   <Text style={{ ...texts.md }}>{t('Entregar hoje')}</Text>
                   <TouchableWithoutFeedback
                     onPress={() => {
-                      setPrepMode('realtime');
                       setSelectedSlot(null);
+                      setPrepMode('realtime');
+                      setSelectedDay(nextDateSlots[0]);
                     }}
                   >
                     <View
@@ -169,7 +174,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                         </Text>
                       ) : null}
                       <CheckField
-                        checked={!order.scheduledTo && prepMode === 'realtime'}
+                        checked={selectedSlot === null && prepMode === 'realtime'}
                         variant="circle"
                       />
                     </View>
