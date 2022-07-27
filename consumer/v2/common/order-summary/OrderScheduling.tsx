@@ -1,4 +1,6 @@
-import { getNextDateSlots, scheduleFromDate } from '@appjusto/dates';
+import { Dayjs, getNextDateSlots, scheduleFromDate } from '@appjusto/dates';
+import { Timestamp } from 'firebase/firestore';
+import { capitalize } from 'lodash';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { ApiContext } from '../../../../common/app/context';
@@ -92,11 +94,22 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
               </Text>
             </View>
           ) : null}
-          {order.arrivals?.destination?.estimate ?? order.scheduledTo ? (
+          {order.scheduledTo ? (
             <RectangularListItemText
-              text={`Entrega: ${getETAWithMargin(
-                order.scheduledTo ?? order.arrivals?.destination?.estimate!
-              )}`}
+              text={`${capitalize(
+                Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now, {
+                  sameDay: '[hoje]',
+                  nextDay: 'dddd',
+                  nextWeek: 'dddd',
+                })
+              )}, ${getETAWithMargin(order.scheduledTo)}`}
+              selected
+              onSelect={() => null}
+            />
+          ) : null}
+          {!order.scheduledTo && order.arrivals?.destination?.estimate ? (
+            <RectangularListItemText
+              text={`Entrega: ${getETAWithMargin(order.arrivals?.destination?.estimate!)}`}
               selected
               onSelect={() => null}
             />
