@@ -128,6 +128,7 @@ export const OrderPayment = ({
             title={t('Confirmar pedido')}
             style={{ marginTop: padding, marginBottom: order.type === 'p2p' ? padding : undefined }}
             onPress={onSubmit}
+            activityIndicator={activityIndicator}
           />
         ) : null}
         {canPlaceOrder && !activityIndicator && payableWithPix && payMethod !== 'pix' ? (
