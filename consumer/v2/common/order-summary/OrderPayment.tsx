@@ -122,8 +122,7 @@ export const OrderPayment = ({
           />
         ) : null}
         {canPlaceOrder &&
-        (payMethod === 'pix' || (payMethod === 'credit_card' && selectedPaymentMethod)) &&
-        !activityIndicator ? (
+        (payMethod === 'pix' || (payMethod === 'credit_card' && selectedPaymentMethod)) ? (
           <DefaultButton
             variant="primary"
             title={t('Confirmar pedido')}
