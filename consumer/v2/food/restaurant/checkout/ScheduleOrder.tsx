@@ -67,7 +67,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   const nextDateSlots: Date[][] = getNextDateSlots(daySchedules, now, 60);
   // state
   const [selectedDay, setSelectedDay] = React.useState<Date[]>();
-  const [selectedSlot, setSelectedSlot] = React.useState<Timestamp | null>();
+  const [selectedSlot, setSelectedSlot] = React.useState<Timestamp>(null);
   const [loading, setLoading] = React.useState(false);
   const [prepMode, setPrepMode] = React.useState<PreparationMode | undefined>();
 
@@ -99,7 +99,6 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   }
   // handler
   const confirmSlotHandler = async () => {
-    if (!selectedSlot) return;
     try {
       setLoading(true);
       await api.order().updateOrder(order?.id, { scheduledTo: selectedSlot });

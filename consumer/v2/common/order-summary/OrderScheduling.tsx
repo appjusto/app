@@ -1,9 +1,6 @@
-import { formatRelativeDate, getNextDateSlots, scheduleFromDate } from '@appjusto/dates';
-import { PreparationMode } from '@appjusto/types';
-import { Timestamp } from 'firebase/firestore';
-import { capitalize, isEqual } from 'lodash';
+import { getNextDateSlots, scheduleFromDate } from '@appjusto/dates';
 import React from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { ApiContext } from '../../../../common/app/context';
 import { RectangularListItemText } from '../../../../common/components/list items/RectangularListItemText';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
@@ -36,74 +33,97 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
   // UI
   if (!order) return null; // shouldn't happen
   if (!business) return null; // shouldn't happen
-  if (!business.preparationModes?.includes('scheduled')) return null;
+  // if (!business.preparationModes?.includes('scheduled')) return null;
   if (!nextDateSlots) return null;
 
-  return (
-    <View style={{ ...screens.default, width: '100%', paddingBottom: padding }}>
-      {isEqual(business.preparationModes, ['scheduled'] as PreparationMode[]) ? (
-        <View style={{ paddingHorizontal: padding }}>
-          <View
-            style={{
-              backgroundColor: colors.darkYellow,
-              padding,
-              borderRadius: halfPadding,
-            }}
-          >
+  const scheduleUI = () => {
+    if (!business.preparationModes?.includes('scheduled')) {
+      if (order.arrivals?.destination?.estimate) {
+        return (
+          <View style={{ alignSelf: 'center' }}>
             <Text style={{ ...texts.sm }}>
-              {t('Esse restaurante somente aceita pedidos com horário agendado para entrega')}
+              {t('Previsão de entrega: ')}
+              {getETAWithMargin(order.arrivals.destination.estimate)}
             </Text>
           </View>
-        </View>
-      ) : null}
-      <View
-        style={{
-          flexDirection: 'row',
-          // justifyContent: eTA ? 'space-between' : 'flex-end',
-          justifyContent: 'flex-end',
-          paddingHorizontal: padding,
-        }}
-      >
-        {/* {eTA ? (
-          <View>
-            <Text style={{ ...texts.sm, color: colors.grey700 }}>{eTA}</Text>
-          </View>
-        ) : null} */}
-        <TouchableOpacity onPress={onCheckSchedules}>
-          <Text style={{ ...texts.sm, color: colors.green600 }}>{t('Ver mais horários')}</Text>
-        </TouchableOpacity>
-      </View>
-      <ScrollView
-        horizontal
-        style={{ marginTop: padding, paddingLeft: padding }}
-        showsHorizontalScrollIndicator={false}
-      >
-        {order.arrivals?.destination?.estimate &&
-        business.status === 'open' &&
-        (!business.preparationModes || business.preparationModes.includes('realtime')) ? (
-          <RectangularListItemText
-            text={`Hoje, ${getETAWithMargin(order.arrivals.destination.estimate)}`}
-            selected={!order.scheduledTo}
-            onSelect={() => api.order().updateOrder(order.id, { scheduledTo: null })}
-          />
-        ) : null}
-        {nextDateSlots.map((dayslots, i) =>
-          dayslots.map((slot) => (
-            <View style={{ marginLeft: halfPadding }} key={slot.toString()}>
+        );
+      } else return null;
+    } else {
+      if (business.status === 'closed') {
+        return (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: '100%',
+            }}
+          >
+            <View style={{ width: '48%' }}>
+              <Text style={{ ...texts.xs }} numberOfLines={2}>
+                {t('Esse restaurante só aceita pedidos agendados')}
+              </Text>
+            </View>
+            <View style={{ width: '48%' }}>
               <RectangularListItemText
-                text={`${capitalize(formatRelativeDate(slot, now))}, ${getETAWithMargin(slot)}`}
-                selected={
-                  Boolean(order.scheduledTo) &&
-                  (order.scheduledTo as Timestamp).isEqual(Timestamp.fromDate(slot))
-                }
-                onSelect={() =>
-                  api.order().updateOrder(order.id, { scheduledTo: Timestamp.fromDate(slot) })
-                }
+                text={t('Agendar horário')}
+                selected={false}
+                onSelect={onCheckSchedules!}
               />
             </View>
-          ))
-        )}
-      </ScrollView>
+          </View>
+        );
+      }
+      if (business.status === 'open') {
+        return (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <View style={{ marginRight: halfPadding }}>
+              <RectangularListItemText
+                text={
+                  order.arrivals?.destination?.estimate
+                    ? `Previsão: ${getETAWithMargin(order.arrivals.destination.estimate)}`
+                    : t('Sem previsão')
+                }
+                selected={!order.scheduledTo}
+                onSelect={() => api.order().updateOrder(order.id, { scheduledTo: null })}
+              />
+            </View>
+
+            <RectangularListItemText
+              text={t('Agendar horário')}
+              selected={false}
+              onSelect={onCheckSchedules!}
+            />
+          </View>
+        );
+      }
+    }
+  };
+
+  return (
+    <View
+      style={{
+        ...screens.default,
+        width: '100%',
+        paddingBottom: padding,
+        paddingHorizontal: padding,
+      }}
+    >
+      <View
+        style={{
+          borderBottomWidth: 1,
+          borderBottomColor: colors.grey500,
+          marginBottom: padding,
+        }}
+      />
+
+      {scheduleUI()}
     </View>
   );
 };
