@@ -47,63 +47,70 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
             </Text>
           </View>
         );
-      } else return null;
-    } else {
-      if (business.status === 'closed') {
-        return (
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: '100%',
-            }}
-          >
+      }
+      return null;
+    }
+    // if (business.status === 'closed') {
+    //   return (
+    //     <View
+    //       style={{
+    //         flexDirection: 'row',
+    //         justifyContent: 'space-between',
+    //         alignItems: 'center',
+    //         width: '100%',
+    //       }}
+    //     >
+    // <View style={{ width: '48%' }}>
+    //   <Text style={{ ...texts.xs }} numberOfLines={2}>
+    //     {t('Esse restaurante está aceitando pedidos agendados')}
+    //   </Text>
+    // </View>
+    //       <View style={{ width: '48%' }}>
+    //         <RectangularListItemText
+    //           text={t('Agendar horário')}
+    //           selected={false}
+    //           onSelect={onCheckSchedules!}
+    //         />
+    //       </View>
+    //     </View>
+    //   );
+    // }
+    // if (business.status === 'open') {
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <View style={{ marginRight: halfPadding }}>
+          {business.status === 'closed' && !order.scheduledTo ? (
             <View style={{ width: '48%' }}>
               <Text style={{ ...texts.xs }} numberOfLines={2}>
-                {t('Esse restaurante só aceita pedidos agendados')}
+                {t('Esse restaurante está aceitando pedidos agendados')}
               </Text>
             </View>
-            <View style={{ width: '48%' }}>
-              <RectangularListItemText
-                text={t('Agendar horário')}
-                selected={false}
-                onSelect={onCheckSchedules!}
-              />
-            </View>
-          </View>
-        );
-      }
-      if (business.status === 'open') {
-        return (
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <View style={{ marginRight: halfPadding }}>
-              <RectangularListItemText
-                text={
-                  order.arrivals?.destination?.estimate
-                    ? `Previsão: ${getETAWithMargin(order.arrivals.destination.estimate)}`
-                    : t('Sem previsão')
-                }
-                selected={!order.scheduledTo}
-                onSelect={() => api.order().updateOrder(order.id, { scheduledTo: null })}
-              />
-            </View>
-
+          ) : null}
+          {order.arrivals?.destination?.estimate ?? order.scheduledTo ? (
             <RectangularListItemText
-              text={t('Agendar horário')}
-              selected={false}
-              onSelect={onCheckSchedules!}
+              text={`Entrega: ${getETAWithMargin(
+                order.scheduledTo ?? order.arrivals?.destination?.estimate!
+              )}`}
+              selected
+              onSelect={() => null}
             />
-          </View>
-        );
-      }
-    }
+          ) : null}
+        </View>
+
+        <RectangularListItemText
+          text={t('Agendar horário')}
+          selected={false}
+          onSelect={onCheckSchedules!}
+        />
+      </View>
+    );
+    // }
   };
 
   return (
