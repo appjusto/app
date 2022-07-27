@@ -14,10 +14,11 @@ import { colors, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { PaymentBoxSelector } from '../../common/order-summary/PaymentBoxSelector';
 import { RestaurantNavigatorParamList } from '../../food/restaurant/types';
+import { P2POrderNavigatorParamList } from '../../p2p/types';
 import { ProfileParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<
-  ProfileParamList & RestaurantNavigatorParamList,
+  ProfileParamList & RestaurantNavigatorParamList & P2POrderNavigatorParamList,
   // we might need this later
   //  & OngoingOrderNavigatorParamList
   'SelectPaymentMethod'

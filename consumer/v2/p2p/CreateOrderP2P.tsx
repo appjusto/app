@@ -1,4 +1,10 @@
-import { Fare, Place } from '@appjusto/types';
+import {
+  Fare,
+  PayableWith,
+  Place,
+  PlaceOrderPayloadPaymentCreditCard,
+  PlaceOrderPayloadPaymentPix,
+} from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -55,8 +61,11 @@ export default function ({ navigation, route }: Props) {
   const [wantsCpf, setWantsCpf] = React.useState(false);
   const quotes = useQuotes(order?.id);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
+  const [payMethod, setPayMethod] = React.useState<PayableWith>(
+    consumer.paymentChannel?.mostRecentPaymentMethod ?? 'credit_card'
+  );
   const canSubmit =
-    selectedPaymentMethodId !== undefined &&
+    (payMethod !== 'credit_card' || selectedPaymentMethodId !== undefined) &&
     selectedFare !== undefined &&
     !isLoading &&
     isEmpty(order?.route?.issue);
@@ -112,10 +121,12 @@ export default function ({ navigation, route }: Props) {
     }
     if (params?.paymentMethodId) {
       setSelectedPaymentMethodId(params?.paymentMethodId);
+      setPayMethod('credit_card');
       navigation.setParams({
         paymentMethodId: undefined,
       });
-    }
+    } // from SelectPaymentMethod
+    if (params?.payMethod) setPayMethod(params.payMethod);
   }, [api, consumer, dispatch, navigation, order, orderId, params]);
   // if the order status becomes 'expired'
   React.useEffect(() => {
@@ -152,11 +163,28 @@ export default function ({ navigation, route }: Props) {
       navigation.navigate('ProfilePaymentMethods', { returnScreen: 'CreateOrderP2P' });
     }
   }, [consumer, navigation, selectedPaymentMethodId]);
+  // navigate to complete profile
+  const navigateToCompleteProfile = () => {
+    navigation.navigate('CommonProfileEdit', { returnScreen: 'CreateOrderP2P' });
+  };
   // confirm order
   const placeOrderHandler = async (fleetId: string) => {
     track('placing order');
     if (!orderId) return;
-    if (!selectedPaymentMethodId) return;
+    let paymentPayload;
+    if (payMethod === 'credit_card') {
+      if (!selectedPaymentMethodId) return;
+      paymentPayload = {
+        payableWith: 'credit_card',
+        paymentMethodId: selectedPaymentMethodId,
+      } as PlaceOrderPayloadPaymentCreditCard;
+    }
+    if (payMethod === 'pix') {
+      paymentPayload = {
+        payableWith: 'pix',
+        key: cpf, // remove this
+      } as PlaceOrderPayloadPaymentPix;
+    }
     Keyboard.dismiss();
     if (!order.destination?.address) {
       dispatch(
@@ -198,16 +226,7 @@ export default function ({ navigation, route }: Props) {
     }
     try {
       setLoading(true);
-      await api.order().placeOrder(
-        orderId,
-        fleetId,
-        {
-          payableWith: 'credit_card',
-          paymentMethodId: selectedPaymentMethodId,
-        },
-        wantsCpf,
-        coords
-      );
+      await api.order().placeOrder(orderId, fleetId, paymentPayload, wantsCpf, coords);
 
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {
@@ -258,6 +277,18 @@ export default function ({ navigation, route }: Props) {
           })
         }
         total={selectedFare?.total ?? 0}
+        navigateToCompleteProfile={navigateToCompleteProfile}
+        navigateToSelectPayment={() =>
+          navigation.navigate('SelectPaymentMethod', {
+            selectedPaymentMethodId,
+            payMethod,
+            returnScreen: 'CreateOrderP2P',
+          })
+        }
+        payMethod={payMethod}
+        onPayWithPix={() => {
+          setPayMethod('pix');
+        }}
       />
     </View>
   );

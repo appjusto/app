@@ -14,7 +14,7 @@ import { getETAWithMargin } from '../../../../common/utils/formatters/datetime';
 import { t } from '../../../../strings';
 
 type Props = {
-  onCheckSchedules: () => void;
+  onCheckSchedules?: () => void;
 };
 
 export const OrderScheduling = ({ onCheckSchedules }: Props) => {

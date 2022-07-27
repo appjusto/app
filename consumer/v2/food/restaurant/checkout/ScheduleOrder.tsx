@@ -67,7 +67,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   const nextDateSlots: Date[][] = getNextDateSlots(daySchedules, now, 60);
   // state
   const [selectedDay, setSelectedDay] = React.useState<Date[]>();
-  const [selectedSlot, setSelectedSlot] = React.useState<Timestamp>();
+  const [selectedSlot, setSelectedSlot] = React.useState<Timestamp | null>();
   const [loading, setLoading] = React.useState(false);
   const [prepMode, setPrepMode] = React.useState<PreparationMode | undefined>();
 
@@ -99,18 +99,15 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   }
   // handler
   const confirmSlotHandler = async () => {
-    if (prepMode === 'realtime') navigation.navigate('FoodOrderCheckout');
-    else {
-      if (!selectedSlot) return;
-      try {
-        setLoading(true);
-        await api.order().updateOrder(order?.id, { scheduledTo: selectedSlot });
-        setLoading(false);
-        navigation.navigate('FoodOrderCheckout');
-      } catch (error: any) {
-        setLoading(false);
-        dispatch(showToast(error.toString(), 'error'));
-      }
+    if (!selectedSlot) return;
+    try {
+      setLoading(true);
+      await api.order().updateOrder(order?.id, { scheduledTo: selectedSlot });
+      setLoading(false);
+      navigation.navigate('FoodOrderCheckout');
+    } catch (error: any) {
+      setLoading(false);
+      dispatch(showToast(error.toString(), 'error'));
     }
   };
 
@@ -152,7 +149,10 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                 <View style={{ marginBottom: doublePadding }}>
                   <Text style={{ ...texts.md }}>{t('Entregar hoje')}</Text>
                   <TouchableWithoutFeedback
-                    onPress={() => navigation.navigate('FoodOrderCheckout')}
+                    onPress={() => {
+                      setPrepMode('realtime');
+                      setSelectedSlot(null);
+                    }}
                   >
                     <View
                       style={{
@@ -204,9 +204,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                   {getETAWithMargin(item)}
                 </Text>
                 <CheckField
-                  checked={
-                    selectedSlot !== undefined && Timestamp.fromDate(item).isEqual(selectedSlot)
-                  }
+                  checked={Boolean(selectedSlot) && Timestamp.fromDate(item).isEqual(selectedSlot!)}
                   variant="circle"
                   onPress={() => {
                     setPrepMode('scheduled');

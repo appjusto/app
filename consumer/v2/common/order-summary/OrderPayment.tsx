@@ -6,10 +6,10 @@ import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
+import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
 import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
-import { useContextActiveOrder } from '../../../../common/store/context/order';
 import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
@@ -24,6 +24,7 @@ interface Props {
   navigateToSelectPayment: () => void;
   onPayWithPix: () => void;
   payMethod: PayableWith;
+  orderId: string;
 }
 
 export const OrderPayment = ({
@@ -37,9 +38,10 @@ export const OrderPayment = ({
   navigateToCompleteProfile,
   navigateToSelectPayment,
   payMethod,
+  orderId,
 }: Props) => {
   // context
-  const order = useContextActiveOrder();
+  const order = useObserveOrder(orderId);
   // redux
   const consumer = useSelector(getConsumer)!;
   // helpers
@@ -47,7 +49,7 @@ export const OrderPayment = ({
   const { isProfileComplete, shouldVerifyPhone } = useProfileSummary();
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId); // only for credit cards
   const canPlaceOrder = isProfileComplete && !shouldVerifyPhone;
-  if (!order) return null;
+  console.log('ORDER', order);
   return (
     <View style={{ backgroundColor: colors.white }}>
       {Boolean(selectedPaymentMethod) && payMethod === 'credit_card' ? (
