@@ -26,13 +26,13 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems }: Props) =>
           {t('Somos transparentes do início ao fim da entrega')}
         </Text>
         <View style={{ marginTop: padding }}>
-          {!isEmpty(order.items) && !hideItems ? (
+          {flavor === 'consumer' && !isEmpty(order.items) && !hideItems ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ ...texts.sm }}>{t('Itens do pedido')}</Text>
               <Text style={{ ...texts.sm }}>{formatCurrency(getOrderTotal(order))}</Text>
             </View>
           ) : null}
-          {selectedFare?.platform?.value ? (
+          {flavor === 'consumer' && selectedFare?.platform?.value ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ ...texts.sm }}>{t('AppJusto')}</Text>
               <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.platform.value)}</Text>

@@ -26,11 +26,12 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
   // state
   const [nextDateSlots, setNextDateSlots] = React.useState<Date[][]>();
   // side effects
+  const margin = 60;
   React.useEffect(() => {
     if (!business?.id) return;
     const { schedules } = business;
     const scheduleFromNow = scheduleFromDate(schedules, now);
-    setNextDateSlots(getNextDateSlots(scheduleFromNow, now, 60, 5));
+    setNextDateSlots(getNextDateSlots(scheduleFromNow, now, margin, 5));
   }, [business?.id]);
   // UI
   if (!order) return null; // shouldn't happen
@@ -75,7 +76,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
                   nextDay: 'dddd',
                   nextWeek: 'dddd',
                 })
-              )}, ${getETAWithMargin(order.scheduledTo)}`}
+              )}, ${getETAWithMargin(order.scheduledTo, margin)}`}
               selected
               onSelect={() => null}
             />

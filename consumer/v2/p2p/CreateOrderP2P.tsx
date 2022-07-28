@@ -61,9 +61,7 @@ export default function ({ navigation, route }: Props) {
   const [wantsCpf, setWantsCpf] = React.useState(false);
   const quotes = useQuotes(order?.id);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
-  const [payMethod, setPayMethod] = React.useState<PayableWith>(
-    consumer.paymentChannel?.mostRecentPaymentMethod ?? 'credit_card'
-  );
+  const [payMethod, setPayMethod] = React.useState<PayableWith>('credit_card');
   const canSubmit =
     (payMethod !== 'credit_card' || selectedPaymentMethodId !== undefined) &&
     selectedFare !== undefined &&
