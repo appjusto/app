@@ -26,11 +26,12 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
   // state
   const [nextDateSlots, setNextDateSlots] = React.useState<Date[][]>();
   // side effects
+  const margin = 60;
   React.useEffect(() => {
     if (!business?.id) return;
     const { schedules } = business;
     const scheduleFromNow = scheduleFromDate(schedules, now);
-    setNextDateSlots(getNextDateSlots(scheduleFromNow, now, 60, 5));
+    setNextDateSlots(getNextDateSlots(scheduleFromNow, now, margin, 5));
   }, [business?.id]);
   // UI
   if (!order) return null; // shouldn't happen
@@ -90,7 +91,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
           {business.status === 'closed' && !order.scheduledTo ? (
             <View style={{ width: '48%' }}>
               <Text style={{ ...texts.xs }} numberOfLines={2}>
-                {t('Esse restaurante está aceitando pedidos agendados')}
+                {t('Apenas pedidos agendados')}
               </Text>
             </View>
           ) : null}
@@ -102,12 +103,14 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
                   nextDay: 'dddd',
                   nextWeek: 'dddd',
                 })
-              )}, ${getETAWithMargin(order.scheduledTo)}`}
+              )}, ${getETAWithMargin(order.scheduledTo, margin)}`}
               selected
               onSelect={() => null}
             />
           ) : null}
-          {!order.scheduledTo && order.arrivals?.destination?.estimate ? (
+          {business.status === 'open' &&
+          !order.scheduledTo &&
+          order.arrivals?.destination?.estimate ? (
             <RectangularListItemText
               text={`Entrega: ${getETAWithMargin(order.arrivals?.destination?.estimate!)}`}
               selected

@@ -61,10 +61,11 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   const business = useObserveBusiness(order?.business?.id);
   const dispatch = useDispatch<AppDispatch>();
   // helpers
+  const margin = 60;
   const realTimeDelivery =
     business?.status === 'open' && business?.preparationModes?.includes('realtime');
   const daySchedules = business?.schedules ? scheduleFromDate(business.schedules, now) : [];
-  const nextDateSlots: Date[][] = getNextDateSlots(daySchedules, now, 60);
+  const nextDateSlots: Date[][] = getNextDateSlots(daySchedules, now, margin);
   // state
   const [selectedDay, setSelectedDay] = React.useState<Date[]>();
   const [selectedSlot, setSelectedSlot] = React.useState<Timestamp | null>(null);
@@ -205,7 +206,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                 }}
               >
                 <Text style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}>
-                  {getETAWithMargin(item)}
+                  {getETAWithMargin(item, margin)}
                 </Text>
                 <CheckField
                   checked={Boolean(selectedSlot) && Timestamp.fromDate(item).isEqual(selectedSlot!)}

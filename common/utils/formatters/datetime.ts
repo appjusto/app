@@ -20,8 +20,8 @@ export const formatDuration = (duration: number) => {
   return `${round(duration / 60, 0)} min`;
 };
 
-export const getETAWithMargin = (date: Date | FieldValue) =>
-  `${formatTime(date)} - ${formatTime(dayjs(dateInput(date)).add(30, 'minute').toDate())}`;
+export const getETAWithMargin = (date: Date | FieldValue, margin: number = 30) =>
+  `${formatTime(date)} - ${formatTime(dayjs(dateInput(date)).add(margin, 'minute').toDate())}`;
 
 export const formatHour = (value: string | undefined) => {
   let formatedNumber = '';
