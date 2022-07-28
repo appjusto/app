@@ -70,7 +70,10 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
                 selected={card.id === selectedPayment?.id && payMethod === 'credit_card'}
                 onSelectPayment={() => {
                   setSelectedPayment(card);
-                  navigation.navigate(returnScreen, { paymentMethodId: card.id });
+                  navigation.navigate(returnScreen, {
+                    paymentMethodId: card.id,
+                    payMethod: 'credit_card',
+                  });
                 }}
                 creditCard={card}
               />
