@@ -4,6 +4,8 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../../common/components/containers/PaddedView';
+import RoundedText from '../../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
@@ -25,6 +27,7 @@ interface Props {
   onPayWithPix: () => void;
   payMethod: PayableWith;
   orderId: string;
+  showWarning?: boolean;
 }
 
 export const OrderPayment = ({
@@ -39,6 +42,7 @@ export const OrderPayment = ({
   navigateToSelectPayment,
   payMethod,
   orderId,
+  showWarning,
 }: Props) => {
   // context
   const order = useObserveOrder(orderId);
@@ -74,7 +78,13 @@ export const OrderPayment = ({
             style={{ marginTop: halfPadding, paddingHorizontal: padding, marginBottom: padding }}
             onPress={navigateToAboutCharges}
           >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                width: '95%',
+              }}
+            >
               <Feather name="info" size={14} />
               <Text
                 style={{ ...texts.xs, marginLeft: halfPadding, textDecorationLine: 'underline' }}
@@ -105,6 +115,16 @@ export const OrderPayment = ({
         </View>
       ) : null}
       <View style={{ paddingHorizontal: padding, backgroundColor: colors.white }}>
+        {showWarning ? (
+          <PaddedView
+            half
+            style={{ backgroundColor: colors.darkYellow, borderRadius: halfPadding }}
+          >
+            <Text style={{ ...texts.sm }}>
+              {t('Você precisa agendar um horário antes de fazer o pedido')}
+            </Text>
+          </PaddedView>
+        ) : null}
         {!canPlaceOrder && !activityIndicator ? (
           <DefaultButton
             variant="secondary"
@@ -113,7 +133,7 @@ export const OrderPayment = ({
             onPress={navigateToCompleteProfile}
           />
         ) : null}
-        {canPlaceOrder && !selectedPaymentMethod ? (
+        {canPlaceOrder && !selectedPaymentMethod && payMethod !== 'pix' ? (
           <DefaultButton
             variant="secondary"
             title={t('Escolher forma de pagamento')}
@@ -129,6 +149,7 @@ export const OrderPayment = ({
             style={{ marginTop: padding, marginBottom: order.type === 'p2p' ? padding : undefined }}
             onPress={onSubmit}
             activityIndicator={activityIndicator}
+            disabled={!isSubmitEnabled}
           />
         ) : null}
         {canPlaceOrder && !activityIndicator && payableWithPix && payMethod !== 'pix' ? (
@@ -137,7 +158,10 @@ export const OrderPayment = ({
             title={t('Quero pagar com Pix')}
             style={{ marginTop: padding }}
             onPress={onPayWithPix}
-          />
+            disabled={!isSubmitEnabled}
+          >
+            <RoundedText backgroundColor={colors.yellow}>{t('Novo!')}</RoundedText>
+          </DefaultButton>
         ) : null}
       </View>
     </View>

@@ -8,7 +8,7 @@ import { RectangularListItemText } from '../../../../common/components/list item
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
 import { useContextBusiness } from '../../../../common/store/context/business';
 import { useContextActiveOrder } from '../../../../common/store/context/order';
-import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { colors, padding, screens, texts } from '../../../../common/styles';
 import { getETAWithMargin } from '../../../../common/utils/formatters/datetime';
 import { t } from '../../../../strings';
 
@@ -37,7 +37,6 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
   if (!business) return null; // shouldn't happen
   // if (!business.preparationModes?.includes('scheduled')) return null;
   if (!nextDateSlots) return null;
-
   const scheduleUI = () => {
     if (!business.preparationModes?.includes('scheduled')) {
       if (order.arrivals?.destination?.estimate) {
@@ -52,32 +51,6 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
       }
       return null;
     }
-    // if (business.status === 'closed') {
-    //   return (
-    //     <View
-    //       style={{
-    //         flexDirection: 'row',
-    //         justifyContent: 'space-between',
-    //         alignItems: 'center',
-    //         width: '100%',
-    //       }}
-    //     >
-    // <View style={{ width: '48%' }}>
-    //   <Text style={{ ...texts.xs }} numberOfLines={2}>
-    //     {t('Esse restaurante está aceitando pedidos agendados')}
-    //   </Text>
-    // </View>
-    //       <View style={{ width: '48%' }}>
-    //         <RectangularListItemText
-    //           text={t('Agendar horário')}
-    //           selected={false}
-    //           onSelect={onCheckSchedules!}
-    //         />
-    //       </View>
-    //     </View>
-    //   );
-    // }
-    // if (business.status === 'open') {
     return (
       <View
         style={{
@@ -86,11 +59,11 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
           alignItems: 'center',
         }}
       >
-        <View style={{ marginRight: halfPadding }}>
+        <View>
           {business.status === 'closed' && !order.scheduledTo ? (
-            <View style={{ width: '48%' }}>
-              <Text style={{ ...texts.xs }} numberOfLines={2}>
-                {t('Esse restaurante está aceitando pedidos agendados')}
+            <View>
+              <Text style={{ ...texts.sm, flexWrap: 'wrap' }} numberOfLines={3}>
+                {t('Somente agendamento')}
               </Text>
             </View>
           ) : null}
@@ -107,7 +80,9 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
               onSelect={() => null}
             />
           ) : null}
-          {!order.scheduledTo && order.arrivals?.destination?.estimate ? (
+          {!order.scheduledTo &&
+          business.status === 'open' &&
+          order.arrivals?.destination?.estimate ? (
             <RectangularListItemText
               text={`Entrega: ${getETAWithMargin(order.arrivals?.destination?.estimate!)}`}
               selected
@@ -115,15 +90,15 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
             />
           ) : null}
         </View>
-
-        <RectangularListItemText
-          text={t('Agendar horário')}
-          selected={false}
-          onSelect={onCheckSchedules!}
-        />
+        <View>
+          <RectangularListItemText
+            text={t('Agendar horário')}
+            selected={false}
+            onSelect={onCheckSchedules!}
+          />
+        </View>
       </View>
     );
-    // }
   };
 
   return (
@@ -142,7 +117,6 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
           marginBottom: padding,
         }}
       />
-
       {scheduleUI()}
     </View>
   );

@@ -82,8 +82,13 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [payMethod, setPayMethod] = React.useState<PayableWith>(
     consumer.paymentChannel?.mostRecentPaymentMethod ?? 'credit_card'
   );
+  const canScheduleOrder =
+    business?.status === 'closed' &&
+    !isEmpty(business.preparationModes) &&
+    business.preparationModes!.includes('scheduled') &&
+    !isEmpty(order?.scheduledTo);
   const canSubmit =
-    (business?.status === 'open' || !isEmpty(order?.scheduledTo)) &&
+    (business?.status === 'open' || canScheduleOrder) &&
     (payMethod !== 'credit_card' || selectedPaymentMethodId !== undefined) &&
     selectedFare !== undefined &&
     !isLoading &&
@@ -397,6 +402,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             onPayWithPix={() => {
               setPayMethod('pix');
             }}
+            showWarning={!canScheduleOrder}
           />
         }
       />

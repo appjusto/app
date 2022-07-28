@@ -92,7 +92,7 @@ export default function ({ navigation }: Props) {
             }}
           />
           {!consumer ? (
-            <TouchableOpacity onPress={navigateToWelcomeScreen} style={{ marginBottom: padding }}>
+            <TouchableOpacity onPress={navigateToWelcomeScreen}>
               <HomeCard
                 icon={<IconLogin />}
                 title={t('Crie uma conta ou faça o login')}
