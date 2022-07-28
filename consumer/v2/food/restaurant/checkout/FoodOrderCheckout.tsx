@@ -302,7 +302,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  console.log(business?.acceptedPaymentMethods);
   return (
     <KeyboardAwareScrollView
       style={{ ...screens.default }}
