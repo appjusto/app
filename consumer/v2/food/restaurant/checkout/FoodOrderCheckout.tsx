@@ -302,6 +302,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       </View>
     );
   }
+  console.log(business?.acceptedPaymentMethods);
   return (
     <KeyboardAwareScrollView
       style={{ ...screens.default }}
@@ -402,7 +403,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             onPayWithPix={() => {
               setPayMethod('pix');
             }}
-            showWarning={!canScheduleOrder}
+            showWarning={!canScheduleOrder && business?.status !== 'open'}
           />
         }
       />
