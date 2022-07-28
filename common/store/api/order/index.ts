@@ -111,6 +111,7 @@ export default class OrderApi {
       type: 'p2p',
       status: 'quote',
       fulfillment: 'delivery',
+      paymentMethod: 'credit_card',
       dispatchingStatus: 'idle',
       dispatchingState: null,
       consumer: {

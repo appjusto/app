@@ -28,7 +28,7 @@ export const sectionsFromResults = (
   if (open.length > 0) {
     sections = [
       {
-        title: t('Restaurantes abertos agora'),
+        title: t('Restaurantes disponíveis'),
         subtitle: t('Valor justo para restaurantes e entregadores/as'),
         data: open,
       },
