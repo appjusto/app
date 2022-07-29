@@ -34,7 +34,12 @@ export default ({ text, checked = false, style, onPress, variant = 'square' }: P
         >
           {checked && (
             <View
-              style={{ backgroundColor: colors.green500, borderRadius: 4, width: 16, height: 16 }}
+              style={{
+                backgroundColor: colors.green500,
+                borderRadius: variant === 'square' ? 4 : 12,
+                width: 16,
+                height: 16,
+              }}
             />
           )}
         </View>
