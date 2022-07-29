@@ -58,19 +58,22 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   const order = useContextActiveOrder();
   const api = React.useContext(ApiContext);
   const now = getServerTime();
+  // const now = new Date('2022-07-29T20:00:00');
   const business = useObserveBusiness(order?.business?.id);
   const dispatch = useDispatch<AppDispatch>();
-  // helpers
-  const margin = 60;
-  const realTimeDelivery =
-    business?.status === 'open' && business?.preparationModes?.includes('realtime');
-  const daySchedules = business?.schedules ? scheduleFromDate(business.schedules, now) : [];
-  const nextDateSlots: Date[][] = getNextDateSlots(daySchedules, now, margin);
+
   // state
   const [selectedDay, setSelectedDay] = React.useState<Date[]>();
   const [selectedSlot, setSelectedSlot] = React.useState<Timestamp | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [prepMode, setPrepMode] = React.useState<PreparationMode | undefined>();
+
+  // helpers
+  const margin = 60;
+  const daySchedules = business?.schedules ? scheduleFromDate(business.schedules, now) : [];
+  const nextDateSlots: Date[][] = getNextDateSlots(daySchedules, now, margin);
+  const realTimeDelivery =
+    business?.status === 'open' && business?.preparationModes?.includes('realtime');
 
   //side effects
   // loading the first Date[] with slots as selectedDay
@@ -82,7 +85,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
     if (business && order) {
       const firsDayWithSlots = nextDateSlots?.find((slot) => slot.length > 0);
       if (firsDayWithSlots?.length) setSelectedDay(firsDayWithSlots);
-      else setSelectedDay([]);
+      else setSelectedDay(nextDateSlots[0]);
       if (order?.scheduledTo) {
         const dayScheduled = nextDateSlots.find(
           (slot) => slot[0].getDate() === (order.scheduledTo as Timestamp).toDate().getDate()
@@ -122,7 +125,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
       <View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {nextDateSlots.map((day, i) => {
-            return (
+            return day.length ? (
               <View style={{ marginRight: padding }} key={i}>
                 <DayBoxListItem
                   weekDay={
@@ -145,7 +148,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                   onSelect={() => setSelectedDay(day)}
                 />
               </View>
-            );
+            ) : null;
           })}
         </ScrollView>
       </View>
@@ -194,7 +197,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                 </View>
               ) : null}
               {Boolean(selectedDay) && selectedDay?.length ? (
-                <Text style={{ ...texts.md, marginBottom: padding }}>{t('Agendamento')}</Text>
+                <Text style={{ ...texts.md, marginBottom: padding }}>{t('Agendar')}</Text>
               ) : null}
             </View>
           }
