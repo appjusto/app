@@ -2,7 +2,7 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { defaultScreenOptions } from '../../../../common/screens/options';
@@ -52,7 +52,11 @@ export default function ({ navigation, route }: Props) {
         name="DeliveryHistory"
         options={{ title: 'Suas corridas' }}
         children={() => (
-          <View style={[screens.config]}>
+          <ScrollView
+            style={[screens.config]}
+            contentContainerStyle={{ flexGrow: 1 }}
+            scrollIndicatorInsets={{ right: 1 }}
+          >
             <View>
               <PaddedView>
                 {/* available for withdraw */}
@@ -190,7 +194,7 @@ export default function ({ navigation, route }: Props) {
                 </PaddedView>
               </PaddedView>
             </View>
-          </View>
+          </ScrollView>
         )}
       />
     </Stack.Navigator>

@@ -8,7 +8,7 @@ import {
   View,
   ViewProps,
 } from 'react-native';
-import { borders, colors, padding, texts } from '../../styles';
+import { borders, colors, halfPadding, padding, texts } from '../../styles';
 
 export interface DefaultButtonProps extends TouchableOpacityProps, ViewProps {
   title: string;
@@ -75,7 +75,7 @@ export default function ({
         ]}
       >
         {!activityIndicator && (
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: halfPadding }}>
             <Text style={{ ...texts.sm, color }}>{title}</Text>
             {icon}
           </View>
