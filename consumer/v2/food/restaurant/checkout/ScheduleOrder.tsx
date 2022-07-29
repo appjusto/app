@@ -177,6 +177,11 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                       <CheckField
                         checked={selectedSlot === null && prepMode === 'realtime'}
                         variant="circle"
+                        onPress={() => {
+                          setSelectedSlot(null);
+                          setPrepMode('realtime');
+                          setSelectedDay(nextDateSlots[0]);
+                        }}
                       />
                     </View>
                   </TouchableWithoutFeedback>
