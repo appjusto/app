@@ -3,7 +3,7 @@ import { PreparationMode } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Timestamp } from 'firebase/firestore';
-import { capitalize } from 'lodash';
+import { capitalize, isEqual } from 'lodash';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -124,31 +124,26 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
     <View style={{ ...screens.default, padding }}>
       <View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {nextDateSlots.map((day, i) => {
-            return day.length ? (
+          {nextDateSlots.map((dates, i) => {
+            const day = dates.find(() => true);
+            if (!day) return null;
+            const chosenDay = selectedDay.find(() => true);
+            return (
               <View style={{ marginRight: padding }} key={i}>
                 <DayBoxListItem
-                  weekDay={
-                    day.length
-                      ? capitalize(
-                          Dayjs(day[0]).calendar(now, {
-                            sameDay: '[hoje]',
-                            nextDay: 'dddd'.slice(0, 3),
-                            nextWeek: 'dddd'.slice(0, 3),
-                          })
-                        )
-                      : ''
-                  }
-                  day={day.length ? day[0].getDate().toString() : ''}
-                  selected={
-                    Boolean(day) &&
-                    Boolean(selectedDay) &&
-                    day.toString() === selectedDay?.toString()
-                  }
-                  onSelect={() => setSelectedDay(day)}
+                  weekDay={capitalize(
+                    Dayjs(day).calendar(now, {
+                      sameDay: '[hoje]',
+                      nextDay: 'ddd',
+                      nextWeek: 'ddd',
+                    })
+                  )}
+                  day={day.getDate().toString()}
+                  selected={isEqual(day, chosenDay)}
+                  onSelect={() => setSelectedDay(dates)}
                 />
               </View>
-            ) : null;
+            );
           })}
         </ScrollView>
       </View>
@@ -156,51 +151,55 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
         <FlatList
           showsVerticalScrollIndicator={false}
           style={{ marginTop: 24 }}
-          ListHeaderComponent={
-            <View>
-              {realTimeDelivery ? (
-                <View style={{ marginBottom: doublePadding }}>
-                  <Text style={{ ...texts.md }}>{t('Entregar hoje')}</Text>
-                  <TouchableWithoutFeedback
-                    onPress={() => {
-                      setSelectedSlot(null);
-                      setPrepMode('realtime');
-                      setSelectedDay(nextDateSlots[0]);
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        marginTop: halfPadding,
+          ListHeaderComponent={() => {
+            const chosenDay = selectedDay.find(() => true);
+            if (now.getDate() !== chosenDay?.getDate()) return null;
+            return (
+              <View>
+                {realTimeDelivery ? (
+                  <View style={{ marginBottom: doublePadding }}>
+                    <Text style={{ ...texts.md }}>{t('Entregar hoje')}</Text>
+                    <TouchableWithoutFeedback
+                      onPress={() => {
+                        setSelectedSlot(null);
+                        setPrepMode('realtime');
+                        setSelectedDay(nextDateSlots[0]);
                       }}
                     >
-                      {order.arrivals?.destination?.estimate ? (
-                        <Text
-                          style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}
-                        >
-                          {getETAWithMargin(order.arrivals.destination.estimate)}
-                        </Text>
-                      ) : null}
-                      <CheckField
-                        checked={selectedSlot === null && prepMode === 'realtime'}
-                        variant="circle"
-                        onPress={() => {
-                          setSelectedSlot(null);
-                          setPrepMode('realtime');
-                          setSelectedDay(nextDateSlots[0]);
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          marginTop: halfPadding,
                         }}
-                      />
-                    </View>
-                  </TouchableWithoutFeedback>
-                </View>
-              ) : null}
-              {Boolean(selectedDay) && selectedDay?.length ? (
-                <Text style={{ ...texts.md, marginBottom: padding }}>{t('Agendar')}</Text>
-              ) : null}
-            </View>
-          }
+                      >
+                        {order.arrivals?.destination?.estimate ? (
+                          <Text
+                            style={{ ...texts.sm, color: colors.grey700, marginTop: halfPadding }}
+                          >
+                            {getETAWithMargin(order.arrivals.destination.estimate)}
+                          </Text>
+                        ) : null}
+                        <CheckField
+                          checked={selectedSlot === null && prepMode === 'realtime'}
+                          variant="circle"
+                          onPress={() => {
+                            setSelectedSlot(null);
+                            setPrepMode('realtime');
+                            setSelectedDay(nextDateSlots[0]);
+                          }}
+                        />
+                      </View>
+                    </TouchableWithoutFeedback>
+                  </View>
+                ) : null}
+                {Boolean(selectedDay) && selectedDay?.length ? (
+                  <Text style={{ ...texts.md, marginBottom: padding }}>{t('Agendar')}</Text>
+                ) : null}
+              </View>
+            );
+          }}
           data={selectedDay}
           keyExtractor={(item) => item.toString()}
           renderItem={({ item, index }) => (
