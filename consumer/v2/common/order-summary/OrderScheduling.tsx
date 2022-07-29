@@ -61,8 +61,9 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
         }}
       >
         <View>
-          {(business.status === 'closed' && !order.scheduledTo) ||
-          !business.preparationModes?.includes('realtime') ? (
+          {business.status === 'closed' &&
+          !business.preparationModes?.includes('realtime') &&
+          !order.scheduledTo ? (
             <View>
               <Text style={{ ...texts.sm, flexWrap: 'wrap' }} numberOfLines={3}>
                 {t('Somente agendamento')}
