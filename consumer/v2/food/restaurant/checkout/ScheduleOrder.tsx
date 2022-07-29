@@ -81,21 +81,23 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   React.useEffect(() => {
     if (business && order) {
       const firsDayWithSlots = nextDateSlots?.find((slot) => slot.length > 0);
-      setSelectedDay(firsDayWithSlots);
+      if (firsDayWithSlots?.length) setSelectedDay(firsDayWithSlots);
+      else setSelectedDay([]);
       if (order?.scheduledTo) {
         const dayScheduled = nextDateSlots.find(
           (slot) => slot[0].getDate() === (order.scheduledTo as Timestamp).toDate().getDate()
         );
         setPrepMode('scheduled');
-        setSelectedDay(dayScheduled);
         setSelectedSlot(order.scheduledTo as Timestamp);
+        if (dayScheduled?.length) setSelectedDay(dayScheduled);
+        else setSelectedDay([]);
       } else setPrepMode(realTimeDelivery ? 'realtime' : undefined);
     }
   }, [business?.id, order?.id]);
 
   // UI
   if (!order) return null; // shouldn't happen
-  if (!business) {
+  if (!business || selectedDay === undefined) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -123,14 +125,18 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
             return (
               <View style={{ marginRight: padding }} key={i}>
                 <DayBoxListItem
-                  weekDay={capitalize(
-                    Dayjs(day[0]).calendar(now, {
-                      sameDay: '[hoje]',
-                      nextDay: 'dddd'.slice(0, 3),
-                      nextWeek: 'dddd'.slice(0, 3),
-                    })
-                  )}
-                  day={day[0].getDate().toString()}
+                  weekDay={
+                    day.length
+                      ? capitalize(
+                          Dayjs(day[0]).calendar(now, {
+                            sameDay: '[hoje]',
+                            nextDay: 'dddd'.slice(0, 3),
+                            nextWeek: 'dddd'.slice(0, 3),
+                          })
+                        )
+                      : ''
+                  }
+                  day={day.length ? day[0].getDate().toString() : ''}
                   selected={
                     Boolean(day) &&
                     Boolean(selectedDay) &&
