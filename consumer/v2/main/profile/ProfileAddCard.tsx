@@ -108,7 +108,15 @@ export default function ({ navigation, route }: Props) {
       );
       setLoading(false);
       if (returnScreen) {
-        navigation.navigate(returnScreen, { paymentMethodId: result.paymentMethodId });
+        if (returnScreen === 'FoodOrderCheckout') {
+          navigation.navigate(returnScreen, {
+            paymentMethodId: result.paymentMethodId,
+            payMethod: 'credit_card',
+          });
+        } else
+          navigation.navigate(returnScreen, {
+            paymentMethodId: result.paymentMethodId,
+          });
       } else navigation.pop();
     } catch (error: any) {
       setLoading(false);
@@ -247,7 +255,7 @@ export default function ({ navigation, route }: Props) {
           </View>
           <Text style={{ ...texts.xs }}>
             {t(
-              'Para sermos mais justos, o AppJusto cobra o valor total do pedido divido em duas cobranças no cartão. Por exemplo, se o valor total do seu pedido é de R$ 30, vamos gerar duas cobranças que somadas custarão R$ 30.'
+              'Para sermos mais justos, o AppJusto cobra o valor total do pedido dividido em duas cobranças no cartão. Por exemplo, se o valor total do seu pedido é de R$ 30, vamos gerar duas cobranças que somadas custarão R$ 30.'
             )}
           </Text>
           <Text style={{ ...texts.xs, marginTop: padding }}>

@@ -18,7 +18,6 @@ import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
-import { getOrders } from '../../../../common/store/order/selectors';
 import { padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { LoggedNavigatorParamList } from '../../types';
@@ -36,7 +35,6 @@ type Props = {
 export default function ({ navigation }: Props) {
   // redux store
   const consumer = useSelector(getConsumer);
-  const ongoingOrders = useSelector(getOrders);
   // side effects
   useUpdateLocation();
   useNotificationToken();
@@ -67,7 +65,6 @@ export default function ({ navigation }: Props) {
         />
         <PaddedView>
           <HomeOngoingDeliveries
-            orders={ongoingOrders}
             onPress={(order, chatFrom) => {
               if (order.status === 'declined') {
                 navigation.navigate('OngoingOrderNavigator', {
@@ -75,6 +72,13 @@ export default function ({ navigation }: Props) {
                   params: {
                     orderId: order.id,
                   },
+                });
+              }
+              // only 'confirming' status?
+              if (order.paymentMethod === 'pix' && order.status === 'confirming') {
+                navigation.navigate('OngoingOrderNavigator', {
+                  screen: 'OngoingOrderConfirming',
+                  params: { orderId: order.id },
                 });
               } else {
                 navigation.navigate('OngoingOrderNavigator', {
@@ -88,7 +92,7 @@ export default function ({ navigation }: Props) {
             }}
           />
           {!consumer ? (
-            <TouchableOpacity onPress={navigateToWelcomeScreen} style={{ marginBottom: padding }}>
+            <TouchableOpacity onPress={navigateToWelcomeScreen}>
               <HomeCard
                 icon={<IconLogin />}
                 title={t('Crie uma conta ou faça o login')}

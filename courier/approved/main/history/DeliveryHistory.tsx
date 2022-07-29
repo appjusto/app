@@ -1,32 +1,19 @@
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Image, SectionList, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
-import * as icons from '../../../../assets/icons';
+import { ActivityIndicator, Text, View } from 'react-native';
+import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import RoundedText from '../../../../common/components/texts/RoundedText';
-import ConfigItem from '../../../../common/components/views/ConfigItem';
-import FeedbackView from '../../../../common/components/views/FeedbackView';
-import ShowIf from '../../../../common/components/views/ShowIf';
-import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
 import { defaultScreenOptions } from '../../../../common/screens/options';
-import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
+import { useMarketplaceAccountInfo } from '../../../../common/store/api/courier/account/useMarketplaceAccountInfo';
+import { useCourierRecentOrdersRevenue } from '../../../../common/store/api/order/courier/useCourierRecentOrdersRevenue';
 import { useSegmentScreen } from '../../../../common/store/api/track';
-import {
-  getMonthsWithOrdersInYear,
-  getOrdersWithFilter,
-  getOrderTime,
-  getYearsWithOrders,
-  summarizeOrders,
-} from '../../../../common/store/order/selectors';
-import { getUser } from '../../../../common/store/user/selectors';
-import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
-import { formatCurrency, getMonthName } from '../../../../common/utils/formatters';
+import { borders, colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
-import { MarketplaceAccountInfo } from './MarketplaceAccountInfo';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<MainParamList, 'DeliveryHistory'>,
@@ -39,114 +26,170 @@ type Props = {
   route: ScreenRoute;
 };
 
+export const convertBalance = (value: string) =>
+  parseFloat(value.replace(',', '.').replace(/[^0-9.]/g, ''));
+
 const Stack = createStackNavigator();
 export default function ({ navigation, route }: Props) {
-  // app state
-  const user = useSelector(getUser);
-  // screen state
-  const options = React.useMemo(() => ({ courierId: user?.uid }), [user?.uid]);
-  const orders = useObserveOrders(options);
-  const yearsWithOrders = getYearsWithOrders(orders ?? []);
-  const monthsWithOrdersInYears = getMonthsWithOrdersInYear(orders ?? []);
-  const sections = React.useMemo(() => {
-    // [ { title: '2020', data: [ { monthName: 'Agosto', deliveries: 3, courierFee: 100 }] }]
-    if (orders) {
-      return yearsWithOrders.map((year) => {
-        const monthsInYear = monthsWithOrdersInYears(year);
-
-        return {
-          title: String(year),
-          data: monthsInYear.map((month) => ({
-            key: `${year}-${month}`,
-            year,
-            month,
-            ...summarizeOrders(
-              getOrdersWithFilter(orders, year, month).filter(
-                (order) => getOrderTime(order).getMonth() === month
-              )
-            ),
-          })),
-        };
-      });
-    }
-  }, [yearsWithOrders, monthsWithOrdersInYears, orders]);
+  // state
+  const info = useMarketplaceAccountInfo();
+  const revenue = useCourierRecentOrdersRevenue();
   // tracking
   useSegmentScreen('DeliveryHistory');
   // UI
-  if (orders === undefined) {
+  if (!info || !revenue) {
     return (
-      <View style={{ ...screens.centered, backgroundColor: colors.grey50 }}>
+      <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
-  if (sections?.length === 0) {
-    return (
-      <FeedbackView
-        header={t('Seu histórico está vazio')}
-        description={t('Você ainda não fez nenhuma corrida')}
-        icon={<IconMotocycle />}
-        background={colors.grey50}
-      />
-    );
-  }
-
+  const availableForWithdraw = convertBalance(info.balance_available_for_withdraw);
+  const minimum = 5;
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen
         name="DeliveryHistory"
         options={{ title: 'Suas corridas' }}
         children={() => (
-          <View style={{ ...screens.config }}>
-            <SectionList
-              style={{ flex: 1 }}
-              sections={sections!}
-              keyExtractor={(item) => item.key}
-              renderSectionHeader={({ section }) => (
+          <View style={[screens.config]}>
+            <View>
+              <PaddedView>
+                {/* available for withdraw */}
                 <PaddedView
                   style={{
-                    flexDirection: 'row',
-                    borderBottomColor: colors.grey500,
-                    borderBottomWidth: 1,
+                    marginTop: halfPadding,
+                    ...borders.default,
+                    borderColor: colors.white,
+                    backgroundColor: colors.white,
                   }}
                 >
-                  <Image source={icons.calendar} />
-                  <Text style={{ ...texts.md, marginLeft: padding }}>{section.title}</Text>
+                  <View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <Ionicons name="checkmark-circle-outline" size={20} color={colors.black} />
+                      <Text
+                        style={{
+                          ...texts.sm,
+                          marginLeft: halfPadding,
+                          paddingBottom: 2,
+                        }}
+                      >
+                        {t('Disponível para saque')}
+                      </Text>
+                    </View>
+
+                    <Text style={{ ...texts.x4l }}>{info.balance_available_for_withdraw}</Text>
+
+                    <DefaultButton
+                      style={{ marginTop: padding }}
+                      title={t('Transferir para conta')}
+                      disabled={availableForWithdraw < minimum}
+                      onPress={() =>
+                        navigation.navigate('DeliveriesNavigator', {
+                          screen: 'Withdraws',
+                          params: {
+                            info,
+                          },
+                        })
+                      }
+                    />
+                    <Text
+                      style={{
+                        ...texts.xs,
+                        color: colors.grey700,
+                        paddingTop: halfPadding,
+                        textAlign: 'center',
+                      }}
+                    >
+                      {t('Valor mínimo de R$ 5,00 para transferência')}
+                    </Text>
+                  </View>
                 </PaddedView>
-              )}
-              renderItem={({ item }) => {
-                const title = getMonthName(item.month);
-                const subtitle = item.delivered + t(' corridas finalizadas');
-                if (item.total === 0) return null;
-                return (
-                  <ConfigItem
-                    title={title}
-                    subtitle={subtitle}
-                    description={t('Total recebido: ') + formatCurrency(item.courierFee)}
-                    onPress={() =>
-                      navigation.navigate('DeliveriesNavigator', {
-                        screen: 'DeliveryHistoryByMonth',
-                        params: {
-                          year: item.year,
-                          month: item.month,
-                        },
-                      })
-                    }
-                  >
-                    <ShowIf test={item.ongoing > 0}>
-                      {() => (
-                        <View style={{ marginTop: halfPadding }}>
-                          <RoundedText backgroundColor={colors.yellow}>
-                            {t('Corrida em andamento')}
-                          </RoundedText>
-                        </View>
-                      )}
-                    </ShowIf>
-                  </ConfigItem>
-                );
-              }}
-              ListHeaderComponent={<MarketplaceAccountInfo />}
-            />
+                {/* advance */}
+                <PaddedView
+                  style={{
+                    ...borders.default,
+                    borderColor: colors.white,
+                    backgroundColor: colors.white,
+                    marginTop: padding,
+                  }}
+                >
+                  <View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <MaterialIcons name="timer" size={20} color={colors.grey700} />
+                      <Text
+                        style={{
+                          ...texts.sm,
+                          color: colors.grey700,
+                          marginLeft: halfPadding,
+                          paddingBottom: 2,
+                        }}
+                      >
+                        {t('Em faturamento')}
+                      </Text>
+                    </View>
+
+                    <Text style={{ ...texts.x4l }}>{info.receivable_balance}</Text>
+
+                    <DefaultButton
+                      style={{ marginTop: padding }}
+                      title={t('Antecipar valores')}
+                      onPress={() =>
+                        navigation.navigate('DeliveriesNavigator', {
+                          screen: 'Receivables',
+                          params: {
+                            receivableBalance: info!.receivable_balance,
+                          },
+                        })
+                      }
+                      variant="secondary"
+                    />
+                  </View>
+                </PaddedView>
+                {/* week summary */}
+                <PaddedView
+                  style={{
+                    ...borders.default,
+                    borderColor: colors.white,
+                    backgroundColor: colors.white,
+                    marginTop: padding,
+                  }}
+                >
+                  <View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <MaterialIcons
+                        name="account-balance-wallet"
+                        size={20}
+                        color={colors.grey700}
+                      />
+                      <Text
+                        style={{
+                          ...texts.sm,
+                          color: colors.grey700,
+                          marginLeft: halfPadding,
+                          paddingBottom: 2,
+                        }}
+                      >
+                        {t('Resumo da semana')}
+                      </Text>
+                    </View>
+
+                    <Text style={{ ...texts.x4l }}>{formatCurrency(revenue.week)}</Text>
+
+                    <DefaultButton
+                      style={{ marginTop: padding }}
+                      title={t('Ver corridas da semana')}
+                      onPress={() =>
+                        navigation.navigate('DeliveriesNavigator', {
+                          screen: 'DeliveryHistoryByWeek',
+                        })
+                      }
+                      variant="secondary"
+                    />
+                  </View>
+                </PaddedView>
+              </PaddedView>
+            </View>
           </View>
         )}
       />

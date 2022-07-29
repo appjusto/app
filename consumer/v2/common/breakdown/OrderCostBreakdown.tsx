@@ -26,35 +26,54 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems }: Props) =>
           {t('Somos transparentes do início ao fim da entrega')}
         </Text>
         <View style={{ marginTop: padding }}>
-          {!isEmpty(order.items) && !hideItems ? (
+          {flavor === 'consumer' && !isEmpty(order.items) && !hideItems ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ ...texts.sm }}>{t('Itens do pedido')}</Text>
               <Text style={{ ...texts.sm }}>{formatCurrency(getOrderTotal(order))}</Text>
             </View>
           ) : null}
-          {selectedFare?.platform?.value ? (
+          {flavor === 'consumer' && selectedFare?.platform?.value ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ ...texts.sm }}>{t('AppJusto')}</Text>
               <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.platform.value)}</Text>
             </View>
           ) : null}
-          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ ...texts.sm }}>{t('Entrega')}</Text>
-            <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare?.courier?.value ?? 0)}</Text>
-          </View>
-          {order.tip?.value ? (
+          {selectedFare?.courier?.value ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ ...texts.sm }}>{t('Caixinha entregador/a')}</Text>
-              <Text style={{ ...texts.sm }}>{formatCurrency(order.tip!.value)}</Text>
+              <Text style={{ ...texts.sm }}>{t('Entrega')}</Text>
+              <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.courier.value)}</Text>
             </View>
           ) : null}
-          {flavor === 'courier' ? (
+          {selectedFare?.courier?.processingFee && flavor === 'courier' ? (
             <View>
               <View style={{ flex: 1, flexDirection: 'row' }}>
                 <Text style={{ ...texts.sm, color: colors.red }}>{t('Taxa Iugu *')}</Text>
                 <View style={{ flex: 1 }} />
-                <Text style={{ ...texts.sm, color: colors.red }}>-2.42%</Text>
+                <Text style={{ ...texts.sm, color: colors.red }}>
+                  {formatCurrency(selectedFare.courier.processingFee)}
+                </Text>
               </View>
+            </View>
+          ) : null}
+          {order.tip?.value ? (
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ ...texts.sm }}>{t('Caixinha')}</Text>
+              <Text style={{ ...texts.sm }}>{formatCurrency(order.tip.value)}</Text>
+            </View>
+          ) : null}
+          {order.tip?.processingFee && flavor === 'courier' ? (
+            <View>
+              <View style={{ flex: 1, flexDirection: 'row' }}>
+                <Text style={{ ...texts.sm, color: colors.red }}>{t('Taxa Iugu *')}</Text>
+                <View style={{ flex: 1 }} />
+                <Text style={{ ...texts.sm, color: colors.red }}>
+                  {formatCurrency(order.tip.processingFee)}
+                </Text>
+              </View>
+            </View>
+          ) : null}
+          {flavor === 'courier' ? (
+            <View>
               <Text style={{ ...texts.xs, color: colors.red, marginTop: padding }}>
                 {t(
                   '* Essa taxa é descontada do valor de cada corrida aceita para efetuar a transação bancária na sua conta. Nada desse valor fica para o AppJusto.'

@@ -21,6 +21,8 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance, secondar
   const outOfRange = (restaurant.deliveryRange ?? 0) < (distance ?? 0);
   // helpers
   const discount = `-${restaurant.averageDiscount}%`;
+  const onlyScheduledOrders =
+    restaurant.status === 'closed' && restaurant.preparationModes?.includes('scheduled');
   return (
     <View style={{ justifyContent: 'center' }}>
       <View
@@ -56,9 +58,18 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance, secondar
             {t(cuisine ?? '')}
           </Text>
           {distance ? (
-            <Text style={{ ...texts.xs, color: secondary ? colors.green600 : colors.grey700 }}>
-              {formatDistance(distance)}
-            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{ ...texts.xs, color: secondary ? colors.green600 : colors.grey700 }}>
+                {formatDistance(distance)}
+              </Text>
+              {onlyScheduledOrders ? (
+                <View style={{ marginLeft: padding }}>
+                  <RoundedText backgroundColor={colors.green100} color={colors.black} noBorder>
+                    {t('Somente agendamento')}
+                  </RoundedText>
+                </View>
+              ) : null}
+            </View>
           ) : null}
           {distance && outOfRange ? (
             <View style={{ marginTop: halfPadding }}>

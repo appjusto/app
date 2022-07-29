@@ -8,13 +8,14 @@ import { t } from '../../../strings';
 import { OngoingOrderDeclined } from '../common/OngoingOrderDeclined';
 import ProfileAddCard from '../main/profile/ProfileAddCard';
 import ProfilePaymentMethods from '../main/profile/ProfilePaymentMethods';
+import { OrderConfirming } from './confirming/OrderConfirming';
+import { ScheduledOrderConfirmation } from './confirming/scheduled/ScheduledOrderConfirmation';
 import { OngoingOrderCourierDetail } from './courier-detail/OngoingOrderCourierDetail';
 import OngoingOrder from './OngoingOrder';
 import { OngoingOrderCancelOrder } from './OngoingOrderCancelOrder';
 import { OngoingOrderConfirmCancel } from './OngoingOrderConfirmCancel';
 import OngoingOrderFeedback from './OngoingOrderFeedback';
 import { OngoingOrderProblem } from './OngoingOrderProblem';
-import { OrderConfirming } from './OrderConfirming';
 import { OrderNoMatch } from './OrderNoMatch';
 import { OrderProblemFeedback } from './OrderProblemFeedback';
 import { OngoingOrderNavigatorParamList } from './types';
@@ -28,6 +29,11 @@ export const OngoingOrderNavigator = () => {
         name="OngoingOrderConfirming"
         component={OrderConfirming}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ScheduledOrderConfirmation"
+        component={ScheduledOrderConfirmation}
+        options={{ title: t('Pedido agendado') }}
       />
       <Stack.Screen
         name="OngoingOrderDeclined"

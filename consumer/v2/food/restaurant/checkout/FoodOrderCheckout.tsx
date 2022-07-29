@@ -1,4 +1,9 @@
-import { Fare } from '@appjusto/types';
+import {
+  Fare,
+  PayableWith,
+  PlaceOrderPayloadPaymentCreditCard,
+  PlaceOrderPayloadPaymentPix,
+} from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -10,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import { useModalToastContext } from '../../../../../common/contexts/ModalToastContext';
 import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
+import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
 import { useQuotes } from '../../../../../common/store/api/order/hooks/useQuotes';
 import { useProfileSummary } from '../../../../../common/store/api/profile/useProfileSummary';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
@@ -51,11 +57,13 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const order = useContextActiveOrder();
   const dispatch = useDispatch<AppDispatch>();
   const { showModalToast } = useModalToastContext();
+  const business = useObserveBusiness(order?.business?.id);
   // redux store
   const consumer = useSelector(getConsumer)!;
   // state
   const { shouldVerifyPhone } = useProfileSummary();
   const { coords } = useLastKnownLocation();
+  // for credit cards only
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
     consumer.paymentChannel?.mostRecentPaymentMethodId
   );
@@ -65,14 +73,23 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
   const [wantsCpf, setWantsCpf] = React.useState(false);
   const [shareDataWithBusiness, setShareDataWithBusiness] = React.useState(false);
-  const { quotes, getOrderQuotes } = useQuotes(order?.id);
+  const quotes = useQuotes(order?.id);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
   const [complement, setComplement] = React.useState<string>(
     order?.destination?.additionalInfo ?? ''
   );
   const [addressComplement, setAddressComplement] = React.useState<boolean>(complement.length > 0);
+  const [payMethod, setPayMethod] = React.useState<PayableWith>(
+    consumer.paymentChannel?.mostRecentPaymentMethod ?? 'credit_card'
+  );
+  const canScheduleOrder =
+    business?.status === 'closed' &&
+    !isEmpty(business.preparationModes) &&
+    business.preparationModes!.includes('scheduled') &&
+    !isEmpty(order?.scheduledTo);
   const canSubmit =
-    selectedPaymentMethodId !== undefined &&
+    (business?.status === 'open' || canScheduleOrder) &&
+    (payMethod !== 'credit_card' || selectedPaymentMethodId !== undefined) &&
     selectedFare !== undefined &&
     !isLoading &&
     isEmpty(order?.route?.issue);
@@ -83,7 +100,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     if (!quotes || isEmpty(quotes)) return;
     setSelectedFare(quotes[0]);
   }, [quotes]);
-  // whenever route changes when interacting with other screens
+  // whenever there is a change when interacting with other screens
   React.useEffect(() => {
     if (params?.destination) {
       if (
@@ -108,6 +125,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
     if (params?.paymentMethodId) {
       setSelectedPaymentMethodId(params?.paymentMethodId);
+      setPayMethod('credit_card');
       navigation.setParams({
         paymentMethodId: undefined,
       });
@@ -119,6 +137,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         returningFare: undefined,
       });
     }
+    // from SelectPaymentMethod
+    if (params?.payMethod) setPayMethod(params.payMethod);
     if (consumer.cpf) setCpf(consumer.cpf);
   }, [api, navigation, order, params, consumer.cpf]);
   // update consumer's name in his first order
@@ -148,7 +168,20 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     Keyboard.dismiss();
     if (!order) return;
     if (!selectedFare) return;
-    if (!selectedPaymentMethodId) return;
+    let paymentPayload;
+    if (payMethod === 'credit_card') {
+      if (!selectedPaymentMethodId) return;
+      paymentPayload = {
+        payableWith: 'credit_card',
+        paymentMethodId: selectedPaymentMethodId,
+      } as PlaceOrderPayloadPaymentCreditCard;
+    }
+    if (payMethod === 'pix') {
+      paymentPayload = {
+        payableWith: 'pix',
+        key: cpf, // remove this
+      } as PlaceOrderPayloadPaymentPix;
+    }
     if (!order.destination?.address) {
       dispatch(
         showToast(
@@ -215,18 +248,17 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           }),
         });
       }
-      await api.order().placeOrder(
-        order.id,
-        selectedFare!.fleet.id,
-        {
-          payableWith: 'credit_card',
-          paymentMethodId: selectedPaymentMethodId,
-        },
-        wantsCpf,
-        coords,
-        orderAdditionalInfo,
-        shareDataWithBusiness
-      );
+      await api
+        .order()
+        .placeOrder(
+          order.id,
+          selectedFare!.fleet.id,
+          paymentPayload,
+          wantsCpf,
+          coords,
+          orderAdditionalInfo,
+          shareDataWithBusiness
+        );
       track('consumer placed a food order');
       setDestinationModalVisible(false);
       setLoading(false);
@@ -240,6 +272,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       setLoading(false);
       Keyboard.dismiss();
       dispatch(showToast(error.toString(), 'error'));
+      showModalToast(error.toString(), 'error');
     }
   };
   // navigate to ProfileAddCard or ProfilePaymentMethods to add or select payment method
@@ -257,6 +290,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       navigation.navigate('ProfilePaymentMethods', { returnScreen: 'FoodOrderCheckout' });
     }
   }, [consumer, navigation, selectedPaymentMethodId]);
+
+  const navigateToCompleteProfile = () => {
+    navigation.navigate('CommonProfileEdit', { returnScreen: 'FoodOrderCheckout' });
+  };
   // UI
   if (!order) {
     return (
@@ -296,26 +333,28 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           setShareDataWithBusiness(!shareDataWithBusiness);
           track('consumer changed share data with business preferences');
         }}
-        availableFleets={
-          <OrderAvailableFleets
-            quotes={quotes}
-            selectedFare={selectedFare}
-            onFareSelect={(fare) => {
-              setSelectedFare(fare);
-            }}
-            onFleetSelect={(fleetId: string) => {
-              navigation.navigate('FleetDetail', { fleetId });
-            }}
-            onRetry={getOrderQuotes}
-            order={order}
-            navigateToAvailableFleets={() =>
-              navigation.navigate('AvailableFleets', {
-                orderId: order.id,
-                selectedFare: selectedFare!,
-                returnScreen: 'FoodOrderCheckout',
-              })
-            }
-          />
+        onCheckSchedules={() => navigation.navigate('ScheduleOrder')}
+        orderFulfillment={
+          <View>
+            <OrderAvailableFleets
+              order={order}
+              quotes={quotes}
+              selectedFare={selectedFare}
+              onFareSelect={(fare) => {
+                setSelectedFare(fare);
+              }}
+              onFleetSelect={(fleetId: string) => {
+                navigation.navigate('FleetDetail', { fleetId });
+              }}
+              navigateToAvailableFleets={() =>
+                navigation.navigate('AvailableFleets', {
+                  orderId: order.id,
+                  selectedFare: selectedFare!,
+                  returnScreen: 'FoodOrderCheckout',
+                })
+              }
+            />
+          </View>
         }
         costBreakdown={<OrderCostBreakdown order={order} selectedFare={selectedFare!} />}
         totalCost={
@@ -338,6 +377,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         }
         payment={
           <OrderPayment
+            orderId={order.id}
             selectedPaymentMethodId={selectedPaymentMethodId}
             isSubmitEnabled={canSubmit}
             activityIndicator={isLoading}
@@ -349,6 +389,20 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             navigateToAboutCharges={() => {
               navigation.navigate('AboutCharges');
             }}
+            navigateToCompleteProfile={navigateToCompleteProfile}
+            navigateToSelectPayment={() =>
+              navigation.navigate('SelectPaymentMethod', {
+                selectedPaymentMethodId,
+                payMethod,
+                returnScreen: 'FoodOrderCheckout',
+                orderId: order.id,
+              })
+            }
+            payMethod={payMethod}
+            onPayWithPix={() => {
+              setPayMethod('pix');
+            }}
+            showWarning={!canScheduleOrder && business?.status !== 'open'}
           />
         }
       />
@@ -372,7 +426,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         onChangeComplement={(text) => setComplement(text)}
         checked={!addressComplement}
         toggleAddressComplement={() => setAddressComplement(!addressComplement)}
-        disabled={isLoading || (addressComplement && complement.length === 0)}
+        disabled={!canSubmit || (addressComplement && complement.length === 0)}
       />
     </KeyboardAwareScrollView>
   );

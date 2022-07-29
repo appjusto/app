@@ -1,4 +1,4 @@
-import { Fare, Place } from '@appjusto/types';
+import { Fare, PayableWith, Place } from '@appjusto/types';
 import { FleetDetailParamList } from '../../../../common/screens/fleet/FleetDetail';
 import { PixParamList } from '../../common/PayWithPix';
 import { ProfileAddCardParamList } from '../../main/profile/ProfileAddCard';
@@ -17,6 +17,7 @@ export type RestaurantNavigatorParamList = {
     destination?: Place;
     paymentMethodId?: string;
     returningFare?: Fare;
+    payMethod?: PayableWith;
   };
   OrderDestination: {
     returnScreen: 'FoodOrderCheckout';
@@ -28,6 +29,13 @@ export type RestaurantNavigatorParamList = {
     orderId: string;
     selectedFare: Fare;
     returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
+  };
+  ScheduleOrder: undefined;
+  SelectPaymentMethod: {
+    selectedPaymentMethodId?: string;
+    payMethod?: PayableWith;
+    returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
+    orderId?: string;
   };
 } & PixParamList &
   FleetDetailParamList &

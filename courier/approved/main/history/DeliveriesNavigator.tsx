@@ -2,9 +2,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import Chat from '../../../../common/screens/Chat';
 import { defaultScreenOptions } from '../../../../common/screens/options';
-import { getMonthName } from '../../../../common/utils/formatters/datetime';
 import { t } from '../../../../strings';
-import DeliveryHistoryByMonth from './DeliveryHistoryByMonth';
+import { DeliveryHistoryByWeek } from './DeliveryHistoryByWeek';
 import DeliverySummary from './DeliverySummary';
 import { DeliveriesNavigatorParamList } from './types';
 import { AdvanceReceivables } from './withdraw/AdvanceReceivables';
@@ -17,11 +16,9 @@ export default function () {
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen
-        name="DeliveryHistoryByMonth"
-        component={DeliveryHistoryByMonth}
-        options={({ route }) => ({
-          title: `${t('Corridas em')} ${getMonthName(route.params.month)}`,
-        })}
+        name="DeliveryHistoryByWeek"
+        component={DeliveryHistoryByWeek}
+        options={{ title: t('Histórico') }}
       />
       <Stack.Screen
         name="DeliverySummary"

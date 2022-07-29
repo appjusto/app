@@ -1,3 +1,4 @@
+import { PayableWith } from '@appjusto/types';
 import { IuguCustomerPaymentMethod } from '@appjusto/types/payment/iugu';
 import { ProfileEditParamList } from '../../../../common/screens/profile/CommonProfileEdit';
 import { PhoneVerificationParamList } from '../../../../common/screens/profile/PhoneVerificationScreen';
@@ -13,6 +14,12 @@ export type ProfileParamList = {
   NotificationPreferences: undefined;
   AboutApp: undefined;
   RequestProfileEdit: undefined;
+  SelectPaymentMethod: {
+    selectedPaymentMethodId?: string;
+    payMethod?: PayableWith;
+    returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
+    orderId?: string;
+  };
 } & ProfileEraseParamList &
   ProfilePaymentMethodsParamList &
   ProfileAddCardParamList &

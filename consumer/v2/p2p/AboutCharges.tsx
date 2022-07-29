@@ -11,7 +11,12 @@ export const AboutCharges = () => {
   return (
     <PaddedView style={{ ...screens.config }}>
       <Text style={{ ...texts.x2l, marginBottom: 24 }}>
-        {t('O AppJusto divide o valor do pedido em duas cobranças no seu cartão')}
+        {t(
+          'O AppJusto divide o valor dos pedidos para entrega imediata em duas cobranças no seu cartão'
+        )}
+      </Text>
+      <Text style={{ ...texts.x2l, marginBottom: 24 }}>
+        {t('Nos pedidos pagos com Pix ou agendados será realizada apenas uma cobrança.')}
       </Text>
       <Text style={{ ...texts.sm, color: colors.grey700, marginBottom: 24 }}>
         {t(

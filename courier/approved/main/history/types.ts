@@ -2,10 +2,7 @@ import { FetchAccountInformationResponse } from '@appjusto/types';
 import { ChatParamList } from '../../../../common/screens/Chat';
 
 export type DeliveriesNavigatorParamList = {
-  DeliveryHistoryByMonth: {
-    year: number;
-    month: number;
-  };
+  DeliveryHistoryByWeek: undefined;
   DeliverySummary: {
     orderId: string;
   };

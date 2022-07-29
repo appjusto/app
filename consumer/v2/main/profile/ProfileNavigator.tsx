@@ -12,6 +12,7 @@ import PaymentMethodDetail from './PaymentMethodDetail';
 import ProfileAddCard from './ProfileAddCard';
 import ProfilePaymentMethods from './ProfilePaymentMethods';
 import { RequestProfileEdit } from './RequestProfileEdit';
+import { SelectPaymentMethod } from './SelectPaymentMethod';
 import { ProfileParamList } from './types';
 
 const Stack = createStackNavigator<ProfileParamList>();
@@ -35,6 +36,11 @@ export default function () {
         name="PhoneVerificationScreen"
         component={PhoneVerificationScreen}
         options={{ title: t('Verificação de telefone') }}
+      />
+      <Stack.Screen
+        name="SelectPaymentMethod"
+        component={SelectPaymentMethod}
+        options={{ title: t('Selecionar pagamento') }}
       />
       <Stack.Screen
         name="ProfilePaymentMethods"

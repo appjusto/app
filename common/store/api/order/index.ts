@@ -30,6 +30,7 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  Timestamp,
   Unsubscribe,
   updateDoc,
   where,
@@ -41,16 +42,25 @@ import { OrderCourierLocationLog } from '../../../../../types';
 import { getAppVersion } from '../../../utils/version';
 import { fetchPublicIP } from '../externals/ipify';
 import { documentAs, documentsAs } from '../types';
+import InvoiceApi from './invoices/InvoiceApi';
 import { ObserveOrdersOptions } from './types';
 
 export type QueryOrdering = 'asc' | 'desc';
 
 export default class OrderApi {
+  private _invoices: InvoiceApi;
+
   constructor(
     private firestoreRefs: FirestoreRefs,
     private functionsRef: FunctionsRef,
     private firestore: Firestore
-  ) {}
+  ) {
+    this._invoices = new InvoiceApi(this.firestoreRefs);
+  }
+
+  invoice() {
+    return this._invoices;
+  }
 
   // firestore
   // consumer
@@ -77,7 +87,6 @@ export default class OrderApi {
       status: 'quote',
       fulfillment: 'delivery',
       dispatchingStatus: 'idle',
-      // @ts-ignore
       dispatchingState: null,
       business: {
         id: business.id,
@@ -102,8 +111,8 @@ export default class OrderApi {
       type: 'p2p',
       status: 'quote',
       fulfillment: 'delivery',
+      paymentMethod: 'credit_card',
       dispatchingStatus: 'idle',
-      // @ts-ignore
       dispatchingState: null,
       consumer: {
         id: consumer.id,
@@ -136,12 +145,14 @@ export default class OrderApi {
     options: ObserveOrdersOptions,
     resultHandler: (orders: WithId<Order>[]) => void
   ): Unsubscribe {
-    const { consumerId, courierId, statuses, businessId, orderField } = options;
+    const { consumerId, courierId, statuses, businessId, orderField, from, to } = options;
     const constraints = [orderBy(orderField ?? 'createdOn', 'desc')];
     if (!isEmpty(statuses)) constraints.push(where('status', 'in', statuses));
     if (consumerId) constraints.push(where('consumer.id', '==', consumerId));
     if (courierId) constraints.push(where('courier.id', '==', courierId));
     if (businessId) constraints.push(where('business.id', '==', businessId));
+    if (from) constraints.push(where('createdOn', '>', Timestamp.fromDate(from)));
+    if (to) constraints.push(where('createdOn', '<', Timestamp.fromDate(to)));
     if (options.limit) constraints.push(limit(options.limit));
     return onSnapshot(
       query(this.firestoreRefs.getOrdersRef(), ...constraints),
@@ -321,10 +332,11 @@ export default class OrderApi {
 
   // callables
   // consumer
-  async getOrderQuotes(orderId: string) {
+  async getOrderQuotes(orderId: string, fleetsIds?: string[]) {
     return (
       await this.functionsRef.getGetOrderQuotesCallable()({
         orderId,
+        fleetsIds,
         meta: { version: getAppVersion() },
       })
     ).data;

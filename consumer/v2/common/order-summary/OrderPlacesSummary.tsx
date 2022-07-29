@@ -1,8 +1,9 @@
 import { Order } from '@appjusto/types';
 import React from 'react';
-import PaddedView from '../../../../common/components/containers/PaddedView';
+import { View } from 'react-native';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import PlaceSummary from '../../../../common/screens/orders/summary/PlaceSummary';
+import { padding } from '../../../../common/styles';
 import { formatDistance, separateWithDot } from '../../../../common/utils/formatters';
 import { getETAWithMargin } from '../../../../common/utils/formatters/datetime';
 import { t } from '../../../../strings';
@@ -16,7 +17,13 @@ interface Props {
 export const OrderPlacesSummary = ({ order, onEditStep }: Props) => {
   const { origin, destination, route, arrivals } = order;
   return (
-    <PaddedView>
+    <View
+      style={{
+        paddingHorizontal: padding,
+        paddingTop: padding,
+        paddingBottom: order.type === 'p2p' ? padding : undefined,
+      }}
+    >
       {origin && (
         <PlaceSummary
           title={order.type === 'p2p' ? t('Retirada') : t('Restaurante')}
@@ -31,7 +38,7 @@ export const OrderPlacesSummary = ({ order, onEditStep }: Props) => {
           onEdit={() => onEditStep(Step.Destination)}
         />
       )}
-      {route?.distance && arrivals?.destination?.estimate ? (
+      {route?.distance && arrivals?.destination?.estimate && order.type === 'p2p' ? (
         <RoundedText>
           {separateWithDot(
             formatDistance(route.distance),
@@ -39,6 +46,6 @@ export const OrderPlacesSummary = ({ order, onEditStep }: Props) => {
           )}
         </RoundedText>
       ) : null}
-    </PaddedView>
+    </View>
   );
 };

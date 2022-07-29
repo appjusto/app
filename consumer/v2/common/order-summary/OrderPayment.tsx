@@ -1,13 +1,18 @@
+import { PayableWith } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
+import RoundedText from '../../../../common/components/texts/RoundedText';
+import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
+import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
+import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
 import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
-import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
+import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
 interface Props {
@@ -17,6 +22,12 @@ interface Props {
   onEditPaymentMethod: () => void;
   onSubmit: () => void;
   navigateToAboutCharges: () => void;
+  navigateToCompleteProfile: () => void;
+  navigateToSelectPayment: () => void;
+  onPayWithPix: () => void;
+  payMethod: PayableWith;
+  orderId: string;
+  showWarning?: boolean;
 }
 
 export const OrderPayment = ({
@@ -26,90 +37,133 @@ export const OrderPayment = ({
   onEditPaymentMethod,
   onSubmit,
   navigateToAboutCharges,
+  onPayWithPix,
+  navigateToCompleteProfile,
+  navigateToSelectPayment,
+  payMethod,
+  orderId,
+  showWarning,
 }: Props) => {
+  // context
+  const order = useObserveOrder(orderId);
   // redux
   const consumer = useSelector(getConsumer)!;
+  // helpers
+  const payableWithPix = useIsPixEnabled();
   const { isProfileComplete, shouldVerifyPhone } = useProfileSummary();
-  const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId);
+  const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId); // only for credit cards
+  const canPlaceOrder = isProfileComplete && !shouldVerifyPhone;
+  if (!order) return null;
   return (
-    <View>
-      {/* <View style={{ marginTop: padding }}>
-        <SingleHeader title={t('Forma de pagamento')} />
-      </View> */}
-      <PaddedView>
-        {/* {Boolean(!selectedPaymentMethod) && (
-          <View style={{ marginBottom: padding }}>
-            <PixCard navigateToPixPayment={navigateToPixPayment} />
-          </View>
-        )} */}
-        {Boolean(selectedPaymentMethod) && (
-          <View style={{ marginBottom: halfPadding }}>
-            <TouchableOpacity onPress={onEditPaymentMethod}>
-              <View style={{ marginBottom: halfPadding }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Text style={{ ...texts.md }}>{t('Forma de pagamento')}</Text>
-                  <Feather
-                    name="edit-3"
-                    size={12}
-                    style={{ ...borders.default, borderColor: colors.grey50, padding: 8 }}
-                  />
-                </View>
-                <Text style={{ ...texts.sm, color: colors.grey700 }}>
-                  {`${t('Cartão de crédito')}: ${selectedPaymentMethod!.data.display_number}`}
-                </Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ marginTop: halfPadding }} onPress={navigateToAboutCharges}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Feather name="info" size={14} />
-                <Text
-                  style={{ ...texts.xs, marginLeft: halfPadding, textDecorationLine: 'underline' }}
-                >
-                  {t('O valor total será dividido em duas cobranças')}
-                </Text>
-              </View>
+    <View style={{ backgroundColor: colors.white }}>
+      {Boolean(selectedPaymentMethod) && payMethod === 'credit_card' ? (
+        <View>
+          <SingleHeader title={t('Forma de pagamento')} />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingHorizontal: padding,
+            }}
+          >
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>
+              {`${t('Cartão de crédito')}: ${selectedPaymentMethod!.data.display_number}`}
+            </Text>
+            <TouchableOpacity onPress={navigateToSelectPayment}>
+              <Text style={{ ...texts.md, color: colors.green600 }}>{t('Trocar')}</Text>
             </TouchableOpacity>
           </View>
-        )}
-
-        {isProfileComplete && selectedPaymentMethod ? (
+          <TouchableOpacity
+            style={{ marginTop: halfPadding, paddingHorizontal: padding, marginBottom: padding }}
+            onPress={navigateToAboutCharges}
+          >
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                width: '95%',
+              }}
+            >
+              <Feather name="info" size={14} />
+              <Text
+                style={{ ...texts.xs, marginLeft: halfPadding, textDecorationLine: 'underline' }}
+              >
+                {t('O valor total pode ser dividido em duas cobranças. Clique para saber mais')}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      ) : null}
+      {payMethod === 'pix' ? (
+        <View>
+          <SingleHeader title={t('Forma de pagamento')} />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingHorizontal: padding,
+              marginBottom: padding,
+            }}
+          >
+            <Text style={{ ...texts.md }}>{t('Pagar com Pix')}</Text>
+            <TouchableOpacity onPress={navigateToSelectPayment}>
+              <Text style={{ ...texts.md, color: colors.green600 }}>{t('Trocar')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      ) : null}
+      <View style={{ paddingHorizontal: padding, backgroundColor: colors.white }}>
+        {showWarning ? (
+          <PaddedView
+            half
+            style={{ backgroundColor: colors.darkYellow, borderRadius: halfPadding }}
+          >
+            <Text style={{ ...texts.sm }}>
+              {t('Você precisa agendar um horário antes de fazer o pedido')}
+            </Text>
+          </PaddedView>
+        ) : null}
+        {!canPlaceOrder && !activityIndicator ? (
           <DefaultButton
-            style={{ marginVertical: padding }}
-            title={shouldVerifyPhone ? t('Verificar telefone') : t('Confirmar pedido')}
-            onPress={onSubmit}
-            disabled={!isSubmitEnabled}
-            activityIndicator={activityIndicator}
-          />
-        ) : (
-          <DefaultButton
-            title={
-              !isProfileComplete ? t('Completar cadastro') : t('Escolher uma forma de pagamento')
-            }
-            onPress={onEditPaymentMethod}
             variant="secondary"
-            style={{ marginTop: padding }}
+            title={t('Completar cadastro')}
+            // style={{ marginVertical: padding }}
+            onPress={navigateToCompleteProfile}
           />
-        )}
-
-        {/* {Boolean(selectedPaymentMethod) && (
+        ) : null}
+        {canPlaceOrder && !selectedPaymentMethod && payMethod !== 'pix' ? (
+          <DefaultButton
+            variant="secondary"
+            title={t('Escolher forma de pagamento')}
+            style={{ marginBottom: order.type === 'p2p' ? padding : undefined }}
+            onPress={navigateToSelectPayment}
+          />
+        ) : null}
+        {canPlaceOrder &&
+        (payMethod === 'pix' || (payMethod === 'credit_card' && selectedPaymentMethod)) ? (
+          <DefaultButton
+            variant="primary"
+            title={t('Confirmar pedido')}
+            style={{ marginTop: padding, marginBottom: order.type === 'p2p' ? padding : undefined }}
+            onPress={onSubmit}
+            activityIndicator={activityIndicator}
+            disabled={!isSubmitEnabled}
+          />
+        ) : null}
+        {canPlaceOrder && !activityIndicator && payableWithPix && payMethod !== 'pix' ? (
           <DefaultButton
             variant="secondary"
             title={t('Quero pagar com Pix')}
-            style={{ marginBottom: padding }}
-            onPress={navigateToPixPayment}
+            style={{ marginTop: padding }}
+            onPress={onPayWithPix}
+            disabled={!isSubmitEnabled}
           >
-            <RoundedText backgroundColor={colors.darkYellow} style={{ right: -64 }}>
-              {t('Novo!')}
-            </RoundedText>
+            <RoundedText backgroundColor={colors.yellow}>{t('Novo!')}</RoundedText>
           </DefaultButton>
-        )} */}
-      </PaddedView>
+        ) : null}
+      </View>
     </View>
   );
 };

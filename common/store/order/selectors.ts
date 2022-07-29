@@ -31,21 +31,6 @@ export const getMonthsWithOrdersInYear = (orders: WithId<Order>[]) =>
     )
   );
 
-export const getOrdersWithFilter = (
-  orders: WithId<Order>[],
-  year: number,
-  month?: number,
-  day?: number
-) =>
-  orders.filter((order) => {
-    const time = getOrderTime(order);
-    if (!time) return false;
-    if (year !== time.getFullYear()) return false;
-    if (month && month !== time.getMonth()) return false;
-    if (day && day !== time.getDate()) return false;
-    return true;
-  });
-
 export const getDeliveredOrders = (orders: WithId<Order>[]) =>
   orders.filter((order) => order.status === 'delivered');
 
@@ -58,6 +43,8 @@ export const getOrdersSince = (orders: WithId<Order>[], date: Date) =>
   });
 
 export const OngoingOrdersStatuses: OrderStatus[] = [
+  'scheduled',
+  'confirming',
   'confirmed',
   'preparing',
   'ready',
@@ -68,31 +55,6 @@ export const isOrderOngoing = (order: Order) => OngoingOrdersStatuses.includes(o
 
 export const getFinancialFee = (value: number) => Math.floor(value * (2.42 / 100));
 
-export const summarizeOrders = memoize((orders: WithId<Order>[]) =>
-  orders.reduce(
-    (result, order) => ({
-      delivered: order.status === 'delivered' ? result.delivered + 1 : result.delivered,
-      canceled: order.status === 'canceled' ? result.canceled + 1 : result.canceled,
-      ongoing: isOrderOngoing(order) ? result.ongoing + 1 : result.ongoing,
-      quote: order.status === 'quote' ? result.quote + 1 : result.quote,
-      total:
-        order.status === 'delivered' ||
-        order.status === 'canceled' ||
-        isOrderOngoing(order) ||
-        order.status === 'quote'
-          ? result.total + 1
-          : result.total,
-      courierFee:
-        order.status === 'delivered'
-          ? result.courierFee +
-            (order.fare!.courier!.value - getFinancialFee(order.fare!.courier!.value)) +
-            ((order.tip?.value ?? 0) - getFinancialFee(order.tip?.value ?? 0))
-          : result.courierFee,
-    }),
-    { delivered: 0, canceled: 0, ongoing: 0, quote: 0, total: 0, courierFee: 0 }
-  )
-);
-
 type OrdersSummary = {
   [K in OrderStatus]?: number;
 };
@@ -100,21 +62,35 @@ type OrdersSummary = {
 export const summarizeOrders2 = memoize((orders: WithId<Order>[] = []) =>
   orders.reduce(
     (result, order) => ({
+      quote: order.status === 'quote' ? (result.quote ?? 0) + 1 : result.quote,
+      confirming: order.status === 'confirming' ? (result.confirming ?? 0) + 1 : result.confirming,
+      charged: order.status === 'charged' ? (result.charged ?? 0) + 1 : result.charged,
       confirmed: order.status === 'confirmed' ? (result.confirmed ?? 0) + 1 : result.confirmed,
+      scheduled: order.status === 'scheduled' ? (result.scheduled ?? 0) + 1 : result.scheduled,
       preparing: order.status === 'preparing' ? (result.preparing ?? 0) + 1 : result.preparing,
       ready: order.status === 'ready' ? (result.ready ?? 0) + 1 : result.ready,
       dispatching:
         order.status === 'dispatching' ? (result.dispatching ?? 0) + 1 : result.dispatching,
       delivered: order.status === 'delivered' ? (result.delivered ?? 0) + 1 : result.delivered,
       canceled: order.status === 'canceled' ? (result.canceled ?? 0) + 1 : result.canceled,
+      rejected: order.status === 'rejected' ? (result.rejected ?? 0) + 1 : result.rejected,
+      declined: order.status === 'declined' ? (result.declined ?? 0) + 1 : result.declined,
+      expired: order.status === 'expired' ? (result.expired ?? 0) + 1 : result.expired,
     }),
     {
+      quote: 0,
+      confirming: 0,
+      charged: 0,
       confirmed: 0,
+      scheduled: 0,
       preparing: 0,
       ready: 0,
       dispatching: 0,
       delivered: 0,
       canceled: 0,
+      rejected: 0,
+      declined: 0,
+      expired: 0,
     } as OrdersSummary
   )
 );

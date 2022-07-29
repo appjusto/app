@@ -2,7 +2,6 @@ import { Flavor } from '@appjusto/types';
 import { NestedNavigatorParams } from '../common/types';
 
 export type LoggedBusinessNavParamsList = {
-  BusinessPending: undefined;
   BusinessNavigator: NestedNavigatorParams<BusinessNavParamsList>;
 };
 

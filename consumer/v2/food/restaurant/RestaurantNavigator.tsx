@@ -10,10 +10,12 @@ import { AvailableFleets } from '../../common/AvailableFleets';
 import { PayWithPix } from '../../common/PayWithPix';
 import ProfileAddCard from '../../main/profile/ProfileAddCard';
 import ProfilePaymentMethods from '../../main/profile/ProfilePaymentMethods';
+import { SelectPaymentMethod } from '../../main/profile/SelectPaymentMethod';
 import { AboutCharges } from '../../p2p/AboutCharges';
 import { AboutRestaurant } from './about/AboutRestaurant';
 import { RestaurantHeaderMessage } from './about/RestaurantHeaderMessage';
 import { FoodOrderCheckout } from './checkout/FoodOrderCheckout';
+import { ScheduleOrder } from './checkout/ScheduleOrder';
 import { RestaurantDetail } from './detail/RestaurantDetail';
 import { ItemDetail } from './product/ItemDetail';
 import { RestaurantNavigatorParamList } from './types';
@@ -45,6 +47,11 @@ export default function () {
         options={{ title: t('Sua sacola') }}
       />
       <Stack.Screen
+        name="ScheduleOrder"
+        component={ScheduleOrder}
+        options={{ title: t('Agendamento') }}
+      />
+      <Stack.Screen
         name="CommonProfileEdit"
         component={CommonProfileEdit}
         options={{ title: t('Seus dados') }}
@@ -63,6 +70,11 @@ export default function () {
         name="ProfileAddCard"
         component={ProfileAddCard}
         options={{ title: t('Adicionar cartão') }}
+      />
+      <Stack.Screen
+        name="SelectPaymentMethod"
+        component={SelectPaymentMethod}
+        options={{ title: t('Selecionar pagamento') }}
       />
       <Stack.Screen
         name="ProfilePaymentMethods"

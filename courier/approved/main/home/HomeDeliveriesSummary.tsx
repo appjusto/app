@@ -1,42 +1,17 @@
-import { OrderStatus } from '@appjusto/types';
-import dayjs from 'dayjs';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { IconRequestSmall } from '../../../../common/icons/icon-requests-small';
-import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
-import {
-  getDeliveredOrders,
-  getOrdersSince,
-  summarizeOrders,
-} from '../../../../common/store/order/selectors';
-import { getUser } from '../../../../common/store/user/selectors';
+import { useCourierRecentOrdersRevenue } from '../../../../common/store/api/order/courier/useCourierRecentOrdersRevenue';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 
-export default function () {
-  // app state
-  const user = useSelector(getUser);
+export const HomeDeliveriesSummary = () => {
   // state
-  // TO-DO: add parameter to fetch only orders delivered on the last week
-  const options = React.useMemo(
-    () => ({ courierId: user?.uid, statuses: ['delivered'] as OrderStatus[] }),
-    [user?.uid]
-  );
-  const orders = useObserveOrders(options);
-  const todaysOrdersFee = useMemo(() => {
-    const today = dayjs().startOf('d').toDate();
-    const todaysOrders = getOrdersSince(getDeliveredOrders(orders ?? []), today);
-    return summarizeOrders(todaysOrders).courierFee;
-  }, [orders]);
-  const weeksOrdersFee = useMemo(() => {
-    const startOfWeek = dayjs().isoWeekday(1).startOf('w').toDate();
-    const weeksOrders = getOrdersSince(getDeliveredOrders(orders ?? []), startOfWeek);
-    return summarizeOrders(weeksOrders).courierFee;
-  }, [orders]);
-
+  const revenue = useCourierRecentOrdersRevenue();
+  // UI
+  if (!revenue) return null;
   return (
     <PaddedView
       style={{
@@ -58,13 +33,13 @@ export default function () {
             <View>
               <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Hoje')}</Text>
               <Text style={{ ...texts.md, color: colors.black }}>
-                {formatCurrency(todaysOrdersFee)}
+                {formatCurrency(revenue.today)}
               </Text>
             </View>
             <View>
               <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Semana')}</Text>
               <Text style={{ ...texts.md, color: colors.black }}>
-                {formatCurrency(weeksOrdersFee)}
+                {formatCurrency(revenue.week)}
               </Text>
             </View>
           </View>
@@ -75,4 +50,4 @@ export default function () {
       </View>
     </PaddedView>
   );
-}
+};

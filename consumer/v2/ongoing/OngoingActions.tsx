@@ -88,28 +88,40 @@ export const OngoingActions = ({
           </PaddedView>
         </TouchableOpacity>
       ) : (
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <View style={{ width: '49%' }}>
-            <DefaultButton
-              title={t('Relatar problema')}
-              variant="secondary"
-              onPress={navigateToReportIssue}
-            />
-          </View>
-          <View style={{ width: '49%' }}>
-            <DefaultButton
-              title={t('Cancelar pedido')}
-              variant="danger"
-              onPress={navigateToConfirmCancel}
-            />
-          </View>
+        <View>
+          {order.status === 'scheduled' ? (
+            <View style={{ flex: 1 }}>
+              <DefaultButton
+                title={t('Cancelar pedido')}
+                variant="danger"
+                onPress={navigateToConfirmCancel}
+              />
+            </View>
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <View style={{ width: '49%' }}>
+                <DefaultButton
+                  title={t('Relatar problema')}
+                  variant="secondary"
+                  onPress={navigateToReportIssue}
+                />
+              </View>
+              <View style={{ width: '49%' }}>
+                <DefaultButton
+                  title={t('Cancelar pedido')}
+                  variant="danger"
+                  onPress={navigateToConfirmCancel}
+                />
+              </View>
+            </View>
+          )}
         </View>
       )}
     </PaddedView>

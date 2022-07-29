@@ -15,7 +15,11 @@ export const ModalToastProvider: React.FC = ({ children }) => {
   const [modalToastConfig, setModalToastConfig] = React.useState<ModalToastConfigType | null>(null);
 
   const showModalToast = (message: string, type: ToastType, duration = 4000) => {
-    setModalToastConfig({ type, message, duration });
+    setModalToastConfig({
+      type,
+      message: message.replace('Firebase', '').replace('Error: ', ''),
+      duration,
+    });
   };
 
   const hideModalToast = () => {

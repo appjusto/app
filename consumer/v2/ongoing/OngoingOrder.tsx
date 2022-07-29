@@ -113,7 +113,6 @@ export default function ({ navigation, route }: Props) {
       navigation.replace('OngoingOrderDeclined', { orderId });
     }
   }, [navigation, order, orderId]);
-  // console.log(orderId);
   // UI
   // showing the indicator until the order is loaded
   if (!order) {
@@ -165,7 +164,7 @@ export default function ({ navigation, route }: Props) {
           onChatWithCourier={openChatWithCourier}
           onOpenChat={openChatHandler}
         />
-        {order.dispatchingStatus !== 'outsourced' ? (
+        {order.dispatchingStatus !== 'outsourced' && order.status !== 'scheduled' ? (
           <DeliveryConfirmation
             switchValue={wantsCode}
             onChangeCodeDelivery={() => {
@@ -188,14 +187,16 @@ export default function ({ navigation, route }: Props) {
             navigateToConfirmCancel={navigateToConfirmCancel}
             onMessageReceived={openChatHandler}
           />
-          <HR />
-          {order.type === 'food' ? (
-            <PaddedView>
-              <DefaultButton
-                title={t('Abrir chat com o restaurante')}
-                onPress={() => openChatWithRestaurant()}
-              />
-            </PaddedView>
+          {order.type === 'food' && order.status !== 'scheduled' ? (
+            <View>
+              <HR />
+              <PaddedView>
+                <DefaultButton
+                  title={t('Abrir chat com o restaurante')}
+                  onPress={() => openChatWithRestaurant()}
+                />
+              </PaddedView>
+            </View>
           ) : null}
         </View>
       </View>

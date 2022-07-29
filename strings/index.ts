@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
+import calendar from 'dayjs/plugin/calendar';
 import duration from 'dayjs/plugin/duration';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -12,6 +13,7 @@ dayjs.locale('pt-br');
 dayjs.extend(duration);
 dayjs.extend(isoWeek);
 dayjs.extend(relativeTime);
+dayjs.extend(calendar);
 dayjs.extend(timezone);
 dayjs.extend(utc);
 

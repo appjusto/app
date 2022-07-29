@@ -1,4 +1,4 @@
-import { Fare, Order, Place, WithId } from '@appjusto/types';
+import { Fare, Order, PayableWith, Place, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import {
@@ -12,8 +12,7 @@ import {
   View,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-// import ViewPager, { ViewPagerOnPageScrollEventData } from '@react-native-community/viewpager';
-import PagerView, { ViewPagerOnPageScrollEventData } from 'react-native-pager-view';
+import PagerView, { PagerViewOnPageSelectedEventData } from 'react-native-pager-view';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -50,9 +49,12 @@ type Props = {
   quotes: Fare[] | undefined;
   selectedFare: Fare | undefined;
   onFareSelect: (fare: Fare) => void;
-  onRetry: () => void;
   total: number;
   navigateToAvailableFleets: () => void;
+  navigateToCompleteProfile: () => void;
+  navigateToSelectPayment: () => void;
+  payMethod: PayableWith;
+  onPayWithPix: () => void;
 };
 
 export default function ({
@@ -65,6 +67,7 @@ export default function ({
   navigateToTransportableItems,
   onSubmit,
   navigateToAboutCharges,
+  navigateToPixPayment,
   cpf,
   setCpf,
   wantsCpf,
@@ -73,9 +76,12 @@ export default function ({
   quotes,
   selectedFare,
   onFareSelect,
-  onRetry,
   total,
   navigateToAvailableFleets,
+  navigateToCompleteProfile,
+  navigateToSelectPayment,
+  payMethod,
+  onPayWithPix,
 }: Props) {
   // params
   const { origin, destination } = order ?? {};
@@ -179,7 +185,7 @@ export default function ({
     }
   };
   // change the step as user's scroll between pages
-  const onPageScroll = (ev: NativeSyntheticEvent<ViewPagerOnPageScrollEventData>) => {
+  const onPageScroll = (ev: NativeSyntheticEvent<PagerViewOnPageSelectedEventData>) => {
     const { nativeEvent } = ev;
     const { position } = nativeEvent;
     if (position !== step) {
@@ -352,16 +358,20 @@ export default function ({
                   onSubmit={onSubmit}
                   activityIndicator={isLoading}
                   navigateToAboutCharges={navigateToAboutCharges}
+                  orderId={order.id}
+                  navigateToCompleteProfile={navigateToCompleteProfile}
+                  navigateToSelectPayment={navigateToSelectPayment}
+                  payMethod={payMethod}
+                  onPayWithPix={onPayWithPix}
                 />
               }
-              availableFleets={
+              orderFulfillment={
                 <OrderAvailableFleets
+                  order={order}
                   quotes={quotes}
                   selectedFare={selectedFare}
                   onFareSelect={onFareSelect}
                   onFleetSelect={navigateFleetDetail}
-                  onRetry={onRetry}
-                  order={order}
                   navigateToAvailableFleets={navigateToAvailableFleets}
                 />
               }

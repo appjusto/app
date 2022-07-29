@@ -3,53 +3,32 @@ import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 import { t } from '../../../../../strings';
 import { RestaurantListSection } from './types';
 
-//order restaurants depending on wether distance is inside restaurant delivery range
-const restaurantsInRange = (
-  status: string,
-  items?: (BusinessAlgolia | WithId<Business>)[],
-  currentLocation?: LatLng | null
-) => {
-  const inRange = (items ?? []).filter(
-    (restaurant) =>
-      restaurant.status === status &&
-      (restaurant.deliveryRange ?? 0) >=
-        (currentLocation && restaurant.businessAddress?.latlng
-          ? distanceBetweenLatLng(currentLocation, restaurant.businessAddress.latlng)
-          : 0)
-  );
-  return inRange;
-};
-
-const restaurantsOutOfRange = (
-  status: string,
-  items?: (BusinessAlgolia | WithId<Business>)[],
-  currentLocation?: LatLng | null
-) => {
-  const outOfRange = (items ?? []).filter(
-    (restaurant) =>
-      restaurant.status === status &&
-      (restaurant.deliveryRange ?? 0) <
-        (currentLocation && restaurant.businessAddress?.latlng
-          ? distanceBetweenLatLng(currentLocation, restaurant.businessAddress.latlng)
-          : 0)
-  );
-  return outOfRange;
-};
+const isOutOfRange = (business: BusinessAlgolia | WithId<Business>, location?: LatLng | null) =>
+  (business.deliveryRange ?? 0) <
+  (location && business.businessAddress?.latlng
+    ? distanceBetweenLatLng(location, business.businessAddress.latlng)
+    : 0);
 
 export const sectionsFromResults = (
   items?: (BusinessAlgolia | WithId<Business>)[],
   currentLocation?: LatLng | null
 ) => {
-  const open = restaurantsInRange('open', items, currentLocation);
-  const openOutOfRange = restaurantsOutOfRange('open', items, currentLocation);
-  const closed = restaurantsInRange('closed', items, currentLocation).concat(
-    restaurantsOutOfRange('closed', items, currentLocation)
-  );
+  const open: (BusinessAlgolia | WithId<Business>)[] = [];
+  const openOutOfRange: (BusinessAlgolia | WithId<Business>)[] = [];
+  const closed: (BusinessAlgolia | WithId<Business>)[] = [];
+  items?.forEach((item) => {
+    if (item.status === 'open' || item.preparationModes?.includes('scheduled')) {
+      if (!isOutOfRange(item, currentLocation)) open.push(item);
+      else openOutOfRange.push(item);
+    } else {
+      closed.push(item);
+    }
+  });
   let sections: RestaurantListSection[] = [];
   if (open.length > 0) {
     sections = [
       {
-        title: t('Restaurantes abertos agora'),
+        title: t('Restaurantes disponíveis'),
         subtitle: t('Valor justo para restaurantes e entregadores/as'),
         data: open,
       },

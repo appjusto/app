@@ -8,8 +8,6 @@ import { MainNavigatorParamList } from '../main/types';
 export type OngoingOrderNavigatorParamList = {
   OngoingOrderConfirming: {
     orderId: string;
-    pixKey?: string;
-    total?: number;
   };
   OngoingOrderNoMatch: {
     orderId: string;
@@ -48,6 +46,7 @@ export type OngoingOrderNavigatorParamList = {
   OrderProblemFeedback: {
     orderId: string;
   };
+  ScheduledOrderConfirmation: undefined;
 } & ReportIssueParamList &
   ProfilePaymentMethodsParamList &
   OrderCanceledParamList &

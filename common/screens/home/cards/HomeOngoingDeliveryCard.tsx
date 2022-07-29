@@ -20,17 +20,23 @@ export default function ({ order, onPress }: Props) {
   // redux store
   const flavor = useSelector(getFlavor);
   // UI
-  const { business, courier } = order;
+  const { business, courier, scheduledTo } = order;
+  const showCode = order.code ? `#${order.code}` : null;
   let title = '';
   let detail = '';
   if (flavor === 'consumer') {
     if (type === 'food') {
       const businessName = business!.name;
       if (status === 'confirming' || status === 'charged') {
-        title = `${t('Criando pedido no/a')} ${businessName}`;
+        if (scheduledTo) {
+          title = `${t('Agendando pedido no/a')} ${businessName}`;
+        } else title = `${t('Criando pedido no/a')} ${businessName}`;
       } else if (status === 'declined') {
         title = t('Problema no pagamento');
         detail = t('Selecione outra forma de pagamento');
+      } else if (status === 'scheduled') {
+        title = `${t('Pedido agendado em')} ${businessName}`;
+        detail = t('Você será avisado quando o pedido sair para a entrega');
       } else if (status === 'confirmed') {
         title = `${t('Aguardando')} ${businessName} ${t('confirmar o seu pedido')}`;
       } else if (status === 'preparing') {
@@ -41,8 +47,7 @@ export default function ({ order, onPress }: Props) {
         } else if (status === 'dispatching') {
           title = t('Seu pedido está à caminho!');
         }
-        // TODO: colocar a caminho da entrega para pedidos P2P
-        if (dispatchingStatus === 'confirmed' || dispatchingStatus == 'outsourced') {
+        if (dispatchingStatus === 'confirmed' || dispatchingStatus === 'outsourced') {
           if (dispatchingState === 'going-pickup') {
             detail = `${courier?.name ?? t('Entregador/a')} ${t('está indo para')} ${businessName}`;
           } else if (dispatchingState === 'arrived-pickup') {
@@ -91,20 +96,25 @@ export default function ({ order, onPress }: Props) {
   } else if (flavor === 'courier') {
     if (dispatchingState === 'going-pickup') {
       title =
-        type === 'p2p' ? `${t('Indo para a coleta')}` : `${t('Indo para')} ${order.business!.name}`;
+        type === 'p2p'
+          ? `${t('Indo para a coleta')}`
+          : `${t('Indo para')} ${order.business!.name} ${showCode}`;
       detail = order.origin!.address.main!;
     } else if (dispatchingState === 'arrived-pickup') {
-      title = type === 'p2p' ? t('No local de coleta') : `${t('No/a')} ${order.business!.name}`;
+      title =
+        type === 'p2p'
+          ? t('No local de coleta')
+          : `${t('No/a')} ${order.business!.name}  ${showCode}`;
       detail =
         type === 'p2p'
           ? order.origin?.intructions ??
             `${t('Qualquer dúvida, mande uma mensagem para ')} ${order.consumer.name}`
           : `${t('Informe o código')} ${order.code}`;
     } else if (dispatchingState === 'going-destination') {
-      title = `${t('Indo para a entrega')}`;
+      title = `${t('Indo para a entrega')}  ${showCode}`;
       detail = order.destination!.address.main!;
     } else if (dispatchingState === 'arrived-destination') {
-      title = t('No local de entrega');
+      title = `${t('No local de entrega')}  ${showCode}`;
       detail =
         type === 'p2p'
           ? order.destination?.intructions ??

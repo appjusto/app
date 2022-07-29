@@ -22,7 +22,7 @@ import {
 } from '../../../../../common/styles';
 import { formatDate } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
-import { convertBalance } from '../MarketplaceAccountInfo';
+import { convertBalance } from '../DeliveryHistory';
 import { DeliveriesNavigatorParamList } from '../types';
 
 type ScreenNavigationProp = StackNavigationProp<DeliveriesNavigatorParamList, 'Withdraws'>;

@@ -12,6 +12,7 @@ import { t } from '../../../../strings';
 import { Step } from '../../p2p/types';
 import { OrderItems } from './OrderItems';
 import { OrderPlacesSummary } from './OrderPlacesSummary';
+import { OrderScheduling } from './OrderScheduling';
 
 type Props = {
   order: WithId<Order>;
@@ -23,10 +24,11 @@ type Props = {
   onAddInfo?: (text: string) => void;
   shareDataWithBusiness?: boolean;
   onShareData?: (value: boolean) => void;
-  availableFleets: React.ReactNode;
+  orderFulfillment: React.ReactNode;
   costBreakdown: React.ReactNode;
   totalCost: React.ReactNode;
   payment: React.ReactNode;
+  onCheckSchedules?: () => void;
 };
 
 export const OrderSummary = ({
@@ -39,10 +41,11 @@ export const OrderSummary = ({
   onAddInfo,
   shareDataWithBusiness,
   onShareData,
-  availableFleets,
+  orderFulfillment: availableFleets,
   costBreakdown,
   totalCost,
   payment,
+  onCheckSchedules,
 }: Props) => {
   // context
   const tallerDevice = useTallerDevice();
@@ -66,6 +69,7 @@ export const OrderSummary = ({
       ) : null}
       <View style={{ paddingTop: tallerDevice ? padding : 0 }}>
         <OrderPlacesSummary order={order} onEditStep={onEditStep} />
+        {order.type === 'food' ? <OrderScheduling onCheckSchedules={onCheckSchedules} /> : null}
       </View>
 
       {!isEmpty(order.items) ? (
