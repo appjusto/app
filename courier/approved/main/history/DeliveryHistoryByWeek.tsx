@@ -121,7 +121,7 @@ export const DeliveryHistoryByWeek = ({ navigation, route }: Props) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
-              padding: padding,
+              padding,
             }}
           >
             <TouchableOpacity

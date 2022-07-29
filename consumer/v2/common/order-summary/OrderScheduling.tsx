@@ -61,7 +61,8 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
         }}
       >
         <View>
-          {business.status === 'closed' && !order.scheduledTo ? (
+          {(business.status === 'closed' && !order.scheduledTo) ||
+          !business.preparationModes?.includes('realtime') ? (
             <View>
               <Text style={{ ...texts.sm, flexWrap: 'wrap' }} numberOfLines={3}>
                 {t('Somente agendamento')}
@@ -83,6 +84,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
           ) : null}
           {!order.scheduledTo &&
           business.status === 'open' &&
+          business.preparationModes?.includes('realtime') &&
           order.arrivals?.destination?.estimate ? (
             <RectangularListItemText
               text={`Entrega: ${getETAWithMargin(order.arrivals?.destination?.estimate!)}`}

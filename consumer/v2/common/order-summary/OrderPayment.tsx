@@ -115,7 +115,7 @@ export const OrderPayment = ({
         </View>
       ) : null}
       <View style={{ paddingHorizontal: padding, backgroundColor: colors.white }}>
-        {showWarning ? (
+        {showWarning && canPlaceOrder ? (
           <PaddedView
             half
             style={{ backgroundColor: colors.darkYellow, borderRadius: halfPadding }}
