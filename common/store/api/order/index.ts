@@ -141,6 +141,7 @@ export default class OrderApi {
   }
 
   // courier, customers and businesses
+  //
   observeOrders(
     options: ObserveOrdersOptions,
     resultHandler: (orders: WithId<Order>[]) => void
@@ -156,7 +157,10 @@ export default class OrderApi {
     if (options.limit) constraints.push(limit(options.limit));
     return onSnapshot(
       query(this.firestoreRefs.getOrdersRef(), ...constraints),
-      (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
+      (querySnapshot) =>
+        resultHandler(
+          documentsAs<Order>(querySnapshot.docs).filter((order) => order.status !== 'expired')
+        ),
       (error) => {
         console.error(error);
         Sentry.Native.captureException(error);
