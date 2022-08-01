@@ -130,13 +130,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
             return (
               <View style={{ marginRight: padding }} key={i}>
                 <DayBoxListItem
-                  weekDay={capitalize(
-                    Dayjs(day).calendar(now, {
-                      sameDay: '[hoje]',
-                      nextDay: 'ddd',
-                      nextWeek: 'ddd',
-                    })
-                  )}
+                  weekDay={capitalize(Dayjs(day).format('ddd'))}
                   day={day.getDate().toString()}
                   selected={isEqual(day, chosenDay)}
                   onSelect={() => setSelectedDay(dates)}
