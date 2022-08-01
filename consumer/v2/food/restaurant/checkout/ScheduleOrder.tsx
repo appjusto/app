@@ -85,9 +85,13 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
       if (firsDayWithSlots?.length) setSelectedDay(firsDayWithSlots);
       else setSelectedDay(nextDateSlots[0]);
       if (order?.scheduledTo) {
-        const dayScheduled = nextDateSlots.find(
-          (slot) => slot[0].getDate() === (order.scheduledTo as Timestamp).toDate().getDate()
-        );
+        console.log(nextDateSlots);
+        const dayScheduled = nextDateSlots.find((slot) => {
+          console.log(slot);
+          if (slot && slot[0])
+            slot[0].getDate() === (order.scheduledTo as Timestamp).toDate().getDate();
+          return false;
+        });
         setPrepMode('scheduled');
         setSelectedSlot(order.scheduledTo as Timestamp);
         if (dayScheduled?.length) setSelectedDay(dayScheduled);
