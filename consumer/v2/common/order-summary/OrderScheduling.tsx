@@ -1,4 +1,4 @@
-import { Dayjs, getNextDateSlots, scheduleFromDate } from '@appjusto/dates';
+import { Dayjs } from '@appjusto/dates';
 import { Timestamp } from 'firebase/firestore';
 import { capitalize } from 'lodash';
 import React from 'react';
@@ -23,21 +23,11 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
   const business = useContextBusiness();
   const api = React.useContext(ApiContext);
   const now = getServerTime();
-  // state
-  const [nextDateSlots, setNextDateSlots] = React.useState<Date[][]>();
   // side effects
   const margin = 60;
-  React.useEffect(() => {
-    if (!business?.id) return;
-    const { schedules } = business;
-    const scheduleFromNow = scheduleFromDate(schedules, now);
-    setNextDateSlots(getNextDateSlots(scheduleFromNow, now, margin, 5));
-  }, [business?.id]);
   // UI
   if (!order) return null; // shouldn't happen
   if (!business) return null; // shouldn't happen
-  // if (!business.preparationModes?.includes('scheduled')) return null;
-  if (!nextDateSlots) return null;
   const scheduleUI = () => {
     if (!business.preparationModes?.includes('scheduled')) {
       if (order.arrivals?.destination?.estimate) {
@@ -73,11 +63,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
           {order.scheduledTo ? (
             <RectangularListItemText
               text={`${capitalize(
-                Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now, {
-                  sameDay: '[hoje]',
-                  nextDay: 'dddd',
-                  nextWeek: 'dddd',
-                })
+                Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now)
               )}, ${getETAWithMargin(order.scheduledTo, margin)}`}
               selected
               onSelect={() => null}

@@ -1,4 +1,4 @@
-import { getNextDateSlots } from '@appjusto/dates';
+import { getNextDateSlots, scheduleFromDate } from '@appjusto/dates';
 import { PreparationMode } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -20,7 +20,6 @@ import DefaultButton from '../../../../../common/components/buttons/DefaultButto
 import { DayBoxListItem } from '../../../../../common/components/list items/DayBoxListItem';
 import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTimeContext';
 import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
-import { scheduleFromDate } from '../../../../../common/store/api/business/selectors';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { showToast } from '../../../../../common/store/ui/actions';
 import {
@@ -70,7 +69,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
 
   // helpers
   const margin = 60;
-  const daySchedules = business?.schedules ? scheduleFromDate(business.schedules, now) : [];
+  const daySchedules = business?.schedules ? scheduleFromDate(business.schedules, now, 2) : [];
   const nextDateSlots: Date[][] = getNextDateSlots(daySchedules, now, margin);
   const realTimeDelivery =
     business?.status === 'open' && business?.preparationModes?.includes('realtime');
