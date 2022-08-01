@@ -28,7 +28,75 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
   // UI
   if (!order) return null; // shouldn't happen
   if (!business) return null; // shouldn't happen
-  const scheduleUI = () => {
+  const canScheduleUI = () => {
+    // realtime and scheduling
+    if (business.preparationModes?.includes('realtime')) {
+      if (order.scheduledTo) {
+        return (
+          <RectangularListItemText
+            text={`${capitalize(
+              Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now, {
+                sameDay: '[hoje]',
+                nextDay: 'dddd',
+                nextWeek: 'dddd',
+              })
+            )}, ${getETAWithMargin(order.scheduledTo, margin)}`}
+            selected
+            onSelect={() => null}
+          />
+        );
+      } else {
+        if (business.status === 'open') {
+          // without scheduledTo
+          if (order.arrivals?.destination?.estimate) {
+            return (
+              <RectangularListItemText
+                text={`Entrega: ${getETAWithMargin(order.arrivals?.destination?.estimate!)}`}
+                selected
+                onSelect={() => null}
+              />
+            );
+          }
+          return null;
+        }
+        if (business.status === 'closed') {
+          // without scheduledTo
+          return (
+            <View>
+              <Text style={{ ...texts.sm, flexWrap: 'wrap' }} numberOfLines={3}>
+                {t('Somente agendamento')}
+              </Text>
+            </View>
+          );
+        }
+      }
+      return null;
+    }
+    // no realtime, only scheduling
+    else {
+      if (order.scheduledTo) {
+        return (
+          <RectangularListItemText
+            text={`${capitalize(
+              Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now)
+            )}, ${getETAWithMargin(order.scheduledTo, margin)}`}
+            selected
+            onSelect={() => null}
+          />
+        );
+      } else {
+        return (
+          <View>
+            <Text style={{ ...texts.sm, flexWrap: 'wrap' }} numberOfLines={3}>
+              {t('Somente agendamento')}
+            </Text>
+          </View>
+        );
+      }
+    }
+  };
+  const orderSchedulingUI = () => {
+    // real time only
     if (!business.preparationModes?.includes('scheduled')) {
       if (order.arrivals?.destination?.estimate) {
         return (
@@ -50,36 +118,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
           alignItems: 'center',
         }}
       >
-        <View>
-          {business.status === 'closed' &&
-          !business.preparationModes?.includes('realtime') &&
-          !order.scheduledTo ? (
-            <View>
-              <Text style={{ ...texts.sm, flexWrap: 'wrap' }} numberOfLines={3}>
-                {t('Somente agendamento')}
-              </Text>
-            </View>
-          ) : null}
-          {order.scheduledTo ? (
-            <RectangularListItemText
-              text={`${capitalize(
-                Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now)
-              )}, ${getETAWithMargin(order.scheduledTo, margin)}`}
-              selected
-              onSelect={() => null}
-            />
-          ) : null}
-          {!order.scheduledTo &&
-          business.status === 'open' &&
-          business.preparationModes?.includes('realtime') &&
-          order.arrivals?.destination?.estimate ? (
-            <RectangularListItemText
-              text={`Entrega: ${getETAWithMargin(order.arrivals?.destination?.estimate!)}`}
-              selected
-              onSelect={() => null}
-            />
-          ) : null}
-        </View>
+        <View>{canScheduleUI()}</View>
         <View>
           <RectangularListItemText
             text={t('Agendar horário')}
@@ -107,7 +146,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
           marginBottom: padding,
         }}
       />
-      {scheduleUI()}
+      {orderSchedulingUI()}
     </View>
   );
 };
