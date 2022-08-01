@@ -1,4 +1,4 @@
-import { getNextDateSlots, scheduleFromDate } from '@appjusto/dates';
+import { getNextDateSlots } from '@appjusto/dates';
 import { PreparationMode } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -69,8 +69,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
 
   // helpers
   const margin = 60;
-  const daySchedules = business?.schedules ? scheduleFromDate(business.schedules, now, 2) : [];
-  const nextDateSlots: Date[][] = getNextDateSlots(daySchedules, now, margin);
+  const nextDateSlots: Date[][] = business ? getNextDateSlots(business, now, margin, 2) : [];
   const realTimeDelivery =
     business?.status === 'open' && business?.preparationModes?.includes('realtime');
 
