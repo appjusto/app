@@ -35,11 +35,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
         return (
           <RectangularListItemText
             text={`${capitalize(
-              Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now, {
-                sameDay: '[hoje]',
-                nextDay: 'dddd',
-                nextWeek: 'dddd',
-              })
+              Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now)
             )}, ${getETAWithMargin(order.scheduledTo, margin)}`}
             selected
             onSelect={() => null}
