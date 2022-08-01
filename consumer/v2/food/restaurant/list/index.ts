@@ -1,4 +1,5 @@
 import { Business, BusinessAlgolia, LatLng, WithId } from '@appjusto/types';
+import { uniqBy } from 'lodash';
 import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 import { t } from '../../../../../strings';
 import { RestaurantListSection } from './types';
@@ -10,13 +11,13 @@ const isOutOfRange = (business: BusinessAlgolia | WithId<Business>, location?: L
     : 0);
 
 export const sectionsFromResults = (
-  items?: (BusinessAlgolia | WithId<Business>)[],
+  items: (BusinessAlgolia | WithId<Business>)[] = [],
   currentLocation?: LatLng | null
 ) => {
   const open: (BusinessAlgolia | WithId<Business>)[] = [];
   const openOutOfRange: (BusinessAlgolia | WithId<Business>)[] = [];
   const closed: (BusinessAlgolia | WithId<Business>)[] = [];
-  items?.forEach((item) => {
+  uniqBy(items, (item) => ('id' in item ? item.id : item.objectID)).forEach((item) => {
     if (item.status === 'open' || item.preparationModes?.includes('scheduled')) {
       if (!isOutOfRange(item, currentLocation)) open.push(item);
       else openOutOfRange.push(item);
