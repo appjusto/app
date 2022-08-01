@@ -21,7 +21,7 @@ export const RectangularListItemText = ({
       onPress={onSelect}
       style={[
         {
-          flex: 1,
+          // flex: 1,
           borderRadius: padding,
           paddingHorizontal: padding,
           paddingVertical: 6,
