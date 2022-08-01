@@ -40,26 +40,21 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
   const canScheduleUI = () => {
     // realtime and scheduling
     if (business.preparationModes?.includes('realtime')) {
-      // open
-      if (business.status === 'open') {
-        // with scheduledTo
-        if (order.scheduledTo) {
-          return (
-            <RectangularListItemText
-              text={`${capitalize(
-                Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now, {
-                  sameDay: '[hoje]',
-                  nextDay: 'dddd',
-                  nextWeek: 'dddd',
-                })
-              )}, ${getETAWithMargin(order.scheduledTo, margin)}`}
-              selected
-              onSelect={() => null}
-            />
-          )
-        }
-        // without scheduledTo
-        else {
+      if (order.scheduledTo) {
+        return (<RectangularListItemText
+          text={`${capitalize(
+            Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now, {
+              sameDay: '[hoje]',
+              nextDay: 'dddd',
+              nextWeek: 'dddd',
+            })
+          )}, ${getETAWithMargin(order.scheduledTo, margin)}`}
+          selected
+          onSelect={() => null}
+        />)
+      } else {
+        if (business.status === 'open') {
+          // without scheduledTo
           if (order.arrivals?.destination?.estimate) {
             return (
               <RectangularListItemText
@@ -70,27 +65,8 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
             )
           } return null
         }
-      }
-      // closed
-      if (business.status === 'closed') {
-        // with scheduledTo
-        if (order.scheduledTo) {
-          return (
-            <RectangularListItemText
-              text={`${capitalize(
-                Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now, {
-                  sameDay: '[hoje]',
-                  nextDay: 'dddd',
-                  nextWeek: 'dddd',
-                })
-              )}, ${getETAWithMargin(order.scheduledTo, margin)}`}
-              selected
-              onSelect={() => null}
-            />
-          )
-        }
-        // without scheduledTo
-        else {
+        if (business.status === 'closed') {
+          // without scheduledTo
           return (
             <View>
               <Text style={{ ...texts.sm, flexWrap: 'wrap' }} numberOfLines={3}>
@@ -132,6 +108,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
     }
   }
   const orderSchedulingUI = () => {
+    // real time only
     if (!business.preparationModes?.includes('scheduled')) {
       if (order.arrivals?.destination?.estimate) {
         return (
@@ -154,41 +131,8 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
         }}
       >
         <View>
-          {/* {business.status === 'closed' &&
-            !business.preparationModes?.includes('realtime') &&
-            !order.scheduledTo ? (
-            <View>
-              <Text style={{ ...texts.sm, flexWrap: 'wrap' }} numberOfLines={3}>
-                {t('Somente agendamento')}
-              </Text>
-            </View>
-          ) : null}
-          {order.scheduledTo ? (
-            <RectangularListItemText
-              text={`${capitalize(
-                Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now, {
-                  sameDay: '[hoje]',
-                  nextDay: 'dddd',
-                  nextWeek: 'dddd',
-                })
-              )}, ${getETAWithMargin(order.scheduledTo, margin)}`}
-              selected
-              onSelect={() => null}
-            />
-          ) : null}
-          {!order.scheduledTo &&
-            business.status === 'open' &&
-            business.preparationModes?.includes('realtime') &&
-            order.arrivals?.destination?.estimate ? (
-            <RectangularListItemText
-              text={`Entrega: ${getETAWithMargin(order.arrivals?.destination?.estimate!)}`}
-              selected
-              onSelect={() => null}
-            />
-          ) : null} */}
           {canScheduleUI()}
         </View>
-        {/* right side */}
         <View>
           <RectangularListItemText
             text={t('Agendar horário')}
