@@ -41,17 +41,19 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
     // realtime and scheduling
     if (business.preparationModes?.includes('realtime')) {
       if (order.scheduledTo) {
-        return (<RectangularListItemText
-          text={`${capitalize(
-            Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now, {
-              sameDay: '[hoje]',
-              nextDay: 'dddd',
-              nextWeek: 'dddd',
-            })
-          )}, ${getETAWithMargin(order.scheduledTo, margin)}`}
-          selected
-          onSelect={() => null}
-        />)
+        return (
+          <RectangularListItemText
+            text={`${capitalize(
+              Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now, {
+                sameDay: '[hoje]',
+                nextDay: 'dddd',
+                nextWeek: 'dddd',
+              })
+            )}, ${getETAWithMargin(order.scheduledTo, margin)}`}
+            selected
+            onSelect={() => null}
+          />
+        );
       } else {
         if (business.status === 'open') {
           // without scheduledTo
@@ -62,8 +64,9 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
                 selected
                 onSelect={() => null}
               />
-            )
-          } return null
+            );
+          }
+          return null;
         }
         if (business.status === 'closed') {
           // without scheduledTo
@@ -73,10 +76,10 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
                 {t('Somente agendamento')}
               </Text>
             </View>
-          )
+          );
         }
       }
-      return null
+      return null;
     }
     // no realtime, only scheduling
     else {
@@ -93,20 +96,18 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
             selected
             onSelect={() => null}
           />
-        )
-      }
-      else {
+        );
+      } else {
         return (
           <View>
             <Text style={{ ...texts.sm, flexWrap: 'wrap' }} numberOfLines={3}>
               {t('Somente agendamento')}
             </Text>
           </View>
-        )
-
+        );
       }
     }
-  }
+  };
   const orderSchedulingUI = () => {
     // real time only
     if (!business.preparationModes?.includes('scheduled')) {
@@ -130,9 +131,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
           alignItems: 'center',
         }}
       >
-        <View>
-          {canScheduleUI()}
-        </View>
+        <View>{canScheduleUI()}</View>
         <View>
           <RectangularListItemText
             text={t('Agendar horário')}
