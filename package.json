@@ -15,7 +15,7 @@
     "postversion": "git push && git push --tags && git fetch"
   },
   "dependencies": {
-    "@appjusto/dates": "^0.7.0",
+    "@appjusto/dates": "github:appjusto/dates",
     "@appjusto/firebase-refs": "^0.2.0",
     "@appjusto/menu": "^0.1.4",
     "@appjusto/types": "^7.6.9",

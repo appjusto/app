@@ -85,11 +85,11 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
       if (firsDayWithSlots?.length) setSelectedDay(firsDayWithSlots);
       else setSelectedDay(nextDateSlots[0]);
       if (order?.scheduledTo) {
-        console.log(nextDateSlots);
+        // console.log(nextDateSlots);
         const dayScheduled = nextDateSlots.find((slot) => {
-          console.log(slot);
+          // console.log(slot);
           if (slot && slot[0])
-            slot[0].getDate() === (order.scheduledTo as Timestamp).toDate().getDate();
+            return slot[0].getDate() === (order.scheduledTo as Timestamp).toDate().getDate();
           return false;
         });
         setPrepMode('scheduled');
@@ -130,6 +130,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
             const day = dates.find(() => true);
             if (!day) return null;
             const chosenDay = selectedDay.find(() => true);
+            // console.log(chosenDay);
             return (
               <View style={{ marginRight: padding }} key={i}>
                 <DayBoxListItem
@@ -145,6 +146,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
       </View>
       <View style={{ flex: 1 }}>
         <FlatList
+          initialNumToRender={20}
           showsVerticalScrollIndicator={false}
           style={{ marginTop: 24 }}
           ListHeaderComponent={() => {
