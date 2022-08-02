@@ -69,7 +69,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
 
   // helpers
   const margin = 60;
-  const daySchedules = business?.schedules ? scheduleFromDate(business.schedules, now, 2) : [];
+  const daySchedules = business?.schedules ? scheduleFromDate(business.schedules, now) : [];
   const nextDateSlots: Date[][] = getNextDateSlots(daySchedules, now, margin);
   const realTimeDelivery =
     business?.status === 'open' && business?.preparationModes?.includes('realtime');
