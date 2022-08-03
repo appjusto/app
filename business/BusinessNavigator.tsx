@@ -127,7 +127,7 @@ export const BusinessNavigator = () => {
           headerLeft: () => (
             <TouchableWithoutFeedback onPress={() => navigation.navigate('BusinessOptions')}>
               <View style={{ marginLeft: 12 }}>
-                <Image source={headerMenu} height={32} width={32} />
+                <Image source={headerMenu} style={{ height: 32, width: 32 }} />
               </View>
             </TouchableWithoutFeedback>
           ),

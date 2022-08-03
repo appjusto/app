@@ -1,4 +1,4 @@
-import { Order, OrderStatus, WithId } from '@appjusto/types';
+import { Business, Order, OrderStatus, WithId } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -29,6 +29,8 @@ type Props = {
 };
 
 export const BusinessOrders = ({ navigation, route }: Props) => {
+  // route params
+  const { businessId } = route.params ?? {};
   // context
   const getServerTime = useContextGetSeverTime();
   const api = React.useContext(ApiContext);
@@ -37,8 +39,9 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   const ordersSummary = summarizeOrders2(orders);
   const [kanbanOrders, setKanbanOrders] = React.useState<WithId<Order>[]>();
   const [selectedFilter, setSelectedFilter] = React.useState<OrderStatus>();
-  // TODO: choose best business initially and remember last selected
-  // TODO maybe:add the printing switch here
+  const [selectedBusiness, setSelectedBusiness] = React.useState<WithId<Business> | undefined>(
+    business
+  );
   // side-effects
   React.useEffect(() => {
     if (!orders?.length) setKanbanOrders([]);
@@ -63,10 +66,18 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
       }
     })();
   }, [business, getServerTime, api]);
+  // getting business from SelectBusiness screen
+  React.useEffect(() => {
+    if (businessId?.length) {
+      console.log('businessId vindo da outra tela');
+      setSelectedBusiness(undefined);
+      return api.business().observeBusiness(businessId, setSelectedBusiness);
+    }
+  }, [businessId]);
   // tracking
   useSegmentScreen('BusinessOrders');
   //UI
-  if (business === undefined || kanbanOrders === undefined) {
+  if (selectedBusiness === undefined || kanbanOrders === undefined) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -81,7 +92,12 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
     <View style={screens.default}>
       <View>
         <PaddedView>
-          <BusinessOrdersHeader business={business} />
+          <BusinessOrdersHeader
+            business={selectedBusiness}
+            onSwitchBusiness={() =>
+              navigation.navigate('SelectBusiness', { businessId: selectedBusiness.id })
+            }
+          />
         </PaddedView>
       </View>
       <KeyboardAwareScrollView

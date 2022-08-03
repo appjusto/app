@@ -1,4 +1,5 @@
 import { Business, Order, OrderStatus, WithId } from '@appjusto/types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../common/app/context';
@@ -25,6 +26,7 @@ interface ContextProps {
   unreadCount: number;
   activeOrders: WithId<Order>[];
   completedOrders: WithId<Order>[];
+  businesses: WithId<Business>[] | undefined;
 }
 
 export const BusinessAppContext = React.createContext<ContextProps>({} as ContextProps);
@@ -70,9 +72,17 @@ export const BusinessAppProvider = ({ children }: Props) => {
   }, [api, businessId]);
 
   React.useEffect(() => {
-    if (!user?.email) return;
-    if (businessId) return;
-    getBusinessIdFromBusinesses();
+    (async () => {
+      if (!user?.email) return;
+      if (businessId) return;
+      // checking if there is a business.id saved in AsyncStorage
+      const storedBusinessId = await AsyncStorage.getItem('last-business-id');
+      if (storedBusinessId) {
+        setBusinessId(storedBusinessId);
+      } else {
+        getBusinessIdFromBusinesses();
+      }
+    })();
   }, [user?.email, businessId, getBusinessIdFromBusinesses]);
 
   React.useEffect(() => {
@@ -101,6 +111,7 @@ export const BusinessAppProvider = ({ children }: Props) => {
         unreadCount,
         activeOrders,
         completedOrders,
+        businesses,
       }}
     >
       {children}

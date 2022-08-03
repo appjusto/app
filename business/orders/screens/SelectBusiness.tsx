@@ -27,7 +27,7 @@ export const SelectBusiness = ({ navigation, route }: Props) => {
   // route params
   const { businessId } = route.params ?? {};
   // context
-  const { allBusinessesManaged } = React.useContext(BusinessAppContext);
+  const { businesses } = React.useContext(BusinessAppContext);
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // state
@@ -61,7 +61,7 @@ export const SelectBusiness = ({ navigation, route }: Props) => {
     }
   };
   //UI
-  if (allBusinessesManaged === undefined || selectedBusiness === undefined) {
+  if (businesses === undefined || selectedBusiness === undefined) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -75,7 +75,7 @@ export const SelectBusiness = ({ navigation, route }: Props) => {
         contentContainerStyle={{ flexGrow: 1 }}
         scrollIndicatorInsets={{ right: 1 }}
       >
-        {allBusinessesManaged.map((business) => {
+        {businesses.map((business) => {
           return (
             <View style={{ marginBottom: padding }} key={business.id}>
               <SelectBusinessCard
