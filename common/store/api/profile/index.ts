@@ -5,7 +5,6 @@ import {
   doc,
   Firestore,
   GeoPoint,
-  getDoc,
   onSnapshot,
   serverTimestamp,
   setDoc,
@@ -36,25 +35,16 @@ export default class ProfileApi {
   }
   private async createProfile(id: string) {
     console.log(`Creating ${this.flavor} profile...`);
-    const ref = this.getProfileRef(id);
-    const profileSnapshot = await getDoc(ref);
-    if (profileSnapshot.exists()) {
-      const profile = profileSnapshot.data() as UserProfile;
-      Sentry.Native.captureException(new Error('Tentativa de criação de perfil já existente'), {
-        extra: { flavor: this.flavor, id, situation: profile.situation },
-      });
-    } else {
-      await setDoc(
-        ref,
-        {
-          situation: 'pending',
-          email: this.auth.getEmail() ?? null,
-          phone: this.auth.getPhoneNumber(true) ?? null,
-          createdOn: serverTimestamp(),
-        } as UserProfile,
-        { merge: true }
-      );
-    }
+    await setDoc(
+      this.getProfileRef(id),
+      {
+        situation: 'pending',
+        email: this.auth.getEmail() ?? null,
+        phone: this.auth.getPhoneNumber(true) ?? null,
+        createdOn: serverTimestamp(),
+      } as UserProfile,
+      { merge: true }
+    );
   }
 
   // firestore
