@@ -69,7 +69,6 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // getting business from SelectBusiness screen
   React.useEffect(() => {
     if (businessId?.length) {
-      console.log('businessId vindo da outra tela');
       setSelectedBusiness(undefined);
       return api.business().observeBusiness(businessId, setSelectedBusiness);
     }
