@@ -28,6 +28,7 @@ interface ContextProps {
   completedOrders: WithId<Order>[];
   businesses: WithId<Business>[] | undefined;
   scheduledOrders: WithId<Order>[];
+  selectBusinessId: (businessId: string) => void;
 }
 
 export const BusinessAppContext = React.createContext<ContextProps>({} as ContextProps);
@@ -60,6 +61,10 @@ export const BusinessAppProvider = ({ children }: Props) => {
     if (!businesses) return;
     setBusinessId(businesses.find(() => true)?.id ?? null);
   }, [businesses]);
+
+  const selectBusinessId = (businessId: string) => {
+    setBusinessId(businessId);
+  };
 
   // side-effects
   // configure notifications
@@ -116,6 +121,7 @@ export const BusinessAppProvider = ({ children }: Props) => {
         completedOrders,
         businesses,
         scheduledOrders,
+        selectBusinessId,
       }}
     >
       {children}

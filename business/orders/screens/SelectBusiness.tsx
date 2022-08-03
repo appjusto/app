@@ -6,8 +6,6 @@ import React from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
-import DefaultButton from '../../../common/components/buttons/DefaultButton';
-import PaddedView from '../../../common/components/containers/PaddedView';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -27,7 +25,7 @@ export const SelectBusiness = ({ navigation, route }: Props) => {
   // route params
   const { businessId } = route.params ?? {};
   // context
-  const { businesses } = React.useContext(BusinessAppContext);
+  const { businesses, selectBusinessId } = React.useContext(BusinessAppContext);
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // state
@@ -41,14 +39,14 @@ export const SelectBusiness = ({ navigation, route }: Props) => {
     }
   }, [businessId, api]);
   // handlers
-  const selectBusinessHandler = async () => {
+  const selectBusinessHandler = async (business: WithId<Business>) => {
     try {
-      if (selectedBusiness) {
-        setLoading(true);
-        await AsyncStorage.setItem('last-business-id', selectedBusiness.id);
-        setLoading(false);
-        navigation.navigate('BusinessOrders', { businessId: selectedBusiness.id });
-      } else dispatch(showToast(t('Escolha um restaurante para prosseguir'), 'error'));
+      setSelectedBusiness(business);
+      setLoading(true);
+      await AsyncStorage.setItem('last-business-id', business.id);
+      selectBusinessId(business.id);
+      setLoading(false);
+      navigation.navigate('BusinessOrders', { businessId: business.id });
     } catch (error: any) {
       setLoading(false);
       console.log(error.toString());
@@ -81,21 +79,12 @@ export const SelectBusiness = ({ navigation, route }: Props) => {
               <SelectBusinessCard
                 business={business}
                 selected={selectedBusiness && selectedBusiness.id === business.id}
-                onSelectBusiness={() => setSelectedBusiness(business)}
+                onSelectBusiness={() => selectBusinessHandler(business)}
               />
             </View>
           );
         })}
       </ScrollView>
-      <PaddedView>
-        <DefaultButton
-          title={t('Confirmar')}
-          style={{ marginBottom: padding }}
-          activityIndicator={loading}
-          disabled={loading || selectedBusiness === undefined}
-          onPress={selectBusinessHandler}
-        />
-      </PaddedView>
     </View>
   );
 };
