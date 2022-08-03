@@ -87,6 +87,8 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
     // TODO: what should we do?
     return null;
   }
+  // console.log(business?.id);
+  console.log(orders);
   return (
     <View style={screens.default}>
       <View>

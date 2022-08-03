@@ -27,6 +27,7 @@ interface ContextProps {
   activeOrders: WithId<Order>[];
   completedOrders: WithId<Order>[];
   businesses: WithId<Business>[] | undefined;
+  // scheduledOrders: WithId<Order>[];
 }
 
 export const BusinessAppContext = React.createContext<ContextProps>({} as ContextProps);
@@ -45,6 +46,7 @@ export const BusinessAppProvider = ({ children }: Props) => {
   const [businessId, setBusinessId] = React.useState<string | undefined | null>();
   const [business, setBusiness] = React.useState<WithId<Business>>();
   const [orders, setOrders] = React.useState<WithId<Order>[]>([]);
+  const scheduledOrders = useObserveBusinessOrders(business?.id, ['scheduled']);
   const activeOrders = useObserveBusinessOrders(business?.id, activeStatuses);
   const completedOrders = useCompletedBusinessOrders(business?.id);
   const activeChats = useBusinessChats(business?.id, activeOrders);
@@ -112,6 +114,7 @@ export const BusinessAppProvider = ({ children }: Props) => {
         activeOrders,
         completedOrders,
         businesses,
+        // scheduledOrders,
       }}
     >
       {children}
