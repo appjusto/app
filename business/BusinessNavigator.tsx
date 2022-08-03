@@ -24,6 +24,7 @@ import { BusinessOrders } from './orders/screens/BusinessOrders';
 import { BusinessPending } from './orders/screens/BusinessPending';
 import { BusinessProfile } from './orders/screens/BusinessProfile';
 import { OrderDetail } from './orders/screens/OrderDetail';
+import { SelectBusiness } from './orders/screens/SelectBusiness';
 import { BusinessNavParamsList, LoggedBusinessNavParamsList } from './types';
 import { KEEP_ALIVE_INTERVAL, startKeepAliveTask, stopKeepAliveTask } from './utils/keepAlive';
 
@@ -154,6 +155,11 @@ export const BusinessNavigator = () => {
         name="BusinessChats"
         component={BusinessChats}
         options={{ title: t('Chats') }}
+      />
+      <Stack.Screen
+        name="SelectBusiness"
+        component={SelectBusiness}
+        options={{ title: t('Restaurantes') }}
       />
       <Stack.Screen
         name="BusinessOptions"

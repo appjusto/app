@@ -7,13 +7,18 @@ export type LoggedBusinessNavParamsList = {
 
 export type BusinessNavParamsList = {
   BusinessPending: undefined;
-  BusinessOrders: undefined;
+  BusinessOrders?: {
+    businessId?: string;
+  };
   OrderDetail: {
     orderId: string;
   };
   BusinessChats: undefined;
   BusinessOptions: undefined;
   AboutApp: undefined;
+  SelectBusiness?: {
+    businessId?: string;
+  };
   Terms: undefined;
   OrderChat: {
     orderId: string;
