@@ -89,7 +89,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
     return null;
   }
   console.log(business?.id);
-  console.log(orders);
+
   return (
     <View style={screens.default}>
       <View>
@@ -124,6 +124,13 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
               showsHorizontalScrollIndicator={false}
               style={{ marginTop: padding, paddingLeft: padding }}
             >
+              {/* scheduled orders */}
+              <ListFilterButton
+                title={t('Agendados')}
+                selected={selectedFilter === 'scheduled'}
+                onPress={() => setSelectedFilter('scheduled')}
+                style={{ marginRight: halfPadding }}
+              />
               {/* active orders */}
               <ListFilterButton
                 title={t('Ativos')}
