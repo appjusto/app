@@ -1,6 +1,10 @@
+import { Dayjs } from '@appjusto/dates';
 import { Order } from '@appjusto/types';
+import { Timestamp } from 'firebase/firestore';
+import { capitalize } from 'lodash';
 import React from 'react';
 import RoundedText from '../../../common/components/texts/RoundedText';
+import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeContext';
 import { colors } from '../../../common/styles';
 import { formatTime } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
@@ -10,10 +14,25 @@ type Props = {
 };
 
 export const OrderLabel = ({ order }: Props) => {
+  // context
+  const getServerTime = useContextGetSeverTime();
+  const now = getServerTime();
   if (!order) return null;
-  const { status, dispatchingState, timestamps } = order;
+  const { status, dispatchingState, timestamps, scheduledTo } = order;
+
   let statusLabel;
   let statusBGColor;
+  if (status === 'scheduled') {
+    if (scheduledTo) {
+      statusLabel = `${t('Agendado para ')} ${capitalize(
+        Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now)
+      )}`;
+      statusBGColor = colors.green100;
+    } else {
+      statusLabel = t('Agendado');
+      statusBGColor = colors.green100;
+    }
+  }
   if (status === 'confirmed') {
     statusLabel = t('A confirmar');
     statusBGColor = colors.red;

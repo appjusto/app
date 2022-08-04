@@ -45,9 +45,9 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // side-effects
   React.useEffect(() => {
     if (!orders?.length) setKanbanOrders([]);
-    else if (!selectedFilter) setKanbanOrders(activeOrders);
-    else if (selectedFilter === 'scheduled') setKanbanOrders(scheduledOrders);
-    else setKanbanOrders(filterOrdersByStatus(orders, selectedFilter));
+    if (!selectedFilter) setKanbanOrders(activeOrders);
+    if (selectedFilter === 'scheduled') setKanbanOrders(scheduledOrders);
+    else setKanbanOrders(filterOrdersByStatus(orders, selectedFilter!));
   }, [orders, selectedFilter, scheduledOrders, activeOrders]);
   // setting business status to open whenever a manager logs in during business hours
   React.useEffect(() => {
@@ -89,6 +89,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
     return null;
   }
   console.log(business?.id);
+  // console.log(scheduledOrders);
 
   return (
     <View style={screens.default}>
