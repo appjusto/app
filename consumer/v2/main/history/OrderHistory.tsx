@@ -166,13 +166,15 @@ export default function ({ navigation, route }: Props) {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: padding,
+                    padding,
                   }}
                 >
                   <TouchableOpacity
                     onPress={() => setFrom((value) => Dayjs(value).subtract(7, 'day').toDate())}
                   >
-                    <MaterialIcons name="arrow-back-ios" size={24} color="black" />
+                    <View style={{ paddingRight: padding, paddingVertical: halfPadding }}>
+                      <MaterialIcons name="arrow-back-ios" size={24} color="black" />
+                    </View>
                   </TouchableOpacity>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <MaterialIcons name="calendar-today" size={24} color="black" />
@@ -185,7 +187,9 @@ export default function ({ navigation, route }: Props) {
                   <TouchableOpacity
                     onPress={() => setFrom((value) => Dayjs(value).add(7, 'day').toDate())}
                   >
-                    <MaterialIcons name="arrow-forward-ios" size={24} color="black" />
+                    <View style={{ paddingLeft: padding, paddingVertical: halfPadding }}>
+                      <MaterialIcons name="arrow-forward-ios" size={24} color="black" />
+                    </View>
                   </TouchableOpacity>
                 </View>
               )}

@@ -127,8 +127,11 @@ export const DeliveryHistoryByWeek = ({ navigation, route }: Props) => {
             <TouchableOpacity
               onPress={() => setFrom((value) => Dayjs(value).subtract(7, 'day').toDate())}
             >
-              <MaterialIcons name="arrow-back-ios" size={24} color="black" />
+              <View style={{ paddingRight: padding, paddingVertical: halfPadding }}>
+                <MaterialIcons name="arrow-back-ios" size={24} color="black" />
+              </View>
             </TouchableOpacity>
+
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <MaterialIcons name="calendar-today" size={24} color="black" />
               <Text style={{ marginLeft: halfPadding, ...texts.md }}>{`${from.getDate()}${
@@ -140,7 +143,9 @@ export const DeliveryHistoryByWeek = ({ navigation, route }: Props) => {
             <TouchableOpacity
               onPress={() => setFrom((value) => Dayjs(value).add(7, 'day').toDate())}
             >
-              <MaterialIcons name="arrow-forward-ios" size={24} color="black" />
+              <View style={{ paddingLeft: padding, paddingVertical: halfPadding }}>
+                <MaterialIcons name="arrow-forward-ios" size={24} color="black" />
+              </View>
             </TouchableOpacity>
           </View>
         )}
