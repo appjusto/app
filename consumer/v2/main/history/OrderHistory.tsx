@@ -10,21 +10,31 @@ import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../common/app/context';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
+import FeedbackView from '../../../../common/components/views/FeedbackView';
 import StatusBadge from '../../../../common/components/views/StatusBadge';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
+import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
 import { ObserveOrdersOptions } from '../../../../common/store/api/order/types';
 import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { getOrderTime, isOrderOngoing } from '../../../../common/store/order/selectors';
 import { getUser } from '../../../../common/store/user/selectors';
-import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import {
+  colors,
+  doublePadding,
+  halfPadding,
+  padding,
+  screens,
+  texts,
+} from '../../../../common/styles';
 import {
   formatAddress,
   formatDate,
   formatTime,
   separateWithDot,
 } from '../../../../common/utils/formatters';
+import { t } from '../../../../strings';
 import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
 
@@ -193,6 +203,18 @@ export default function ({ navigation, route }: Props) {
                   </TouchableOpacity>
                 </View>
               )}
+              ListEmptyComponent={
+                orders.length === 0 ? (
+                  <View style={{ marginTop: doublePadding }}>
+                    <FeedbackView
+                      header={t('Sem pedidos no período')}
+                      description={t('Os pedidos que você efetuar aparecerão nessa lista')}
+                      icon={<IconMotocycle />}
+                      background={colors.grey50}
+                    />
+                  </View>
+                ) : null
+              }
             />
           </View>
         )}

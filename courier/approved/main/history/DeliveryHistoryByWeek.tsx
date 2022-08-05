@@ -10,7 +10,9 @@ import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
+import FeedbackView from '../../../../common/components/views/FeedbackView';
 import StatusBadge from '../../../../common/components/views/StatusBadge';
+import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
 import { ObserveOrdersOptions } from '../../../../common/store/api/order/types';
 import { useSegmentScreen } from '../../../../common/store/api/track';
@@ -20,7 +22,14 @@ import {
   isOrderOngoing,
 } from '../../../../common/store/order/selectors';
 import { getUser } from '../../../../common/store/user/selectors';
-import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import {
+  colors,
+  doublePadding,
+  halfPadding,
+  padding,
+  screens,
+  texts,
+} from '../../../../common/styles';
 import {
   formatCurrency,
   formatDate,
@@ -28,6 +37,7 @@ import {
   separateWithDot,
 } from '../../../../common/utils/formatters';
 import { useServerTime } from '../../../../common/utils/platform/useServerTime';
+import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
 import { DeliveriesNavigatorParamList } from './types';
@@ -109,6 +119,7 @@ export const DeliveryHistoryByWeek = ({ navigation, route }: Props) => {
             formatDate(time),
             formatTime(time)
           )}`;
+
           return (
             <ConfigItem title={title} subtitle={subtitle} onPress={() => orderPressHandler(item)}>
               <StatusBadge order={item} />
@@ -135,7 +146,7 @@ export const DeliveryHistoryByWeek = ({ navigation, route }: Props) => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <MaterialIcons name="calendar-today" size={24} color="black" />
               <Text style={{ marginLeft: halfPadding, ...texts.md }}>{`${from.getDate()}${
-                from.getMonth() != to.getMonth()
+                from.getMonth() !== to.getMonth()
                   ? ` de ${capitalize(Dayjs(from).format('MMMM'))}`
                   : ''
               } a ${to.getDate()} de ${capitalize(Dayjs(to).format('MMMM'))}`}</Text>
@@ -149,6 +160,18 @@ export const DeliveryHistoryByWeek = ({ navigation, route }: Props) => {
             </TouchableOpacity>
           </View>
         )}
+        ListEmptyComponent={
+          orders.length === 0 ? (
+            <View style={{ marginTop: doublePadding }}>
+              <FeedbackView
+                header={t('Sem entregas no período')}
+                description={t('As corridas que você efetuar aparecerão nessa lista')}
+                icon={<IconMotocycle />}
+                background={colors.grey50}
+              />
+            </View>
+          ) : null
+        }
       />
     </View>
   );
