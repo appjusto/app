@@ -2,8 +2,7 @@ import { Business, Order, OrderStatus, WithId } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { ActivityIndicator, FlatList, ScrollView, Text, View } from 'react-native';
 import { ApiContext } from '../../../common/app/context';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
@@ -89,148 +88,126 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
     return null;
   }
   console.log(business?.id);
-  // console.log(scheduledOrders);
 
   return (
-    <View style={screens.default}>
-      <View>
-        <PaddedView>
-          <BusinessOrdersHeader
-            business={selectedBusiness}
-            onSwitchBusiness={() =>
-              navigation.navigate('SelectBusiness', { businessId: selectedBusiness.id })
-            }
+    <View style={screens.config}>
+      <PaddedView style={{ backgroundColor: colors.white }}>
+        <BusinessOrdersHeader
+          business={selectedBusiness}
+          onSwitchBusiness={() =>
+            navigation.navigate('SelectBusiness', { businessId: selectedBusiness.id })
+          }
+        />
+      </PaddedView>
+      <View style={{ backgroundColor: colors.grey50 }}>
+        <DoubleHeader title={t('Pedidos')} subtitle={t('Gerencie os pedidos do seu restaurante')} />
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ marginVertical: padding, paddingLeft: padding }}
+        >
+          <ListFilterButton
+            title={t('Agendados')}
+            selected={selectedFilter === 'scheduled'}
+            onPress={() => setSelectedFilter('scheduled')}
+            style={{ marginRight: halfPadding }}
           />
-        </PaddedView>
-      </View>
-      <KeyboardAwareScrollView
-        enableOnAndroid
-        enableAutomaticScroll
-        keyboardOpeningTime={0}
-        style={{ ...screens.config }}
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ flexGrow: 1 }}
-        scrollIndicatorInsets={{ right: 1 }}
-      >
+          <ListFilterButton
+            title={t('Ativos')}
+            selected={selectedFilter === undefined}
+            onPress={() => {
+              setSelectedFilter(undefined);
+            }}
+            style={{ marginRight: halfPadding }}
+          />
+          <ListFilterButton
+            title={t('A confirmar')}
+            selected={selectedFilter === 'confirmed'}
+            onPress={() => setSelectedFilter('confirmed')}
+            total={ordersSummary.confirmed ?? 0}
+            numberColor={ordersSummary.confirmed ? colors.white : colors.black}
+            numberBgColor={ordersSummary.confirmed ? colors.red : colors.grey50}
+            style={{ marginRight: halfPadding }}
+          />
+          <ListFilterButton
+            title={t('Preparação')}
+            selected={selectedFilter === 'preparing'}
+            onPress={() => setSelectedFilter('preparing')}
+            total={ordersSummary.preparing ?? 0}
+            numberColor={colors.black}
+            style={{ marginRight: halfPadding }}
+          />
+          <ListFilterButton
+            title={t('Retirada')}
+            selected={selectedFilter === 'ready'}
+            onPress={() => setSelectedFilter('ready')}
+            total={ordersSummary.ready ?? 0}
+            numberColor={colors.black}
+            style={{ marginRight: halfPadding }}
+            numberBgColor={ordersSummary.ready ? colors.darkYellow : colors.grey50}
+          />
+          <ListFilterButton
+            title={t('Despachado')}
+            selected={selectedFilter === 'dispatching'}
+            onPress={() => setSelectedFilter('dispatching')}
+            total={ordersSummary.dispatching ?? 0}
+            numberColor={colors.black}
+            style={{ marginRight: halfPadding }}
+          />
+          <ListFilterButton
+            title={t('Concluído')}
+            selected={selectedFilter === 'delivered'}
+            onPress={() => setSelectedFilter('delivered')}
+            total={ordersSummary.delivered ?? 0}
+            numberColor={colors.black}
+            style={{ marginRight: halfPadding }}
+          />
+          <ListFilterButton
+            title={t('Cancelados')}
+            selected={selectedFilter === 'canceled'}
+            onPress={() => setSelectedFilter('canceled')}
+            total={ordersSummary.canceled ?? 0}
+            style={{ marginRight: 32 }}
+          />
+        </ScrollView>
         <View>
-          <DoubleHeader
-            title={t('Pedidos')}
-            subtitle={t('Gerencie os pedidos do seu restaurante')}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
-          <View>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              style={{ marginTop: padding, paddingLeft: padding }}
-            >
-              {/* scheduled orders */}
-              <ListFilterButton
-                title={t('Agendados')}
-                selected={selectedFilter === 'scheduled'}
-                onPress={() => setSelectedFilter('scheduled')}
-                style={{ marginRight: halfPadding }}
-              />
-              {/* active orders */}
-              <ListFilterButton
-                title={t('Ativos')}
-                selected={selectedFilter === undefined}
-                onPress={() => {
-                  setSelectedFilter(undefined);
+          <FlatList
+            style={{ padding, paddingBottom: 32 }}
+            data={kanbanOrders}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <View style={{ marginBottom: padding }}>
+                <OrdersKanbanItem
+                  onCheckOrder={() => navigation.navigate('OrderDetail', { orderId: item.id })}
+                  orderId={item.id}
+                />
+              </View>
+            )}
+            ListEmptyComponent={
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: colors.grey50,
+                  paddingTop: 32,
                 }}
-                style={{ marginRight: halfPadding }}
-              />
-              {/* confirmed orders */}
-              <ListFilterButton
-                title={t('A confirmar')}
-                selected={selectedFilter === 'confirmed'}
-                onPress={() => setSelectedFilter('confirmed')}
-                total={ordersSummary.confirmed ?? 0}
-                numberColor={ordersSummary.confirmed ? colors.white : colors.black}
-                numberBgColor={ordersSummary.confirmed ? colors.red : colors.grey50}
-                style={{ marginRight: halfPadding }}
-              />
-              {/* preparing orders */}
-              <ListFilterButton
-                title={t('Preparação')}
-                selected={selectedFilter === 'preparing'}
-                onPress={() => setSelectedFilter('preparing')}
-                total={ordersSummary.preparing ?? 0}
-                numberColor={colors.black}
-                style={{ marginRight: halfPadding }}
-              />
-              <ListFilterButton
-                title={t('Retirada')}
-                selected={selectedFilter === 'ready'}
-                onPress={() => setSelectedFilter('ready')}
-                total={ordersSummary.ready ?? 0}
-                numberColor={colors.black}
-                style={{ marginRight: halfPadding }}
-                numberBgColor={ordersSummary.ready ? colors.darkYellow : colors.grey50}
-              />
-              <ListFilterButton
-                title={t('Despachado')}
-                selected={selectedFilter === 'dispatching'}
-                onPress={() => setSelectedFilter('dispatching')}
-                total={ordersSummary.dispatching ?? 0}
-                numberColor={colors.black}
-                style={{ marginRight: halfPadding }}
-              />
-              {/* delivered orders */}
-              <ListFilterButton
-                title={t('Concluído')}
-                selected={selectedFilter === 'delivered'}
-                onPress={() => setSelectedFilter('delivered')}
-                total={ordersSummary.delivered ?? 0}
-                numberColor={colors.black}
-                style={{ marginRight: halfPadding }}
-              />
-              {/* canceled orders */}
-              <ListFilterButton
-                title={t('Cancelados')}
-                selected={selectedFilter === 'canceled'}
-                onPress={() => setSelectedFilter('canceled')}
-                total={ordersSummary.canceled ?? 0}
-                style={{ marginRight: 32 }}
-              />
-            </ScrollView>
-            <PaddedView style={{ flex: 1 }}>
-              {kanbanOrders.length === 0 ? (
-                <View
+              >
+                <IconOnboardingDelivery circleColor={colors.white} />
+                <Text
                   style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: colors.grey50,
-                    paddingTop: 32,
+                    textAlign: 'center',
+                    ...texts.sm,
+                    color: colors.grey700,
+                    paddingTop: padding,
                   }}
                 >
-                  <IconOnboardingDelivery circleColor={colors.white} />
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      ...texts.sm,
-                      color: colors.grey700,
-                      paddingTop: padding,
-                    }}
-                  >
-                    {t('Não há pedidos ativos nesse momento.')}
-                  </Text>
-                </View>
-              ) : (
-                kanbanOrders?.map((order) => (
-                  <View style={{ marginBottom: padding }} key={order.id}>
-                    <OrdersKanbanItem
-                      onCheckOrder={() => navigation.navigate('OrderDetail', { orderId: order.id })}
-                      orderId={order.id}
-                    />
-                  </View>
-                ))
-              )}
-            </PaddedView>
-          </View>
+                  {t('Não há pedidos ativos nesse momento.')}
+                </Text>
+              </View>
+            }
+          />
         </View>
-      </KeyboardAwareScrollView>
+      </View>
     </View>
   );
 };

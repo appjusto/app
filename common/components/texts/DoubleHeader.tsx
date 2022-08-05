@@ -12,10 +12,7 @@ type Props = {
 
 export default function ({ title, subtitle, secondary, ...props }: Props) {
   return (
-    <View
-      style={{ flexDirection: 'row', alignItems: 'center', marginTop: padding, flex: 1 }}
-      {...props}
-    >
+    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: padding }} {...props}>
       <Pill tall color={secondary ? colors.grey700 : colors.green500} />
       <View style={{ marginLeft: 12 }}>
         <Text
