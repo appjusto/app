@@ -2,7 +2,7 @@ import { Flavor } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Keyboard, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Linking, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -25,6 +25,7 @@ import {
   separateWithDot,
 } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
+import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
 import { OrderCostBreakdown } from '../common/breakdown/OrderCostBreakdown';
 import { DeliveredItems } from '../common/DeliveredItems';
 import { ReviewBox } from '../common/review/ReviewBox';
@@ -255,6 +256,18 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
                 />
               </View>
             ) : null}
+            <View style={{ flex: 1 }}>
+              <View style={{ flex: 1 }} />
+              <DefaultButton
+                title={t('Falar com o suporte')}
+                onPress={() => {
+                  track('opening whatsapp chat with backoffice');
+                  Linking.openURL(AppJustoAssistanceWhatsAppURL);
+                }}
+                style={{ marginBottom: padding }}
+                variant="danger"
+              />
+            </View>
           </PaddedView>
         )}
       </View>
