@@ -111,28 +111,6 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   // handlers
   const updateProfileHandler = async () => {
     Keyboard.dismiss();
-    // try {
-    //   if (!canUpdateProfile) {
-    //     if (shouldVerifyPhone)
-    //       navigation.replace('PhoneVerificationScreen', { phone, countryCode });
-    //     else navigation.replace('RequestProfileEdit');
-    //   } else {
-    //     setLoading(true);
-    //     await api.profile().updateProfile(profile.id, updatedUser);
-    //     track('profile updated');
-    //     setLoading(false);
-    //     if (shouldVerifyPhone) {
-    //       navigation.navigate('PhoneVerificationScreen', {
-    //         phone: updatedUser.phone!,
-    //         countryCode,
-    //         returnScreen,
-    //         returnNextScreen,
-    //       });
-    //     } else if (returnScreen) {
-    //       navigation.navigate(returnScreen, { returnScreen: returnNextScreen });
-    //     } else navigation.goBack();
-    //   }
-    // }
     try {
       if (!canUpdateProfile) {
         if (shouldVerifyPhone)
@@ -190,10 +168,6 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
       return undefined;
     }
   })();
-  console.log(shouldVerifyPhone, 'SHOULD VERIFY');
-  console.log(isProfilePhoneVerified, 'IS PROFILE PHONE VERIFIED');
-  console.log(returnScreen, 'RETURN SCREEN');
-  console.log(returnNextScreen, 'RETURN NEXT SCREEN');
   return (
     <KeyboardAwareScrollView
       enableOnAndroid
