@@ -34,6 +34,12 @@ export default function ({ navigation, route }: Props) {
   // screen state
   const order = useObserveOrder(orderId);
   // side effects
+  // sending order code to header
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: order?.code ? `${t('Corrida finalizada')} #${order.code}` : t('Corrida finalizada'),
+    });
+  }, [navigation, order?.code]);
   // tracking
   useSegmentScreen('DeliverySummary');
   if (!order?.fare?.courier) {
