@@ -232,8 +232,9 @@ export default class OrderApi {
   async sendMessage(message: Partial<ChatMessage>) {
     return addDoc(this.firestoreRefs.getChatsRef(), {
       ...message,
+      read: false,
       timestamp: serverTimestamp(),
-    });
+    } as ChatMessage);
   }
 
   async updateReadMessages(messageIds: string[]) {
