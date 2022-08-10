@@ -1,4 +1,5 @@
 import { Business, Order, OrderStatus, WithId } from '@appjusto/types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../common/app/context';
@@ -25,11 +26,15 @@ interface ContextProps {
   unreadCount: number;
   activeOrders: WithId<Order>[];
   completedOrders: WithId<Order>[];
+  businesses: WithId<Business>[] | undefined;
+  scheduledOrders: WithId<Order>[];
+  selectBusinessId: (businessId: string) => void;
 }
 
 export const BusinessAppContext = React.createContext<ContextProps>({} as ContextProps);
 
 const activeStatuses = ['confirmed', 'preparing', 'ready', 'dispatching'] as OrderStatus[];
+const scheduled: OrderStatus[] = ['scheduled'];
 
 export const BusinessAppProvider = ({ children }: Props) => {
   // context
@@ -43,6 +48,7 @@ export const BusinessAppProvider = ({ children }: Props) => {
   const [businessId, setBusinessId] = React.useState<string | undefined | null>();
   const [business, setBusiness] = React.useState<WithId<Business>>();
   const [orders, setOrders] = React.useState<WithId<Order>[]>([]);
+  const scheduledOrders = useObserveBusinessOrders(business?.id, scheduled);
   const activeOrders = useObserveBusinessOrders(business?.id, activeStatuses);
   const completedOrders = useCompletedBusinessOrders(business?.id);
   const activeChats = useBusinessChats(business?.id, activeOrders);
@@ -55,6 +61,10 @@ export const BusinessAppProvider = ({ children }: Props) => {
     if (!businesses) return;
     setBusinessId(businesses.find(() => true)?.id ?? null);
   }, [businesses]);
+
+  const selectBusinessId = (businessId: string) => {
+    setBusinessId(businessId);
+  };
 
   // side-effects
   // configure notifications
@@ -70,9 +80,17 @@ export const BusinessAppProvider = ({ children }: Props) => {
   }, [api, businessId]);
 
   React.useEffect(() => {
-    if (!user?.email) return;
-    if (businessId) return;
-    getBusinessIdFromBusinesses();
+    (async () => {
+      if (!user?.email) return;
+      if (businessId) return;
+      // checking if there is a business.id saved in AsyncStorage
+      const storedBusinessId = await AsyncStorage.getItem('last-business-id');
+      if (storedBusinessId) {
+        setBusinessId(storedBusinessId);
+      } else {
+        getBusinessIdFromBusinesses();
+      }
+    })();
   }, [user?.email, businessId, getBusinessIdFromBusinesses]);
 
   React.useEffect(() => {
@@ -101,6 +119,9 @@ export const BusinessAppProvider = ({ children }: Props) => {
         unreadCount,
         activeOrders,
         completedOrders,
+        businesses,
+        scheduledOrders,
+        selectBusinessId,
       }}
     >
       {children}
