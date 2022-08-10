@@ -53,14 +53,13 @@ export default function ({ navigation, route }: Props) {
   const courier = useSelector(getCourier)!;
   const tallerDevice = useTallerDevice();
   // state
-  const { coords } = useLastKnownLocation();
+  const { coords, lastKnownLocation } = useLastKnownLocation();
   const request = useObserveOrderRequest(courier.id, orderId);
   const situation = request?.situation;
   const canAccept = situation === 'pending' || situation === 'viewed';
   const [routeDistanceToOrigin, setRouteDistanceToOrigin] = React.useState<number>();
   const [isLoading, setLoading] = React.useState(true);
   const [courierLatLng, setCourierLatLng] = React.useState<LatLng>();
-  const { lastKnownLocation } = useLastKnownLocation();
   // side effects
   // calculating the real distance between courier and origin
   React.useEffect(() => {
