@@ -43,7 +43,7 @@ export const OrderDetailHeader = ({ order, style, onOpenOrderChat }: Props) => {
         </Text>
         {/* TODO: add total consumer orders in that business */}
         {chatStillActive ? (
-          <View style={{ width: '60%', marginTop: halfPadding }}>
+          <View style={{ width: '100%', marginTop: halfPadding }}>
             <DefaultButton
               title={t('Abrir chat com o cliente')}
               variant="secondary"

@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Keyboard, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Platform, ScrollView, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -156,7 +156,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
           <InfoAndCPF order={order} />
         </View>
         {cancellableStatuses ? (
-          <View style={{ minWidth: '61%', paddingHorizontal: padding, marginBottom: 32 }}>
+          <View style={{ width: '100%', paddingHorizontal: padding, marginBottom: 32 }}>
             <CustomButton
               order={order}
               activityIndicator={isLoading}
@@ -175,7 +175,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
             borderTopWidth: 1,
           }}
         >
-          <View style={{ width: '100%' }}>
+          <View style={{ width: '100%', paddingBottom: Platform.OS === 'ios' ? padding : 0 }}>
             <CustomButton
               order={order}
               onPress={actionHandler}
