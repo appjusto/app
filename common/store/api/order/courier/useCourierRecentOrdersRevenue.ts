@@ -31,16 +31,17 @@ export const useCourierRecentOrdersRevenue = () => {
     let today = 0;
     let week = 0;
     orders.forEach((order) => {
-      const value = order.fare?.courier?.value ?? 0;
-      const processingFee = order?.fare?.courier?.processingFee ?? 0;
-      const revenue = value - processingFee;
+      const delivery =
+        (order.fare?.courier?.value ?? 0) - (order.fare?.courier?.processingFee ?? 0);
+      const tip = (order.tip?.value ?? 0) - (order.tip?.processingFee ?? 0);
+      const revenue = delivery + tip;
       week += revenue;
       if (Dayjs((order.createdOn as Timestamp).toDate()).diff(getServerTime(), 'day') === 0) {
         today += revenue;
       }
     });
     setResult({ today, week });
-  }, [orders]);
+  }, [getServerTime, orders]);
   // result
   return result;
 };

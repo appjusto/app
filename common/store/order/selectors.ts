@@ -53,8 +53,6 @@ export const OngoingOrdersStatuses: OrderStatus[] = [
 
 export const isOrderOngoing = (order: Order) => OngoingOrdersStatuses.includes(order.status);
 
-export const getFinancialFee = (value: number) => Math.floor(value * (2.42 / 100));
-
 type OrdersSummary = {
   [K in OrderStatus]?: number;
 };

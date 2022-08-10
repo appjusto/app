@@ -16,11 +16,7 @@ import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
 import { ObserveOrdersOptions } from '../../../../common/store/api/order/types';
 import { useSegmentScreen } from '../../../../common/store/api/track';
-import {
-  getFinancialFee,
-  getOrderTime,
-  isOrderOngoing,
-} from '../../../../common/store/order/selectors';
+import { getOrderTime, isOrderOngoing } from '../../../../common/store/order/selectors';
 import { getUser } from '../../../../common/store/user/selectors';
 import {
   colors,
@@ -106,15 +102,11 @@ export const DeliveryHistoryByWeek = ({ navigation, route }: Props) => {
         keyExtractor={(item) => item.id!}
         renderItem={({ item }) => {
           const time = getOrderTime(item);
-          const courierFee = item.fare?.courier
-            ? item.fare.courier.value -
-              (item.fare.courier.processingFee ?? getFinancialFee(item.fare.courier.value))
-            : 0;
-          const tip = item.tip
-            ? item.tip.value - (item.tip.processingFee ?? getFinancialFee(item.tip.value))
-            : 0;
-          const totalFee = courierFee + tip;
-          const title = formatCurrency(totalFee);
+          const delivery =
+            (item.fare?.courier?.value ?? 0) - (item.fare?.courier?.processingFee ?? 0);
+          const tip = (item.tip?.value ?? 0) - (item.tip?.processingFee ?? 0);
+          const revenue = delivery + tip;
+          const title = formatCurrency(revenue);
           const subtitle = `Pedido ${item.code}\n${separateWithDot(
             formatDate(time),
             formatTime(time)
