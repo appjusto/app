@@ -1,4 +1,4 @@
-import { ChatMessage, ChatMessageType, Flavor, WithId } from '@appjusto/types';
+import { ChatMessage, ChatMessageType, ChatMessageUser, Flavor, WithId } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import React from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Text, View } from 'react-native';
@@ -79,15 +79,22 @@ export default function ({ route }: Props) {
       else if (counterpartFlavor === 'business') return `business-${flavor}`;
       return 'consumer-courier';
     })() as ChatMessageType;
+    const getName = (flavor: Flavor) => {
+      if (flavor === 'consumer') return order.consumer.name ?? t('Cliente');
+      if (flavor === 'courier') return order.courier?.name ?? t('Entregador/a');
+      if (flavor === 'business') return order.business?.name ?? t('Restaurante');
+      return '';
+    };
     const participantsIds =
       flavor === 'business'
         ? [agentId, counterpartId]
         : flavor === 'consumer'
         ? [agentId, counterpartId]
         : [counterpartId, agentId];
-    const to: { agent: Flavor; id: string } = {
+    const to: ChatMessageUser = {
       agent: counterpartFlavor,
       id: counterpartId,
+      name: getName(counterpartFlavor),
     };
     const message: Partial<ChatMessage> = {
       orderId,
@@ -96,16 +103,12 @@ export default function ({ route }: Props) {
       from: {
         agent: flavor,
         id: agentId,
-        name:
-          flavor === 'consumer'
-            ? order.consumer.name ?? t('Cliente')
-            : flavor === 'business'
-            ? order.business?.name ?? t('Restaurante')
-            : order.courier?.name ?? t('Entregador/a'),
+        name: getName(flavor),
       },
       to,
       message: inputText.trim(),
       orderStatus: order.status,
+      orderCode: order.code,
     };
     api.order().sendMessage(message);
     setInputText('');
