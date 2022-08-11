@@ -124,10 +124,10 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
           <View
             style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
           >
-            <View style={{ width: '38%' }}>
+            <View style={{ width: '49%' }}>
               <DefaultButton variant="secondary" title={t('Ver pedido')} onPress={onCheckOrder} />
             </View>
-            <View style={{ width: '57%', position: 'absolute', right: -2 }}>
+            <View style={{ width: '50%', position: 'absolute', right: -2 }}>
               <CustomButton
                 order={order}
                 onPress={actionHandler}
