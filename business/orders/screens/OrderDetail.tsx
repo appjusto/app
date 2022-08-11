@@ -98,6 +98,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
   const cancellableStatuses =
     order &&
     (order.status === 'confirmed' ||
+      order.status === 'scheduled' ||
       (order.status === 'preparing' && !order.courier) ||
       (order.status === 'ready' && !order.courier) ||
       (order.dispatchingStatus === 'outsourced' && order.outsourcedBy === 'business'));
