@@ -2,7 +2,7 @@ import { Business, Order, OrderStatus, WithId } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, FlatList, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { ApiContext } from '../../../common/app/context';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
@@ -111,6 +111,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
             selected={selectedFilter === 'scheduled'}
             onPress={() => setSelectedFilter('scheduled')}
             style={{ marginRight: halfPadding }}
+            total={ordersSummary.scheduled ?? 0}
           />
           <ListFilterButton
             title={t('Ativos')}
@@ -170,20 +171,9 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
             style={{ marginRight: 32 }}
           />
         </ScrollView>
-        <View>
-          <FlatList
-            style={{ padding, paddingBottom: 32 }}
-            data={kanbanOrders}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <View style={{ marginBottom: padding }}>
-                <OrdersKanbanItem
-                  onCheckOrder={() => navigation.navigate('OrderDetail', { orderId: item.id })}
-                  orderId={item.id}
-                />
-              </View>
-            )}
-            ListEmptyComponent={
+        <ScrollView style={{ marginBottom: 32 }}>
+          <PaddedView style={{ flex: 1 }}>
+            {kanbanOrders.length === 0 ? (
               <View
                 style={{
                   justifyContent: 'center',
@@ -204,9 +194,18 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
                   {t('Não há pedidos ativos nesse momento.')}
                 </Text>
               </View>
-            }
-          />
-        </View>
+            ) : (
+              kanbanOrders?.map((order) => (
+                <View style={{ marginBottom: padding }} key={order.id}>
+                  <OrdersKanbanItem
+                    onCheckOrder={() => navigation.navigate('OrderDetail', { orderId: order.id })}
+                    orderId={order.id}
+                  />
+                </View>
+              ))
+            )}
+          </PaddedView>
+        </ScrollView>
       </View>
     </View>
   );
