@@ -83,7 +83,7 @@ export default function ({
         {activityIndicator && (
           <ActivityIndicator
             size="small"
-            color={variant === 'secondary' ? colors.black : colors.white}
+            color={variant === 'secondary' || variant === 'danger' ? colors.black : colors.white}
           />
         )}
         {children}
