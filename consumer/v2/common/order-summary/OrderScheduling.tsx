@@ -2,8 +2,7 @@ import { Dayjs } from '@appjusto/dates';
 import { Timestamp } from 'firebase/firestore';
 import { capitalize } from 'lodash';
 import React from 'react';
-import { Text, View } from 'react-native';
-import { ApiContext } from '../../../../common/app/context';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { RectangularListItemText } from '../../../../common/components/list items/RectangularListItemText';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
 import { useContextBusiness } from '../../../../common/store/context/business';
@@ -21,7 +20,6 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
   const getServerTime = useContextGetSeverTime();
   const order = useContextActiveOrder();
   const business = useContextBusiness();
-  const api = React.useContext(ApiContext);
   const now = getServerTime();
   // side effects
   const margin = 60;
@@ -53,7 +51,11 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
               />
             );
           }
-          return null;
+          return (
+            <View style={screens.centered}>
+              <ActivityIndicator size="small" color={colors.green500} />
+            </View>
+          );
         }
         if (business.status === 'closed') {
           // without scheduledTo
