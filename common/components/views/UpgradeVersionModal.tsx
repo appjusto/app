@@ -1,3 +1,4 @@
+import { compare } from 'compare-versions';
 import React from 'react';
 import { Linking, Modal, ModalProps, Platform, Pressable, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -6,7 +7,7 @@ import { t } from '../../../strings';
 import { usePlatformAccess } from '../../hooks/usePlatformAccess';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
 import { colors, doublePadding, halfPadding, padding, texts } from '../../styles';
-import { getNativeAndManifestVersion, isCurrentVersionAllowed } from '../../utils/version';
+import { getAppVersion, getNativeAndManifestVersion } from '../../utils/version';
 import DefaultButton from '../buttons/DefaultButton';
 
 export const UpgradeVersionModal = (props: ModalProps) => {
@@ -36,7 +37,8 @@ export const UpgradeVersionModal = (props: ModalProps) => {
   // effects
   React.useEffect(() => {
     if (!minVersion) return;
-    setModalVisible(!isCurrentVersionAllowed(minVersion));
+    setModalVisible(compare(getAppVersion(), minVersion, '<'));
+    console.log(getAppVersion());
   }, [minVersion]);
   // UI
   return (
