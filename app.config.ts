@@ -40,6 +40,7 @@ const getFallbackDomain = (environment: Environment) =>
 
 export default (context: ConfigContext): ExpoConfig => {
   const config: ExpoConfig = {
+    owner: 'appjusto',
     name: name(),
     slug: slug(),
     // scheme: scheme(),
