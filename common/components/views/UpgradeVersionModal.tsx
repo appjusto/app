@@ -38,7 +38,6 @@ export const UpgradeVersionModal = (props: ModalProps) => {
   React.useEffect(() => {
     if (!minVersion) return;
     setModalVisible(compare(getAppVersion(), minVersion, '<'));
-    console.log(getAppVersion());
   }, [minVersion]);
   // UI
   return (

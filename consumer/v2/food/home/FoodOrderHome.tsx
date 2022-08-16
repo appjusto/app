@@ -2,9 +2,10 @@ import { BusinessAlgolia } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
+import { usePlatformAccess } from '../../../../common/hooks/usePlatformAccess';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
 import { useLastRestaurants } from '../../../../common/store/api/order/hooks/useLastRestaurants';
 import { useSearch } from '../../../../common/store/api/search/useSearch';
@@ -15,7 +16,8 @@ import {
 } from '../../../../common/store/consumer/actions';
 import { getConsumer, getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import { SearchFilter } from '../../../../common/store/consumer/types';
-import { colors, padding } from '../../../../common/styles';
+import { colors, padding, screens } from '../../../../common/styles';
+import { isCurrentVersionAllowed } from '../../../../common/utils/version';
 import { LoggedNavigatorParamList } from '../../types';
 import { sectionsFromResults } from '../restaurant/list';
 import { RestaurantList } from '../restaurant/list/RestaurantList';
@@ -39,6 +41,8 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  const platformAccess = usePlatformAccess();
+  const minVersion = platformAccess?.minVersions?.consumer;
   // redux store
   const currentLocation = useSelector(getCurrentLocation);
   const consumer = useSelector(getConsumer);
@@ -69,8 +73,14 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     await refetch();
     setRefreshing(false);
   };
-  // console.log('FOODORDERHOME CURRENTLOCATION', currentLocation);
   // UI
+  if (!minVersion) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <RestaurantList
       sections={sectionsFromResults(restaurants, currentLocation)}
@@ -80,6 +90,9 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
       onEndReachedThreshold={0.7}
       ListHeaderComponent={
         <View style={{ backgroundColor: colors.white, paddingBottom: padding }}>
+          <View style={{ paddingTop: padding }}>
+            {isCurrentVersionAllowed(minVersion) ? <Text>SIM</Text> : <Text>NÃO</Text>}
+          </View>
           <FoodOrderHomeHeader
             onSelectRestaurant={(restaurantId) => {
               navigation.push('RestaurantNavigator', {
