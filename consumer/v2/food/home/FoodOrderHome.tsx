@@ -1,9 +1,8 @@
 import { BusinessAlgolia } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { compare } from 'compare-versions';
 import React from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import { usePlatformAccess } from '../../../../common/hooks/usePlatformAccess';
@@ -18,7 +17,6 @@ import {
 import { getConsumer, getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import { SearchFilter } from '../../../../common/store/consumer/types';
 import { colors, padding, screens } from '../../../../common/styles';
-import { getAppVersion, isCurrentVersionAllowed } from '../../../../common/utils/version';
 import { LoggedNavigatorParamList } from '../../types';
 import { sectionsFromResults } from '../restaurant/list';
 import { RestaurantList } from '../restaurant/list/RestaurantList';
@@ -91,14 +89,6 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
       onEndReachedThreshold={0.7}
       ListHeaderComponent={
         <View style={{ backgroundColor: colors.white, paddingBottom: padding }}>
-          <View style={{ paddingTop: padding }}>
-            {isCurrentVersionAllowed(minVersion) ? <Text>SIM</Text> : <Text>NÃO</Text>}
-            {compare(getAppVersion(), minVersion, '<') ? (
-              <Text>NÃO NA LIB</Text>
-            ) : (
-              <Text>SIM NA LIB</Text>
-            )}
-          </View>
           <FoodOrderHomeHeader
             onSelectRestaurant={(restaurantId) => {
               navigation.push('RestaurantNavigator', {
