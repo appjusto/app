@@ -153,8 +153,8 @@ export default function ({ navigation, route }: Props) {
     );
   // helpers
   const totalDistance = (matchRequest.distance + routeDistanceToOrigin) / 1000;
-  const discountedFee = (matchRequest.fee * 2.42) / 100;
-  const feePerKm = (matchRequest.fee - discountedFee) / 100 / totalDistance;
+  const fee = matchRequest.fee - matchRequest.processingFee;
+  const feePerKm = fee / 100 / totalDistance;
   const roundedFeePerKm = round(feePerKm, 2);
   return (
     <ScrollView
@@ -179,7 +179,7 @@ export default function ({ navigation, route }: Props) {
             </Text>
             <Text style={{ ...texts.xs, marginBottom: 2 }}>{`${formatCurrency(
               matchRequest.fee
-            )} da frota - ${formatCurrency(discountedFee)} da tarifa bancária`}</Text>
+            )} da frota - ${formatCurrency(matchRequest.processingFee)} da tarifa bancária`}</Text>
             <Text style={{ ...texts.xs, color: colors.red }}>
               {t('(tarifa de 2,42% + R$ 0,09 por transação)')}
             </Text>
@@ -216,9 +216,7 @@ export default function ({ navigation, route }: Props) {
           }}
         >
           <View style={{ alignItems: 'center', flex: 1 }}>
-            <Text style={{ ...texts.x4l, textAlign: 'center' }}>
-              {formatCurrency(matchRequest.fee - discountedFee)}
-            </Text>
+            <Text style={{ ...texts.x4l, textAlign: 'center' }}>{formatCurrency(fee)}</Text>
             <Text
               style={{
                 ...texts.xs,
