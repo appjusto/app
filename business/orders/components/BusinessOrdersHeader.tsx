@@ -50,11 +50,13 @@ export const BusinessOrdersHeader = ({ business, onSwitchBusiness }: Props) => {
           style={{
             alignItems: 'flex-start',
             justifyContent: 'center',
-            width: '65%',
+            width: '70%',
           }}
         >
-          <View style={{ width: '90%' }}>
-            <Text style={{ ...texts.lg }}>{business.name}</Text>
+          <View style={{ width: '100%' }}>
+            <Text style={{ ...texts.lg }} numberOfLines={3}>
+              {business.name}
+            </Text>
           </View>
           <View
             style={{

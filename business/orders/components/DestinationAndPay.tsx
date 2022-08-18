@@ -23,7 +23,7 @@ export const DestinationAndPay = ({ order, style }: Props) => {
         <Text style={{ ...texts.md }}>
           {t('Valor do frete: ')}
           <Text style={texts.bold}>
-            {order?.fare?.courier.value ? formatCurrency(order.fare.courier.value) : 'N/E'}
+            {order?.fare?.courier?.value ? formatCurrency(order.fare.courier.value) : 'N/E'}
             {order?.outsourcedBy === 'business' && ` (${t('Assumido pelo restaurante')})`}
           </Text>
         </Text>
@@ -34,7 +34,11 @@ export const DestinationAndPay = ({ order, style }: Props) => {
         {/* for now, this doesn't change */}
         <Text style={{ ...texts.md, marginTop: 4 }}>
           {t('Método de pagamento: ')}
-          <Text style={texts.bold}>{t('pagamento via app')}</Text>
+          {order.paymentMethod === 'pix' ? (
+            <Text style={texts.bold}>{t('pagamento via app: Pix')}</Text>
+          ) : (
+            <Text style={texts.bold}>{t('pagamento via app: Cartão de Crédito')}</Text>
+          )}
         </Text>
       </View>
     </View>
