@@ -161,6 +161,13 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       navigation.navigate('MainNavigator', { screen: 'Home' });
     }
   }, [order, navigation]);
+  // setting complement whenever additionalInfo changes
+  React.useEffect(() => {
+    if (order?.destination?.additionalInfo) {
+      setComplement(order.destination.additionalInfo);
+      setAddressComplement(true);
+    }
+  }, [order?.destination?.additionalInfo]);
   // tracking
   useSegmentScreen('FoodOrderCheckout');
   // handlers
