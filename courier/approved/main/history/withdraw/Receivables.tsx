@@ -116,7 +116,7 @@ export const Receivables = ({ navigation, route }: Props) => {
             </View>
             <Text style={{ ...texts.sm, paddingBottom: halfPadding }}>
               {t(
-                'O prazo padrão para processar os pagamentos é de 30 dias. Para antecipar, você paga uma taxa de até 1.99% por operação. Funciona assim: se for antecipar no primeiro dia útil após a corrida, você pagará o valor cheio de 1.99%, e a taxa diminui proporcionalmente a cada dia que passa. Se você esperar 15 dias, por exemplo, pagará 0.99%.'
+                'O prazo padrão para processar os pagamentos é de 30 dias. Para antecipar, você paga uma taxa de até 2.75% por operação. Funciona assim: se for antecipar no primeiro dia útil após a corrida, você pagará o valor cheio de 2.75%, e a taxa diminui proporcionalmente a cada dia que passa. Se você esperar 15 dias, por exemplo, pagará 0.99%.'
               )}
             </Text>
             <Text style={{ ...texts.sm, color: colors.red }}>
