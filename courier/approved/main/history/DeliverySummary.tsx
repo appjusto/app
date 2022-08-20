@@ -50,8 +50,8 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
-  const delivery = order.fare.courier.value - (order.fare.courier.processingFee ?? 0);
-  const tip = (order.tip?.value ?? 0) - (order.tip?.processingFee ?? 0);
+  const delivery = order.fare.courier.value - (order.fare.courier.processing?.value ?? 0);
+  const tip = (order.tip?.value ?? 0) - (order.tip?.processing?.value ?? 0);
   const total = delivery + tip;
   // UI
   return (

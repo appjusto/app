@@ -32,8 +32,8 @@ export const useCourierRecentOrdersRevenue = () => {
     let week = 0;
     orders.forEach((order) => {
       const delivery =
-        (order.fare?.courier?.value ?? 0) - (order.fare?.courier?.processingFee ?? 0);
-      const tip = (order.tip?.value ?? 0) - (order.tip?.processingFee ?? 0);
+        (order.fare?.courier?.value ?? 0) - (order.fare?.courier?.processing?.value ?? 0);
+      const tip = (order.tip?.value ?? 0) - (order.tip?.processing?.value ?? 0);
       const revenue = delivery + tip;
       week += revenue;
       if (Dayjs((order.createdOn as Timestamp).toDate()).diff(getServerTime(), 'day') === 0) {
