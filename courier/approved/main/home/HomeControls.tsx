@@ -63,6 +63,7 @@ export default function ({ onFleetDetail }: Props) {
   }, [courier.updatedOn]);
   // handlers
   const toggleWorking = () => {
+    if (status === 'inactive') return;
     if (status === 'dispatching') {
       Keyboard.dismiss();
       dispatch(
@@ -82,9 +83,15 @@ export default function ({ onFleetDetail }: Props) {
   };
 
   // UI
+  const getBackgroundColor = () => {
+    if (status === 'inactive') return colors.grey500;
+    if (working) return colors.green500;
+    return colors.darkYellow;
+  };
+
   return (
     <View>
-      <PaddedView style={[{ backgroundColor: working ? colors.green500 : colors.darkYellow }]}>
+      <PaddedView style={[{ backgroundColor: getBackgroundColor() }]}>
         <Text
           style={[
             texts.x2l,
