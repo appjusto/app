@@ -345,7 +345,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         orderFulfillment={
           <View>
             <View>
-              <FulfillmentSwitch fulfillment={fulfillment} onChangeHandler={setFulfillment} />
+              <FulfillmentSwitch fulfillment={fulfillment} orderId={order.id} />
             </View>
             {fulfillment === 'delivery' ? (
               <View>

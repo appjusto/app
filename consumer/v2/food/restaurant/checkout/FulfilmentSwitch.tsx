@@ -6,16 +6,15 @@ import {
   PanGestureHandler,
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
+import * as Sentry from 'sentry-expo';
+import { ApiContext } from '../../../../../common/app/context';
 import { colors, doublePadding, padding } from '../../../../../common/styles';
 import SliderButton from '../../../../../courier/approved/ongoing/SliderButton';
 import { t } from '../../../../../strings';
-
-interface FulfillmentSwitchProps {
+type Props = {
   fulfillment: Fulfillment;
-  onDelivery?: () => void;
-  onTakeAway?: () => void;
-  onChangeHandler: (value: Fulfillment) => void;
-}
+  orderId: string;
+};
 
 const { width } = Dimensions.get('window');
 const trackHeight = 48;
@@ -25,25 +24,42 @@ const leftmost = 0;
 const rightmost = width - thumbWidth;
 const threshold = 30;
 
-export const FulfillmentSwitch = ({ fulfillment, onChangeHandler }: FulfillmentSwitchProps) => {
+export const FulfillmentSwitch = ({ fulfillment, orderId }: Props) => {
+  // context
+  const api = React.useContext(ApiContext);
   // state
   const [translateX, setTranslateX] = React.useState(0);
+  const [loading, setLoading] = React.useState(false);
   const [orderFulfillment, setOrderFulfillment] = React.useState<Fulfillment>(fulfillment);
   // UI handlers
   const onGestureEvent = (event: GestureEvent<PanGestureHandlerEventPayload>) => {
     const { translationX } = event.nativeEvent;
     if (translationX >= leftmost && translationX <= rightmost) setTranslateX(translationX);
   };
-  const onGestureEnded = () => {
-    const shouldConfirm = translateX > 0 && rightmost - translateX < threshold;
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    if (shouldConfirm) {
-      setTranslateX(rightmost);
-      onChangeHandler('take-away');
-    } else {
-      setTranslateX(leftmost);
-      onChangeHandler('delivery');
-      setTranslateX(0);
+  const onGestureEnded = async () => {
+    try {
+      const takeAway = translateX > 0 && rightmost - translateX < threshold;
+      const delivery = translateX < 0 && translateX - leftmost < threshold;
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      if (takeAway) {
+        setTranslateX(rightmost);
+        setOrderFulfillment('take-away');
+        setLoading(true);
+        await api.order().updateOrder(orderId, { fulfillment: 'take-away' });
+        setLoading(false);
+      } else if (delivery) {
+        setTranslateX(leftmost);
+        setOrderFulfillment('delivery');
+        setLoading(true);
+        await api.order().updateOrder(orderId, { fulfillment: 'delivery' });
+        setLoading(false);
+      } else {
+        setTranslateX(0);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      Sentry.Native.captureException(error);
     }
   };
   // UI
@@ -81,9 +97,9 @@ export const FulfillmentSwitch = ({ fulfillment, onChangeHandler }: FulfillmentS
             }}
           >
             <SliderButton
-              title={fulfillment === 'delivery' ? '🛵  Entregar' : 'Retirar 🚶‍♂️'}
+              title={orderFulfillment === 'delivery' ? '🛵  Entregar' : 'Retirar 🚶‍♂️'}
               style={{ height: trackHeight, width: '81%', borderRadius: 28 }}
-              // activityIndicator={confirmed}
+              activityIndicator={loading}
               buttonColor={colors.green100}
               rightIcon={false}
             />
