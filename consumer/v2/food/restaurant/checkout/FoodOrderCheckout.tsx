@@ -1,5 +1,6 @@
 import {
   Fare,
+  Fulfillment,
   PayableWith,
   PlaceOrderPayloadPaymentCreditCard,
   PlaceOrderPayloadPaymentPix,
@@ -34,6 +35,7 @@ import { LoggedNavigatorParamList } from '../../../types';
 import { FoodOrderNavigatorParamList } from '../../types';
 import { RestaurantNavigatorParamList } from '../types';
 import { DestinationModal } from './DestinationModal';
+import { FulfillmentSwitch } from './FulfilmentSwitch';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<RestaurantNavigatorParamList, 'FoodOrderCheckout'>,
@@ -81,6 +83,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [addressComplement, setAddressComplement] = React.useState<boolean>(complement.length > 0);
   const [payMethod, setPayMethod] = React.useState<PayableWith>(
     consumer.paymentChannel?.mostRecentPaymentMethod ?? 'credit_card'
+  );
+  const [fulfillment, setFulfillment] = React.useState<Fulfillment>(
+    order?.fulfillment ?? 'delivery'
   );
   const canScheduleOrder =
     business?.status === 'closed' &&
@@ -336,24 +341,31 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         onCheckSchedules={() => navigation.navigate('ScheduleOrder')}
         orderFulfillment={
           <View>
-            <OrderAvailableFleets
-              order={order}
-              quotes={quotes}
-              selectedFare={selectedFare}
-              onFareSelect={(fare) => {
-                setSelectedFare(fare);
-              }}
-              onFleetSelect={(fleetId: string) => {
-                navigation.navigate('FleetDetail', { fleetId });
-              }}
-              navigateToAvailableFleets={() =>
-                navigation.navigate('AvailableFleets', {
-                  orderId: order.id,
-                  selectedFare: selectedFare!,
-                  returnScreen: 'FoodOrderCheckout',
-                })
-              }
-            />
+            <View>
+              <FulfillmentSwitch fulfillment={fulfillment} onChangeHandler={setFulfillment} />
+            </View>
+            {fulfillment === 'delivery' ? (
+              <View>
+                <OrderAvailableFleets
+                  order={order}
+                  quotes={quotes}
+                  selectedFare={selectedFare}
+                  onFareSelect={(fare) => {
+                    setSelectedFare(fare);
+                  }}
+                  onFleetSelect={(fleetId: string) => {
+                    navigation.navigate('FleetDetail', { fleetId });
+                  }}
+                  navigateToAvailableFleets={() =>
+                    navigation.navigate('AvailableFleets', {
+                      orderId: order.id,
+                      selectedFare: selectedFare!,
+                      returnScreen: 'FoodOrderCheckout',
+                    })
+                  }
+                />
+              </View>
+            ) : null}
           </View>
         }
         costBreakdown={<OrderCostBreakdown order={order} selectedFare={selectedFare!} />}
