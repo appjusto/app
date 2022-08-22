@@ -67,8 +67,8 @@ export const FulfillmentSwitch = ({ fulfillment, onChangeHandler }: FulfillmentS
             borderRadius: 28,
           }}
         >
-          <Text style={{ color: colors.white }}>{t('Entregar')}</Text>
-          <Text style={{ color: colors.white }}>{t('Retirar')}</Text>
+          <Text style={{ color: colors.white }}>🛵 {t('Entregar')}</Text>
+          <Text style={{ color: colors.white }}>🚶‍♂️ {t('Retirar')}</Text>
         </View>
         <PanGestureHandler onGestureEvent={onGestureEvent} onEnded={onGestureEnded}>
           <Animated.View
@@ -81,7 +81,7 @@ export const FulfillmentSwitch = ({ fulfillment, onChangeHandler }: FulfillmentS
             }}
           >
             <SliderButton
-              title={fulfillment === 'delivery' ? 'Entregar' : 'Retirar'}
+              title={fulfillment === 'delivery' ? '🛵  Entregar' : 'Retirar 🚶‍♂️'}
               style={{ height: trackHeight, width: '81%', borderRadius: 28 }}
               // activityIndicator={confirmed}
               buttonColor={colors.green100}
