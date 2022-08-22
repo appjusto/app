@@ -67,15 +67,14 @@ export const PayWithPix = ({ navigation, route }: Props) => {
       if (pixKey !== consumer.pix) {
         await api.profile().updateProfile(consumer.id, { pix: pixKey });
       }
-      // placing order
       await api.order().placeOrder(
         orderId,
-        fleetId,
         {
           payableWith: 'pix',
           key: pixKey,
         },
-        false
+        false,
+        fleetId
       );
       track('placing order with Pix payment');
       setLoading(false);

@@ -224,7 +224,7 @@ export default function ({ navigation, route }: Props) {
     }
     try {
       setLoading(true);
-      await api.order().placeOrder(orderId, fleetId, paymentPayload, wantsCpf, coords);
+      await api.order().placeOrder(orderId, paymentPayload, wantsCpf, fleetId, coords);
 
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {

@@ -349,9 +349,9 @@ export default class OrderApi {
 
   async placeOrder(
     orderId: string,
-    fleetId: string,
     payment: PlaceOrderPayloadPayment,
     invoiceWithCPF: boolean,
+    fleetId?: string,
     coordinates?: LatLng,
     additionalInfo?: string,
     wantToShareData?: boolean
@@ -364,9 +364,9 @@ export default class OrderApi {
     }
     await this.functionsRef.getPlaceOrderCallable()({
       orderId,
-      fleetId,
       payment,
       invoiceWithCPF,
+      fleetId,
       coordinates,
       additionalInfo,
       wantToShareData,

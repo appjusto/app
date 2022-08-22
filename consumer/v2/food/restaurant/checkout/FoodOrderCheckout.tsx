@@ -252,9 +252,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         .order()
         .placeOrder(
           order.id,
-          selectedFare!.fleet.id,
           paymentPayload,
           wantsCpf,
+          selectedFare!.fleet.id,
           coords,
           orderAdditionalInfo,
           shareDataWithBusiness
