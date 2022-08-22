@@ -81,8 +81,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     order?.destination?.additionalInfo ?? ''
   );
   const [addressComplement, setAddressComplement] = React.useState<boolean>(complement.length > 0);
-  const [payMethod, setPayMethod] = React.useState<PayableWith | undefined>(
-    consumer.paymentChannel?.mostRecentPaymentMethod
+  const [payMethod, setPayMethod] = React.useState<PayableWith>(
+    consumer.paymentChannel?.mostRecentPaymentMethod ?? 'credit_card'
   );
   const [fulfillment, setFulfillment] = React.useState<Fulfillment>(
     order?.fulfillment ?? 'delivery'
@@ -95,9 +95,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const canSubmit =
     (business?.status === 'open' || canScheduleOrder) &&
     (payMethod === 'pix' ||
-      // adding this condition only because we are also using it for enabling the 'wanna pay with pix' button
-      // so a new user can pay his first order with pix
-      payMethod === undefined ||
       (payMethod === 'credit_card' && selectedPaymentMethodId !== undefined)) &&
     selectedFare !== undefined &&
     !isLoading &&
