@@ -187,7 +187,7 @@ export default function ({ navigation, route }: Props) {
                 matchRequest.processing.fee.fixed > 0
                   ? ` + ${formatCurrency(matchRequest.processing.fee.fixed)}`
                   : ''
-              } ${t('por transação')}`}
+              } ${t('por transação')})`}
             </Text>
           </PaddedView>
         ) : (
