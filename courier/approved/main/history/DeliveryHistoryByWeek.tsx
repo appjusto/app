@@ -103,8 +103,8 @@ export const DeliveryHistoryByWeek = ({ navigation, route }: Props) => {
         renderItem={({ item }) => {
           const time = getOrderTime(item);
           const delivery =
-            (item.fare?.courier?.value ?? 0) - (item.fare?.courier?.processingFee ?? 0);
-          const tip = (item.tip?.value ?? 0) - (item.tip?.processingFee ?? 0);
+            (item.fare?.courier?.value ?? 0) - (item.fare?.courier?.processing?.value ?? 0);
+          const tip = (item.tip?.value ?? 0) - (item.tip?.processing?.value ?? 0);
           const revenue = delivery + tip;
           const title = formatCurrency(revenue);
           const subtitle = `Pedido ${item.code}\n${separateWithDot(

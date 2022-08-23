@@ -44,13 +44,13 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems }: Props) =>
               <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.courier.value)}</Text>
             </View>
           ) : null}
-          {selectedFare?.courier?.processingFee && flavor === 'courier' ? (
+          {selectedFare?.courier?.processing?.value && flavor === 'courier' ? (
             <View>
               <View style={{ flex: 1, flexDirection: 'row' }}>
                 <Text style={{ ...texts.sm, color: colors.red }}>{t('Taxa Iugu *')}</Text>
                 <View style={{ flex: 1 }} />
                 <Text style={{ ...texts.sm, color: colors.red }}>
-                  {formatCurrency(selectedFare.courier.processingFee)}
+                  {formatCurrency(selectedFare.courier.processing.value)}
                 </Text>
               </View>
             </View>
@@ -61,13 +61,13 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems }: Props) =>
               <Text style={{ ...texts.sm }}>{formatCurrency(order.tip.value)}</Text>
             </View>
           ) : null}
-          {order.tip?.processingFee && flavor === 'courier' ? (
+          {order.tip?.processing?.value && flavor === 'courier' ? (
             <View>
               <View style={{ flex: 1, flexDirection: 'row' }}>
                 <Text style={{ ...texts.sm, color: colors.red }}>{t('Taxa Iugu *')}</Text>
                 <View style={{ flex: 1 }} />
                 <Text style={{ ...texts.sm, color: colors.red }}>
-                  {formatCurrency(order.tip.processingFee)}
+                  {formatCurrency(order.tip.processing.value)}
                 </Text>
               </View>
             </View>
