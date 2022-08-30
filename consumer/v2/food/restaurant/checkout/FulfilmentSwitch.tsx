@@ -18,11 +18,11 @@ type Props = {
 
 const { width } = Dimensions.get('window');
 const trackHeight = 48;
-const thumbWidth = 160;
+const thumbWidth = width / 2 - doublePadding;
 // const marginHorizontal = 0;
 const leftmost = 0;
-const rightmost = width - thumbWidth - padding;
-const threshold = 30;
+const rightmost = width - doublePadding;
+const threshold = doublePadding;
 
 export const FulfillmentSwitch = ({ fulfillment, orderId }: Props) => {
   // context
@@ -30,7 +30,8 @@ export const FulfillmentSwitch = ({ fulfillment, orderId }: Props) => {
   // state
   const [translateX, setTranslateX] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
-  const [orderFulfillment, setOrderFulfillment] = React.useState<Fulfillment>(fulfillment);
+  const [takeAwayFulfillment, setTakeAwayFulfillment] = React.useState(false);
+  const [deliveryFulfillment, setDeliveryFulfillment] = React.useState(true);
   // UI handlers
   const onGestureEvent = (event: GestureEvent<PanGestureHandlerEventPayload>) => {
     const { translationX } = event.nativeEvent;
@@ -39,17 +40,21 @@ export const FulfillmentSwitch = ({ fulfillment, orderId }: Props) => {
   const onGestureEnded = async () => {
     try {
       const takeAway = translateX > 0 && rightmost - translateX < threshold;
-      const delivery = translateX < 0 && translateX - leftmost < threshold;
+      // const delivery = translateX === 0;
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      if (takeAway) {
-        setTranslateX(rightmost);
-        setOrderFulfillment('take-away');
-        setLoading(true);
-        await api.order().updateOrder(orderId, { fulfillment: 'take-away' });
-        setLoading(false);
-      } else if (delivery) {
+      if (translateX === 0) {
         setTranslateX(leftmost);
-        setOrderFulfillment('delivery');
+        // setOrderFulfillment('take-away');
+        setDeliveryFulfillment(true);
+        if (fulfillment !== 'delivery') {
+          setLoading(true);
+          await api.order().updateOrder(orderId, { fulfillment: 'take-away' });
+          setLoading(false);
+        }
+      } else if (takeAway) {
+        setTranslateX(rightmost);
+        // setOrderFulfillment('delivery');
+        setTakeAwayFulfillment(true);
         setLoading(true);
         await api.order().updateOrder(orderId, { fulfillment: 'delivery' });
         setLoading(false);
@@ -97,7 +102,7 @@ export const FulfillmentSwitch = ({ fulfillment, orderId }: Props) => {
             }}
           >
             <SliderButton
-              title={orderFulfillment === 'delivery' ? '🛵  Entregar' : 'Retirar 🚶‍♂️'}
+              title={deliveryFulfillment ? '🛵  Entregar' : 'Retirar 🚶‍♂️'}
               style={{ height: trackHeight, width: thumbWidth, borderRadius: 28 }}
               activityIndicator={loading}
               buttonColor={colors.green100}

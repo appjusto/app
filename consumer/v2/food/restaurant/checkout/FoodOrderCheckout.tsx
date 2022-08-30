@@ -310,7 +310,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  console.log(order.fulfillment);
   return (
     <KeyboardAwareScrollView
       style={{ ...screens.default }}
