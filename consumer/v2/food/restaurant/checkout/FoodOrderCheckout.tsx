@@ -303,7 +303,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     navigation.navigate('CommonProfileEdit', { returnScreen: 'FoodOrderCheckout' });
   };
   // UI
-  if (!order) {
+  if (!order || !business) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -344,9 +344,11 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         onCheckSchedules={() => navigation.navigate('ScheduleOrder')}
         orderFulfillment={
           <View>
-            <View>
-              <FulfillmentSwitch fulfillment={fulfillment} orderId={order.id} />
-            </View>
+            {business.fulfillment?.includes('take-away') ? (
+              <View>
+                <FulfillmentSwitch fulfillment={fulfillment} orderId={order.id} />
+              </View>
+            ) : null}
             {fulfillment === 'delivery' ? (
               <View>
                 <OrderAvailableFleets
