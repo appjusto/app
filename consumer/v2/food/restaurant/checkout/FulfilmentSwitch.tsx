@@ -18,10 +18,10 @@ type Props = {
 
 const { width } = Dimensions.get('window');
 const trackHeight = 48;
-const thumbWidth = 180;
+const thumbWidth = 160;
 // const marginHorizontal = 0;
 const leftmost = 0;
-const rightmost = width - thumbWidth;
+const rightmost = width - thumbWidth - padding;
 const threshold = 30;
 
 export const FulfillmentSwitch = ({ fulfillment, orderId }: Props) => {
@@ -98,7 +98,7 @@ export const FulfillmentSwitch = ({ fulfillment, orderId }: Props) => {
           >
             <SliderButton
               title={orderFulfillment === 'delivery' ? '🛵  Entregar' : 'Retirar 🚶‍♂️'}
-              style={{ height: trackHeight, width: '81%', borderRadius: 28 }}
+              style={{ height: trackHeight, width: thumbWidth, borderRadius: 28 }}
               activityIndicator={loading}
               buttonColor={colors.green100}
               rightIcon={false}

@@ -310,6 +310,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       </View>
     );
   }
+  console.log(order.fulfillment);
   return (
     <KeyboardAwareScrollView
       style={{ ...screens.default }}
@@ -373,7 +374,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         }
         costBreakdown={<OrderCostBreakdown order={order} selectedFare={selectedFare!} />}
         totalCost={
-          quotes === undefined ? (
+          fulfillment === 'delivery' && quotes === undefined ? (
             <View style={screens.centered}>
               <ActivityIndicator size="large" color={colors.green500} />
             </View>
