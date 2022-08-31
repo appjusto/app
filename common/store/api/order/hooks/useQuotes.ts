@@ -20,12 +20,10 @@ export const useQuotes = (orderId?: string) => {
       return;
     }
     setQuotes(undefined);
-    console.log('setting quotes undefined');
     try {
       setQuotes(
         await api.order().getOrderQuotes(order.id, order.scheduledTo ? ['appjusto'] : undefined)
       );
-      console.log('setting quotes from api');
     } catch (error: any) {
       dispatch(showToast(error.toString(), 'error'));
     }

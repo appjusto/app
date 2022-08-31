@@ -342,31 +342,30 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           <View>
             {business.fulfillment?.includes('take-away') ? (
               <View>
-                <FulfillmentSwitch
-                  fulfillment={order?.fulfillment ?? 'delivery'}
-                  orderId={order.id}
-                />
+                <FulfillmentSwitch orderId={order.id} />
               </View>
             ) : null}
             <View>
-              <OrderAvailableFleets
-                order={order}
-                quotes={quotes}
-                selectedFare={selectedFare}
-                onFareSelect={(fare) => {
-                  setSelectedFare(fare);
-                }}
-                onFleetSelect={(fleetId: string) => {
-                  navigation.navigate('FleetDetail', { fleetId });
-                }}
-                navigateToAvailableFleets={() =>
-                  navigation.navigate('AvailableFleets', {
-                    orderId: order.id,
-                    selectedFare: selectedFare!,
-                    returnScreen: 'FoodOrderCheckout',
-                  })
-                }
-              />
+              {order.fulfillment === 'delivery' ? (
+                <OrderAvailableFleets
+                  order={order}
+                  quotes={quotes}
+                  selectedFare={selectedFare}
+                  onFareSelect={(fare) => {
+                    setSelectedFare(fare);
+                  }}
+                  onFleetSelect={(fleetId: string) => {
+                    navigation.navigate('FleetDetail', { fleetId });
+                  }}
+                  navigateToAvailableFleets={() =>
+                    navigation.navigate('AvailableFleets', {
+                      orderId: order.id,
+                      selectedFare: selectedFare!,
+                      returnScreen: 'FoodOrderCheckout',
+                    })
+                  }
+                />
+              ) : null}
             </View>
           </View>
         }

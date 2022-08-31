@@ -8,30 +8,27 @@ import {
 } from 'react-native-gesture-handler';
 import * as Sentry from 'sentry-expo';
 import { ApiContext } from '../../../../../common/app/context';
-import { colors, doublePadding, padding } from '../../../../../common/styles';
+import { colors, doublePadding, halfPadding, padding } from '../../../../../common/styles';
 import SliderButton from '../../../../../courier/approved/ongoing/SliderButton';
 import { t } from '../../../../../strings';
 type Props = {
-  fulfillment: Fulfillment;
   orderId: string;
 };
 
 const { width } = Dimensions.get('window');
 const trackHeight = 48;
-const thumbWidth = width / 2 - doublePadding;
-// const marginHorizontal = 0;
+const thumbSize = width / 2 - doublePadding;
+const center = (width - thumbSize) * 0.4;
 const leftmost = 0;
-const rightmost = width - doublePadding;
-const threshold = doublePadding;
+const rightmost = width - width / 2 - halfPadding;
 
-export const FulfillmentSwitch = ({ fulfillment, orderId }: Props) => {
+export const FulfillmentSwitch = ({ orderId }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   // state
   const [translateX, setTranslateX] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
-  const [takeAwayFulfillment, setTakeAwayFulfillment] = React.useState(false);
-  const [deliveryFulfillment, setDeliveryFulfillment] = React.useState(true);
+  const [orderFulfillment, setOrderFulfillment] = React.useState<Fulfillment>('delivery');
   // UI handlers
   const onGestureEvent = (event: GestureEvent<PanGestureHandlerEventPayload>) => {
     const { translationX } = event.nativeEvent;
@@ -39,24 +36,20 @@ export const FulfillmentSwitch = ({ fulfillment, orderId }: Props) => {
   };
   const onGestureEnded = async () => {
     try {
-      const takeAway = translateX > 0 && rightmost - translateX < threshold;
-      // const delivery = translateX === 0;
+      const takeAway = translateX > center && translateX < rightmost;
+      const delivery = translateX < center;
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      if (translateX === 0) {
+      if (delivery) {
+        setOrderFulfillment('delivery');
         setTranslateX(leftmost);
-        // setOrderFulfillment('take-away');
-        setDeliveryFulfillment(true);
-        if (fulfillment !== 'delivery') {
-          setLoading(true);
-          await api.order().updateOrder(orderId, { fulfillment: 'take-away' });
-          setLoading(false);
-        }
-      } else if (takeAway) {
-        setTranslateX(rightmost);
-        // setOrderFulfillment('delivery');
-        setTakeAwayFulfillment(true);
         setLoading(true);
         await api.order().updateOrder(orderId, { fulfillment: 'delivery' });
+        setLoading(false);
+      } else if (takeAway) {
+        setOrderFulfillment('take-away');
+        setTranslateX(rightmost);
+        setLoading(true);
+        await api.order().updateOrder(orderId, { fulfillment: 'take-away' });
         setLoading(false);
       } else {
         setTranslateX(0);
@@ -102,8 +95,8 @@ export const FulfillmentSwitch = ({ fulfillment, orderId }: Props) => {
             }}
           >
             <SliderButton
-              title={deliveryFulfillment ? '🛵  Entregar' : 'Retirar 🚶‍♂️'}
-              style={{ height: trackHeight, width: thumbWidth, borderRadius: 28 }}
+              title={orderFulfillment === 'delivery' ? '🛵  Entregar' : 'Retirar 🚶‍♂️'}
+              style={{ height: trackHeight, width: thumbSize, borderRadius: 28 }}
               activityIndicator={loading}
               buttonColor={colors.green100}
               rightIcon={false}
