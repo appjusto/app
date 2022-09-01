@@ -1,13 +1,16 @@
+import { Dayjs } from '@appjusto/dates';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
-import { GeoPoint } from 'firebase/firestore';
+import { GeoPoint, Timestamp } from 'firebase/firestore';
 import { LatLng } from 'react-native-maps';
 import * as Sentry from 'sentry-expo';
 import { t } from '../../strings';
 import { AppStore } from '../app/context';
 import Api from '../store/api/api';
+import { getFlavor } from '../store/config/selectors';
 import { getConsumer } from '../store/consumer/selectors';
 import { getCourier } from '../store/courier/selectors';
+import { getOrders } from '../store/order/selectors';
 
 const TASK_FETCH_LOCATION = 'TASK_FETCH_LOCATION';
 
@@ -55,6 +58,7 @@ const locationTaskExecutor =
     try {
       const state = store.getState();
       const profile = getCourier(state) ?? getConsumer(state);
+      const orders = getOrders(state);
       const result = body.data as LocationUpdateResult;
       // track('Location updates', {
       //   id: profile?.id,
@@ -68,11 +72,39 @@ const locationTaskExecutor =
       const { latitude, longitude } = location.coords;
       const coordinates = new GeoPoint(latitude, longitude);
 
-      if (profile?.id)
+      if (profile?.id) {
         api
           .profile()
           .updateLocation(profile.id, coordinates)
-          .then(() => null);
+          .then(
+            () =>
+              new Promise<void>((resolve, reject) => {
+                if (getFlavor(state) !== 'courier') return resolve();
+                if (!orders.length) return resolve();
+                const order = orders[0];
+                if (!order.route?.duration) return resolve();
+                if (!order.dispatchingTimestamps?.goingPickup) return resolve();
+                const goingPickupTimestamp = (
+                  order.dispatchingTimestamps.goingPickup as Timestamp
+                ).toDate();
+                if (
+                  Dayjs(new Date()).diff(goingPickupTimestamp, 'second') <
+                  order.route.duration * 1.5
+                ) {
+                  return resolve();
+                }
+                resolve(
+                  api.order().dropOrder(order.id, {
+                    type: 'courier-drops-delivery',
+                    id: 'courier-exceed-pick-up-time',
+                    title: 'Drop automático por demora em pegar o pedido',
+                  })
+                );
+              })
+          )
+          .then(() => null)
+          .catch((error) => console.error(error));
+      }
     } catch (error: any) {
       Sentry.Native.captureException(error);
     }
