@@ -210,7 +210,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           blurOnSubmit={false}
           keyboardType="email-address"
           autoCorrect={false}
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={(text) => setEmail(text.toLowerCase())}
           onSubmitEditing={() => nameRef.current?.focus()}
         />
         <DefaultInput
