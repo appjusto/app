@@ -34,7 +34,9 @@ export function init(props: AnalyticsConfig) {
       iosWriteKey: segmentCourieriOSKey,
     });
   }
-  Segment.setEnabledAsync(environment === 'live')
-    .then(() => null)
-    .catch(console.warn);
+  if (Constants.appOwnership !== 'expo' && environment === 'live') {
+    Segment.setEnabledAsync(true)
+      .then(() => null)
+      .catch(console.warn);
+  }
 }
