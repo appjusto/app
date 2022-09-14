@@ -1,4 +1,4 @@
-import { AdvanceReceivablesPayload, CourierOrderRequest } from '@appjusto/types';
+import { AdvanceReceivablesPayload, CourierOrderRequest, LedgerEntry } from '@appjusto/types';
 import { IuguMarketplaceAccountAdvanceSimulation } from '@appjusto/types/payment/iugu';
 import {
   getDocs,
@@ -63,6 +63,19 @@ export default class CourierApi {
     return updateDoc(this.firestoreRefs.getCourierOrderRequestsRef(courierId, orderId), {
       situation: 'viewed',
     } as Partial<CourierOrderRequest>);
+  }
+
+  async fetchCourierLedgerPendingInvoices(courierId: string) {
+    const ref = this.firestoreRefs.getLedgerRef();
+    const snapshot = await getDocs(
+      query(
+        ref,
+        where('to.accountId', '==', courierId),
+        where('status', '==', 'pending'),
+        orderBy('createdOn', 'desc')
+      )
+    );
+    return documentsAs<LedgerEntry>(snapshot.docs);
   }
 
   // callables
