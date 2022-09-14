@@ -1,8 +1,8 @@
-import { FunctionsRef } from '@appjusto/firebase-refs';
 import { IuguCreatePaymentTokenData } from '@appjusto/types/payment/iugu';
 import { CancelToken } from 'axios';
 import { t } from '../../../../../strings';
 import { getAppVersion } from '../../../../utils/version';
+import { FunctionsRef } from '../../../refs/FunctionsRef';
 import IuguApi from '../../payment/iugu';
 
 export default class ConsumerApi {

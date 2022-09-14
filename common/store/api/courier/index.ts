@@ -1,4 +1,3 @@
-import { FirestoreRefs, FunctionsRef, StoragePaths } from '@appjusto/firebase-refs';
 import { AdvanceReceivablesPayload, CourierOrderRequest } from '@appjusto/types';
 import { IuguMarketplaceAccountAdvanceSimulation } from '@appjusto/types/payment/iugu';
 import {
@@ -13,6 +12,9 @@ import {
 } from 'firebase/firestore';
 import * as Sentry from 'sentry-expo';
 import { getAppVersion } from '../../../utils/version';
+import { FirestoreRefs } from '../../refs/FirestoreRefs';
+import { FunctionsRef } from '../../refs/FunctionsRef';
+import { StoragePaths } from '../../refs/StoragePaths';
 import FilesApi from '../files';
 import { documentAs, documentsAs } from '../types';
 
@@ -65,13 +67,19 @@ export default class CourierApi {
 
   // callables
   async fetchAccountInformation(accountId: string) {
-    return (
-      await this.functionsRef.getFetchAccountInformationCallable()({
-        accountType: 'courier',
-        accountId,
-        meta: { version: getAppVersion() },
-      })
-    ).data;
+    console.log('fetchAccountInformation', this.functionsRef);
+    try {
+      return (
+        await this.functionsRef.getFetchAccountInformationCallable()({
+          accountType: 'courier',
+          accountId,
+          meta: { version: getAppVersion() },
+        })
+      ).data;
+    } catch (e) {
+      console.log('FETCH error');
+      console.log(e);
+    }
   }
   async requestWithdraw(accountId: string, amount: number) {
     return (

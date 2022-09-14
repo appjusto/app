@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@appjusto/dates": "github:appjusto/dates",
-    "@appjusto/firebase-refs": "^0.2.0",
     "@appjusto/menu": "^0.1.4",
     "@appjusto/types": "^7.9.3",
     "@expo/react-native-action-sheet": "^3.13.0",

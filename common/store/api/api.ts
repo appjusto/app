@@ -1,6 +1,5 @@
 // eslint-disable-next-line import/order
 // import FirebaseRefs from './FirebaseRefs';
-import { FirestoreRefs, FunctionsRef, StoragePaths } from '@appjusto/firebase-refs';
 import { CourierProfile, DeleteAccountPayload } from '@appjusto/types';
 import { getApp, initializeApp } from 'firebase/app';
 import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth';
@@ -9,6 +8,9 @@ import { connectFunctionsEmulator, Functions, getFunctions } from 'firebase/func
 import { connectStorageEmulator, FirebaseStorage, getStorage } from 'firebase/storage';
 import { Platform } from 'react-native';
 import { Extra } from '../../../config/types';
+import { FirestoreRefs } from '../refs/FirestoreRefs';
+import { FunctionsRef } from '../refs/FunctionsRef';
+import { StoragePaths } from '../refs/StoragePaths';
 import AuthApi from './auth';
 import BusinessApi from './business';
 import BusinessesGeoSearchApi from './business/BusinessesGeoSearchApi';
@@ -69,7 +71,7 @@ export default class Api {
       connectStorageEmulator(this.storage, host, 9199);
     }
     // TO-DO: removing these parameters it leading to an exception, don't know why.
-    this._firestoreRefs = new FirestoreRefs(this.firestore);
+    this._firestoreRefs = new FirestoreRefs();
     this._functionsRefs = new FunctionsRef(this.functions);
     this._storagePaths = new StoragePaths();
     this._iugu = new IuguApi(extra.iugu.accountId, extra.environment !== 'live');

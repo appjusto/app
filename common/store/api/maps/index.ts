@@ -1,8 +1,8 @@
-import { FunctionsRef } from '@appjusto/firebase-refs';
 import { Address, CourierMode, LatLng, RouteDetails } from '@appjusto/types';
 import * as Sentry from 'sentry-expo';
 import { getExtra } from '../../../utils/config';
 import { getAppVersion } from '../../../utils/version';
+import { FunctionsRef } from '../../refs/FunctionsRef';
 
 const { flavor } = getExtra();
 

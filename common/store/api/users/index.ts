@@ -1,6 +1,6 @@
-import { FirestoreRefs } from '@appjusto/firebase-refs';
 import { Flavor, ProfileChange, UserProfile } from '@appjusto/types';
 import { addDoc, getDocs, limit, query, serverTimestamp, where } from 'firebase/firestore';
+import { FirestoreRefs } from '../../refs/FirestoreRefs';
 import { documentsAs } from '../types';
 
 export default class UserApi {

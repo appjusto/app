@@ -1,4 +1,3 @@
-import { FirestoreRefs } from '@appjusto/firebase-refs';
 import {
   Bank,
   Classification,
@@ -9,6 +8,7 @@ import {
   PlatformParams,
 } from '@appjusto/types';
 import { getDoc, getDocs, orderBy, query, where } from 'firebase/firestore';
+import { FirestoreRefs } from '../../refs/FirestoreRefs';
 import FilesApi from '../files';
 import { documentsAs } from '../types';
 
