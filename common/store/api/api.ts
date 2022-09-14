@@ -70,7 +70,6 @@ export default class Api {
       connectFunctionsEmulator(this.functions, host, 5001);
       connectStorageEmulator(this.storage, host, 9199);
     }
-    // TO-DO: removing these parameters it leading to an exception, don't know why.
     this._firestoreRefs = new FirestoreRefs();
     this._functionsRefs = new FunctionsRef(this.functions);
     this._storagePaths = new StoragePaths();

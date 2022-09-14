@@ -67,19 +67,13 @@ export default class CourierApi {
 
   // callables
   async fetchAccountInformation(accountId: string) {
-    console.log('fetchAccountInformation', this.functionsRef);
-    try {
-      return (
-        await this.functionsRef.getFetchAccountInformationCallable()({
-          accountType: 'courier',
-          accountId,
-          meta: { version: getAppVersion() },
-        })
-      ).data;
-    } catch (e) {
-      console.log('FETCH error');
-      console.log(e);
-    }
+    return (
+      await this.functionsRef.getFetchAccountInformationCallable()({
+        accountType: 'courier',
+        accountId,
+        meta: { version: getAppVersion() },
+      })
+    ).data;
   }
   async requestWithdraw(accountId: string, amount: number) {
     return (
