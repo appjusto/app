@@ -69,7 +69,7 @@ export default function ({ navigation, route }: Props) {
                 {/* available for withdraw */}
                 <PaddedView
                   style={{
-                    marginTop: halfPadding,
+                    // marginTop: halfPadding,
                     ...borders.default,
                     borderColor: colors.white,
                     backgroundColor: colors.white,
