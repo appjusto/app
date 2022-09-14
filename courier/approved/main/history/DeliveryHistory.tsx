@@ -65,98 +65,7 @@ export default function ({ navigation, route }: Props) {
             scrollIndicatorInsets={{ right: 1 }}
           >
             <View>
-              <PaddedView>
-                {/* available for withdraw */}
-                <PaddedView
-                  style={{
-                    // marginTop: halfPadding,
-                    ...borders.default,
-                    borderColor: colors.white,
-                    backgroundColor: colors.white,
-                  }}
-                >
-                  <View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <Ionicons name="checkmark-circle-outline" size={20} color={colors.black} />
-                      <Text
-                        style={{
-                          ...texts.sm,
-                          marginLeft: halfPadding,
-                          paddingBottom: 2,
-                        }}
-                      >
-                        {t('Disponível para saque')}
-                      </Text>
-                    </View>
-
-                    <Text style={{ ...texts.x4l }}>{info.balance_available_for_withdraw}</Text>
-
-                    <DefaultButton
-                      style={{ marginTop: padding }}
-                      title={t('Transferir para conta')}
-                      disabled={availableForWithdraw < minimum}
-                      onPress={() =>
-                        navigation.navigate('DeliveriesNavigator', {
-                          screen: 'Withdraws',
-                          params: {
-                            info,
-                          },
-                        })
-                      }
-                    />
-                    <Text
-                      style={{
-                        ...texts.xs,
-                        color: colors.grey700,
-                        paddingTop: halfPadding,
-                        textAlign: 'center',
-                      }}
-                    >
-                      {t('Valor mínimo de R$ 5,00 para transferência')}
-                    </Text>
-                  </View>
-                </PaddedView>
-                {/* advance */}
-                <PaddedView
-                  style={{
-                    ...borders.default,
-                    borderColor: colors.white,
-                    backgroundColor: colors.white,
-                    marginTop: padding,
-                  }}
-                >
-                  <View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <MaterialIcons name="timer" size={20} color={colors.grey700} />
-                      <Text
-                        style={{
-                          ...texts.sm,
-                          color: colors.grey700,
-                          marginLeft: halfPadding,
-                          paddingBottom: 2,
-                        }}
-                      >
-                        {t('Em faturamento')}
-                      </Text>
-                    </View>
-
-                    <Text style={{ ...texts.x4l }}>{info.receivable_balance}</Text>
-
-                    <DefaultButton
-                      style={{ marginTop: padding }}
-                      title={t('Antecipar valores')}
-                      onPress={() =>
-                        navigation.navigate('DeliveriesNavigator', {
-                          screen: 'Receivables',
-                          params: {
-                            receivableBalance: info!.receivable_balance,
-                          },
-                        })
-                      }
-                      variant="secondary"
-                    />
-                  </View>
-                </PaddedView>
+              <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
                 {/* week summary */}
                 <PaddedView
                   style={{
@@ -226,7 +135,98 @@ export default function ({ navigation, route }: Props) {
                     <Text style={{ ...texts.x4l }}>{formatCurrency(ledgerTotal)}</Text>
                   </View>
                 </PaddedView>
-              </PaddedView>
+                {/* advance */}
+                <PaddedView
+                  style={{
+                    ...borders.default,
+                    borderColor: colors.white,
+                    backgroundColor: colors.white,
+                    marginTop: padding,
+                  }}
+                >
+                  <View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <MaterialIcons name="timer" size={20} color={colors.grey700} />
+                      <Text
+                        style={{
+                          ...texts.sm,
+                          color: colors.grey700,
+                          marginLeft: halfPadding,
+                          paddingBottom: 2,
+                        }}
+                      >
+                        {t('Em faturamento')}
+                      </Text>
+                    </View>
+
+                    <Text style={{ ...texts.x4l }}>{info.receivable_balance}</Text>
+
+                    <DefaultButton
+                      style={{ marginTop: padding }}
+                      title={t('Antecipar valores')}
+                      onPress={() =>
+                        navigation.navigate('DeliveriesNavigator', {
+                          screen: 'Receivables',
+                          params: {
+                            receivableBalance: info!.receivable_balance,
+                          },
+                        })
+                      }
+                      variant="secondary"
+                    />
+                  </View>
+                </PaddedView>
+                {/* available for withdraw */}
+                <PaddedView
+                  style={{
+                    // marginTop: halfPadding,
+                    ...borders.default,
+                    borderColor: colors.white,
+                    backgroundColor: colors.white,
+                  }}
+                >
+                  <View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <Ionicons name="checkmark-circle-outline" size={20} color={colors.black} />
+                      <Text
+                        style={{
+                          ...texts.sm,
+                          marginLeft: halfPadding,
+                          paddingBottom: 2,
+                        }}
+                      >
+                        {t('Disponível para saque')}
+                      </Text>
+                    </View>
+
+                    <Text style={{ ...texts.x4l }}>{info.balance_available_for_withdraw}</Text>
+
+                    <DefaultButton
+                      style={{ marginTop: padding }}
+                      title={t('Transferir para conta')}
+                      disabled={availableForWithdraw < minimum}
+                      onPress={() =>
+                        navigation.navigate('DeliveriesNavigator', {
+                          screen: 'Withdraws',
+                          params: {
+                            info,
+                          },
+                        })
+                      }
+                    />
+                    <Text
+                      style={{
+                        ...texts.xs,
+                        color: colors.grey700,
+                        paddingTop: halfPadding,
+                        textAlign: 'center',
+                      }}
+                    >
+                      {t('Valor mínimo de R$ 5,00 para transferência')}
+                    </Text>
+                  </View>
+                </PaddedView>
+              </View>
             </View>
           </ScrollView>
         )}
