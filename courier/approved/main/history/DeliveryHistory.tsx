@@ -65,121 +65,10 @@ export default function ({ navigation, route }: Props) {
             scrollIndicatorInsets={{ right: 1 }}
           >
             <View>
-              <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
-                {/* week summary */}
-                <PaddedView
-                  style={{
-                    ...borders.default,
-                    borderColor: colors.white,
-                    backgroundColor: colors.white,
-                    marginTop: padding,
-                  }}
-                >
-                  <View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <MaterialIcons
-                        name="account-balance-wallet"
-                        size={20}
-                        color={colors.grey700}
-                      />
-                      <Text
-                        style={{
-                          ...texts.sm,
-                          color: colors.grey700,
-                          marginLeft: halfPadding,
-                          paddingBottom: 2,
-                        }}
-                      >
-                        {t('Resumo da semana')}
-                      </Text>
-                    </View>
-
-                    <Text style={{ ...texts.x4l }}>{formatCurrency(revenue.week)}</Text>
-
-                    <DefaultButton
-                      style={{ marginTop: padding }}
-                      title={t('Ver corridas da semana')}
-                      onPress={() =>
-                        navigation.navigate('DeliveriesNavigator', {
-                          screen: 'DeliveryHistoryByWeek',
-                        })
-                      }
-                      variant="secondary"
-                    />
-                  </View>
-                </PaddedView>
-                {/* ledger values  */}
-                <PaddedView
-                  style={{
-                    ...borders.default,
-                    borderColor: colors.white,
-                    backgroundColor: colors.white,
-                    marginTop: padding,
-                  }}
-                >
-                  <View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <MaterialIcons name="timer" size={20} color={colors.grey700} />
-                      <Text
-                        style={{
-                          ...texts.sm,
-                          color: colors.grey700,
-                          marginLeft: halfPadding,
-                          paddingBottom: 2,
-                        }}
-                      >
-                        {t('Faturamento em até 2 dias')}
-                      </Text>
-                    </View>
-
-                    <Text style={{ ...texts.x4l }}>{formatCurrency(ledgerTotal)}</Text>
-                  </View>
-                </PaddedView>
-                {/* advance */}
-                <PaddedView
-                  style={{
-                    ...borders.default,
-                    borderColor: colors.white,
-                    backgroundColor: colors.white,
-                    marginTop: padding,
-                  }}
-                >
-                  <View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <MaterialIcons name="timer" size={20} color={colors.grey700} />
-                      <Text
-                        style={{
-                          ...texts.sm,
-                          color: colors.grey700,
-                          marginLeft: halfPadding,
-                          paddingBottom: 2,
-                        }}
-                      >
-                        {t('Em faturamento')}
-                      </Text>
-                    </View>
-
-                    <Text style={{ ...texts.x4l }}>{info.receivable_balance}</Text>
-
-                    <DefaultButton
-                      style={{ marginTop: padding }}
-                      title={t('Antecipar valores')}
-                      onPress={() =>
-                        navigation.navigate('DeliveriesNavigator', {
-                          screen: 'Receivables',
-                          params: {
-                            receivableBalance: info!.receivable_balance,
-                          },
-                        })
-                      }
-                      variant="secondary"
-                    />
-                  </View>
-                </PaddedView>
+              <PaddedView>
                 {/* available for withdraw */}
                 <PaddedView
                   style={{
-                    // marginTop: halfPadding,
                     ...borders.default,
                     borderColor: colors.white,
                     backgroundColor: colors.white,
@@ -226,7 +115,117 @@ export default function ({ navigation, route }: Props) {
                     </Text>
                   </View>
                 </PaddedView>
-              </View>
+                {/* ledger values  */}
+                <PaddedView
+                  style={{
+                    ...borders.default,
+                    borderColor: colors.white,
+                    backgroundColor: colors.white,
+                    marginTop: padding,
+                  }}
+                >
+                  <View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <MaterialIcons name="timer" size={20} color={colors.grey700} />
+                      <Text
+                        style={{
+                          ...texts.sm,
+                          color: colors.grey700,
+                          marginLeft: halfPadding,
+                          paddingBottom: 2,
+                        }}
+                      >
+                        {t('Faturamento em até 2 dias')}
+                      </Text>
+                    </View>
+
+                    <Text style={{ ...texts.x4l }}>{formatCurrency(ledgerTotal)}</Text>
+                  </View>
+                </PaddedView>
+                {/* week summary */}
+                <PaddedView
+                  style={{
+                    ...borders.default,
+                    borderColor: colors.white,
+                    backgroundColor: colors.white,
+                    marginTop: padding,
+                  }}
+                >
+                  <View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <MaterialIcons
+                        name="account-balance-wallet"
+                        size={20}
+                        color={colors.grey700}
+                      />
+                      <Text
+                        style={{
+                          ...texts.sm,
+                          color: colors.grey700,
+                          marginLeft: halfPadding,
+                          paddingBottom: 2,
+                        }}
+                      >
+                        {t('Resumo da semana')}
+                      </Text>
+                    </View>
+
+                    <Text style={{ ...texts.x4l }}>{formatCurrency(revenue.week)}</Text>
+
+                    <DefaultButton
+                      style={{ marginTop: padding }}
+                      title={t('Ver corridas da semana')}
+                      onPress={() =>
+                        navigation.navigate('DeliveriesNavigator', {
+                          screen: 'DeliveryHistoryByWeek',
+                        })
+                      }
+                      variant="secondary"
+                    />
+                  </View>
+                </PaddedView>
+                {/* advance */}
+                <PaddedView
+                  style={{
+                    ...borders.default,
+                    borderColor: colors.white,
+                    backgroundColor: colors.white,
+                    marginTop: padding,
+                  }}
+                >
+                  <View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <MaterialIcons name="timer" size={20} color={colors.grey700} />
+                      <Text
+                        style={{
+                          ...texts.sm,
+                          color: colors.grey700,
+                          marginLeft: halfPadding,
+                          paddingBottom: 2,
+                        }}
+                      >
+                        {t('Em faturamento')}
+                      </Text>
+                    </View>
+
+                    <Text style={{ ...texts.x4l }}>{info.receivable_balance}</Text>
+
+                    <DefaultButton
+                      style={{ marginTop: padding }}
+                      title={t('Antecipar valores')}
+                      onPress={() =>
+                        navigation.navigate('DeliveriesNavigator', {
+                          screen: 'Receivables',
+                          params: {
+                            receivableBalance: info!.receivable_balance,
+                          },
+                        })
+                      }
+                      variant="secondary"
+                    />
+                  </View>
+                </PaddedView>
+              </PaddedView>
             </View>
           </ScrollView>
         )}
