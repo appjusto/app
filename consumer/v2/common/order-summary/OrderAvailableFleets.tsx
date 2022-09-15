@@ -26,10 +26,9 @@ export const OrderAvailableFleets = ({
   navigateToAvailableFleets,
 }: Props) => {
   const { fulfillment, scheduledTo } = order;
-  if (fulfillment !== 'delivery') return null;
-  if (scheduledTo) return null;
   const isLoading = quotes === undefined;
   const orderedFares = (quotes ?? []).slice(0, 3);
+  if (scheduledTo) return null;
   // UI
   return (
     <View>
@@ -45,7 +44,9 @@ export const OrderAvailableFleets = ({
               <RouteIssueCard issue={order.route.issue} />
             ) : (
               <View>
-                {quotes.length === 1 && quotes[0].fleet!.participantsOnline === 0 ? (
+                {quotes.length === 1 &&
+                quotes[0].fleet?.participantsOnline === 0 &&
+                fulfillment === 'delivery' ? (
                   <Text style={{ ...texts.xs, color: colors.grey700, marginBottom: 12 }}>
                     {t(
                       'Sua entrega poderá ser feita por uma empresa parceira caso não haja entregadores online no momento'
@@ -59,18 +60,18 @@ export const OrderAvailableFleets = ({
                   </Text>
                 )}
                 <View style={{ marginBottom: padding }}>
-                  {orderedFares.map((item) => {
-                    return (
-                      <View key={item.fleet!.id} style={{ marginBottom: padding }}>
+                  {orderedFares.map((item) =>
+                    item.fleet ? (
+                      <View key={item.fleet?.id} style={{ marginBottom: padding }}>
                         <FleetListItem
                           item={item}
-                          selectedFare={selectedFare?.fleet?.id === item.fleet!.id}
+                          selectedFare={selectedFare?.fleet?.id === item.fleet?.id}
                           onFareSelect={(item) => onFareSelect(item)}
                           onFleetDetail={() => onFleetSelect(item.fleet!.id)}
                         />
                       </View>
-                    );
-                  })}
+                    ) : null
+                  )}
                   {quotes.length >= 3 ? (
                     <DefaultButton
                       variant="secondary"

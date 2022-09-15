@@ -172,20 +172,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     Keyboard.dismiss();
     if (!order) return;
     if (!selectedFare) return;
-    let paymentPayload;
-    if (payMethod === 'credit_card') {
-      if (!selectedPaymentMethodId) return;
-      paymentPayload = {
-        payableWith: 'credit_card',
-        paymentMethodId: selectedPaymentMethodId,
-      } as PlaceOrderPayloadPaymentCreditCard;
-    }
-    if (payMethod === 'pix') {
-      paymentPayload = {
-        payableWith: 'pix',
-        key: cpf, // remove this
-      } as PlaceOrderPayloadPaymentPix;
-    }
     if (!order.destination?.address) {
       dispatch(
         showToast(
@@ -252,13 +238,24 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           }),
         });
       }
+      const paymentPayload =
+        payMethod === 'credit_card'
+          ? ({
+              payableWith: 'credit_card',
+              paymentMethodId: selectedPaymentMethodId,
+            } as PlaceOrderPayloadPaymentCreditCard)
+          : ({
+              payableWith: 'pix',
+              key: cpf,
+            } as PlaceOrderPayloadPaymentPix);
+      const fleetId = order.fulfillment === 'delivery' ? selectedFare?.fleet?.id : undefined;
       await api
         .order()
         .placeOrder(
           order.id,
           paymentPayload,
           wantsCpf,
-          selectedFare!.fleet.id,
+          fleetId,
           coords,
           orderAdditionalInfo,
           shareDataWithBusiness
