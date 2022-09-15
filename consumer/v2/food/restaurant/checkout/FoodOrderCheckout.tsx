@@ -393,7 +393,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             activityIndicator={isLoading}
             onEditPaymentMethod={navigateToFillPaymentInfo}
             onSubmit={() => {
-              if (!shouldVerifyPhone) setDestinationModalVisible(true);
+              if (!shouldVerifyPhone && order.fulfillment === 'delivery')
+                setDestinationModalVisible(true);
               else placeOrderHandler();
             }}
             navigateToAboutCharges={() => {

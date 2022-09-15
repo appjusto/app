@@ -70,9 +70,7 @@ export const OrderSummary = ({
       ) : null}
       <View style={{ paddingTop: tallerDevice ? padding : 0 }}>
         <OrderPlacesSummary order={order} onEditStep={onEditStep} />
-        {type === 'food' && fulfillment === 'delivery' ? (
-          <OrderScheduling onCheckSchedules={onCheckSchedules} />
-        ) : null}
+        {type === 'food' ? <OrderScheduling onCheckSchedules={onCheckSchedules} /> : null}
       </View>
 
       {!isEmpty(order.items) ? (
