@@ -49,6 +49,7 @@ export const OrderSummary = ({
 }: Props) => {
   // context
   const tallerDevice = useTallerDevice();
+  const { route, type, fulfillment } = order;
 
   // UI
   return (
@@ -62,14 +63,16 @@ export const OrderSummary = ({
           <OrderMap
             originLocation={order.origin?.location}
             destinationLocation={order.destination?.location}
-            route={order.route}
+            route={route}
             ratio={360 / 160}
           />
         </View>
       ) : null}
       <View style={{ paddingTop: tallerDevice ? padding : 0 }}>
         <OrderPlacesSummary order={order} onEditStep={onEditStep} />
-        {order.type === 'food' ? <OrderScheduling onCheckSchedules={onCheckSchedules} /> : null}
+        {type === 'food' && fulfillment === 'delivery' ? (
+          <OrderScheduling onCheckSchedules={onCheckSchedules} />
+        ) : null}
       </View>
 
       {!isEmpty(order.items) ? (
@@ -83,7 +86,7 @@ export const OrderSummary = ({
           <OrderAdditionalInfo value={additionalInfo!} onAddInfo={onAddInfo!} />
         </View>
       ) : null}
-      {order.type === 'food' ? (
+      {type === 'food' ? (
         <View style={{ flex: 1, marginHorizontal: padding, marginBottom: padding }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: halfPadding }}>
             <Ionicons name="share-social-outline" size={16} style={{ marginRight: 4 }} />
