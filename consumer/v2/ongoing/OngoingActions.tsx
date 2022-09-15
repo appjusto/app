@@ -33,41 +33,46 @@ export const OngoingActions = ({
   const unread = unreadMessages(chat, user.uid);
   return (
     <PaddedView style={{ flex: 1 }}>
-      <Text style={[texts.xs, { color: colors.green600 }]}>{t('Entregar em')}</Text>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          marginBottom: padding,
-        }}
-      >
+      {order.fulfillment === 'delivery' ? (
         <View>
-          <Text style={[texts.xs]} numberOfLines={2}>
-            {order.destination?.address.main ?? ''}
-          </Text>
-          {order.destination?.additionalInfo ? (
+          <Text style={[texts.xs, { color: colors.green600 }]}>{t('Entregar em')}</Text>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              marginBottom: padding,
+            }}
+          >
             <View>
-              <Text style={{ ...texts.xs, color: colors.grey700 }}>
-                {order.destination?.additionalInfo}
+              <Text style={[texts.xs]} numberOfLines={2}>
+                {order.destination?.address.main ?? ''}
               </Text>
+              {order.destination?.additionalInfo ? (
+                <View>
+                  <Text style={{ ...texts.xs, color: colors.grey700 }}>
+                    {order.destination?.additionalInfo}
+                  </Text>
+                </View>
+              ) : null}
+              {order.type === 'p2p' && order.destination?.intructions ? (
+                <View>
+                  <Text style={{ ...texts.xs, color: colors.grey700 }}>
+                    {order.destination.intructions}
+                  </Text>
+                </View>
+              ) : null}
             </View>
-          ) : null}
-          {order.type === 'p2p' && order.destination?.intructions ? (
-            <View>
-              <Text style={{ ...texts.xs, color: colors.grey700 }}>
-                {order.destination.intructions}
-              </Text>
-            </View>
-          ) : null}
-        </View>
-        {/* <View>
+            {/* <View>
           <TouchableOpacity onPress={() => null}>
             <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Alterar')}</Text>
           </TouchableOpacity>
         </View> */}
-      </View>
+          </View>
+        </View>
+      ) : null}
+
       {unread.length > 0 && order.status !== 'dispatching' ? (
         <TouchableOpacity onPress={() => onMessageReceived(unread[0].from)}>
           <PaddedView

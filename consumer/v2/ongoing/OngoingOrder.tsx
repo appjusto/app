@@ -164,7 +164,9 @@ export default function ({ navigation, route }: Props) {
           onChatWithCourier={openChatWithCourier}
           onOpenChat={openChatHandler}
         />
-        {order.dispatchingStatus !== 'outsourced' && order.status !== 'scheduled' ? (
+        {order.dispatchingStatus !== 'outsourced' &&
+        order.status !== 'scheduled' &&
+        order.fulfillment === 'delivery' ? (
           <DeliveryConfirmation
             switchValue={wantsCode}
             onChangeCodeDelivery={() => {
@@ -187,7 +189,7 @@ export default function ({ navigation, route }: Props) {
             navigateToConfirmCancel={navigateToConfirmCancel}
             onMessageReceived={openChatHandler}
           />
-          {order.type === 'food' && order.status !== 'scheduled' ? (
+          {order.type === 'food' ? (
             <View>
               <HR />
               <PaddedView>
