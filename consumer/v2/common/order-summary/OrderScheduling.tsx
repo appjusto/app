@@ -21,9 +21,9 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
   const order = useContextActiveOrder();
   const business = useContextBusiness();
   const now = getServerTime();
-  const shouldBeReady = new Date(now.getTime() + (order?.cookingTime ?? 0));
   // side effects
   const margin = 60;
+  const shouldBeReady = new Date(now.getTime() + 60000 * 60); // TODO: what will we use here?
   // UI
   if (!order) return null; // shouldn't happen
   if (!business) return null; // shouldn't happen
@@ -98,7 +98,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
     } else {
       return (
         <RectangularListItemText
-          text={`Previsão: ${getETAWithMargin(shouldBeReady, 20)}`} // adding more 20 minutes as "tolerance time"
+          text={`Previsão: ${getETAWithMargin(shouldBeReady)}`}
           selected
           onSelect={() => null}
         />
@@ -123,7 +123,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
       } else if (fulfillment === 'take-away') {
         return (
           <View style={{ alignSelf: 'center' }}>
-            <Text style={{ ...texts.sm }}>{t('Previsão de entrega: qual? - qual?')}</Text>
+            <Text style={{ ...texts.sm }}>{`Previsão: ${getETAWithMargin(shouldBeReady)}`}</Text>
           </View>
         );
       }
