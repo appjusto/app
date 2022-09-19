@@ -1,4 +1,4 @@
-import { DispatchingState, Order, OrderStatus } from '@appjusto/types';
+import { DispatchingState, Fulfillment, Order, OrderStatus } from '@appjusto/types';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { t } from '../../../strings';
@@ -6,7 +6,11 @@ import { isOrderOngoing } from '../../store/order/selectors';
 import { colors, halfPadding } from '../../styles';
 import RoundedText from '../texts/RoundedText';
 
-const getStatusLabel = (status: OrderStatus, dispatchingState: DispatchingState) => {
+const getStatusLabel = (
+  status: OrderStatus,
+  dispatchingState: DispatchingState,
+  fulfillment?: Fulfillment
+) => {
   if (status === 'quote') return t('Continuar pedido');
   if (status === 'confirming' || status === 'charged') return t('Confirmando...');
   if (status === 'scheduled') return t('Agendado');
@@ -18,6 +22,8 @@ const getStatusLabel = (status: OrderStatus, dispatchingState: DispatchingState)
   // status must be ready or dispatching at this point
   if (dispatchingState === 'going-destination') return t('Saiu para entrega');
   if (dispatchingState === 'arrived-destination') return t('Chegou no destino');
+  // take-away
+  if (fulfillment === 'take-away' && status === 'ready') return t('Aguardando retirada');
   // possible dispatchingState here: 'idle' 'matching', 'going-pickup', 'arrived-pickup', 'unmatched'
   return t('Aguardando entregador/a');
 };
@@ -28,7 +34,7 @@ type Props = {
 };
 
 export default function ({ order, onRemove }: Props) {
-  const { status, dispatchingState } = order;
+  const { status, dispatchingState, fulfillment } = order;
   let backgroundColor = colors.white;
   let color = colors.black;
   let noBorder = false;
@@ -44,7 +50,7 @@ export default function ({ order, onRemove }: Props) {
     return (
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <RoundedText backgroundColor={backgroundColor} color={color} quote>
-          {getStatusLabel(status, dispatchingState!)}
+          {getStatusLabel(status, dispatchingState!, fulfillment)}
         </RoundedText>
         <TouchableOpacity onPress={onRemove} style={{ marginLeft: halfPadding }}>
           <RoundedText color={colors.red}>{t('Remover')}</RoundedText>
@@ -53,7 +59,7 @@ export default function ({ order, onRemove }: Props) {
     );
   return (
     <RoundedText backgroundColor={backgroundColor} color={color} noBorder={noBorder}>
-      {getStatusLabel(status, dispatchingState!)}
+      {getStatusLabel(status, dispatchingState!, fulfillment)}
     </RoundedText>
   );
 }

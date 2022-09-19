@@ -49,7 +49,7 @@ export const OrderSummary = ({
 }: Props) => {
   // context
   const tallerDevice = useTallerDevice();
-  const { route, type, fulfillment } = order;
+  const { route, type } = order;
 
   // UI
   return (

@@ -8,7 +8,11 @@ import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeConte
 import { IconOngoingMotocycle } from '../../../common/icons/icon-ongoing-motocycle';
 import { IconOngoingStatus } from '../../../common/icons/icon-ongoing-status';
 import { colors, halfPadding, padding, texts } from '../../../common/styles';
-import { formatDate, getETAWithMargin } from '../../../common/utils/formatters/datetime';
+import {
+  formatDate,
+  formatTime,
+  getETAWithMargin,
+} from '../../../common/utils/formatters/datetime';
 import { t } from '../../../strings';
 
 interface Props {
@@ -19,7 +23,6 @@ export const OngoingOrderStatus = ({ order }: Props) => {
   // context
   const getServerTime = useContextGetSeverTime();
   const now = getServerTime();
-  const shouldBeReady = new Date(now.getTime() + (order?.cookingTime ?? 0));
   const { status, dispatchingState, type, dispatchingStatus, fulfillment } = order;
   let header: string | null = null;
   let description: string | null = null;
@@ -190,10 +193,12 @@ export const OngoingOrderStatus = ({ order }: Props) => {
       );
     }
     if (order.fulfillment !== 'delivery') {
+      if (order.status === 'ready') return;
+      if (!order.cookingTime) return;
+      const shouldBeReady = new Date(now.getTime() + order.cookingTime); // TODO: add correct interval
       return (
-        // adding more 20 minutes as "tolerance time"
         <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>
-          {`Previsão: ${getETAWithMargin(shouldBeReady, 20)}`}
+          {`Previsão: ${formatTime(shouldBeReady)}`}
         </RoundedText>
       );
     } else {
