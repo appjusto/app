@@ -21,6 +21,7 @@ const thumbSize = width / 2 - doublePadding;
 const center = (width - thumbSize) * 0.4;
 const leftmost = 0;
 const rightmost = width - width / 2 - halfPadding;
+const threshold = 40;
 
 export const FulfillmentSwitch = ({ orderId }: Props) => {
   // context
@@ -36,8 +37,8 @@ export const FulfillmentSwitch = ({ orderId }: Props) => {
   };
   const onGestureEnded = async () => {
     try {
-      const takeAway = translateX > center && translateX < rightmost;
-      const delivery = translateX < center;
+      const takeAway = translateX > center + threshold && translateX < rightmost;
+      const delivery = translateX < center + threshold;
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       if (delivery) {
         setOrderFulfillment('delivery');
