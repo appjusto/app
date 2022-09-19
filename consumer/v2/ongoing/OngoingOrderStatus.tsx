@@ -4,6 +4,7 @@ import { Text, View } from 'react-native';
 import request from '../../../assets/lottie-icons/request.json';
 import { Lottie } from '../../../common/components/icons/Lottie';
 import RoundedText from '../../../common/components/texts/RoundedText';
+import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeContext';
 import { IconOngoingMotocycle } from '../../../common/icons/icon-ongoing-motocycle';
 import { IconOngoingStatus } from '../../../common/icons/icon-ongoing-status';
 import { colors, halfPadding, padding, texts } from '../../../common/styles';
@@ -15,6 +16,10 @@ interface Props {
 }
 
 export const OngoingOrderStatus = ({ order }: Props) => {
+  // context
+  const getServerTime = useContextGetSeverTime();
+  const now = getServerTime();
+  const shouldBeReady = new Date(now.getTime() + (order?.cookingTime ?? 0));
   const { status, dispatchingState, type, dispatchingStatus, fulfillment } = order;
   let header: string | null = null;
   let description: string | null = null;
@@ -172,6 +177,35 @@ export const OngoingOrderStatus = ({ order }: Props) => {
       return <IconOngoingMotocycle />;
     else return <IconOngoingStatus />;
   };
+  const etaUI = () => {
+    if (!order) return;
+    if (order.status === 'scheduled') {
+      return (
+        // TODO: add delivery time
+        <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>{`${t(
+          'Previsão de entrega:'
+        )} ${formatDate(order.scheduledTo!)}, ${getETAWithMargin(
+          order.scheduledTo!
+        )}`}</RoundedText>
+      );
+    }
+    if (order.fulfillment !== 'delivery') {
+      return (
+        // adding more 20 minutes as "tolerance time"
+        <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>
+          {`Previsão: ${getETAWithMargin(shouldBeReady, 20)}`}
+        </RoundedText>
+      );
+    } else {
+      if (order.arrivals?.destination?.estimate) {
+        return (
+          <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>{`${t(
+            'Previsão de entrega:'
+          )} ${getETAWithMargin(order.arrivals.destination.estimate)}`}</RoundedText>
+        );
+      } else return null;
+    }
+  };
   return (
     <View style={{ paddingHorizontal: padding, paddingVertical: padding }}>
       {iconsUI()}
@@ -185,22 +219,10 @@ export const OngoingOrderStatus = ({ order }: Props) => {
       >
         {description}
       </Text>
-      {order.arrivals?.destination?.estimate && order.dispatchingState !== 'arrived-destination' && (
-        <View style={{ marginTop: padding }}>
-          {order.status === 'scheduled' ? (
-            // TODO: add delivery time
-            <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>{`${t(
-              'Previsão de entrega:'
-            )} ${formatDate(order.scheduledTo!)}, ${getETAWithMargin(
-              order.scheduledTo!
-            )}`}</RoundedText>
-          ) : (
-            <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>{`${t(
-              'Previsão de entrega:'
-            )} ${getETAWithMargin(order.arrivals.destination.estimate)}`}</RoundedText>
-          )}
-        </View>
-      )}
+      {order.arrivals?.destination?.estimate &&
+        order.dispatchingState !== 'arrived-destination' && (
+          <View style={{ marginTop: padding }}>{etaUI()}</View>
+        )}
     </View>
   );
 };
