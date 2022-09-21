@@ -1,4 +1,9 @@
-import { AdvanceReceivablesPayload, CourierOrderRequest, LedgerEntry } from '@appjusto/types';
+import {
+  AdvanceReceivablesPayload,
+  CourierOrderRequest,
+  FetchAdvanceByAmountSimulationPayload,
+  LedgerEntry,
+} from '@appjusto/types';
 import { IuguMarketplaceAccountAdvanceSimulation } from '@appjusto/types/payment/iugu';
 import {
   getDocs,
@@ -144,6 +149,15 @@ export default class CourierApi {
       meta: { version: getAppVersion() },
     };
     return (await this.functionsRef.getAdvanceReceivablesCallable()(payload)).data;
+  }
+  async advanceByAmountSimulation(accountId: string, amount: number): Promise<any> {
+    const payload: FetchAdvanceByAmountSimulationPayload = {
+      accountType: 'courier',
+      accountId,
+      amount,
+      meta: { version: getAppVersion() },
+    };
+    return (await this.functionsRef.getFetchAdvanceByAmountSimulationCallable()(payload)).data;
   }
   // storage
   // selfie
