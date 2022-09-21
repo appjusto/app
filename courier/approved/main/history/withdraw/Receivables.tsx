@@ -2,12 +2,10 @@ import { IuguMarketplaceAccountReceivableItem } from '@appjusto/types/payment/iu
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import dayjs from 'dayjs';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
-import { usePlatformParamsContext } from '../../../../../common/contexts/PlatformParamsContext';
 import { useMarketplaceAccountInfo } from '../../../../../common/store/api/courier/account/useMarketplaceAccountInfo';
 import { useSegmentScreen } from '../../../../../common/store/api/track';
 import {
@@ -38,14 +36,10 @@ interface Section {
 
 export const Receivables = ({ navigation, route }: Props) => {
   // context
-  const advanceableAfterHours = usePlatformParamsContext()?.courier.advanceableAfterHours ?? 48;
-  // state
   const info = useMarketplaceAccountInfo();
+  // state
   const canAdvanceReceivables = useCanAdvanceReceivables();
   const [selected, setSelected] = React.useState<number[]>([]);
-  // helpers
-  const advanceableAt = (createdAt: string) =>
-    dayjs(new Date(createdAt)).add(advanceableAfterHours, 'hour').toDate();
   // side effects
   useSegmentScreen('Receivables');
   // handlers
@@ -113,7 +107,6 @@ export const Receivables = ({ navigation, route }: Props) => {
       <View style={{ flex: 1 }} />
       <PaddedView>
         <DefaultButton
-          // title={canAdvanceReceivables ? t('Avançar') : t('Fora do horário')}
           title={t('Simular antecipação')}
           onPress={advanceHandler}
           disabled={!canAdvanceReceivables}

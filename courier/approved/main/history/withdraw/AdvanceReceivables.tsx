@@ -8,6 +8,7 @@ import CheckField from '../../../../../common/components/buttons/CheckField';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { useAdvanceSimulation } from '../../../../../common/store/api/courier/account/useAdvanceSimulation';
+import { useMarketplaceAccountInfo } from '../../../../../common/store/api/courier/account/useMarketplaceAccountInfo';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { showToast } from '../../../../../common/store/ui/actions';
@@ -19,6 +20,7 @@ import {
   screens,
   texts,
 } from '../../../../../common/styles';
+import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import { DeliveriesNavigatorParamList } from '../types';
 import { useCanAdvanceReceivables } from './useCanAdvanceReceivables';
@@ -35,6 +37,7 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  const info = useMarketplaceAccountInfo();
   // redux
   const courier = useSelector(getCourier)!;
   // state
@@ -63,7 +66,7 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
     }
   };
   // UI
-  if (!simulation) {
+  if (!info || !simulation) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -73,15 +76,11 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
   return (
     <ScrollView style={{ ...screens.config }} contentContainerStyle={{ flexGrow: 1 }}>
       <PaddedView style={{ flex: 1 }}>
-        <Text style={{ ...texts.sm, color: colors.grey700, marginTop: padding }}>
-          {t('Você selecionou')}
-        </Text>
-        <Text style={{ ...texts.x2l }}>{`${simulation.transactions.length} ${t('corridas')}`}</Text>
         <Text style={{ ...texts.sm, color: colors.grey700, marginTop: biggerPadding }}>
           {t('Total a adiantar')}
         </Text>
         <Text style={{ ...texts.x2l, color: colors.green600 }}>
-          {`+ ${simulation.total.advanced_value}`}
+          {formatCurrency(info.advanceable_value)}
         </Text>
         <Text style={{ ...texts.sm, color: colors.grey700, marginTop: biggerPadding }}>
           {t('Total de taxas de adiantamento')}
