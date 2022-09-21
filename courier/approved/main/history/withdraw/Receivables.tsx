@@ -39,12 +39,11 @@ export const Receivables = ({ navigation, route }: Props) => {
   const info = useMarketplaceAccountInfo();
   // state
   const canAdvanceReceivables = useCanAdvanceReceivables();
-  const [selected, setSelected] = React.useState<number[]>([]);
   // side effects
   useSegmentScreen('Receivables');
   // handlers
   const advanceHandler = () => {
-    navigation.replace('AdvanceReceivables', { ids: selected });
+    navigation.replace('AdvanceReceivables');
   };
   // UI
   if (!info) {
@@ -107,7 +106,7 @@ export const Receivables = ({ navigation, route }: Props) => {
       <View style={{ flex: 1 }} />
       <PaddedView>
         <DefaultButton
-          title={t('Simular antecipação')}
+          title={canAdvanceReceivables ? t('Simular antecipação') : t('Fora do horário')}
           onPress={advanceHandler}
           disabled={!canAdvanceReceivables}
         />

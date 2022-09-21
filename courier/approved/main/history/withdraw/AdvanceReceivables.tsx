@@ -1,13 +1,13 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Keyboard, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import CheckField from '../../../../../common/components/buttons/CheckField';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
-import { useAdvanceSimulation } from '../../../../../common/store/api/courier/account/useAdvanceSimulation';
+import { useAdvanceByAmountSimulation } from '../../../../../common/store/api/courier/account/useAdvanceByAmountSimulation';
 import { useMarketplaceAccountInfo } from '../../../../../common/store/api/courier/account/useMarketplaceAccountInfo';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
@@ -45,28 +45,29 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
   const [requesting, setRequesting] = React.useState(false);
   // side effects
   const canAdvanceReceivables = useCanAdvanceReceivables();
-  const simulation = useAdvanceSimulation(route.params.ids);
+  const simulationByAmount = useAdvanceByAmountSimulation(info?.advanceable_value);
   // tracking
   useSegmentScreen('AdvanceReceivables');
   // handlers
   const confirmHandler = async () => {
     setRequesting(true);
     try {
-      const result = await api.courier().advanceReceivables(courier.id, route.params.ids);
+      if (!simulationByAmount) return;
+      await api
+        .courier()
+        .advanceReceivablesByAmount(courier.id, simulationByAmount.nearest.simulation_id);
       track('courier advanced receivables');
-      // console.log(result);
       navigation.replace('RequestWithdrawFeedback', {
         header: t('Antecipação realizada com sucesso!'),
         description: t('O valor será transferido para sua conta em até 1 dia útil.'),
       });
     } catch (error) {
-      Keyboard.dismiss();
       dispatch(showToast('Não foi possível realizar a requisição. Tente novamente.', 'error'));
       setRequesting(false);
     }
   };
   // UI
-  if (!info || !simulation) {
+  if (!info || !simulationByAmount) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -80,13 +81,13 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
           {t('Total a adiantar')}
         </Text>
         <Text style={{ ...texts.x2l, color: colors.green600 }}>
-          {formatCurrency(info.advanceable_value)}
+          {formatCurrency(simulationByAmount.nearest.advanceable_amount_cents)}
         </Text>
         <Text style={{ ...texts.sm, color: colors.grey700, marginTop: biggerPadding }}>
           {t('Total de taxas de adiantamento')}
         </Text>
         <Text style={{ ...texts.x2l, color: colors.red }}>
-          {`+ ${simulation.total.advance_fee}`}
+          {`+ ${formatCurrency(simulationByAmount.nearest.advancement_fee_cents)}`}
         </Text>
         <PaddedView
           style={{
@@ -101,7 +102,12 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
               {t('Total a receber no adiantamento')}
             </Text>
           </View>
-          <Text style={{ ...texts.x4l }}>{simulation.total.received_value}</Text>
+          <Text style={{ ...texts.x4l }}>
+            {formatCurrency(
+              simulationByAmount.nearest.advanceable_amount_cents -
+                simulationByAmount.nearest.advancement_fee_cents
+            )}
+          </Text>
         </PaddedView>
         <View style={{ flex: 1 }} />
         <CheckField

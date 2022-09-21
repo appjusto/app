@@ -1,4 +1,5 @@
 import {
+  AdvanceReceivablesByAmountPayload,
   AdvanceReceivablesPayload,
   CourierOrderRequest,
   FetchAdvanceByAmountSimulationPayload,
@@ -158,6 +159,16 @@ export default class CourierApi {
       meta: { version: getAppVersion() },
     };
     return (await this.functionsRef.getFetchAdvanceByAmountSimulationCallable()(payload)).data;
+  }
+
+  async advanceReceivablesByAmount(accountId: string, simulationId: string): Promise<any> {
+    const payload: AdvanceReceivablesByAmountPayload = {
+      accountType: 'courier',
+      accountId,
+      simulationId,
+      meta: { version: getAppVersion() },
+    };
+    return (await this.functionsRef.getAdvanceReceivablesByAmountCallable()(payload)).data;
   }
   // storage
   // selfie

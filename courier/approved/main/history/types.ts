@@ -7,9 +7,7 @@ export type DeliveriesNavigatorParamList = {
     orderId: string;
   };
   Receivables: undefined;
-  AdvanceReceivables: {
-    ids: number[];
-  };
+  AdvanceReceivables: undefined;
   Withdraws: {
     info?: FetchAccountInformationResponse;
   };
