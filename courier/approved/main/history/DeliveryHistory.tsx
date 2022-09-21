@@ -51,7 +51,9 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
+
   const availableForWithdraw = convertBalance(info.balance_available_for_withdraw);
+  const receivableBalance = convertBalance(info.receivable_balance) * 100;
   const minimum = 5;
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
@@ -113,33 +115,6 @@ export default function ({ navigation, route }: Props) {
                     >
                       {t('Valor mínimo de R$ 5,00 para transferência')}
                     </Text>
-                  </View>
-                </PaddedView>
-                {/* ledger values  */}
-                <PaddedView
-                  style={{
-                    ...borders.default,
-                    borderColor: colors.white,
-                    backgroundColor: colors.white,
-                    marginTop: padding,
-                  }}
-                >
-                  <View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <MaterialIcons name="timer" size={20} color={colors.grey700} />
-                      <Text
-                        style={{
-                          ...texts.sm,
-                          color: colors.grey700,
-                          marginLeft: halfPadding,
-                          paddingBottom: 2,
-                        }}
-                      >
-                        {t('Faturamento em até 2 dias')}
-                      </Text>
-                    </View>
-
-                    <Text style={{ ...texts.x4l }}>{formatCurrency(ledgerTotal)}</Text>
                   </View>
                 </PaddedView>
                 {/* week summary */}
@@ -208,11 +183,13 @@ export default function ({ navigation, route }: Props) {
                       </Text>
                     </View>
 
-                    <Text style={{ ...texts.x4l }}>{info.receivable_balance}</Text>
+                    <Text style={{ ...texts.x4l }}>
+                      {formatCurrency(ledgerTotal * 100 + receivableBalance)}
+                    </Text>
 
                     <DefaultButton
                       style={{ marginTop: padding }}
-                      title={t('Antecipar valores')}
+                      title={t('Ver detalhes')}
                       onPress={() =>
                         navigation.navigate('DeliveriesNavigator', {
                           screen: 'Receivables',
