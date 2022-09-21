@@ -6,9 +6,7 @@ export type DeliveriesNavigatorParamList = {
   DeliverySummary: {
     orderId: string;
   };
-  Receivables: {
-    receivableBalance: string;
-  };
+  Receivables: undefined;
   AdvanceReceivables: {
     ids: number[];
   };

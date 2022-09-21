@@ -193,9 +193,6 @@ export default function ({ navigation, route }: Props) {
                       onPress={() =>
                         navigation.navigate('DeliveriesNavigator', {
                           screen: 'Receivables',
-                          params: {
-                            receivableBalance: info!.receivable_balance,
-                          },
                         })
                       }
                       variant="secondary"
