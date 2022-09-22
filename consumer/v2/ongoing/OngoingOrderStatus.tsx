@@ -195,7 +195,7 @@ export const OngoingOrderStatus = ({ order }: Props) => {
     if (order.fulfillment !== 'delivery') {
       if (order.status === 'ready') return;
       if (!order.cookingTime) return;
-      const shouldBeReady = new Date(now.getTime() + order.cookingTime); // TODO: add correct interval
+      const shouldBeReady = new Date(now.getTime() + order.cookingTime * 1000);
       return (
         <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>
           {`Previsão: ${formatTime(shouldBeReady)}`}

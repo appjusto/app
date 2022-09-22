@@ -156,7 +156,9 @@ export default function ({ navigation, route }: Props) {
       <View style={{ flex: 1 }}>
         {/* top */}
         <OngoingOrderStatus order={order} />
-        {order.status !== 'dispatching' ? <HR height={padding} /> : null}
+        {order.fulfillment === 'delivery' && order.status !== 'dispatching' ? (
+          <HR height={padding} />
+        ) : null}
         <OngoingMapAndInfo
           order={order}
           courierLocation={courierLocation}
