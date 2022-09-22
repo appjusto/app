@@ -8,7 +8,6 @@ import CheckField from '../../../../../common/components/buttons/CheckField';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { useAdvanceByAmountSimulation } from '../../../../../common/store/api/courier/account/useAdvanceByAmountSimulation';
-import { useMarketplaceAccountInfo } from '../../../../../common/store/api/courier/account/useMarketplaceAccountInfo';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { showToast } from '../../../../../common/store/ui/actions';
@@ -37,7 +36,6 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
-  const info = useMarketplaceAccountInfo();
   // redux
   const courier = useSelector(getCourier)!;
   // state
@@ -45,7 +43,7 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
   const [requesting, setRequesting] = React.useState(false);
   // side effects
   const canAdvanceReceivables = useCanAdvanceReceivables();
-  const simulationByAmount = useAdvanceByAmountSimulation(info?.advanceable_value);
+  const simulationByAmount = useAdvanceByAmountSimulation();
   // tracking
   useSegmentScreen('AdvanceReceivables');
   // handlers
@@ -67,7 +65,7 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
     }
   };
   // UI
-  if (!info || !simulationByAmount) {
+  if (!simulationByAmount) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
