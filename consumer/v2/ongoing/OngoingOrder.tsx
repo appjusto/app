@@ -21,6 +21,7 @@ import { FoodOrderItemsInfo } from './FoodOrderItemsInfo';
 import { OngoingActions } from './OngoingActions';
 import { OngoingMapAndInfo } from './OngoingMapAndInfo';
 import { OngoingOrderStatus } from './OngoingOrderStatus';
+import { OrderNumber } from './OrderNumber';
 import { OngoingOrderNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
@@ -135,13 +136,6 @@ export default function ({ navigation, route }: Props) {
   const navigateToCourierDetail = () => {
     navigation.navigate('OngoingOrderCourierDetail', { orderId });
   };
-  // const navigateToChangeRoute = () =>
-  //   navigation.navigate('P2POrderNavigator', {
-  //     screen: 'CreateOrderP2P',
-  //     params: {
-  //       orderId,
-  //     },
-  //   });
   // ongoing UI
   return (
     <KeyboardAwareScrollView
@@ -178,6 +172,7 @@ export default function ({ navigation, route }: Props) {
             confirmation={confirmation}
           />
         ) : null}
+        {order.fulfillment === 'take-away' ? <OrderNumber code={order.code} /> : null}
         <FoodOrderItemsInfo order={order} />
         {order.dispatchingStatus !== 'outsourced' ? <HR height={padding} /> : null}
         <View style={{ paddingTop: halfPadding }}>
