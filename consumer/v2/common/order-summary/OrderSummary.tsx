@@ -49,7 +49,7 @@ export const OrderSummary = ({
 }: Props) => {
   // context
   const tallerDevice = useTallerDevice();
-  const { route, type } = order;
+  const { route, type, fulfillment } = order;
 
   // UI
   return (
@@ -63,7 +63,7 @@ export const OrderSummary = ({
           <OrderMap
             originLocation={order.origin?.location}
             destinationLocation={order.destination?.location}
-            route={route}
+            route={fulfillment === 'delivery' ? route : undefined}
             ratio={360 / 160}
           />
         </View>

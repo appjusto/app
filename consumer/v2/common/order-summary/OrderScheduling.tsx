@@ -21,12 +21,14 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
   const order = useContextActiveOrder();
   const business = useContextBusiness();
   const now = getServerTime();
-  // side effects
-  const margin = 60;
-  const shouldBeReady = new Date(now.getTime() + 60000 * 60); // TODO: what will we use here?
+
   // UI
   if (!order) return null; // shouldn't happen
   if (!business) return null; // shouldn't happen
+  const margin = 60;
+  const shouldBeReady = new Date(
+    now.getTime() + (business.averageCookingTime ? business.averageCookingTime * 1000 : 3600 * 1000)
+  );
   const { fulfillment, scheduledTo } = order;
   const canScheduleUI = () => {
     // realtime and scheduling
