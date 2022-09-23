@@ -114,6 +114,14 @@ export default function ({ navigation, route }: Props) {
       navigation.replace('OngoingOrderDeclined', { orderId });
     }
   }, [navigation, order, orderId]);
+  // header title
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: order?.code
+        ? `${t('Pedido')} #${order.code} ${t('em andamento')}`
+        : t('Pedido em andamento'),
+    });
+  }, [navigation, order?.code]);
   // UI
   // showing the indicator until the order is loaded
   if (!order) {
