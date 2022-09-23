@@ -41,6 +41,7 @@ export const OngoingMapAndInfo = ({
             courierLocation={fulfillment === 'delivery' ? courierLocation : undefined}
             route={fulfillment === 'delivery' ? order.route : undefined}
             ratio={240 / 160}
+            orderFulfillment={fulfillment}
           />
           {fulfillment === 'delivery' ? (
             <View>

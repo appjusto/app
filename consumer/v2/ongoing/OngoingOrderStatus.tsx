@@ -8,11 +8,7 @@ import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeConte
 import { IconOngoingMotocycle } from '../../../common/icons/icon-ongoing-motocycle';
 import { IconOngoingStatus } from '../../../common/icons/icon-ongoing-status';
 import { colors, halfPadding, padding, texts } from '../../../common/styles';
-import {
-  formatDate,
-  formatTime,
-  getETAWithMargin,
-} from '../../../common/utils/formatters/datetime';
+import { formatDate, getETAWithMargin } from '../../../common/utils/formatters/datetime';
 import { t } from '../../../strings';
 
 interface Props {
@@ -195,12 +191,13 @@ export const OngoingOrderStatus = ({ order }: Props) => {
     if (order.fulfillment !== 'delivery') {
       if (order.status === 'ready') return;
       if (!order.cookingTime) return;
-      const shouldBeReady = new Date(now.getTime() + order.cookingTime * 1000);
-      return (
-        <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>
-          {`Previsão: ${formatTime(shouldBeReady)}`}
-        </RoundedText>
-      );
+      if (order.arrivals?.origin?.estimate) {
+        return (
+          <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>
+            {`Previsão: ${getETAWithMargin(order.arrivals?.origin?.estimate)}`}
+          </RoundedText>
+        );
+      } else return null;
     } else {
       if (order.arrivals?.destination?.estimate) {
         return (
