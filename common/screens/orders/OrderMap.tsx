@@ -34,14 +34,13 @@ export default function ({
 }: Props) {
   const { width } = Dimensions.get('window');
   if (!originLocation) return null;
-  if (!destinationLocation && orderFulfillment === 'delivery') return null;
+  if (orderFulfillment === 'delivery' && !destinationLocation) return null;
 
   const routeCoordinates = route?.polyline
     ? polyline.decode(route.polyline).map((pair) => {
         return { latitude: pair[0], longitude: pair[1] } as LatLng;
       })
     : undefined;
-  console.log(destinationLocation);
   return (
     <View
       style={{

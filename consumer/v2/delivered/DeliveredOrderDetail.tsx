@@ -110,6 +110,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
       </View>
     );
   }
+  console.log(order.fulfillment);
   return (
     <KeyboardAwareScrollView
       style={{ ...screens.default }}
@@ -126,6 +127,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
           destinationLocation={order.destination?.location}
           route={order.route}
           ratio={360 / 160}
+          orderFulfillment={order.fulfillment}
         />
         {order.status === 'canceled' ? (
           <View>
@@ -133,18 +135,20 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
             <HR height={padding} />
           </View>
         ) : null}
-        <PaddedView>
-          <PlaceSummary title={t('Retirada')} place={order.origin!} />
-          <PlaceSummary title={t('Entrega')} place={order.destination!} />
-          <View style={{ marginTop: halfPadding }}>
-            <RoundedText>
-              {separateWithDot(
-                formatDistance(order.route?.distance ?? 0),
-                formatDuration(order.route?.duration ?? 0)
-              )}
-            </RoundedText>
-          </View>
-        </PaddedView>
+        {order.fulfillment === 'delivery' ? (
+          <PaddedView>
+            <PlaceSummary title={t('Retirada')} place={order.origin!} />
+            <PlaceSummary title={t('Entrega')} place={order.destination!} />
+            <View style={{ marginTop: halfPadding }}>
+              <RoundedText>
+                {separateWithDot(
+                  formatDistance(order.route?.distance ?? 0),
+                  formatDuration(order.route?.duration ?? 0)
+                )}
+              </RoundedText>
+            </View>
+          </PaddedView>
+        ) : null}
         {order.type === 'food' ? (
           <View>
             <DeliveredItems order={order} />

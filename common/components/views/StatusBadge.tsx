@@ -1,4 +1,4 @@
-import { DispatchingState, Fulfillment, Order, OrderStatus } from '@appjusto/types';
+import { DispatchingState, Fulfillment, Order, OrderStatus, WithId } from '@appjusto/types';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { t } from '../../../strings';
@@ -16,7 +16,13 @@ const getStatusLabel = (
   if (status === 'scheduled') return t('Agendado');
   if (status === 'confirmed') return t('Confirmado');
   if (status === 'preparing') return t('Preparando');
-  if (status === 'delivered') return t('Entregue');
+  if (status === 'delivered') {
+    if (fulfillment === 'delivery') {
+      return t('Entregue');
+    } else if (fulfillment === 'take-away') {
+      return t('Retirada efetuada');
+    }
+  }
   if (status === 'canceled' || status === 'rejected') return t('Cancelado');
   if (status === 'declined') return t('Não aprovado');
   // status must be ready or dispatching at this point
@@ -29,7 +35,7 @@ const getStatusLabel = (
 };
 
 type Props = {
-  order: Order;
+  order: WithId<Order>;
   onRemove?: () => void;
 };
 
