@@ -3,15 +3,12 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { defaultScreenOptions } from '../../../../common/screens/options';
-import { useLedgerPendingValues } from '../../../../common/store/api/courier/account/useLedgerPendingValues';
 import { useMarketplaceAccountInfo } from '../../../../common/store/api/courier/account/useMarketplaceAccountInfo';
 import { useCourierRecentOrdersRevenue } from '../../../../common/store/api/order/courier/useCourierRecentOrdersRevenue';
 import { useSegmentScreen } from '../../../../common/store/api/track';
-import { getCourier } from '../../../../common/store/courier/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
@@ -34,17 +31,13 @@ export const convertBalance = (value: string) =>
 
 const Stack = createStackNavigator();
 export default function ({ navigation, route }: Props) {
-  // redux store
-  const courier = useSelector(getCourier);
-  const courierId = courier?.id;
   // state
   const info = useMarketplaceAccountInfo();
   const revenue = useCourierRecentOrdersRevenue();
-  const ledgerTotal = useLedgerPendingValues(courierId);
   // tracking
   useSegmentScreen('DeliveryHistory');
   // UI
-  if (!info || !revenue || ledgerTotal === undefined) {
+  if (!info || !revenue) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -53,7 +46,6 @@ export default function ({ navigation, route }: Props) {
   }
 
   const availableForWithdraw = convertBalance(info.balance_available_for_withdraw);
-  const receivableBalance = convertBalance(info.receivable_balance) * 100;
   const minimum = 5;
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
@@ -149,7 +141,7 @@ export default function ({ navigation, route }: Props) {
 
                     <DefaultButton
                       style={{ marginTop: padding }}
-                      title={t('Ver corridas da semana')}
+                      title={t('Ver histórico de corridas')}
                       onPress={() =>
                         navigation.navigate('DeliveriesNavigator', {
                           screen: 'DeliveryHistoryByWeek',
@@ -183,9 +175,7 @@ export default function ({ navigation, route }: Props) {
                       </Text>
                     </View>
 
-                    <Text style={{ ...texts.x4l }}>
-                      {formatCurrency(ledgerTotal + receivableBalance)}
-                    </Text>
+                    <Text style={{ ...texts.x4l }}>{formatCurrency(info.advanceable_value)}</Text>
 
                     <DefaultButton
                       style={{ marginTop: padding }}
