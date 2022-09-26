@@ -1,4 +1,3 @@
-import { FirestoreRefs, FunctionsRef } from '@appjusto/firebase-refs';
 import { DeleteAccountPayload } from '@appjusto/types';
 import {
   ApplicationVerifier,
@@ -21,6 +20,8 @@ import { Extra } from '../../../../config/types';
 import { getExtra } from '../../../utils/config';
 import { getDeeplinkDomain, getFallbackDomain } from '../../../utils/domains';
 import { getAppVersion } from '../../../utils/version';
+import { FirestoreRefs } from '../../refs/FirestoreRefs';
+import { FunctionsRef } from '../../refs/FunctionsRef';
 
 export type AuthMode = 'passwordless' | 'password' | 'phone';
 

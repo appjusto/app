@@ -1,4 +1,3 @@
-import { FirestoreRefs, StoragePaths } from '@appjusto/firebase-refs';
 import {
   Business,
   BusinessMenuMessage,
@@ -24,6 +23,8 @@ import {
   where,
 } from 'firebase/firestore';
 import * as Sentry from 'sentry-expo';
+import { FirestoreRefs } from '../../refs/FirestoreRefs';
+import { StoragePaths } from '../../refs/StoragePaths';
 import FilesApi from '../files';
 import { documentAs, documentsAs } from '../types';
 

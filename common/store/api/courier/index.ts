@@ -1,5 +1,10 @@
-import { FirestoreRefs, FunctionsRef, StoragePaths } from '@appjusto/firebase-refs';
-import { AdvanceReceivablesPayload, CourierOrderRequest } from '@appjusto/types';
+import {
+  AdvanceReceivablesByAmountPayload,
+  AdvanceReceivablesPayload,
+  CourierOrderRequest,
+  FetchAdvanceByAmountSimulationPayload,
+  LedgerEntry,
+} from '@appjusto/types';
 import { IuguMarketplaceAccountAdvanceSimulation } from '@appjusto/types/payment/iugu';
 import {
   getDocs,
@@ -13,6 +18,9 @@ import {
 } from 'firebase/firestore';
 import * as Sentry from 'sentry-expo';
 import { getAppVersion } from '../../../utils/version';
+import { FirestoreRefs } from '../../refs/FirestoreRefs';
+import { FunctionsRef } from '../../refs/FunctionsRef';
+import { StoragePaths } from '../../refs/StoragePaths';
 import FilesApi from '../files';
 import { documentAs, documentsAs } from '../types';
 
@@ -61,6 +69,19 @@ export default class CourierApi {
     return updateDoc(this.firestoreRefs.getCourierOrderRequestsRef(courierId, orderId), {
       situation: 'viewed',
     } as Partial<CourierOrderRequest>);
+  }
+
+  async fetchCourierLedgerPendingInvoices(courierId: string) {
+    const ref = this.firestoreRefs.getLedgerRef();
+    const snapshot = await getDocs(
+      query(
+        ref,
+        where('to.accountId', '==', courierId),
+        where('status', '==', 'pending'),
+        orderBy('createdOn', 'desc')
+      )
+    );
+    return documentsAs<LedgerEntry>(snapshot.docs);
   }
 
   // callables
@@ -129,6 +150,25 @@ export default class CourierApi {
       meta: { version: getAppVersion() },
     };
     return (await this.functionsRef.getAdvanceReceivablesCallable()(payload)).data;
+  }
+  async fetchAdvanceByAmountSimulation(accountId: string, amount: number): Promise<any> {
+    const payload: FetchAdvanceByAmountSimulationPayload = {
+      accountType: 'courier',
+      accountId,
+      amount,
+      meta: { version: getAppVersion() },
+    };
+    return (await this.functionsRef.getFetchAdvanceByAmountSimulationCallable()(payload)).data;
+  }
+
+  async advanceReceivablesByAmount(accountId: string, simulationId: string): Promise<any> {
+    const payload: AdvanceReceivablesByAmountPayload = {
+      accountType: 'courier',
+      accountId,
+      simulationId,
+      meta: { version: getAppVersion() },
+    };
+    return (await this.functionsRef.getAdvanceReceivablesByAmountCallable()(payload)).data;
   }
   // storage
   // selfie

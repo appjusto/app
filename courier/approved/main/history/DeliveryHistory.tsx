@@ -3,12 +3,15 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { defaultScreenOptions } from '../../../../common/screens/options';
+import { useLedgerPendingValues } from '../../../../common/store/api/courier/account/useLedgerPendingValues';
 import { useMarketplaceAccountInfo } from '../../../../common/store/api/courier/account/useMarketplaceAccountInfo';
 import { useCourierRecentOrdersRevenue } from '../../../../common/store/api/order/courier/useCourierRecentOrdersRevenue';
 import { useSegmentScreen } from '../../../../common/store/api/track';
+import { getCourier } from '../../../../common/store/courier/selectors';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
@@ -31,20 +34,26 @@ export const convertBalance = (value: string) =>
 
 const Stack = createStackNavigator();
 export default function ({ navigation, route }: Props) {
+  // redux store
+  const courier = useSelector(getCourier);
+  const courierId = courier?.id;
   // state
   const info = useMarketplaceAccountInfo();
   const revenue = useCourierRecentOrdersRevenue();
+  const ledgerTotal = useLedgerPendingValues(courierId);
   // tracking
   useSegmentScreen('DeliveryHistory');
   // UI
-  if (!info || !revenue) {
+  if (!info || !revenue || ledgerTotal === undefined) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
+
   const availableForWithdraw = convertBalance(info.balance_available_for_withdraw);
+  const receivableBalance = convertBalance(info.receivable_balance) * 100;
   const minimum = 5;
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
@@ -62,7 +71,6 @@ export default function ({ navigation, route }: Props) {
                 {/* available for withdraw */}
                 <PaddedView
                   style={{
-                    marginTop: halfPadding,
                     ...borders.default,
                     borderColor: colors.white,
                     backgroundColor: colors.white,
@@ -109,47 +117,6 @@ export default function ({ navigation, route }: Props) {
                     </Text>
                   </View>
                 </PaddedView>
-                {/* advance */}
-                <PaddedView
-                  style={{
-                    ...borders.default,
-                    borderColor: colors.white,
-                    backgroundColor: colors.white,
-                    marginTop: padding,
-                  }}
-                >
-                  <View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <MaterialIcons name="timer" size={20} color={colors.grey700} />
-                      <Text
-                        style={{
-                          ...texts.sm,
-                          color: colors.grey700,
-                          marginLeft: halfPadding,
-                          paddingBottom: 2,
-                        }}
-                      >
-                        {t('Em faturamento')}
-                      </Text>
-                    </View>
-
-                    <Text style={{ ...texts.x4l }}>{info.receivable_balance}</Text>
-
-                    <DefaultButton
-                      style={{ marginTop: padding }}
-                      title={t('Antecipar valores')}
-                      onPress={() =>
-                        navigation.navigate('DeliveriesNavigator', {
-                          screen: 'Receivables',
-                          params: {
-                            receivableBalance: info!.receivable_balance,
-                          },
-                        })
-                      }
-                      variant="secondary"
-                    />
-                  </View>
-                </PaddedView>
                 {/* week summary */}
                 <PaddedView
                   style={{
@@ -186,6 +153,46 @@ export default function ({ navigation, route }: Props) {
                       onPress={() =>
                         navigation.navigate('DeliveriesNavigator', {
                           screen: 'DeliveryHistoryByWeek',
+                        })
+                      }
+                      variant="secondary"
+                    />
+                  </View>
+                </PaddedView>
+                {/* advance */}
+                <PaddedView
+                  style={{
+                    ...borders.default,
+                    borderColor: colors.white,
+                    backgroundColor: colors.white,
+                    marginTop: padding,
+                  }}
+                >
+                  <View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <MaterialIcons name="timer" size={20} color={colors.grey700} />
+                      <Text
+                        style={{
+                          ...texts.sm,
+                          color: colors.grey700,
+                          marginLeft: halfPadding,
+                          paddingBottom: 2,
+                        }}
+                      >
+                        {t('Em faturamento')}
+                      </Text>
+                    </View>
+
+                    <Text style={{ ...texts.x4l }}>
+                      {formatCurrency(ledgerTotal * 100 + receivableBalance)}
+                    </Text>
+
+                    <DefaultButton
+                      style={{ marginTop: padding }}
+                      title={t('Ver detalhes')}
+                      onPress={() =>
+                        navigation.navigate('DeliveriesNavigator', {
+                          screen: 'Receivables',
                         })
                       }
                       variant="secondary"

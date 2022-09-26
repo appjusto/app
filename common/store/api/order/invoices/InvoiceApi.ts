@@ -1,4 +1,3 @@
-import { FirestoreRefs } from '@appjusto/firebase-refs';
 import { InvoiceType, WithId } from '@appjusto/types';
 import { IuguInvoiceStatus } from '@appjusto/types/payment/iugu';
 import {
@@ -12,6 +11,7 @@ import {
 } from 'firebase/firestore';
 import * as Sentry from 'sentry-expo';
 import { Invoice } from '../../../../../../types';
+import { FirestoreRefs } from '../../../refs/FirestoreRefs';
 import { documentsAs } from '../../types';
 
 interface FetchOrderInvoicesOptions {

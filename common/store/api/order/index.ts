@@ -1,4 +1,3 @@
-import { FirestoreRefs, FunctionsRef } from '@appjusto/firebase-refs';
 import {
   Business,
   CancelOrderPayload,
@@ -40,6 +39,8 @@ import { isEmpty, uniq } from 'lodash';
 import * as Sentry from 'sentry-expo';
 import { OrderCourierLocationLog } from '../../../../../types';
 import { getAppVersion } from '../../../utils/version';
+import { FirestoreRefs } from '../../refs/FirestoreRefs';
+import { FunctionsRef } from '../../refs/FunctionsRef';
 import { fetchPublicIP } from '../externals/ipify';
 import { documentAs, documentsAs } from '../types';
 import InvoiceApi from './invoices/InvoiceApi';

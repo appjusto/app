@@ -1,6 +1,6 @@
-import { FirestoreRefs } from '@appjusto/firebase-refs';
 import { Flavor, OrderConsumerReview, Review, ReviewTag, WithId } from '@appjusto/types';
 import { doc, getDocs, limit, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
+import { FirestoreRefs } from '../../refs/FirestoreRefs';
 import { documentAs, documentsAs } from '../types';
 
 export default class ReviewsApi {

@@ -1,7 +1,7 @@
-import { FirestoreRefs } from '@appjusto/firebase-refs';
 import { Fleet, WithId } from '@appjusto/types';
 import { doc, onSnapshot, setDoc, Unsubscribe } from 'firebase/firestore';
 import * as Sentry from 'sentry-expo';
+import { FirestoreRefs } from '../../refs/FirestoreRefs';
 import { documentAs } from '../types';
 
 export default class FleetApi {
