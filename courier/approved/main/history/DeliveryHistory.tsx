@@ -184,7 +184,7 @@ export default function ({ navigation, route }: Props) {
                     </View>
 
                     <Text style={{ ...texts.x4l }}>
-                      {formatCurrency(ledgerTotal * 100 + receivableBalance)}
+                      {formatCurrency(ledgerTotal + receivableBalance)}
                     </Text>
 
                     <DefaultButton
