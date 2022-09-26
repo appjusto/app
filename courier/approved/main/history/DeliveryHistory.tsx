@@ -171,7 +171,7 @@ export default function ({ navigation, route }: Props) {
                           paddingBottom: 2,
                         }}
                       >
-                        {t('Em faturamento')}
+                        {t('Disponível para antecipação')}
                       </Text>
                     </View>
 
