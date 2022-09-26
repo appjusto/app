@@ -1,18 +1,39 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import HR from '../../../common/components/views/HR';
-import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
+import { useObserveBusiness } from '../../../common/store/api/business/hooks/useObserveBusiness';
+import { borders, colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
 type Props = {
   code?: string;
+  businessId: string;
 };
 
-export const OrderNumber = ({ code }: Props) => {
+export const OrderNumber = ({ code, businessId }: Props) => {
+  // context
+  const business = useObserveBusiness(businessId);
+  if (!business) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="small" color={colors.green500} />
+      </View>
+    );
+  }
+  const { businessAddress } = business;
   return (
     <View style={{ backgroundColor: colors.white, paddingTop: halfPadding, flex: 1 }}>
       <SingleHeader title={t('Retirada')} />
+      {business && businessAddress ? (
+        <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
+          <Text style={{ ...texts.sm }}>
+            {businessAddress.address}, {businessAddress.number}
+          </Text>
+          <Text style={{ ...texts.sm }}>{businessAddress.neighborhood}</Text>
+        </View>
+      ) : null}
+
       <View style={{ paddingHorizontal: padding }}>
         <Text style={{ ...texts.xs, color: colors.grey700 }}>
           {t('Apresente o número do pedido no momento da retirada no restaurante.')}

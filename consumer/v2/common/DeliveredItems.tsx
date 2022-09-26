@@ -3,28 +3,18 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import HR from '../../../common/components/views/HR';
-import { useObserveBusiness } from '../../../common/store/api/business/hooks/useObserveBusiness';
 import { colors, padding, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
+import { t } from '../../../strings';
 
 interface Props {
   order: WithId<Order>;
 }
 
 export const DeliveredItems = ({ order }: Props) => {
-  // context
-  const business = useObserveBusiness(order?.business?.id);
   return (
     <View>
-      <SingleHeader title={order.business?.name ?? ''} />
-      {order.fulfillment === 'take-away' && business && business.businessAddress ? (
-        <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
-          <Text style={{ ...texts.sm }}>
-            {business.businessAddress.address}, {business.businessAddress.number}
-          </Text>
-          <Text style={{ ...texts.sm }}>{business.businessAddress.neighborhood}</Text>
-        </View>
-      ) : null}
+      <SingleHeader title={t('Detalhes do pedido')} />
       <HR />
       {order.items?.map((item) => (
         <View key={item.id}>
