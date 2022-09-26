@@ -80,13 +80,13 @@ export default function ({ order, onPress }: Props) {
           detail = t('Selecione outra forma de pagamento');
         } else if (status === 'scheduled') {
           title = `${t('Pedido agendado em')} ${businessName}`;
-          detail = t('Você será avisado quando o pedido sair para a entrega');
+          detail = t('Você será avisado quando o estiver pronto para a retirada');
         } else if (status === 'confirmed') {
           title = `${t('Aguardando')} ${businessName} ${t('confirmar o seu pedido')}`;
         } else if (status === 'preparing') {
           title = `${businessName} ${t('está preparando seu pedido')}`;
         } else if (status === 'ready') {
-          title = t('Seu pedido está pronto!');
+          title = `${t('Seu pedido')} ${showCode} {t('está pronto!)}`;
           detail = t('Dirija-se ao restaurante para fazer a retirada');
         }
       }
