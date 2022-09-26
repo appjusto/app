@@ -98,13 +98,24 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
         }
       }
     } else {
-      return (
-        <RectangularListItemText
-          text={`Previsão: ${getETAWithMargin(shouldBeReady)}`}
-          selected
-          onSelect={() => null}
-        />
-      );
+      if (scheduledTo) {
+        return (
+          <RectangularListItemText
+            text={`${capitalize(
+              Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now)
+            )}, ${getETAWithMargin(scheduledTo, margin)}`}
+            selected
+            onSelect={() => null}
+          />
+        );
+      } else
+        return (
+          <RectangularListItemText
+            text={`Previsão: ${getETAWithMargin(shouldBeReady)}`}
+            selected
+            onSelect={() => null}
+          />
+        );
     }
   };
   const orderSchedulingUI = () => {
