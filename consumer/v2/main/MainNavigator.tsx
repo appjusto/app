@@ -4,8 +4,10 @@ import { useNavigation } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Dimensions, Image, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import * as icons from '../../../assets/icons';
 import { track } from '../../../common/store/api/track';
+import { getConsumer } from '../../../common/store/consumer/selectors';
 import { OngoingOrdersStatuses } from '../../../common/store/order/selectors';
 import { halfPadding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -23,6 +25,8 @@ const Tab = createBottomTabNavigator<MainNavigatorParamList>();
 export const MainNavigator = () => {
   // context
   const navigation = useNavigation<ScreenNavigationProp>();
+  // redux store
+  const consumer = useSelector(getConsumer);
   // handlers
   const handler = React.useCallback(
     (data: PushMessageData, clicked?: boolean, remove?: () => void) => {
@@ -71,6 +75,8 @@ export const MainNavigator = () => {
           remove!();
           track('consumer clicked in navigate-business push', {
             action: data.action,
+            businessId: data.businessId,
+            consumerId: consumer?.id ?? undefined,
           });
           navigation.navigate('FoodOrderNavigator', {
             screen: 'RestaurantNavigator',
