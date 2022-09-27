@@ -25,8 +25,8 @@ export default function ({ order, onPress }: Props) {
   let title = '';
   let detail = '';
   if (flavor === 'consumer') {
-    const businessName = business!.name;
     if (type === 'food') {
+      const businessName = business!.name;
       if (fulfillment === 'delivery') {
         if (status === 'confirming' || status === 'charged') {
           if (scheduledTo) {
