@@ -108,7 +108,7 @@ export const Receivables = ({ navigation, route }: Props) => {
         <DefaultButton
           title={canAdvanceReceivables ? t('Simular antecipação') : t('Fora do horário')}
           onPress={advanceHandler}
-          disabled={!canAdvanceReceivables && info.advanceable_value > 0}
+          disabled={!canAdvanceReceivables || info.advanceable_value === 0}
         />
       </PaddedView>
     </ScrollView>
