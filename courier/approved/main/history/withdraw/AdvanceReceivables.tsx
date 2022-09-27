@@ -53,7 +53,12 @@ export const AdvanceReceivables = ({ navigation, route }: Props) => {
       if (!simulationByAmount) return;
       await api
         .courier()
-        .advanceReceivablesByAmount(courier.id, simulationByAmount.nearest.simulation_id);
+        .advanceReceivablesByAmount(
+          courier.id,
+          simulationByAmount.nearest.simulation_id,
+          simulationByAmount.nearest.advanceable_amount_cents,
+          simulationByAmount.nearest.advancement_fee_cents
+        );
       track('courier advanced receivables');
       navigation.replace('RequestWithdrawFeedback', {
         header: t('Antecipação realizada com sucesso!'),

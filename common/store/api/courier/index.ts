@@ -161,11 +161,18 @@ export default class CourierApi {
     return (await this.functionsRef.getFetchAdvanceByAmountSimulationCallable()(payload)).data;
   }
 
-  async advanceReceivablesByAmount(accountId: string, simulationId: string): Promise<any> {
+  async advanceReceivablesByAmount(
+    accountId: string,
+    simulationId: string,
+    amount: number,
+    fee: number
+  ): Promise<any> {
     const payload: AdvanceReceivablesByAmountPayload = {
       accountType: 'courier',
       accountId,
       simulationId,
+      amount,
+      fee,
       meta: { version: getAppVersion() },
     };
     return (await this.functionsRef.getAdvanceReceivablesByAmountCallable()(payload)).data;
