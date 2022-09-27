@@ -124,7 +124,7 @@ export default function ({ navigation, route }: Props) {
   }, [navigation, order?.code]);
   // UI
   // showing the indicator until the order is loaded
-  if (!order) {
+  if (!order || !businessId) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -180,7 +180,9 @@ export default function ({ navigation, route }: Props) {
             confirmation={confirmation}
           />
         ) : null}
-        {order.fulfillment === 'take-away' ? <OrderNumber code={order.code} /> : null}
+        {order.fulfillment === 'take-away' ? (
+          <OrderNumber code={order.code} businessId={businessId} />
+        ) : null}
         <FoodOrderItemsInfo order={order} />
         {order.dispatchingStatus !== 'outsourced' ? <HR height={padding} /> : null}
         <View style={{ paddingTop: halfPadding }}>
