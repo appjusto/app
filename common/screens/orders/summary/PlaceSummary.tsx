@@ -16,7 +16,7 @@ type Props = {
 export default function ({ place, title, onEdit, fulfillment }: Props) {
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-      <View style={{ maxWidth: '90%' }}>
+      <View style={{ maxWidth: '90%', marginBottom: halfPadding }}>
         <Text style={{ ...texts.xs, color: colors.green600 }}>{title}</Text>
         <Text style={{ ...texts.md, marginTop: 4 }} numberOfLines={2}>
           {formatAddress(place.address!)}
@@ -33,9 +33,7 @@ export default function ({ place, title, onEdit, fulfillment }: Props) {
           </Text>
         ) : null}
         {place.intructions ? (
-          <Text style={{ ...texts.xs, marginBottom: halfPadding, marginTop: 4 }}>
-            {place.intructions}
-          </Text>
+          <Text style={{ ...texts.xs, marginTop: 4 }}>{place.intructions}</Text>
         ) : null}
       </View>
       {onEdit && (
