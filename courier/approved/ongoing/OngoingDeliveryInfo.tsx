@@ -114,7 +114,7 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
             >
               {addressLabel}
             </Text>
-            <CourierDistanceBadge order={order} delivering />
+            <CourierDistanceBadge order={order} courierLocation={location} delivering />
           </View>
         </View>
       )}

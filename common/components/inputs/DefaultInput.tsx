@@ -8,11 +8,20 @@ export interface DefaultInputProps extends TextInputProps {
   title?: string;
   children?: ReactNode;
   errorMessage?: string;
+  inputHeight?: number;
 }
 
 export default React.forwardRef(
   (
-    { title, children, editable = true, style, errorMessage, ...props }: DefaultInputProps,
+    {
+      title,
+      children,
+      editable = true,
+      style,
+      errorMessage,
+      inputHeight,
+      ...props
+    }: DefaultInputProps,
     externalRef
   ) => {
     const internalRef = useRef<TextInput>(null);
@@ -63,6 +72,7 @@ export default React.forwardRef(
                       ...texts.md,
                       color: editable ? colors.grey700 : colors.grey500,
                       width: '100%',
+                      height: inputHeight ?? undefined,
                     }}
                     editable={editable}
                     {...props}

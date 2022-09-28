@@ -53,7 +53,7 @@ export const ReportIssueView = ({
           {inputHeader}
         </Text>
         <DefaultInput
-          style={{ height: 128 }}
+          inputHeight={128}
           placeholder={t('Escreva sua mensagem')}
           multiline
           value={comment}
