@@ -3,6 +3,7 @@ import { Feather } from '@expo/vector-icons';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { useContextBusiness } from '../../../store/context/business';
 import { borders, colors, halfPadding, texts } from '../../../styles';
 import { formatAddress } from '../../../utils/formatters';
 
@@ -10,9 +11,12 @@ type Props = {
   place: Partial<Place>;
   title: string;
   onEdit?: () => void;
+  businessId?: string;
 };
 
-export default function ({ place, title, onEdit }: Props) {
+export default function ({ place, title, onEdit, businessId }: Props) {
+  // context
+  const business = useContextBusiness();
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
       <View style={{ maxWidth: '90%' }}>
@@ -26,6 +30,11 @@ export default function ({ place, title, onEdit }: Props) {
         {!isEmpty(place.additionalInfo) && (
           <Text style={{ ...texts.xs, marginTop: 4 }}>{place.additionalInfo}</Text>
         )}
+        {business?.businessAddress?.instructions ? (
+          <Text style={{ ...texts.xs, marginBottom: halfPadding, marginTop: 4 }}>
+            {business.businessAddress.instructions}
+          </Text>
+        ) : null}
         <Text style={{ ...texts.xs, marginBottom: halfPadding, marginTop: 4 }}>
           {place.intructions}
         </Text>
