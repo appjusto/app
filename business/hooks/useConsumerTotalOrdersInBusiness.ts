@@ -1,5 +1,15 @@
+import { OrderStatus } from '@appjusto/types';
 import React from 'react';
 import { ApiContext } from '../../common/app/context';
+
+const statuses = [
+  'scheduled',
+  'confirmed',
+  'preparing',
+  'ready',
+  'dispatching',
+  'delivered',
+] as OrderStatus[];
 
 export const useConsumerTotalOrdersInBusiness = (businessId?: string, consumerId?: string) => {
   // context
@@ -13,7 +23,7 @@ export const useConsumerTotalOrdersInBusiness = (businessId?: string, consumerId
     (async () => {
       const total = await api
         .business()
-        .fetchConsumerTotalOrdersInBusiness(businessId, consumerId, ['delivered']);
+        .fetchConsumerTotalOrdersInBusiness(businessId, consumerId, statuses);
       setOrdersTotal(total);
     })();
   }, [api, businessId, consumerId]);
