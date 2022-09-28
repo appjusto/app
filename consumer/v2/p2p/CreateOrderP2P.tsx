@@ -169,20 +169,16 @@ export default function ({ navigation, route }: Props) {
   const placeOrderHandler = async (fleetId: string) => {
     track('placing order');
     if (!orderId) return;
-    let paymentPayload;
-    if (payMethod === 'credit_card') {
-      if (!selectedPaymentMethodId) return;
-      paymentPayload = {
-        payableWith: 'credit_card',
-        paymentMethodId: selectedPaymentMethodId,
-      } as PlaceOrderPayloadPaymentCreditCard;
-    }
-    if (payMethod === 'pix') {
-      paymentPayload = {
-        payableWith: 'pix',
-        key: cpf, // remove this
-      } as PlaceOrderPayloadPaymentPix;
-    }
+    const paymentPayload =
+      payMethod === 'credit_card'
+        ? ({
+            payableWith: 'credit_card',
+            paymentMethodId: selectedPaymentMethodId,
+          } as PlaceOrderPayloadPaymentCreditCard)
+        : ({
+            payableWith: 'pix',
+            key: cpf,
+          } as PlaceOrderPayloadPaymentPix);
     Keyboard.dismiss();
     if (!order.destination?.address) {
       dispatch(
