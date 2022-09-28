@@ -3,7 +3,6 @@ import { Feather } from '@expo/vector-icons';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { useContextBusiness } from '../../../store/context/business';
 import { borders, colors, halfPadding, texts } from '../../../styles';
 import { formatAddress } from '../../../utils/formatters';
 
@@ -15,8 +14,6 @@ type Props = {
 };
 
 export default function ({ place, title, onEdit, fulfillment }: Props) {
-  // context
-  const business = useContextBusiness();
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
       <View style={{ maxWidth: '90%' }}>
@@ -30,14 +27,16 @@ export default function ({ place, title, onEdit, fulfillment }: Props) {
         {!isEmpty(place.additionalInfo) && (
           <Text style={{ ...texts.xs, marginTop: 4 }}>{place.additionalInfo}</Text>
         )}
-        {business?.businessAddress?.instructions && fulfillment === 'take-away' ? (
+        {place.instructions && fulfillment === 'take-away' ? (
           <Text style={{ ...texts.xs, marginBottom: halfPadding, marginTop: 4 }}>
-            {business.businessAddress.instructions}
+            {place.instructions}
           </Text>
         ) : null}
-        <Text style={{ ...texts.xs, marginBottom: halfPadding, marginTop: 4 }}>
-          {place.intructions}
-        </Text>
+        {place.intructions ? (
+          <Text style={{ ...texts.xs, marginBottom: halfPadding, marginTop: 4 }}>
+            {place.intructions}
+          </Text>
+        ) : null}
       </View>
       {onEdit && (
         <View style={{ alignSelf: 'center', width: 32, height: 32 }}>

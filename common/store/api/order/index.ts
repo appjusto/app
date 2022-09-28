@@ -72,7 +72,7 @@ export default class OrderApi {
     destination: Place | null = null
   ) {
     const businessAddress = business.businessAddress!;
-    const { address, number, neighborhood, city, additional } = businessAddress;
+    const { address, number, neighborhood, city, additional, instructions } = businessAddress;
     const main = `${address}, ${number}`;
     const secondary = `${neighborhood ? `${neighborhood} - ` : ''}${city}`;
     const origin: Place = {
@@ -82,6 +82,7 @@ export default class OrderApi {
         description: `${main} - ${secondary}`,
       },
       additionalInfo: additional ?? '',
+      instructions: instructions ?? '',
     };
     const payload: Partial<Order> = {
       type: 'food',
