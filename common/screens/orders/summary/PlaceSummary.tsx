@@ -1,4 +1,4 @@
-import { Place } from '@appjusto/types';
+import { Fulfillment, Place } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import { isEmpty } from 'lodash';
 import React from 'react';
@@ -11,10 +11,10 @@ type Props = {
   place: Partial<Place>;
   title: string;
   onEdit?: () => void;
-  businessId?: string;
+  fulfillment?: Fulfillment;
 };
 
-export default function ({ place, title, onEdit, businessId }: Props) {
+export default function ({ place, title, onEdit, fulfillment }: Props) {
   // context
   const business = useContextBusiness();
   return (
@@ -30,7 +30,7 @@ export default function ({ place, title, onEdit, businessId }: Props) {
         {!isEmpty(place.additionalInfo) && (
           <Text style={{ ...texts.xs, marginTop: 4 }}>{place.additionalInfo}</Text>
         )}
-        {business?.businessAddress?.instructions ? (
+        {business?.businessAddress?.instructions && fulfillment === 'take-away' ? (
           <Text style={{ ...texts.xs, marginBottom: halfPadding, marginTop: 4 }}>
             {business.businessAddress.instructions}
           </Text>
