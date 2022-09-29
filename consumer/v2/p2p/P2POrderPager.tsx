@@ -93,22 +93,27 @@ export default function ({
   const [originAdditionalInfo, setOriginAdditionalInfo] = React.useState(
     origin?.additionalInfo ?? ''
   );
-  const [originInstructions, setOriginInstructions] = React.useState(origin?.intructions ?? '');
+  const [originInstructions, setOriginInstructions] = React.useState(
+    origin?.intructions ?? origin?.instructions ?? ''
+  );
   const [destinationAdditionalInfo, setDestinationAdditionalInfo] = React.useState(
     destination?.additionalInfo ?? ''
   );
   const [destinationInstructions, setDestinationInstructions] = React.useState(
-    destination?.intructions ?? ''
+    destination?.intructions ?? destination?.instructions ?? ''
   );
   // side effects
   React.useEffect(() => {
     if (order?.origin?.additionalInfo !== undefined)
       setOriginAdditionalInfo(order.origin.additionalInfo);
     if (order?.origin?.intructions !== undefined) setOriginInstructions(order.origin.intructions);
+    if (order?.origin?.instructions !== undefined) setOriginInstructions(order.origin.instructions);
     if (order?.destination?.additionalInfo !== undefined)
       setDestinationAdditionalInfo(order.destination.additionalInfo);
     if (order?.destination?.intructions !== undefined)
       setDestinationInstructions(order.destination.intructions);
+    if (order?.destination?.instructions !== undefined)
+      setDestinationInstructions(order.destination.instructions);
   }, [order]);
   // refs
   const pagerView = React.useRef<PagerView>(null);
@@ -163,6 +168,7 @@ export default function ({
             ...origin,
             additionalInfo: originAdditionalInfo,
             intructions: originInstructions,
+            instructions: originInstructions,
           },
         });
       } else if (step === Step.Destination) {
@@ -176,6 +182,7 @@ export default function ({
             ...destination,
             additionalInfo: destinationAdditionalInfo,
             intructions: destinationInstructions,
+            instructions: destinationInstructions,
           },
         });
       }
@@ -310,7 +317,6 @@ export default function ({
               blurOnSubmit
               multiline
               editable={Boolean(destination)}
-              // numberOfLines={3}
             />
 
             <TouchableWithoutFeedback onPress={navigateToTransportableItems}>
