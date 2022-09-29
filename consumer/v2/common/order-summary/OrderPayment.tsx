@@ -10,9 +10,10 @@ import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
+import { useP2PPix } from '../../../../common/store/api/order/ui/useP2PPix';
 import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
-import { colors, halfPadding, padding, texts } from '../../../../common/styles';
+import { colors, doublePadding, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
 interface Props {
@@ -49,13 +50,14 @@ export const OrderPayment = ({
   // redux
   const consumer = useSelector(getConsumer)!;
   // helpers
-  const payableWithPix = useIsPixEnabled();
+  const foodPayableWithPix = useIsPixEnabled();
+  const p2pPayableWithPix = useP2PPix();
   const { isProfileComplete, shouldVerifyPhone } = useProfileSummary();
   const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId); // only for credit cards
   const canPlaceOrder = isProfileComplete && !shouldVerifyPhone;
   if (!order) return null;
   return (
-    <View style={{ backgroundColor: colors.white }}>
+    <View style={{ backgroundColor: colors.white, paddingBottom: doublePadding }}>
       {Boolean(selectedPaymentMethod) && payMethod === 'credit_card' ? (
         <View>
           <SingleHeader title={t('Forma de pagamento')} />
@@ -129,7 +131,6 @@ export const OrderPayment = ({
           <DefaultButton
             variant="secondary"
             title={t('Completar cadastro')}
-            // style={{ marginVertical: padding }}
             onPress={navigateToCompleteProfile}
           />
         ) : null}
@@ -137,7 +138,6 @@ export const OrderPayment = ({
           <DefaultButton
             variant="secondary"
             title={t('Escolher forma de pagamento')}
-            style={{ marginBottom: order.type === 'p2p' ? padding : undefined }}
             onPress={navigateToSelectPayment}
           />
         ) : null}
@@ -146,13 +146,16 @@ export const OrderPayment = ({
           <DefaultButton
             variant="primary"
             title={t('Confirmar pedido')}
-            style={{ marginTop: padding, marginBottom: order.type === 'p2p' ? padding : undefined }}
+            style={{ marginTop: padding }}
             onPress={onSubmit}
             activityIndicator={activityIndicator}
             disabled={!isSubmitEnabled}
           />
         ) : null}
-        {canPlaceOrder && !activityIndicator && payableWithPix && payMethod !== 'pix' ? (
+        {canPlaceOrder &&
+        !activityIndicator &&
+        (foodPayableWithPix || p2pPayableWithPix) &&
+        payMethod !== 'pix' ? (
           <DefaultButton
             variant="secondary"
             title={t('Quero pagar com Pix')}

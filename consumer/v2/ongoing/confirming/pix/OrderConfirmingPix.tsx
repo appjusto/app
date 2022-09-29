@@ -33,6 +33,7 @@ export const OrderConfirmingPix = ({ order, onCancel }: Props) => {
       dispatch(showToast(t('Copiado!')));
     })();
   };
+  console.log(pendingInvoice);
   // UI
   return (
     <ScrollView

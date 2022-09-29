@@ -106,15 +106,21 @@ export default function ({
   React.useEffect(() => {
     if (order?.origin?.additionalInfo !== undefined)
       setOriginAdditionalInfo(order.origin.additionalInfo);
-    if (order?.origin?.intructions !== undefined) setOriginInstructions(order.origin.intructions);
-    if (order?.origin?.instructions !== undefined) setOriginInstructions(order.origin.instructions);
+    if (order?.origin?.intructions !== undefined) {
+      setOriginInstructions(order.origin.intructions);
+    }
+    if (order?.origin?.instructions !== undefined) {
+      setOriginInstructions(order.origin.instructions);
+    }
     if (order?.destination?.additionalInfo !== undefined)
       setDestinationAdditionalInfo(order.destination.additionalInfo);
-    if (order?.destination?.intructions !== undefined)
+    if (order?.destination?.intructions !== undefined) {
       setDestinationInstructions(order.destination.intructions);
-    if (order?.destination?.instructions !== undefined)
+    }
+    if (order?.destination?.instructions !== undefined) {
       setDestinationInstructions(order.destination.instructions);
-  }, [order]);
+    }
+  }, [order?.origin, order?.destination]);
   // refs
   const pagerView = React.useRef<PagerView>(null);
   const originDescriptionRef = React.useRef<TextInput>(null);
