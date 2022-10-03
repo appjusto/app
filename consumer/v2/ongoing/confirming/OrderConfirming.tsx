@@ -68,8 +68,13 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  const { paymentMethod, type, scheduledTo } = order;
+  const { paymentMethod, type, scheduledTo, dispatchingStatus } = order;
   if (paymentMethod === 'pix') {
+    if (type === 'p2p') {
+      if (dispatchingStatus === 'matching') {
+        return <OrderConfirmingCreditP2P onCancel={navigateToCancelOrder} />;
+      }
+    }
     return <OrderConfirmingPix order={order} onCancel={navigateToCancelOrder} />;
   }
   if (type === 'food') {
