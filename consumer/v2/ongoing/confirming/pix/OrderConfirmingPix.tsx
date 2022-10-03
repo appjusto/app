@@ -1,4 +1,4 @@
-import { InvoiceType, Order, WithId } from '@appjusto/types';
+import { Order, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import React from 'react';
@@ -24,8 +24,7 @@ export const OrderConfirmingPix = ({ order, onCancel }: Props) => {
   // context
   const dispatch = useDispatch<AppDispatch>();
   // state
-  const invoiceType: InvoiceType = order.type === 'food' ? 'order' : 'delivery';
-  const pendingInvoice = useObservePendingOrderInvoice(order.id, invoiceType);
+  const pendingInvoice = useObservePendingOrderInvoice(order.id);
   // handlers
   const copyToClipboard = () => {
     (async () => {
