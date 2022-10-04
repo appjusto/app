@@ -110,7 +110,10 @@ export default function ({ navigation, route }: Props) {
       });
     }
     if (order && orderId && params?.destination) {
-      if (params.destination.address.description !== order.destination?.address.description) {
+      if (
+        params.destination.address.description !== order.destination?.address.description ||
+        params.destination.additionalInfo !== order.destination?.additionalInfo
+      ) {
         api.order().updateOrder(orderId, { destination: params.destination });
       }
       navigation.setParams({
