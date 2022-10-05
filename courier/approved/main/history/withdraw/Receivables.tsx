@@ -60,6 +60,26 @@ export const Receivables = ({ navigation, route }: Props) => {
       scrollIndicatorInsets={{ right: 1 }}
     >
       <PaddedView>
+        <PaddedView
+          style={{
+            width: '100%',
+            borderRadius: padding,
+            backgroundColor: colors.darkYellow,
+            justifyContent: 'center',
+            marginBottom: padding,
+          }}
+        >
+          <Text style={[texts.sm, texts.bold]}>
+            {t(
+              'A partir do dia xx/xx/2022, os valores dos pedidos entregues ficarão disponíveis na sua conta no dia útil seguinte ao da corrida e não será mais necessário fazer antecipação.'
+            )}
+          </Text>
+          <Text style={[texts.sm]}>
+            {t(
+              'Até la, você poderá continuar utilizando o fluxo normal de antecipações para corridas em pedidos pagos com cartão de crédito.'
+            )}
+          </Text>
+        </PaddedView>
         <Text style={{ ...texts.sm }}>
           {t(
             'O AppJusto não fica com nada do valor do seu trabalho. Todos os pagamentos são processados com segurança pela operadora financeira Iugu.'
