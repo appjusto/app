@@ -1,7 +1,6 @@
-import { Feather, Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
-import dayjs from 'dayjs';
 import React from 'react';
 import { ActivityIndicator, Keyboard, ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +8,6 @@ import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
-import { useTotalWithdrawsThisMonth } from '../../../../../common/store/api/courier/account/useTotalWithdrawsThisMonth';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { showToast } from '../../../../../common/store/ui/actions';
 import {
@@ -20,7 +18,7 @@ import {
   screens,
   texts,
 } from '../../../../../common/styles';
-import { formatDate } from '../../../../../common/utils/formatters';
+import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import { convertBalance } from '../DeliveryHistory';
 import { DeliveriesNavigatorParamList } from '../types';
@@ -46,11 +44,6 @@ export const Withdraws = ({ navigation, route }: Props) => {
   // helpers
   const availableForWithdraw = info ? convertBalance(info.balance_available_for_withdraw) : 0;
   const minimum = 5;
-  const withdrawsThisMonth = useTotalWithdrawsThisMonth(courier.id);
-  const lastDayofThisMonth = dayjs().endOf('month').format('DD/MM/YYYY');
-  const date = new Date();
-  const firstDay = new Date(date.getFullYear(), date.getMonth() + 1, 1);
-  const firstDayNextMonth = formatDate(firstDay);
   // handler
   const withdrawHandler = async () => {
     if (!availableForWithdraw) return;
@@ -82,24 +75,11 @@ export const Withdraws = ({ navigation, route }: Props) => {
       <PaddedView style={{ flex: 1 }}>
         <Text style={{ ...texts.sm }}>
           {t(
-            'O AppJusto não fica com nada do valor do seu trabalho. Todas os pagamentos são processados com segurança pela operadora financeira Iugu.'
+            'O AppJusto não fica com nada do valor do seu trabalho. Todas os pagamentos são processados com segurança pela operadora financeira Iugu, '
           )}
-        </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginBottom: padding,
-            marginTop: 24,
-          }}
-        >
-          <Feather name="info" size={14} />
-          <Text style={{ ...texts.md, marginLeft: halfPadding }}>{t('Como funciona')}</Text>
-        </View>
-        <Text style={{ ...texts.sm, paddingBottom: halfPadding }}>
-          {t(
-            'Você tem direito a 4 saques grátis a cada 30 dias. O valor mínimo para transferência é de R$5,00. Recomendamos que faça 1 saque por semana. Dessa forma, durante o período de 30 dias, você consegue sacar sem taxas adicionais. Caso precise de mais saques dentro desse mesmo período, será cobrada uma taxa de R$2,00 por saque adicional. Para solicitar saques adicionais, entre em contato com nosso suporte.'
-          )}
+          <Text style={{ color: colors.red }}>
+            {t('que cobra R$ 1,00 por cada operação de saque.')}
+          </Text>
         </Text>
         <PaddedView
           style={{
@@ -131,53 +111,53 @@ export const Withdraws = ({ navigation, route }: Props) => {
             ) : (
               <Text style={{ ...texts.x4l }}>{info.balance_available_for_withdraw}</Text>
             )}
-            {withdrawsThisMonth === undefined ? (
-              <ActivityIndicator
-                style={{ marginVertical: 6 }}
-                size="small"
-                color={colors.green500}
-              />
-            ) : withdrawsThisMonth < 4 ? (
-              <Text
-                style={{
-                  ...texts.xs,
-                  color: colors.grey700,
-                  paddingTop: halfPadding,
-                  textAlign: 'center',
-                }}
-              >
-                {t('Você possui')} {4 - withdrawsThisMonth} {t('saques grátis até')}{' '}
-                {lastDayofThisMonth}
-              </Text>
-            ) : (
-              <Text
-                style={{
-                  ...texts.xs,
-                  color: colors.red,
-                  paddingTop: halfPadding,
-                  textAlign: 'center',
-                }}
-              >
-                {t('Você não possui mais saques grátis disponíveis. Espere até o dia ')}
-                {firstDayNextMonth}{' '}
-                {t(
-                  'para renovar seus 4 saques grátis, ou entre em contato com nosso suporte e solicite um saque adicional.'
-                )}
-              </Text>
-            )}
           </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Ionicons name="checkmark-circle-outline" size={20} color={colors.red} />
+            <Text
+              style={{
+                ...texts.sm,
+                marginLeft: halfPadding,
+                paddingBottom: 2,
+                color: colors.red,
+              }}
+            >
+              {t('Taxa Iugu por saque')}
+            </Text>
+          </View>
+          {info === undefined ? (
+            <ActivityIndicator style={{ marginVertical: 6 }} size="large" color={colors.green500} />
+          ) : (
+            <Text style={{ ...texts.x4l }}>R$ 1,00</Text>
+          )}
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Ionicons name="checkmark-circle-outline" size={20} color={colors.black} />
+            <Text
+              style={{
+                ...texts.sm,
+                marginLeft: halfPadding,
+                paddingBottom: 2,
+              }}
+            >
+              {t('Valor total do saque')}
+            </Text>
+          </View>
+          {info === undefined ? (
+            <ActivityIndicator style={{ marginVertical: 6 }} size="large" color={colors.green500} />
+          ) : (
+            <Text style={{ ...texts.x4l }}>
+              {formatCurrency(
+                convertBalance(info.balance_available_for_withdraw) - convertBalance('R$ 1,00')
+              )}
+            </Text>
+          )}
         </PaddedView>
         <View style={{ flex: 1 }} />
         <DefaultButton
           style={{ marginTop: padding }}
           title={t('Confirmar transferência')}
           activityIndicator={withdrawing}
-          disabled={
-            availableForWithdraw < minimum ||
-            withdrawing ||
-            withdrawsThisMonth === undefined ||
-            withdrawsThisMonth >= 4
-          }
+          disabled={availableForWithdraw < minimum || withdrawing}
           onPress={withdrawHandler}
         />
       </PaddedView>
