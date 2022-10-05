@@ -78,7 +78,12 @@ export const Receivables = ({ navigation, route }: Props) => {
         </View>
         <Text style={{ ...texts.sm, paddingBottom: halfPadding }}>
           {t(
-            'O prazo padrão para processar os pagamentos é de 30 dias. Para antecipar, você paga uma taxa de até 2.75% por operação. Funciona assim: se for antecipar no primeiro dia útil após a corrida, você pagará o valor cheio de 2.75%, e a taxa diminui proporcionalmente a cada dia que passa. Se você esperar 15 dias, por exemplo, pagará 0.99%.'
+            'O valor a antecipar pode variar de acordo com o valor solicitado. Isso acontece por que a Iugu seleciona o conjunto de faturas, priorizando aquelas mais próximas de sua data de compensação, em que a soma de seus valores se aproxima ao máximo do valor solicitado.'
+          )}
+        </Text>
+        <Text style={{ ...texts.sm, paddingBottom: halfPadding }}>
+          {t(
+            'O prazo padrão para processar os pagamentos é de 30 dias. Para antecipar, você paga uma taxa de até 2.75% por operação. Funciona assim: se for antecipar no primeiro dia útil após a corrida, você pagará o valor cheio de 2.75%, e a taxa diminui proporcionalmente a cada dia que passa. Se você esperar 15 dias, por exemplo, pagará 1,37% (metade dos 2,75%).'
           )}
         </Text>
         <Text style={{ ...texts.sm, color: colors.red }}>
