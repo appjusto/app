@@ -175,7 +175,7 @@ export const BusinessNavigator = () => {
       <Stack.Screen
         name="BusinessProfile"
         component={BusinessProfile}
-        options={{ title: t('Dados do restaurante') }}
+        options={{ title: t('Seus dados') }}
       />
       <Stack.Screen
         name="NotificationPreferences"
