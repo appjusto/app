@@ -4,7 +4,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { trim } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
@@ -19,8 +19,9 @@ import {
 } from '../../../common/components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../common/components/inputs/PatternInput';
-import { useSegmentScreen } from '../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { getManager } from '../../../common/store/business/selectors';
+import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 import { BusinessAppContext } from '../../BusinessAppContext';
@@ -63,6 +64,24 @@ export const BusinessProfile = ({ navigation, route }: Props) => {
   const surnameRef = React.useRef<TextInput>(null);
   const cpfRef = React.useRef<TextInput>(null);
   const phoneRef = React.useRef<TextInput>(null);
+  // handler
+  const updateManagerProfileHandler = async () => {
+    Keyboard.dismiss();
+    if (!manager) return;
+    try {
+      setLoading(true);
+      await api.profile().updateProfile(manager.id, updatedUser);
+      track('manager profile updated');
+      setLoading(false);
+      dispatch(showToast(t('Dados alterados com sucesso.'), 'success'));
+      navigation.goBack();
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        showToast(t('Não foi possível atualizar o perfil. Tente novamente mais tarde.'), 'error')
+      );
+    }
+  };
   //UI
   if (business === undefined || manager === undefined) {
     return (
@@ -159,13 +178,15 @@ export const BusinessProfile = ({ navigation, route }: Props) => {
             ref={phoneRef}
             style={{ marginTop: padding }}
             title={t('Celular')}
-            value={manager.phone ?? ''}
+            value={phone}
             placeholder={t('Número com DDD')}
             mask={phoneMask}
             parser={numbersOnlyParser}
             formatter={phoneFormatter}
             keyboardType="number-pad"
             returnKeyType="next"
+            onChangeText={(text) => setPhone(trim(text))}
+            editable
             blurOnSubmit
           />
         </View>
@@ -173,7 +194,7 @@ export const BusinessProfile = ({ navigation, route }: Props) => {
           <View style={{ flex: 1 }} />
           <DefaultButton
             title={t('Alterar dados')}
-            onPress={() => null}
+            onPress={updateManagerProfileHandler}
             disabled={isLoading}
             activityIndicator={isLoading}
             style={{ marginTop: padding }}
