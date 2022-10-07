@@ -18,11 +18,16 @@ export const useObservePendingOrderInvoice = (orderId: string) => {
         .order()
         .invoice()
         .observeInvoices(
-          { orderId, consumerId: consumer.id, invoiceType: 'order', status: 'pending', limit: 1 },
+          {
+            orderId,
+            consumerId: consumer.id,
+            status: 'pending',
+            limit: 1,
+          },
           (invoices) => setInvoice(invoices.length ? invoices[0] : null)
         );
     })();
-  }, [orderId]);
+  }, [orderId, api, consumer.id]);
   // result
   return invoice;
 };

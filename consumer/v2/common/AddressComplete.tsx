@@ -126,6 +126,11 @@ export const AddressComplete = ({ navigation, route }: Props) => {
       title: returnScreen !== 'RecommendRestaurant' ? 'Confirmar endereço' : 'Indicar restaurante',
     });
   }, [navigation, returnScreen]);
+  React.useEffect(() => {
+    if (!complement) {
+      setAdditionalInfo('');
+    }
+  }, [complement]);
   // tracking
   useSegmentScreen('AddressComplete');
   // handlers
