@@ -68,7 +68,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  const { paymentMethod, type, scheduledTo } = order;
+  const { paymentMethod, type, scheduledTo, fulfillment } = order;
   if (paymentMethod === 'pix') {
     return <OrderConfirmingPix order={order} onCancel={navigateToCancelOrder} />;
   }
@@ -80,6 +80,7 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
           navigation.replace('MainNavigator', { screen: 'Home' });
         }}
         scheduledOrder={!!scheduledTo}
+        fulfillment={fulfillment}
       />
     );
   }
