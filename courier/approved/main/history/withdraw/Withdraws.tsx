@@ -20,7 +20,6 @@ import {
 } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
-import { convertBalance } from '../DeliveryHistory';
 import { DeliveriesNavigatorParamList } from '../types';
 
 type ScreenNavigationProp = StackNavigationProp<DeliveriesNavigatorParamList, 'Withdraws'>;
@@ -30,6 +29,8 @@ type Props = {
   navigation: ScreenNavigationProp;
   route: ScreenRoute;
 };
+
+export const convertBalance = (value: string) => parseInt(value.replace(/[^0-9]/g, ''), 10);
 
 export const Withdraws = ({ navigation, route }: Props) => {
   // params
@@ -145,11 +146,7 @@ export const Withdraws = ({ navigation, route }: Props) => {
           {info === undefined ? (
             <ActivityIndicator style={{ marginVertical: 6 }} size="large" color={colors.green500} />
           ) : (
-            <Text style={{ ...texts.x4l }}>
-              {formatCurrency(
-                convertBalance(info.balance_available_for_withdraw) - convertBalance('R$ 1,00')
-              )}
-            </Text>
+            <Text style={{ ...texts.x4l }}>{formatCurrency(availableForWithdraw - 100)}</Text>
           )}
         </PaddedView>
         <View style={{ flex: 1 }} />

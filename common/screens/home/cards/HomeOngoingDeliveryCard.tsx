@@ -86,7 +86,7 @@ export default function ({ order, onPress }: Props) {
         } else if (status === 'preparing') {
           title = `${businessName} ${t('está preparando seu pedido')}`;
         } else if (status === 'ready') {
-          title = `${t('Seu pedido')} ${showCode} {t('está pronto!)}`;
+          title = `${t('Seu pedido')} ${showCode} ${t('está pronto!')}`;
           detail = t('Dirija-se ao restaurante para fazer a retirada');
         }
       }
