@@ -24,10 +24,11 @@ export const OngoingMapAndInfo = ({
   onChatWithCourier,
   onOpenChat,
 }: Props) => {
-  if (order.status !== 'dispatching') return null;
+  const { fulfillment, status, dispatchingStatus } = order;
+  if (fulfillment === 'delivery' && status !== 'dispatching') return null;
   return (
     <View>
-      {order.dispatchingStatus === 'outsourced' ? (
+      {dispatchingStatus === 'outsourced' ? (
         <View>
           <HR height={padding} />
           <DeliveryInfo order={order} onCourierDetail={onCourierDetail} />
@@ -37,20 +38,25 @@ export const OngoingMapAndInfo = ({
           <OrderMap
             originLocation={order.origin?.location}
             destinationLocation={order.destination?.location}
-            courierLocation={courierLocation}
-            route={order.route}
+            courierLocation={fulfillment === 'delivery' ? courierLocation : undefined}
+            route={fulfillment === 'delivery' ? order.route : undefined}
             ratio={240 / 160}
+            orderFulfillment={fulfillment}
           />
-          <MessagesCard orderId={order.id} onPress={onOpenChat} />
-          <View>
-            <DeliveryInfo order={order} onCourierDetail={onCourierDetail} />
-            <DefaultButton
-              title={t('Abrir chat com o entregador')}
-              onPress={() => onChatWithCourier()}
-              style={{ marginHorizontal: padding, marginBottom: padding }}
-            />
-          </View>
-          <HR height={padding} />
+          {fulfillment === 'delivery' ? (
+            <View>
+              <MessagesCard orderId={order.id} onPress={onOpenChat} />
+              <View>
+                <DeliveryInfo order={order} onCourierDetail={onCourierDetail} />
+                <DefaultButton
+                  title={t('Abrir chat com o entregador')}
+                  onPress={() => onChatWithCourier()}
+                  style={{ marginHorizontal: padding, marginBottom: padding }}
+                />
+              </View>
+              <HR height={padding} />
+            </View>
+          ) : null}
         </View>
       )}
     </View>

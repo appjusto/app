@@ -1,13 +1,11 @@
-import { Dayjs } from '@appjusto/dates';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
-import { GeoPoint, Timestamp } from 'firebase/firestore';
+import { GeoPoint } from 'firebase/firestore';
 import { LatLng } from 'react-native-maps';
 import * as Sentry from 'sentry-expo';
 import { t } from '../../strings';
 import { AppStore } from '../app/context';
 import Api from '../store/api/api';
-import { getFlavor } from '../store/config/selectors';
 import { getConsumer } from '../store/consumer/selectors';
 import { getCourier } from '../store/courier/selectors';
 import { getOrders } from '../store/order/selectors';
@@ -76,32 +74,57 @@ const locationTaskExecutor =
         api
           .profile()
           .updateLocation(profile.id, coordinates)
-          .then(
-            () =>
-              new Promise<void>((resolve, reject) => {
-                if (getFlavor(state) !== 'courier') return resolve();
-                if (!orders.length) return resolve();
-                const order = orders[0];
-                if (!order.route?.duration) return resolve();
-                if (!order.dispatchingTimestamps?.goingPickup) return resolve();
-                const goingPickupTimestamp = (
-                  order.dispatchingTimestamps.goingPickup as Timestamp
-                ).toDate();
-                if (
-                  Dayjs(new Date()).diff(goingPickupTimestamp, 'second') <
-                  order.route.duration * 1.5
-                ) {
-                  return resolve();
-                }
-                resolve(
-                  api.order().dropOrder(order.id, {
-                    type: 'courier-drops-delivery',
-                    id: 'courier-exceed-pick-up-time',
-                    title: 'Drop automático por demora em pegar o pedido',
-                  })
-                );
-              })
-          )
+          // .then(
+          //   () =>
+          //     new Promise<void>((resolve, reject) => {
+          //       const extra = {
+          //         flavor: getFlavor(state),
+          //         activeOrders: orders.length,
+          //         estimate: orders[0]?.arrivals?.origin?.estimate ?? null,
+          //         goingPickup: orders[0]?.dispatchingTimestamps.goingPickup ?? null,
+          //       };
+          //       console.log(extra);
+          //       Sentry.Native.captureEvent({
+          //         message: 'Auto-drop tests',
+          //         extra,
+          //       });
+          //       if (getFlavor(state) !== 'courier') return resolve();
+          //       if (!orders.length) return resolve();
+          //       const order = orders[0];
+          //       if (!order.arrivals?.origin?.estimate) return resolve();
+          //       if (!order.dispatchingTimestamps.goingPickup) return resolve();
+          //       const estimateAsDate = Dayjs(
+          //         (order.arrivals.origin.estimate as Timestamp).toDate()
+          //       );
+          //       const goingPickupAsDate = Dayjs(
+          //         (order.dispatchingTimestamps.goingPickup as Timestamp).toDate()
+          //       );
+          //       if (estimateAsDate.isBefore(goingPickupAsDate)) return resolve();
+          //       const duration = estimateAsDate.diff(goingPickupAsDate, 's');
+          //       if (Dayjs.duration({ minutes: 10 }).asSeconds() > duration) return resolve();
+          //       if (Dayjs(new Date()).diff(goingPickupAsDate, 'second') < duration * 1.5) {
+          //         return resolve();
+          //       }
+          //       Sentry.Native.captureEvent({
+          //         message: 'Auto-drop done',
+          //         extra: {
+          //           flavor: getFlavor(state),
+          //           activeOrders: orders.length,
+          //           estimate: orders[0]?.arrivals?.origin?.estimate ?? null,
+          //           goingPickup: orders[0]?.dispatchingTimestamps.goingPickup ?? null,
+          //           duration,
+          //           diff: Dayjs(new Date()).diff(goingPickupAsDate, 'second'),
+          //         },
+          //       });
+          //       resolve(
+          //         api.order().dropOrder(order.id, {
+          //           type: 'courier-drops-delivery',
+          //           id: 'courier-exceed-pick-up-time',
+          //           title: 'Drop automático por demora em pegar o pedido',
+          //         })
+          //       );
+          //     })
+          // )
           .then(() => null)
           .catch((error) => console.error(error));
       }

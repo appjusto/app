@@ -1,4 +1,3 @@
-import { FirestoreRefs, FunctionsRef } from '@appjusto/firebase-refs';
 import {
   Business,
   CancelOrderPayload,
@@ -40,6 +39,8 @@ import { isEmpty, uniq } from 'lodash';
 import * as Sentry from 'sentry-expo';
 import { OrderCourierLocationLog } from '../../../../../types';
 import { getAppVersion } from '../../../utils/version';
+import { FirestoreRefs } from '../../refs/FirestoreRefs';
+import { FunctionsRef } from '../../refs/FunctionsRef';
 import { fetchPublicIP } from '../externals/ipify';
 import { documentAs, documentsAs } from '../types';
 import InvoiceApi from './invoices/InvoiceApi';
@@ -71,7 +72,7 @@ export default class OrderApi {
     destination: Place | null = null
   ) {
     const businessAddress = business.businessAddress!;
-    const { address, number, neighborhood, city, additional } = businessAddress;
+    const { address, number, neighborhood, city, additional, instructions } = businessAddress;
     const main = `${address}, ${number}`;
     const secondary = `${neighborhood ? `${neighborhood} - ` : ''}${city}`;
     const origin: Place = {
@@ -81,6 +82,7 @@ export default class OrderApi {
         description: `${main} - ${secondary}`,
       },
       additionalInfo: additional ?? '',
+      instructions: instructions ?? '',
     };
     const payload: Partial<Order> = {
       type: 'food',
@@ -349,9 +351,9 @@ export default class OrderApi {
 
   async placeOrder(
     orderId: string,
-    fleetId: string,
     payment: PlaceOrderPayloadPayment,
     invoiceWithCPF: boolean,
+    fleetId?: string,
     coordinates?: LatLng,
     additionalInfo?: string,
     wantToShareData?: boolean
@@ -364,9 +366,9 @@ export default class OrderApi {
     }
     await this.functionsRef.getPlaceOrderCallable()({
       orderId,
-      fleetId,
       payment,
       invoiceWithCPF,
+      fleetId,
       coordinates,
       additionalInfo,
       wantToShareData,
@@ -409,6 +411,12 @@ export default class OrderApi {
   }
 
   async tipCourier(orderId: string, tip: number) {
+    // await this.functionsRef.getTipCourierCallable()({
+    //   orderId,
+    //   tip,
+    //   meta: { version: getAppVersion() },
+    // });
+
     await this.updateOrder(orderId, { tip: { value: tip } });
   }
 

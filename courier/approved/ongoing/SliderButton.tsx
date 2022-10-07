@@ -14,6 +14,7 @@ export interface DefaultButtonProps extends TouchableOpacityProps, ViewProps {
   title: string;
   activityIndicator?: boolean;
   buttonColor: string;
+  rightIcon?: boolean;
 }
 
 export default function ({
@@ -22,6 +23,7 @@ export default function ({
   disabled,
   buttonColor = colors.green500,
   style,
+  rightIcon = true,
   ...props
 }: DefaultButtonProps) {
   const backgroundColor = disabled || activityIndicator ? colors.grey500 : buttonColor;
@@ -51,7 +53,9 @@ export default function ({
           ) : (
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={{ ...texts.sm, color }}>{title}</Text>
-              <Feather name="arrow-right" size={14} style={{ marginLeft: 4, paddingTop: 4 }} />
+              {rightIcon ? (
+                <Feather name="arrow-right" size={14} style={{ marginLeft: 4, paddingTop: 4 }} />
+              ) : null}
             </View>
           )}
         </View>

@@ -21,44 +21,73 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
   const order = useContextActiveOrder();
   const business = useContextBusiness();
   const now = getServerTime();
-  // side effects
-  const margin = 60;
+
   // UI
   if (!order) return null; // shouldn't happen
   if (!business) return null; // shouldn't happen
+  const margin = 60;
+  const shouldBeReady = new Date(
+    now.getTime() + (business.averageCookingTime ? business.averageCookingTime * 1000 : 3600 * 1000)
+  );
+  const { fulfillment, scheduledTo } = order;
   const canScheduleUI = () => {
     // realtime and scheduling
-    if (business.preparationModes?.includes('realtime')) {
-      if (order.scheduledTo) {
-        return (
-          <RectangularListItemText
-            text={`${capitalize(
-              Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now)
-            )}, ${getETAWithMargin(order.scheduledTo, margin)}`}
-            selected
-            onSelect={() => null}
-          />
-        );
-      } else {
-        if (business.status === 'open') {
-          // without scheduledTo
-          if (order.arrivals?.destination?.estimate) {
+    if (fulfillment === 'delivery') {
+      if (business.preparationModes?.includes('realtime')) {
+        if (scheduledTo) {
+          return (
+            <RectangularListItemText
+              text={`${capitalize(
+                Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now)
+              )}, ${getETAWithMargin(scheduledTo, margin)}`}
+              selected
+              onSelect={() => null}
+            />
+          );
+        } else {
+          if (business.status === 'open') {
+            // without scheduledTo
+            if (order.arrivals?.destination?.estimate) {
+              return (
+                <RectangularListItemText
+                  text={`Entrega: ${getETAWithMargin(order.arrivals?.destination?.estimate!)}`}
+                  selected
+                  onSelect={() => null}
+                />
+              );
+            }
             return (
-              <RectangularListItemText
-                text={`Entrega: ${getETAWithMargin(order.arrivals?.destination?.estimate!)}`}
-                selected
-                onSelect={() => null}
-              />
+              <View style={screens.centered}>
+                <ActivityIndicator size="small" color={colors.green500} />
+              </View>
             );
           }
-          return (
-            <View style={screens.centered}>
-              <ActivityIndicator size="small" color={colors.green500} />
-            </View>
-          );
+          if (business.status === 'closed') {
+            // without scheduledTo
+            return (
+              <View>
+                <Text style={{ ...texts.sm, flexWrap: 'wrap' }} numberOfLines={3}>
+                  {t('Somente agendamento')}
+                </Text>
+              </View>
+            );
+          }
         }
-        if (business.status === 'closed') {
-          // without scheduledTo
+        return null;
+      }
+      // no realtime, only scheduling
+      else {
+        if (scheduledTo) {
+          return (
+            <RectangularListItemText
+              text={`${capitalize(
+                Dayjs((scheduledTo as Timestamp).toDate()).calendar(now)
+              )}, ${getETAWithMargin(scheduledTo, margin)}`}
+              selected
+              onSelect={() => null}
+            />
+          );
+        } else {
           return (
             <View>
               <Text style={{ ...texts.sm, flexWrap: 'wrap' }} numberOfLines={3}>
@@ -68,41 +97,46 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
           );
         }
       }
-      return null;
-    }
-    // no realtime, only scheduling
-    else {
-      if (order.scheduledTo) {
+    } else {
+      if (scheduledTo) {
         return (
           <RectangularListItemText
             text={`${capitalize(
               Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now)
-            )}, ${getETAWithMargin(order.scheduledTo, margin)}`}
+            )}, ${getETAWithMargin(scheduledTo, margin)}`}
             selected
             onSelect={() => null}
           />
         );
-      } else {
+      } else
         return (
-          <View>
-            <Text style={{ ...texts.sm, flexWrap: 'wrap' }} numberOfLines={3}>
-              {t('Somente agendamento')}
-            </Text>
-          </View>
+          <RectangularListItemText
+            text={`Previsão: ${getETAWithMargin(shouldBeReady)}`}
+            selected
+            onSelect={() => null}
+          />
         );
-      }
     }
   };
   const orderSchedulingUI = () => {
     // real time only
     if (!business.preparationModes?.includes('scheduled')) {
-      if (order.arrivals?.destination?.estimate) {
+      // adicionar o take away aqui tb
+      if (fulfillment === 'delivery') {
+        if (order.arrivals?.destination?.estimate) {
+          return (
+            <View style={{ alignSelf: 'center' }}>
+              <Text style={{ ...texts.sm }}>
+                {t('Previsão de entrega: ')}
+                {getETAWithMargin(order.arrivals.destination.estimate)}
+              </Text>
+            </View>
+          );
+        }
+      } else if (fulfillment === 'take-away') {
         return (
           <View style={{ alignSelf: 'center' }}>
-            <Text style={{ ...texts.sm }}>
-              {t('Previsão de entrega: ')}
-              {getETAWithMargin(order.arrivals.destination.estimate)}
-            </Text>
+            <Text style={{ ...texts.sm }}>{`Previsão: ${getETAWithMargin(shouldBeReady)}`}</Text>
           </View>
         );
       }

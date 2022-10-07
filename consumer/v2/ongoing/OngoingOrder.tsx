@@ -21,6 +21,7 @@ import { FoodOrderItemsInfo } from './FoodOrderItemsInfo';
 import { OngoingActions } from './OngoingActions';
 import { OngoingMapAndInfo } from './OngoingMapAndInfo';
 import { OngoingOrderStatus } from './OngoingOrderStatus';
+import { OrderNumber } from './OrderNumber';
 import { OngoingOrderNavigatorParamList } from './types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
@@ -113,9 +114,17 @@ export default function ({ navigation, route }: Props) {
       navigation.replace('OngoingOrderDeclined', { orderId });
     }
   }, [navigation, order, orderId]);
+  // header title
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: order?.code
+        ? `${t('Pedido')} #${order.code} ${t('em andamento')}`
+        : t('Pedido em andamento'),
+    });
+  }, [navigation, order?.code]);
   // UI
   // showing the indicator until the order is loaded
-  if (!order) {
+  if (!order || (order.type === 'food' && !businessId)) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -135,13 +144,6 @@ export default function ({ navigation, route }: Props) {
   const navigateToCourierDetail = () => {
     navigation.navigate('OngoingOrderCourierDetail', { orderId });
   };
-  // const navigateToChangeRoute = () =>
-  //   navigation.navigate('P2POrderNavigator', {
-  //     screen: 'CreateOrderP2P',
-  //     params: {
-  //       orderId,
-  //     },
-  //   });
   // ongoing UI
   return (
     <KeyboardAwareScrollView
@@ -156,7 +158,9 @@ export default function ({ navigation, route }: Props) {
       <View style={{ flex: 1 }}>
         {/* top */}
         <OngoingOrderStatus order={order} />
-        {order.status !== 'dispatching' ? <HR height={padding} /> : null}
+        {order.fulfillment === 'delivery' && order.status !== 'dispatching' ? (
+          <HR height={padding} />
+        ) : null}
         <OngoingMapAndInfo
           order={order}
           courierLocation={courierLocation}
@@ -164,7 +168,9 @@ export default function ({ navigation, route }: Props) {
           onChatWithCourier={openChatWithCourier}
           onOpenChat={openChatHandler}
         />
-        {order.dispatchingStatus !== 'outsourced' && order.status !== 'scheduled' ? (
+        {order.dispatchingStatus !== 'outsourced' &&
+        order.status !== 'scheduled' &&
+        order.fulfillment === 'delivery' ? (
           <DeliveryConfirmation
             switchValue={wantsCode}
             onChangeCodeDelivery={() => {
@@ -173,6 +179,9 @@ export default function ({ navigation, route }: Props) {
             }}
             confirmation={confirmation}
           />
+        ) : null}
+        {order.type === 'food' && order.fulfillment === 'take-away' ? (
+          <OrderNumber code={order.code} businessId={businessId!} />
         ) : null}
         <FoodOrderItemsInfo order={order} />
         {order.dispatchingStatus !== 'outsourced' ? <HR height={padding} /> : null}
@@ -187,7 +196,7 @@ export default function ({ navigation, route }: Props) {
             navigateToConfirmCancel={navigateToConfirmCancel}
             onMessageReceived={openChatHandler}
           />
-          {order.type === 'food' && order.status !== 'scheduled' ? (
+          {order.type === 'food' ? (
             <View>
               <HR />
               <PaddedView>

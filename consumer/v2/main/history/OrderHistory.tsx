@@ -189,7 +189,7 @@ export default function ({ navigation, route }: Props) {
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <MaterialIcons name="calendar-today" size={24} color="black" />
                     <Text style={{ marginLeft: halfPadding, ...texts.md }}>{`${from.getDate()}${
-                      from.getMonth() != to.getMonth()
+                      from.getMonth() !== to.getMonth()
                         ? ` de ${capitalize(Dayjs(from).format('MMMM'))}`
                         : ''
                     } a ${to.getDate()} de ${capitalize(Dayjs(to).format('MMMM'))}`}</Text>

@@ -34,6 +34,7 @@ import { LoggedNavigatorParamList } from '../../../types';
 import { FoodOrderNavigatorParamList } from '../../types';
 import { RestaurantNavigatorParamList } from '../types';
 import { DestinationModal } from './DestinationModal';
+import { FulfillmentSwitch } from './FulfilmentSwitch';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<RestaurantNavigatorParamList, 'FoodOrderCheckout'>,
@@ -89,7 +90,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     !isEmpty(order?.scheduledTo);
   const canSubmit =
     (business?.status === 'open' || canScheduleOrder) &&
-    (payMethod !== 'credit_card' || selectedPaymentMethodId !== undefined) &&
+    (payMethod === 'pix' ||
+      (payMethod === 'credit_card' && selectedPaymentMethodId !== undefined)) &&
     selectedFare !== undefined &&
     !isLoading &&
     isEmpty(order?.route?.issue);
@@ -110,14 +112,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         (order && params.destination.additionalInfo !== order.destination?.additionalInfo)
       ) {
         api.order().updateOrder(order.id, { destination: params.destination });
-        if (params.destination.additionalInfo) {
-          setComplement(params.destination.additionalInfo);
-          setAddressComplement(true);
-        }
-        if (params.destination.additionalInfo?.length === 0) {
-          setComplement('');
-          setAddressComplement(false);
-        }
       }
       navigation.setParams({
         destination: undefined,
@@ -161,27 +155,23 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
       navigation.navigate('MainNavigator', { screen: 'Home' });
     }
   }, [order, navigation]);
+  // setting complement whenever additionalInfo changes
+  React.useEffect(() => {
+    if (order?.destination?.additionalInfo && order.destination.additionalInfo.length > 0) {
+      setComplement(order.destination.additionalInfo);
+      setAddressComplement(true);
+    } else {
+      setComplement('');
+      setAddressComplement(false);
+    }
+  }, [order?.destination?.additionalInfo]);
   // tracking
-  useSegmentScreen('FoodOrderCheckout');
+  useSegmentScreen('FoodOrderCheckout', { consumerId: consumer?.id, businessId: business?.id });
   // handlers
   const placeOrderHandler = async () => {
     Keyboard.dismiss();
     if (!order) return;
     if (!selectedFare) return;
-    let paymentPayload;
-    if (payMethod === 'credit_card') {
-      if (!selectedPaymentMethodId) return;
-      paymentPayload = {
-        payableWith: 'credit_card',
-        paymentMethodId: selectedPaymentMethodId,
-      } as PlaceOrderPayloadPaymentCreditCard;
-    }
-    if (payMethod === 'pix') {
-      paymentPayload = {
-        payableWith: 'pix',
-        key: cpf, // remove this
-      } as PlaceOrderPayloadPaymentPix;
-    }
     if (!order.destination?.address) {
       dispatch(
         showToast(
@@ -248,13 +238,24 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           }),
         });
       }
+      const paymentPayload =
+        payMethod === 'credit_card'
+          ? ({
+              payableWith: 'credit_card',
+              paymentMethodId: selectedPaymentMethodId,
+            } as PlaceOrderPayloadPaymentCreditCard)
+          : ({
+              payableWith: 'pix',
+              key: cpf,
+            } as PlaceOrderPayloadPaymentPix);
+      const fleetId = order.fulfillment === 'delivery' ? selectedFare?.fleet?.id : undefined;
       await api
         .order()
         .placeOrder(
           order.id,
-          selectedFare!.fleet.id,
           paymentPayload,
           wantsCpf,
+          fleetId,
           coords,
           orderAdditionalInfo,
           shareDataWithBusiness
@@ -295,7 +296,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     navigation.navigate('CommonProfileEdit', { returnScreen: 'FoodOrderCheckout' });
   };
   // UI
-  if (!order) {
+  if (!order || !business) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -336,29 +337,38 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         onCheckSchedules={() => navigation.navigate('ScheduleOrder')}
         orderFulfillment={
           <View>
-            <OrderAvailableFleets
-              order={order}
-              quotes={quotes}
-              selectedFare={selectedFare}
-              onFareSelect={(fare) => {
-                setSelectedFare(fare);
-              }}
-              onFleetSelect={(fleetId: string) => {
-                navigation.navigate('FleetDetail', { fleetId });
-              }}
-              navigateToAvailableFleets={() =>
-                navigation.navigate('AvailableFleets', {
-                  orderId: order.id,
-                  selectedFare: selectedFare!,
-                  returnScreen: 'FoodOrderCheckout',
-                })
-              }
-            />
+            {business.fulfillment?.includes('take-away') ? (
+              <View>
+                <FulfillmentSwitch orderId={order.id} />
+              </View>
+            ) : null}
+            <View>
+              {order.fulfillment === 'delivery' ? (
+                <OrderAvailableFleets
+                  order={order}
+                  quotes={quotes}
+                  selectedFare={selectedFare}
+                  onFareSelect={(fare) => {
+                    setSelectedFare(fare);
+                  }}
+                  onFleetSelect={(fleetId: string) => {
+                    navigation.navigate('FleetDetail', { fleetId });
+                  }}
+                  navigateToAvailableFleets={() =>
+                    navigation.navigate('AvailableFleets', {
+                      orderId: order.id,
+                      selectedFare: selectedFare!,
+                      returnScreen: 'FoodOrderCheckout',
+                    })
+                  }
+                />
+              ) : null}
+            </View>
           </View>
         }
         costBreakdown={<OrderCostBreakdown order={order} selectedFare={selectedFare!} />}
         totalCost={
-          quotes === undefined ? (
+          order.fulfillment === 'delivery' && quotes === undefined ? (
             <View style={screens.centered}>
               <ActivityIndicator size="large" color={colors.green500} />
             </View>
@@ -383,7 +393,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             activityIndicator={isLoading}
             onEditPaymentMethod={navigateToFillPaymentInfo}
             onSubmit={() => {
-              if (!shouldVerifyPhone) setDestinationModalVisible(true);
+              if (!shouldVerifyPhone && order.fulfillment === 'delivery')
+                setDestinationModalVisible(true);
               else placeOrderHandler();
             }}
             navigateToAboutCharges={() => {
