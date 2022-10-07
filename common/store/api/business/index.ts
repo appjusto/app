@@ -6,6 +6,7 @@ import {
   Complement,
   ComplementGroup,
   Ordering,
+  OrderStatus,
   Place,
   Product,
   WithId,
@@ -50,6 +51,23 @@ export default class BusinessApi {
     );
     if (snapshot.empty) return null;
     return documentAs<Business>(snapshot.docs[0]);
+  }
+
+  async fetchConsumerTotalOrdersInBusiness(
+    businessId: string,
+    consumerId: string,
+    statuses: OrderStatus[]
+  ) {
+    const snapshot = await getDocs(
+      query(
+        this.firestoreRefs.getOrdersRef(),
+        orderBy('createdOn', 'desc'),
+        where('business.id', '==', businessId),
+        where('consumer.id', '==', consumerId),
+        where('status', 'in', statuses)
+      )
+    );
+    return snapshot.size;
   }
 
   observeBusiness(businessId: string, resultHandler: (business: WithId<Business>) => void) {
