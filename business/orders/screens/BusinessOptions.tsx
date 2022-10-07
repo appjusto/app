@@ -59,6 +59,13 @@ export const BusinessOptions = ({ navigation, route }: Props) => {
         onPress={() => navigation.navigate('BusinessProfile')}
       />
       <ConfigItem
+        title={t('Notificações')}
+        subtitle={t('Escolha as notificações que você quer receber no AppJusto')}
+        onPress={() => {
+          navigation.navigate('NotificationPreferences');
+        }}
+      />
+      <ConfigItem
         title={t('Central de ajuda')}
         subtitle={t('Tire suas dúvidas ou envie uma mensagem')}
         onPress={() => {

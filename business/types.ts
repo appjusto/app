@@ -26,4 +26,5 @@ export type BusinessNavParamsList = {
     counterpartFlavor: Flavor;
   };
   BusinessProfile: undefined;
+  NotificationPreferences: undefined;
 };

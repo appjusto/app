@@ -19,6 +19,7 @@ export type CourierProfileParamList = {
   SelectBank: undefined;
   AboutApp: undefined;
   PartnersAndDiscounts: undefined;
+  NotificationPreferences: undefined;
   // fleets
   ChooseFleet?: {
     fleetId: string;
