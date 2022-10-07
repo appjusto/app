@@ -15,6 +15,7 @@ import { phoneFormatter } from '../../components/inputs/pattern-input/formatters
 import { track, useSegmentScreen } from '../../store/api/track';
 import { showToast } from '../../store/ui/actions';
 import { biggerPadding, colors, doublePadding, padding, screens, texts } from '../../styles';
+import { getFirebaseAuthErrorMessages } from '../profile/getFirebaseAuthErrorMessages';
 import { UnloggedParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<UnloggedParamList, 'PhoneLoginScreen'>;
@@ -91,10 +92,7 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
           );
           setState('unrecoverable-error');
         } else {
-          if (message.indexOf('SMS code has expired') > 0)
-            message = t('O código expirou. Clique em "Enviar novamente" e tente de novo.');
-          else if (message.indexOf('phone auth credential is invalid') > 0)
-            message = t('O código não é valido. Clique em "Enviar novamente" e tente de novo.');
+          message = getFirebaseAuthErrorMessages(error);
           setState('error');
         }
         setError(message);
