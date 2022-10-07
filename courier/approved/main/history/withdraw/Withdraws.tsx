@@ -113,41 +113,53 @@ export const Withdraws = ({ navigation, route }: Props) => {
               <Text style={{ ...texts.x4l }}>{info.balance_available_for_withdraw}</Text>
             )}
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Ionicons name="checkmark-circle-outline" size={20} color={colors.red} />
-            <Text
-              style={{
-                ...texts.sm,
-                marginLeft: halfPadding,
-                paddingBottom: 2,
-                color: colors.red,
-              }}
-            >
-              {t('Taxa Iugu por saque')}
-            </Text>
+          <View style={{ marginTop: padding }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons name="checkmark-circle-outline" size={20} color={colors.red} />
+              <Text
+                style={{
+                  ...texts.sm,
+                  marginLeft: halfPadding,
+                  paddingBottom: 2,
+                  color: colors.red,
+                }}
+              >
+                {t('Taxa Iugu por saque')}
+              </Text>
+            </View>
+            {info === undefined ? (
+              <ActivityIndicator
+                style={{ marginVertical: 6 }}
+                size="large"
+                color={colors.green500}
+              />
+            ) : (
+              <Text style={{ ...texts.x4l }}>R$ 1,00</Text>
+            )}
           </View>
-          {info === undefined ? (
-            <ActivityIndicator style={{ marginVertical: 6 }} size="large" color={colors.green500} />
-          ) : (
-            <Text style={{ ...texts.x4l }}>R$ 1,00</Text>
-          )}
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Ionicons name="checkmark-circle-outline" size={20} color={colors.black} />
-            <Text
-              style={{
-                ...texts.sm,
-                marginLeft: halfPadding,
-                paddingBottom: 2,
-              }}
-            >
-              {t('Valor total do saque')}
-            </Text>
+          <View style={{ marginTop: padding }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons name="checkmark-circle-outline" size={20} color={colors.black} />
+              <Text
+                style={{
+                  ...texts.sm,
+                  marginLeft: halfPadding,
+                  paddingBottom: 2,
+                }}
+              >
+                {t('Valor total do saque')}
+              </Text>
+            </View>
+            {info === undefined ? (
+              <ActivityIndicator
+                style={{ marginVertical: 6 }}
+                size="large"
+                color={colors.green500}
+              />
+            ) : (
+              <Text style={{ ...texts.x4l }}>{formatCurrency(availableForWithdraw - 100)}</Text>
+            )}
           </View>
-          {info === undefined ? (
-            <ActivityIndicator style={{ marginVertical: 6 }} size="large" color={colors.green500} />
-          ) : (
-            <Text style={{ ...texts.x4l }}>{formatCurrency(availableForWithdraw - 100)}</Text>
-          )}
         </PaddedView>
         <View style={{ flex: 1 }} />
         <DefaultButton
