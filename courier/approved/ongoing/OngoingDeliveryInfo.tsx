@@ -133,7 +133,7 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
               </Text>
             </View>
           ) : null}
-          {nextPlace?.intructions ? (
+          {nextPlace?.intructions && !nextPlace.instructions ? (
             <View>
               <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={5}>
                 {nextPlace?.intructions ?? ''}
@@ -169,7 +169,7 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
               </Text>
             </View>
           ) : null}
-          {nextPlace?.intructions ? (
+          {nextPlace?.intructions && !nextPlace?.instructions ? (
             <View>
               <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={5}>
                 {nextPlace?.intructions ?? ''}
