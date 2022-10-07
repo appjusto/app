@@ -31,9 +31,11 @@ export const OrderNumber = ({ code, businessId }: Props) => {
             {businessAddress.address}, {businessAddress.number}
           </Text>
           <Text style={{ ...texts.sm }}>{businessAddress.neighborhood}</Text>
+          {businessAddress.instructions ? (
+            <Text style={{ ...texts.sm }}>{businessAddress.instructions}</Text>
+          ) : null}
         </View>
       ) : null}
-
       <View style={{ paddingHorizontal: padding }}>
         <Text style={{ ...texts.xs, color: colors.grey700 }}>
           {t('Apresente o número do pedido no momento da retirada no restaurante.')}
