@@ -71,12 +71,12 @@ export const Receivables = ({ navigation, route }: Props) => {
         >
           <Text style={[texts.sm, texts.bold]}>
             {t(
-              'Desde o dia 10/10/2022, os valores dos pedidos entregues ficarão disponíveis na sua conta 24 horas depois da corrida e não será mais necessário fazer antecipação.'
+              'Desde o dia 11/10/2022, os valores dos pedidos entregues já ficam disponíveis na sua conta 24 horas depois da corrida, não sendo mais necessário fazer antecipação.'
             )}
           </Text>
           <Text style={[texts.sm]}>
             {t(
-              'Você poderá continuar utilizando o fluxo normal de antecipações para corridas realizadas antes do dia 10/10/2022 que foram pagas com cartão de crédito.'
+              'Você poderá continuar utilizando o fluxo normal de antecipações para corridas realizadas antes do dia 11/10/2022 que foram pagas com cartão de crédito.'
             )}
           </Text>
         </PaddedView>
