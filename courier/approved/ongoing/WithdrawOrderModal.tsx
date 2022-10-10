@@ -56,6 +56,7 @@ export const WithdrawOrderModal = ({
       return t('Aguarde o pedido');
     } else return t('Aguarde');
   })();
+  const originInstructions = order.origin?.intructions ?? order.origin?.instructions;
   return (
     <Modal transparent {...props}>
       <View
@@ -100,7 +101,7 @@ export const WithdrawOrderModal = ({
                     {order.origin.additionalInfo}
                   </Text>
                 ) : null}
-                {order.origin?.intructions ? (
+                {originInstructions ? (
                   <Text
                     style={{
                       ...texts.sm,
@@ -109,7 +110,7 @@ export const WithdrawOrderModal = ({
                       flexWrap: 'wrap',
                     }}
                   >
-                    {order.origin.intructions}
+                    {originInstructions}
                   </Text>
                 ) : null}
               </View>

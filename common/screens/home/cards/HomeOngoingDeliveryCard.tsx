@@ -131,6 +131,7 @@ export default function ({ order, onPress }: Props) {
       detail =
         type === 'p2p'
           ? order.origin?.intructions ??
+            order.origin?.instructions ??
             `${t('Qualquer dúvida, mande uma mensagem para ')} ${order.consumer.name}`
           : `${t('Informe o código')} ${order.code}`;
     } else if (dispatchingState === 'going-destination') {
@@ -141,6 +142,7 @@ export default function ({ order, onPress }: Props) {
       detail =
         type === 'p2p'
           ? order.destination?.intructions ??
+            order.destination?.instructions ??
             `${t('Qualquer dúvida, mande uma mensagem para ')} ${order.consumer.name}`
           : `${t('Avise')} ${order.consumer.name} ${t('da sua chegada.')}`;
     }

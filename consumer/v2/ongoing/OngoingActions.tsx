@@ -31,6 +31,8 @@ export const OngoingActions = ({
   // state
   const chat = useObserveOrderChat(order.id, user.uid);
   const unread = unreadMessages(chat, user.uid);
+  // helper
+  const destinationInstructions = order.destination?.intructions ?? order.destination?.instructions;
   return (
     <PaddedView style={{ flex: 1 }}>
       {order.fulfillment === 'delivery' ? (
@@ -56,10 +58,10 @@ export const OngoingActions = ({
                   </Text>
                 </View>
               ) : null}
-              {order.type === 'p2p' && order.destination?.intructions ? (
+              {order.type === 'p2p' && destinationInstructions ? (
                 <View>
                   <Text style={{ ...texts.xs, color: colors.grey700 }}>
-                    {order.destination.intructions}
+                    {destinationInstructions}
                   </Text>
                 </View>
               ) : null}
