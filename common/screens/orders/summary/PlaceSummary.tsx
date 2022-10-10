@@ -14,6 +14,7 @@ type Props = {
 };
 
 export default function ({ place, title, onEdit, fulfillment }: Props) {
+  const instructions = place.intructions ?? place.instructions;
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
       <View style={{ maxWidth: '90%', marginBottom: halfPadding }}>
@@ -27,14 +28,12 @@ export default function ({ place, title, onEdit, fulfillment }: Props) {
         {!isEmpty(place.additionalInfo) && (
           <Text style={{ ...texts.xs, marginTop: 4 }}>{place.additionalInfo}</Text>
         )}
-        {place.instructions && fulfillment === 'take-away' ? (
+        {instructions && fulfillment === 'take-away' ? (
           <Text style={{ ...texts.xs, marginBottom: halfPadding, marginTop: 4 }}>
-            {place.instructions}
+            {instructions}
           </Text>
         ) : null}
-        {place.intructions ? (
-          <Text style={{ ...texts.xs, marginTop: 4 }}>{place.intructions}</Text>
-        ) : null}
+        {instructions ? <Text style={{ ...texts.xs, marginTop: 4 }}>{instructions}</Text> : null}
       </View>
       {onEdit && (
         <View style={{ alignSelf: 'center', width: 32, height: 32 }}>
