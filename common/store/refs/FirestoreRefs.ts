@@ -22,6 +22,7 @@ export class FirestoreRefs {
   getPlatformDatasRef = () => doc(this.getPlatformRef(), 'data');
   getPlatformLogsRef = () => doc(this.getPlatformRef(), 'logs');
   getPlatformAccessRef = () => doc(this.getPlatformRef(), 'access');
+  getPlatformFeesRef = () => doc(this.getPlatformRef(), 'fees');
 
   // platform data subcollections
   getBanksRef = () => collection(this.getPlatformDatasRef(), 'banks');

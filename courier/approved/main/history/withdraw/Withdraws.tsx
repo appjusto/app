@@ -19,6 +19,7 @@ import {
   texts,
 } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
+import { usePlatformFees } from '../../../../../common/utils/platform/usePlatformFees';
 import { t } from '../../../../../strings';
 import { DeliveriesNavigatorParamList } from '../types';
 
@@ -38,6 +39,7 @@ export const Withdraws = ({ navigation, route }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
+  const platformFees = usePlatformFees();
   // redux
   const courier = useSelector(getCourier)!;
   // state
@@ -45,6 +47,7 @@ export const Withdraws = ({ navigation, route }: Props) => {
   // helpers
   const availableForWithdraw = info ? convertBalance(info.balance_available_for_withdraw) : 0;
   const minimum = 5;
+  const withdrawFee = platformFees.fees?.processing.iugu.withdraw;
   // handler
   const withdrawHandler = async () => {
     if (!availableForWithdraw) return;
@@ -66,6 +69,13 @@ export const Withdraws = ({ navigation, route }: Props) => {
     }
   };
   //UI
+  if (!withdrawFee) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <ScrollView
       style={{ ...screens.config }}
@@ -79,7 +89,9 @@ export const Withdraws = ({ navigation, route }: Props) => {
             'O AppJusto não fica com nada do valor do seu trabalho. Todas os pagamentos são processados com segurança pela operadora financeira Iugu, '
           )}
           <Text style={{ color: colors.red }}>
-            {t('que cobra R$ 1,00 por cada operação de saque.')}
+            {`${t('que cobra ')} ${formatCurrency(withdrawFee)} ${t(
+              'por cada operação de saque.'
+            )}`}
           </Text>
         </Text>
         <PaddedView
@@ -134,7 +146,7 @@ export const Withdraws = ({ navigation, route }: Props) => {
                 color={colors.green500}
               />
             ) : (
-              <Text style={{ ...texts.x4l }}>R$ 1,00</Text>
+              <Text style={{ ...texts.x4l }}>{formatCurrency(withdrawFee)}</Text>
             )}
           </View>
           <View style={{ marginTop: padding }}>

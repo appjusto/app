@@ -5,6 +5,7 @@ import {
   Issue,
   IssueType,
   PlatformAccess,
+  PlatformFees,
   PlatformParams,
 } from '@appjusto/types';
 import { getDoc, getDocs, orderBy, query, where } from 'firebase/firestore';
@@ -19,6 +20,11 @@ export default class PlatformApi {
   async fetchPlatformParams() {
     const snapshot = await getDoc(this.firestoreRefs.getPlatformParamsRef());
     return snapshot.data() as PlatformParams;
+  }
+
+  async fetchPlatformFees() {
+    const snapshot = await getDoc(this.firestoreRefs.getPlatformFeesRef());
+    return snapshot.data() as PlatformFees;
   }
 
   async fetchPlatformAccess() {
