@@ -20,6 +20,7 @@ import {
 } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { usePlatformFees } from '../../../../../common/utils/platform/usePlatformFees';
+import { usePlatformParams } from '../../../../../common/utils/platform/usePlatformParams';
 import { t } from '../../../../../strings';
 import { DeliveriesNavigatorParamList } from '../types';
 
@@ -40,21 +41,21 @@ export const Withdraws = ({ navigation, route }: Props) => {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   const platformFees = usePlatformFees();
+  const platformParams = usePlatformParams();
   // redux
   const courier = useSelector(getCourier)!;
   // state
   const [withdrawing, setWithdrawing] = React.useState(false);
   // helpers
   const availableForWithdraw = info ? convertBalance(info.balance_available_for_withdraw) : 0;
-  const minimum = 5;
+  const minWithdrawValue = platformParams?.marketplace.minWithdrawValue ?? 600;
   const withdrawFee = platformFees.fees?.processing.iugu.withdraw;
   // handler
   const withdrawHandler = async () => {
     if (!availableForWithdraw) return;
     setWithdrawing(true);
     try {
-      const result = await api.courier().requestWithdraw(courier.id, availableForWithdraw);
-      // console.log(result);
+      await api.courier().requestWithdraw(courier.id, availableForWithdraw);
       setWithdrawing(false);
       navigation.replace('RequestWithdrawFeedback', {
         header: t('Requisição realizada com sucesso!'),
@@ -86,7 +87,7 @@ export const Withdraws = ({ navigation, route }: Props) => {
       <PaddedView style={{ flex: 1 }}>
         <Text style={{ ...texts.sm }}>
           {t(
-            'O AppJusto não fica com nada do valor do seu trabalho. Todas os pagamentos são processados com segurança pela operadora financeira Iugu, '
+            'O AppJusto não fica com nada do valor do seu trabalho. Todos os pagamentos são processados com segurança pela operadora financeira Iugu, '
           )}
           <Text style={{ color: colors.red }}>
             {`${t('que cobra ')} ${formatCurrency(withdrawFee)} ${t(
@@ -169,7 +170,9 @@ export const Withdraws = ({ navigation, route }: Props) => {
                 color={colors.green500}
               />
             ) : (
-              <Text style={{ ...texts.x4l }}>{formatCurrency(availableForWithdraw - 100)}</Text>
+              <Text style={{ ...texts.x4l }}>
+                {formatCurrency(availableForWithdraw - withdrawFee)}
+              </Text>
             )}
           </View>
         </PaddedView>
@@ -178,7 +181,7 @@ export const Withdraws = ({ navigation, route }: Props) => {
           style={{ marginTop: padding }}
           title={t('Confirmar transferência')}
           activityIndicator={withdrawing}
-          disabled={availableForWithdraw < minimum || withdrawing}
+          disabled={availableForWithdraw < minWithdrawValue || withdrawing}
           onPress={withdrawHandler}
         />
       </PaddedView>
