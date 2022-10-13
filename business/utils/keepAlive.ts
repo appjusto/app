@@ -46,6 +46,10 @@ const keepAliveExecutor = (store: AppStore, api: Api) => async () => {
 };
 
 export const definekeepAliveTask = (store: AppStore, api: Api) => {
-  console.log('definekeepAliveTask');
-  TaskManager.defineTask(TASK_KEEP_ALIVE, keepAliveExecutor(store, api));
+  try {
+    console.log('definekeepAliveTask');
+    TaskManager.defineTask(TASK_KEEP_ALIVE, keepAliveExecutor(store, api));
+  } catch (error: any) {
+    Sentry.Native.captureException(error);
+  }
 };
