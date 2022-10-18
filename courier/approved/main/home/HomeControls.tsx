@@ -51,8 +51,8 @@ export default function ({ onFleetDetail }: Props) {
   const dispatch = useDispatch<AppDispatch>();
   // redux store
   const courier = useSelector(getCourier)!;
-  const status = courier!.status;
-  const working = status !== undefined && status !== ('unavailable' as CourierStatus);
+  const { status } = courier;
+  const working = status === 'available';
   // state
   const { shouldVerifyPhone } = useProfileSummary();
   const [modalVisible, setModalVisible] = React.useState(false);

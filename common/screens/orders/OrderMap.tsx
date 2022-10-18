@@ -1,4 +1,4 @@
-import { LatLng, OrderRoute } from '@appjusto/types';
+import { Fulfillment, LatLng, OrderRoute } from '@appjusto/types';
 import polyline from '@mapbox/polyline';
 import React from 'react';
 import { Dimensions, Platform, View } from 'react-native';
@@ -18,6 +18,7 @@ type Props = {
   mapHeigth?: number;
   route?: OrderRoute | null;
   topRadius?: boolean;
+  orderFulfillment?: Fulfillment;
 };
 
 export default function ({
@@ -29,10 +30,11 @@ export default function ({
   mapWidth,
   mapHeigth,
   topRadius,
+  orderFulfillment = 'delivery',
 }: Props) {
   const { width } = Dimensions.get('window');
   if (!originLocation) return null;
-  if (!destinationLocation) return null;
+  if (orderFulfillment === 'delivery' && !destinationLocation) return null;
 
   const routeCoordinates = route?.polyline
     ? polyline.decode(route.polyline).map((pair) => {
@@ -50,14 +52,21 @@ export default function ({
       }}
     >
       <DefaultMap
-        // coordinates={[origin.location, destination.location]}
         coordinates={routeCoordinates}
         fitToElements
-        initialRegion={{
-          ...destinationLocation,
-          latitudeDelta: 0.03,
-          longitudeDelta: 0.03,
-        }}
+        initialRegion={
+          destinationLocation
+            ? {
+                ...destinationLocation,
+                latitudeDelta: 0.03,
+                longitudeDelta: 0.03,
+              }
+            : {
+                ...originLocation,
+                latitudeDelta: 0.03,
+                longitudeDelta: 0.03,
+              }
+        }
         style={{
           height: '100%',
           width: '100%',
@@ -73,14 +82,16 @@ export default function ({
         >
           <IconMapOrigin />
         </Marker>
-        <Marker
-          key={`${destinationLocation.latitude}-${destinationLocation.longitude}`}
-          coordinate={destinationLocation}
-          identifier="destination"
-          tracksViewChanges={false}
-        >
-          <IconMapDestination />
-        </Marker>
+        {destinationLocation ? (
+          <Marker
+            key={`${destinationLocation.latitude}-${destinationLocation.longitude}`}
+            coordinate={destinationLocation}
+            identifier="destination"
+            tracksViewChanges={false}
+          >
+            <IconMapDestination />
+          </Marker>
+        ) : null}
         {courierLocation ? (
           <Marker
             key={`${courierLocation.latitude}-${courierLocation.longitude}`}

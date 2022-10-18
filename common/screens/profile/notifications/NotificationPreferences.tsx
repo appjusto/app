@@ -4,7 +4,7 @@ import { isEmpty, without } from 'lodash';
 import React, { useContext } from 'react';
 import { Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ProfileParamList } from '../../../../consumer/v2/main/profile/types';
 import { CourierProfileParamList } from '../../../../courier/approved/main/profile/types';
 import { t } from '../../../../strings';
@@ -13,6 +13,7 @@ import CheckField from '../../../components/buttons/CheckField';
 import PaddedView from '../../../components/containers/PaddedView';
 import { useProfile } from '../../../store/api/profile/useProfile';
 import { useSegmentScreen } from '../../../store/api/track';
+import { getFlavor } from '../../../store/config/selectors';
 import { biggerPadding, colors, halfPadding, padding, screens, texts } from '../../../styles';
 import { NotificationConfirmationModal } from './NotificationConfirmationModal';
 
@@ -36,6 +37,7 @@ export const NotificationPreferences = ({ navigation }: Props) => {
   // redux
   const { profile } = useProfile();
   const { notificationPreferences = [] } = profile;
+  const flavor = useSelector(getFlavor);
   // state
   const [channelToConfirm, setChannelToConfirm] = React.useState<NotificationChannel>();
   // tracking
@@ -127,7 +129,9 @@ export const NotificationPreferences = ({ navigation }: Props) => {
           <View style={{ marginTop: padding }}>{createChannelCheckField('order-chat')}</View> */}
           <View>{createChannelCheckField('status')}</View>
           <View style={{ marginTop: padding }}>{createChannelCheckField('general')}</View>
-          <View style={{ marginTop: padding }}>{createChannelCheckField('marketing')}</View>
+          {flavor === 'consumer' ? (
+            <View style={{ marginTop: padding }}>{createChannelCheckField('marketing')}</View>
+          ) : null}
         </View>
       </PaddedView>
       {channelToConfirm ? (

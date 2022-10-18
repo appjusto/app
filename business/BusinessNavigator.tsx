@@ -10,6 +10,7 @@ import { useNotificationToken } from '../common/hooks/useNotificationToken';
 import Chat from '../common/screens/Chat';
 import { defaultScreenOptions } from '../common/screens/options';
 import { AboutApp } from '../common/screens/profile/AboutApp';
+import { NotificationPreferences } from '../common/screens/profile/notifications/NotificationPreferences';
 import Terms from '../common/screens/unlogged/Terms';
 import { track } from '../common/store/api/track';
 import { getManager } from '../common/store/business/selectors';
@@ -174,7 +175,12 @@ export const BusinessNavigator = () => {
       <Stack.Screen
         name="BusinessProfile"
         component={BusinessProfile}
-        options={{ title: t('Dados do restaurante') }}
+        options={{ title: t('Seus dados') }}
+      />
+      <Stack.Screen
+        name="NotificationPreferences"
+        component={NotificationPreferences}
+        options={{ title: t('Notificações') }}
       />
       <Stack.Screen name="OrderChat" component={Chat} options={{ title: t('Chats') }} />
       <Stack.Screen name="Terms" component={Terms} options={{ title: t('Fique por dentro') }} />

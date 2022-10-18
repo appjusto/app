@@ -9,6 +9,7 @@ import PaddedView from '../../../../common/components/containers/PaddedView';
 import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
+import { useP2PPix } from '../../../../common/store/api/order/ui/useP2PPix';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { colors, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -47,6 +48,7 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
   >(getPaymentMethodById(consumer, selectedPaymentMethodId) ?? undefined);
   // helpers
   const payableWithPix = useIsPixEnabled();
+  const p2pPayableWithPix = useP2PPix();
   // UI
   if (!order) {
     return (
@@ -88,7 +90,7 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
             />
           </View>
         )}
-        {payableWithPix ? (
+        {payableWithPix || p2pPayableWithPix ? (
           <PaymentBoxSelector
             variant="pix"
             selected={payMethod === 'pix'}

@@ -5,6 +5,7 @@ import SingleHeader from '../../../common/components/texts/SingleHeader';
 import HR from '../../../common/components/views/HR';
 import { colors, padding, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
+import { t } from '../../../strings';
 
 interface Props {
   order: WithId<Order>;
@@ -13,7 +14,7 @@ interface Props {
 export const DeliveredItems = ({ order }: Props) => {
   return (
     <View>
-      <SingleHeader title={order.business?.name ?? ''} />
+      <SingleHeader title={t('Detalhes do pedido')} />
       <HR />
       {order.items?.map((item) => (
         <View key={item.id}>

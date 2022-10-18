@@ -1,4 +1,11 @@
-import { ConsumerProfile, CourierProfile, Flavor, UserProfile, WithId } from '@appjusto/types';
+import {
+  ConsumerProfile,
+  CourierProfile,
+  Flavor,
+  ManagerProfile,
+  UserProfile,
+  WithId,
+} from '@appjusto/types';
 import * as Application from 'expo-application';
 import Constants from 'expo-constants';
 import {
@@ -77,7 +84,7 @@ export default class ProfileApi {
   // update profile
   async updateProfile(
     id: string,
-    changes: Partial<CourierProfile> | Partial<ConsumerProfile>,
+    changes: Partial<CourierProfile> | Partial<ConsumerProfile> | Partial<ManagerProfile>,
     retry: number = 5
   ) {
     const appVersion = `${Application.nativeApplicationVersion}${

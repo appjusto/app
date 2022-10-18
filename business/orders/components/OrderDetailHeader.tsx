@@ -8,6 +8,7 @@ import { useChatIsEnabled } from '../../../common/hooks/useChatIsEnabled';
 import { halfPadding, padding, texts } from '../../../common/styles';
 import { formatTime } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
+import { useConsumerTotalOrdersInBusiness } from '../../hooks/useConsumerTotalOrdersInBusiness';
 import { OrderLabel } from './OrderLabel';
 import { TimerDisplay } from './TimerDisplay';
 
@@ -17,8 +18,11 @@ interface Props extends ViewProps {
 }
 
 export const OrderDetailHeader = ({ order, style, onOpenOrderChat }: Props) => {
-  // state
+  // context
   const chatStillActive = useChatIsEnabled(order);
+  const businessId = order.business?.id;
+  const consumerId = order.consumer.id;
+  const totalOrders = useConsumerTotalOrdersInBusiness(businessId, consumerId);
   if (!order) return null;
   return (
     <View style={style}>
@@ -41,9 +45,14 @@ export const OrderDetailHeader = ({ order, style, onOpenOrderChat }: Props) => {
           {t('Nome do cliente: ')}
           <Text style={texts.bold}>{order.consumer.name ?? 'Indisponível no momento'}</Text>
         </Text>
-        {/* TODO: add total consumer orders in that business */}
+        {totalOrders ? (
+          <Text style={{ ...texts.md, marginTop: halfPadding }}>
+            {t('Total de pedidos: ')}
+            <Text style={texts.bold}>{totalOrders}</Text>
+          </Text>
+        ) : null}
         {chatStillActive ? (
-          <View style={{ width: '100%', marginTop: halfPadding }}>
+          <View style={{ width: '100%', marginTop: padding }}>
             <DefaultButton
               title={t('Abrir chat com o cliente')}
               variant="secondary"

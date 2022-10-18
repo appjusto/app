@@ -4,6 +4,7 @@ import FleetDetail from '../../../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { AboutApp } from '../../../../common/screens/profile/AboutApp';
 import { CommonProfileEdit } from '../../../../common/screens/profile/CommonProfileEdit';
+import { NotificationPreferences } from '../../../../common/screens/profile/notifications/NotificationPreferences';
 import { PhoneVerificationScreen } from '../../../../common/screens/profile/PhoneVerificationScreen';
 import ProfileErase from '../../../../common/screens/profile/ProfileErase';
 import Terms from '../../../../common/screens/unlogged/Terms';
@@ -87,6 +88,11 @@ export default function () {
         name="FleetDetail"
         component={FleetDetail}
         options={{ title: t('Detalhes da frota') }}
+      />
+      <Stack.Screen
+        name="NotificationPreferences"
+        component={NotificationPreferences}
+        options={{ title: t('Notificações') }}
       />
       <Stack.Screen name="Terms" component={Terms} options={{ title: t('Fique por dentro') }} />
       <Stack.Screen

@@ -1,5 +1,6 @@
 import { LatLng, Order, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
+import { isEmpty } from 'lodash';
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -46,6 +47,9 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
     }
     return '';
   })();
+  const showInstructions =
+    nextPlace && (!isEmpty(nextPlace.intructions) || !isEmpty(nextPlace.instructions));
+  const instructions = nextPlace?.intructions ?? nextPlace?.instructions;
   if (!dispatchingState) return null;
   return (
     <PaddedView style={{ flex: 1 }}>
@@ -114,7 +118,7 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
             >
               {addressLabel}
             </Text>
-            <CourierDistanceBadge order={order} delivering />
+            <CourierDistanceBadge order={order} courierLocation={location} delivering />
           </View>
         </View>
       )}
@@ -133,10 +137,10 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
               </Text>
             </View>
           ) : null}
-          {nextPlace?.intructions ? (
+          {showInstructions ? (
             <View>
               <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={5}>
-                {nextPlace?.intructions ?? ''}
+                {instructions}
               </Text>
             </View>
           ) : null}
@@ -162,10 +166,10 @@ export const OngoingDeliveryInfo = ({ order, onProblem }: Props) => {
               </Text>
             </View>
           ) : null}
-          {nextPlace?.intructions ? (
+          {showInstructions ? (
             <View>
               <Text style={[texts.md, { marginTop: 4, color: colors.grey700 }]} numberOfLines={5}>
-                {nextPlace?.intructions ?? ''}
+                {instructions}
               </Text>
             </View>
           ) : null}

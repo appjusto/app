@@ -20,51 +20,74 @@ export default function ({ order, onPress }: Props) {
   // redux store
   const flavor = useSelector(getFlavor);
   // UI
-  const { business, courier, scheduledTo } = order;
+  const { business, courier, scheduledTo, fulfillment } = order;
   const showCode = order.code ? `#${order.code}` : null;
   let title = '';
   let detail = '';
   if (flavor === 'consumer') {
     if (type === 'food') {
       const businessName = business!.name;
-      if (status === 'confirming' || status === 'charged') {
-        if (scheduledTo) {
-          title = `${t('Agendando pedido no/a')} ${businessName}`;
-        } else title = `${t('Criando pedido no/a')} ${businessName}`;
-      } else if (status === 'declined') {
-        title = t('Problema no pagamento');
-        detail = t('Selecione outra forma de pagamento');
-      } else if (status === 'scheduled') {
-        title = `${t('Pedido agendado em')} ${businessName}`;
-        detail = t('Você será avisado quando o pedido sair para a entrega');
-      } else if (status === 'confirmed') {
-        title = `${t('Aguardando')} ${businessName} ${t('confirmar o seu pedido')}`;
-      } else if (status === 'preparing') {
-        title = `${businessName} ${t('está preparando seu pedido')}`;
-      } else if (status === 'ready' || status === 'dispatching') {
-        if (status === 'ready') {
-          title = t('Seu pedido está pronto!');
-        } else if (status === 'dispatching') {
-          title = t('Seu pedido está à caminho!');
-        }
-        if (dispatchingStatus === 'confirmed' || dispatchingStatus === 'outsourced') {
-          if (dispatchingState === 'going-pickup') {
-            detail = `${courier?.name ?? t('Entregador/a')} ${t('está indo para')} ${businessName}`;
-          } else if (dispatchingState === 'arrived-pickup') {
-            detail = `${courier?.name ?? t('Entregador/a')} ${t('chegou no/a')} ${businessName}`;
-          } else if (dispatchingState === 'going-destination') {
-            detail = `${t('À caminho de')} ${order.destination!.address.main}`;
-          } else if (dispatchingState === 'arrived-destination') {
-            detail = `${courier?.name ?? t('Entregador/a')} ${t('chegou!')}`;
-          }
-        } else if (dispatchingStatus === 'declined') {
+      if (fulfillment === 'delivery') {
+        if (status === 'confirming' || status === 'charged') {
+          if (scheduledTo) {
+            title = `${t('Agendando pedido no/a')} ${businessName}`;
+          } else title = `${t('Criando pedido no/a')} ${businessName}`;
+        } else if (status === 'declined') {
           title = t('Problema no pagamento');
           detail = t('Selecione outra forma de pagamento');
-        } else if (dispatchingStatus === 'no-match') {
-          title = t('Sem entregadores/as na região');
-          detail = t('Clique para tentar novamente');
-        } else {
-          detail = t('Procurando entregador/a');
+        } else if (status === 'scheduled') {
+          title = `${t('Pedido agendado em')} ${businessName}`;
+          detail = t('Você será avisado quando o pedido sair para a entrega');
+        } else if (status === 'confirmed') {
+          title = `${t('Aguardando')} ${businessName} ${t('confirmar o seu pedido')}`;
+        } else if (status === 'preparing') {
+          title = `${businessName} ${t('está preparando seu pedido')}`;
+        } else if (status === 'ready' || status === 'dispatching') {
+          if (status === 'ready') {
+            title = t('Seu pedido está pronto!');
+          } else if (status === 'dispatching') {
+            title = t('Seu pedido está à caminho!');
+          }
+          if (dispatchingStatus === 'confirmed' || dispatchingStatus === 'outsourced') {
+            if (dispatchingState === 'going-pickup') {
+              detail = `${courier?.name ?? t('Entregador/a')} ${t(
+                'está indo para'
+              )} ${businessName}`;
+            } else if (dispatchingState === 'arrived-pickup') {
+              detail = `${courier?.name ?? t('Entregador/a')} ${t('chegou no/a')} ${businessName}`;
+            } else if (dispatchingState === 'going-destination') {
+              detail = `${t('À caminho de')} ${order.destination!.address.main}`;
+            } else if (dispatchingState === 'arrived-destination') {
+              detail = `${courier?.name ?? t('Entregador/a')} ${t('chegou!')}`;
+            }
+          } else if (dispatchingStatus === 'declined') {
+            title = t('Problema no pagamento');
+            detail = t('Selecione outra forma de pagamento');
+          } else if (dispatchingStatus === 'no-match') {
+            title = t('Sem entregadores/as na região');
+            detail = t('Clique para tentar novamente');
+          } else {
+            detail = t('Procurando entregador/a');
+          }
+        }
+      } else {
+        if (status === 'confirming' || status === 'charged') {
+          if (scheduledTo) {
+            title = `${t('Agendando pedido no/a')} ${businessName}`;
+          } else title = `${t('Criando pedido no/a')} ${businessName}`;
+        } else if (status === 'declined') {
+          title = t('Problema no pagamento');
+          detail = t('Selecione outra forma de pagamento');
+        } else if (status === 'scheduled') {
+          title = `${t('Pedido agendado em')} ${businessName}`;
+          detail = t('Você será avisado quando o estiver pronto para a retirada');
+        } else if (status === 'confirmed') {
+          title = `${t('Aguardando')} ${businessName} ${t('confirmar o seu pedido')}`;
+        } else if (status === 'preparing') {
+          title = `${businessName} ${t('está preparando seu pedido')}`;
+        } else if (status === 'ready') {
+          title = `${t('Seu pedido')} ${showCode} ${t('está pronto!')}`;
+          detail = t('Dirija-se ao restaurante para fazer a retirada');
         }
       }
     } else if (type === 'p2p') {
@@ -108,6 +131,7 @@ export default function ({ order, onPress }: Props) {
       detail =
         type === 'p2p'
           ? order.origin?.intructions ??
+            order.origin?.instructions ??
             `${t('Qualquer dúvida, mande uma mensagem para ')} ${order.consumer.name}`
           : `${t('Informe o código')} ${order.code}`;
     } else if (dispatchingState === 'going-destination') {
@@ -118,6 +142,7 @@ export default function ({ order, onPress }: Props) {
       detail =
         type === 'p2p'
           ? order.destination?.intructions ??
+            order.destination?.instructions ??
             `${t('Qualquer dúvida, mande uma mensagem para ')} ${order.consumer.name}`
           : `${t('Avise')} ${order.consumer.name} ${t('da sua chegada.')}`;
     }

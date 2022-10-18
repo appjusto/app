@@ -1,4 +1,4 @@
-import { Place } from '@appjusto/types';
+import { Fulfillment, Place } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import { isEmpty } from 'lodash';
 import React from 'react';
@@ -10,12 +10,14 @@ type Props = {
   place: Partial<Place>;
   title: string;
   onEdit?: () => void;
+  fulfillment?: Fulfillment;
 };
 
-export default function ({ place, title, onEdit }: Props) {
+export default function ({ place, title, onEdit, fulfillment }: Props) {
+  const instructions = place.intructions ?? place.instructions;
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-      <View style={{ maxWidth: '90%' }}>
+      <View style={{ maxWidth: '90%', marginBottom: halfPadding }}>
         <Text style={{ ...texts.xs, color: colors.green600 }}>{title}</Text>
         <Text style={{ ...texts.md, marginTop: 4 }} numberOfLines={2}>
           {formatAddress(place.address!)}
@@ -26,9 +28,12 @@ export default function ({ place, title, onEdit }: Props) {
         {!isEmpty(place.additionalInfo) && (
           <Text style={{ ...texts.xs, marginTop: 4 }}>{place.additionalInfo}</Text>
         )}
-        <Text style={{ ...texts.xs, marginBottom: halfPadding, marginTop: 4 }}>
-          {place.intructions}
-        </Text>
+        {instructions && fulfillment === 'take-away' ? (
+          <Text style={{ ...texts.xs, marginBottom: halfPadding, marginTop: 4 }}>
+            {instructions}
+          </Text>
+        ) : null}
+        {instructions ? <Text style={{ ...texts.xs, marginTop: 4 }}>{instructions}</Text> : null}
       </View>
       {onEdit && (
         <View style={{ alignSelf: 'center', width: 32, height: 32 }}>

@@ -16,7 +16,7 @@ interface Props {
 
 export const FleetListItem = ({ item, selectedFare, onFareSelect, onFleetDetail }: Props) => {
   // helpers
-  const total = formatCurrency(item.courier.value);
+  const total = formatCurrency(item.courier?.value ?? 0);
   // UI
   return (
     <TouchableOpacity onPress={() => onFareSelect(item)}>
@@ -29,14 +29,14 @@ export const FleetListItem = ({ item, selectedFare, onFareSelect, onFleetDetail 
           borderColor: colors.black,
         }}
       >
-        <Text style={[texts.lg, texts.bold]}>{item.fleet.name}</Text>
+        <Text style={[texts.lg, texts.bold]}>{item.fleet?.name}</Text>
         <View
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <View>
             <Text style={{ ...texts.sm, marginRight: 2 }}>{total}</Text>
           </View>
-          <TouchableOpacity onPress={() => onFleetDetail(item.fleet.id)}>
+          <TouchableOpacity onPress={item.fleet ? () => onFleetDetail(item.fleet!.id) : () => null}>
             <RoundedText>{t('Ver detalhes')}</RoundedText>
           </TouchableOpacity>
         </View>

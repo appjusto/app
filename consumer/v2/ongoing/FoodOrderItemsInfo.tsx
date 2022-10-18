@@ -14,7 +14,9 @@ type Props = {
 export const FoodOrderItemsInfo = ({ order }: Props) => {
   return order.type === 'food' ? (
     <View style={{ flex: 1 }}>
-      {order.status !== 'scheduled' ? <HR height={padding} /> : null}
+      {order.status !== 'scheduled' && order.fulfillment === 'delivery' ? (
+        <HR height={padding} />
+      ) : null}
       <View style={{ paddingTop: halfPadding }}>
         <DeliveredItems order={order} />
       </View>

@@ -15,7 +15,7 @@ interface Props {
 }
 
 export const OrderPlacesSummary = ({ order, onEditStep }: Props) => {
-  const { origin, destination, route, arrivals } = order;
+  const { origin, destination, route, arrivals, fulfillment } = order;
   return (
     <View
       style={{
@@ -24,20 +24,21 @@ export const OrderPlacesSummary = ({ order, onEditStep }: Props) => {
         paddingBottom: order.type === 'p2p' ? padding : undefined,
       }}
     >
-      {origin && (
+      {origin ? (
         <PlaceSummary
           title={order.type === 'p2p' ? t('Retirada') : t('Restaurante')}
           place={origin!}
           onEdit={order.type === 'p2p' ? () => onEditStep(Step.Origin) : undefined}
+          fulfillment={fulfillment}
         />
-      )}
-      {destination && (
+      ) : null}
+      {destination && fulfillment === 'delivery' ? (
         <PlaceSummary
           title={t('Entrega')}
           place={destination}
           onEdit={() => onEditStep(Step.Destination)}
         />
-      )}
+      ) : null}
       {route?.distance && arrivals?.destination?.estimate && order.type === 'p2p' ? (
         <RoundedText>
           {separateWithDot(

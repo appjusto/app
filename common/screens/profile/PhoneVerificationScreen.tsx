@@ -20,6 +20,7 @@ import PaddedView from '../../components/containers/PaddedView';
 import { phoneFormatter } from '../../components/inputs/pattern-input/formatters';
 import { showToast } from '../../store/ui/actions';
 import { biggerPadding, colors, doublePadding, padding, screens, texts } from '../../styles';
+import { getFirebaseAuthErrorMessages } from './getFirebaseAuthErrorMessages';
 
 export type PhoneVerificationParamList = {
   PhoneVerificationScreen: {
@@ -110,10 +111,7 @@ export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
           );
           setState('unrecoverable-error');
         } else {
-          if (message.indexOf('SMS code has expired') > 0)
-            message = t('O código expirou. Clique em "Enviar novamente" e tente de novo.');
-          else if (message.indexOf('phone auth credential is invalid') > 0)
-            message = t('O código não é valido. Clique em "Enviar novamente" e tente de novo.');
+          message = getFirebaseAuthErrorMessages(error);
           setState('error');
         }
         setError(message);

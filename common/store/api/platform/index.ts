@@ -1,4 +1,3 @@
-import { FirestoreRefs } from '@appjusto/firebase-refs';
 import {
   Bank,
   Classification,
@@ -6,9 +5,11 @@ import {
   Issue,
   IssueType,
   PlatformAccess,
+  PlatformFees,
   PlatformParams,
 } from '@appjusto/types';
 import { getDoc, getDocs, orderBy, query, where } from 'firebase/firestore';
+import { FirestoreRefs } from '../../refs/FirestoreRefs';
 import FilesApi from '../files';
 import { documentsAs } from '../types';
 
@@ -19,6 +20,11 @@ export default class PlatformApi {
   async fetchPlatformParams() {
     const snapshot = await getDoc(this.firestoreRefs.getPlatformParamsRef());
     return snapshot.data() as PlatformParams;
+  }
+
+  async fetchPlatformFees() {
+    const snapshot = await getDoc(this.firestoreRefs.getPlatformFeesRef());
+    return snapshot.data() as PlatformFees;
   }
 
   async fetchPlatformAccess() {

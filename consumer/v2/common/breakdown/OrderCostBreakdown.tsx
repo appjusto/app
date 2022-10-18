@@ -1,4 +1,4 @@
-import { Fare, Order } from '@appjusto/types';
+import { Fare, Order, WithId } from '@appjusto/types';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Text, View } from 'react-native';
@@ -11,7 +11,7 @@ import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 
 type Props = {
-  order: Order;
+  order: WithId<Order>;
   selectedFare: Fare | undefined;
   hideItems?: boolean;
 };

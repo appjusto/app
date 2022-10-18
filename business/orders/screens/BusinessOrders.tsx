@@ -51,10 +51,9 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // setting business status to open whenever a manager logs in during business hours
   React.useEffect(() => {
     (async () => {
-      if (!business) return;
-      if (!business.enabled) return;
-      if (!business.schedules) return;
-      if (!business.status) return;
+      if (!business?.enabled) return;
+      if (!business?.schedules) return;
+      if (!business?.status) return;
       if (!getServerTime) return;
       const today = getServerTime();
       const shouldBeOpen = businessShouldBeOpen(today, business.schedules);
@@ -65,7 +64,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
         await api.business().updateBusiness(business.id, { status: 'closed' });
       }
     })();
-  }, [business, getServerTime, api]);
+  }, [business?.enabled, business?.schedules, business?.id, business?.status, getServerTime, api]);
   // getting business from SelectBusiness screen
   React.useEffect(() => {
     if (businessId?.length) {
@@ -87,7 +86,6 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
     // TODO: what should we do?
     return null;
   }
-  console.log(business?.id);
 
   return (
     <View style={screens.config}>

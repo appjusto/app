@@ -11,6 +11,7 @@ import { useCourierRecentOrdersRevenue } from '../../../../common/store/api/orde
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
+import { usePlatformParams } from '../../../../common/utils/platform/usePlatformParams';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
@@ -34,6 +35,8 @@ export default function ({ navigation, route }: Props) {
   // state
   const info = useMarketplaceAccountInfo();
   const revenue = useCourierRecentOrdersRevenue();
+  const platformParams = usePlatformParams();
+  const minWithdrawValue = platformParams?.marketplace.minWithdrawValue ?? 600;
   // tracking
   useSegmentScreen('DeliveryHistory');
   // UI
@@ -44,6 +47,7 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
+
   const availableForWithdraw = convertBalance(info.balance_available_for_withdraw);
   const minimum = 5;
   return (
@@ -62,7 +66,6 @@ export default function ({ navigation, route }: Props) {
                 {/* available for withdraw */}
                 <PaddedView
                   style={{
-                    marginTop: halfPadding,
                     ...borders.default,
                     borderColor: colors.white,
                     backgroundColor: colors.white,
@@ -105,49 +108,10 @@ export default function ({ navigation, route }: Props) {
                         textAlign: 'center',
                       }}
                     >
-                      {t('Valor mínimo de R$ 5,00 para transferência')}
+                      {`${t('Valor mínimo de')} ${formatCurrency(minWithdrawValue)} ${t(
+                        'para transferência'
+                      )}`}
                     </Text>
-                  </View>
-                </PaddedView>
-                {/* advance */}
-                <PaddedView
-                  style={{
-                    ...borders.default,
-                    borderColor: colors.white,
-                    backgroundColor: colors.white,
-                    marginTop: padding,
-                  }}
-                >
-                  <View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <MaterialIcons name="timer" size={20} color={colors.grey700} />
-                      <Text
-                        style={{
-                          ...texts.sm,
-                          color: colors.grey700,
-                          marginLeft: halfPadding,
-                          paddingBottom: 2,
-                        }}
-                      >
-                        {t('Em faturamento')}
-                      </Text>
-                    </View>
-
-                    <Text style={{ ...texts.x4l }}>{info.receivable_balance}</Text>
-
-                    <DefaultButton
-                      style={{ marginTop: padding }}
-                      title={t('Antecipar valores')}
-                      onPress={() =>
-                        navigation.navigate('DeliveriesNavigator', {
-                          screen: 'Receivables',
-                          params: {
-                            receivableBalance: info!.receivable_balance,
-                          },
-                        })
-                      }
-                      variant="secondary"
-                    />
                   </View>
                 </PaddedView>
                 {/* week summary */}
@@ -182,10 +146,48 @@ export default function ({ navigation, route }: Props) {
 
                     <DefaultButton
                       style={{ marginTop: padding }}
-                      title={t('Ver corridas da semana')}
+                      title={t('Ver histórico de corridas')}
                       onPress={() =>
                         navigation.navigate('DeliveriesNavigator', {
                           screen: 'DeliveryHistoryByWeek',
+                        })
+                      }
+                      variant="secondary"
+                    />
+                  </View>
+                </PaddedView>
+                {/* advance */}
+                <PaddedView
+                  style={{
+                    ...borders.default,
+                    borderColor: colors.white,
+                    backgroundColor: colors.white,
+                    marginTop: padding,
+                  }}
+                >
+                  <View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <MaterialIcons name="timer" size={20} color={colors.grey700} />
+                      <Text
+                        style={{
+                          ...texts.sm,
+                          color: colors.grey700,
+                          marginLeft: halfPadding,
+                          paddingBottom: 2,
+                        }}
+                      >
+                        {t('Disponível para antecipação')}
+                      </Text>
+                    </View>
+
+                    <Text style={{ ...texts.x4l }}>{formatCurrency(info.advanceable_value)}</Text>
+
+                    <DefaultButton
+                      style={{ marginTop: padding }}
+                      title={t('Ver detalhes')}
+                      onPress={() =>
+                        navigation.navigate('DeliveriesNavigator', {
+                          screen: 'Receivables',
                         })
                       }
                       variant="secondary"
