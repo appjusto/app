@@ -43,8 +43,8 @@ export const FulfillmentSwitch = ({ orderId }: Props) => {
     order?.fulfillment ?? 'delivery'
   );
   // side effects
-  // remembering previous selection of fulfillmente if user leaves checkout and comes back
-  // when loading component for the firs time
+  // remembering previous selection of fulfillment if user leaves checkout and comes back
+  // when loading component for the first time
   React.useEffect(() => {
     if (order?.fulfillment === 'delivery') setTranslateX(leftmost);
     if (order?.fulfillment === 'take-away') setTranslateX(rightmost);
