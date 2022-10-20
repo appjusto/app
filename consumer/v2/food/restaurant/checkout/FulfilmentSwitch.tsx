@@ -1,6 +1,6 @@
 import { Fulfillment } from '@appjusto/types';
 import React from 'react';
-import { Animated, Dimensions, LayoutAnimation, Text, View } from 'react-native';
+import { Animated, Dimensions, LayoutAnimation, Text, TouchableOpacity, View } from 'react-native';
 import {
   GestureEvent,
   PanGestureHandler,
@@ -61,6 +61,32 @@ export const FulfillmentSwitch = ({ orderId }: Props) => {
       Sentry.Native.captureException(error);
     }
   };
+  const onDelivery = async () => {
+    try {
+      setOrderFulfillment('delivery');
+      setTranslateX(leftmost);
+      setLoading(true);
+      await api.order().updateOrder(orderId, { fulfillment: 'delivery' });
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      Sentry.Native.captureException(error);
+    }
+  };
+  const onTakeAway = async () => {
+    try {
+      setOrderFulfillment('take-away');
+      setTranslateX(rightmost);
+      setLoading(true);
+      await api.order().updateOrder(orderId, { fulfillment: 'take-away' });
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      Sentry.Native.captureException(error);
+    }
+  };
   // UI
   return (
     <View
@@ -80,10 +106,31 @@ export const FulfillmentSwitch = ({ orderId }: Props) => {
             paddingHorizontal: doublePadding,
             backgroundColor: colors.green700,
             borderRadius: 28,
+            width: '100%',
           }}
         >
-          <Text style={{ color: colors.white }}>🛵 {t('Entregar')}</Text>
-          <Text style={{ color: colors.white }}>🚶‍♂️ {t('Retirar')}</Text>
+          <TouchableOpacity
+            onPress={onDelivery}
+            style={{
+              width: '50%',
+              height: '100%',
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+            }}
+          >
+            <Text style={{ color: colors.white }}>🛵 {t('Entregar')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={onTakeAway}
+            style={{
+              width: '50%',
+              height: '100%',
+              justifyContent: 'center',
+              alignItems: 'flex-end',
+            }}
+          >
+            <Text style={{ color: colors.white }}>🚶‍♂️ {t('Retirar')}</Text>
+          </TouchableOpacity>
         </View>
         <PanGestureHandler onGestureEvent={onGestureEvent} onEnded={onGestureEnded}>
           <Animated.View
