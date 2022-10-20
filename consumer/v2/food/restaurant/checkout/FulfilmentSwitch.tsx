@@ -1,6 +1,14 @@
 import { Fulfillment } from '@appjusto/types';
 import React from 'react';
-import { Animated, Dimensions, LayoutAnimation, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Animated,
+  Dimensions,
+  LayoutAnimation,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {
   GestureEvent,
   PanGestureHandler,
@@ -8,7 +16,8 @@ import {
 } from 'react-native-gesture-handler';
 import * as Sentry from 'sentry-expo';
 import { ApiContext } from '../../../../../common/app/context';
-import { colors, doublePadding, halfPadding, padding } from '../../../../../common/styles';
+import { useContextActiveOrder } from '../../../../../common/store/context/order';
+import { colors, doublePadding, halfPadding, padding, screens } from '../../../../../common/styles';
 import SliderButton from '../../../../../courier/approved/ongoing/SliderButton';
 import { t } from '../../../../../strings';
 type Props = {
@@ -26,10 +35,20 @@ const threshold = 40;
 export const FulfillmentSwitch = ({ orderId }: Props) => {
   // context
   const api = React.useContext(ApiContext);
+  const order = useContextActiveOrder();
   // state
   const [translateX, setTranslateX] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
-  const [orderFulfillment, setOrderFulfillment] = React.useState<Fulfillment>('delivery');
+  const [orderFulfillment, setOrderFulfillment] = React.useState<Fulfillment>(
+    order?.fulfillment ?? 'delivery'
+  );
+  // side effects
+  // remembering previous selection of fulfillmente if user leaves checkout and comes back
+  // when loading component for the firs time
+  React.useEffect(() => {
+    if (order?.fulfillment === 'delivery') setTranslateX(leftmost);
+    if (order?.fulfillment === 'take-away') setTranslateX(rightmost);
+  }, []);
   // UI handlers
   const onGestureEvent = (event: GestureEvent<PanGestureHandlerEventPayload>) => {
     const { translationX } = event.nativeEvent;
@@ -88,6 +107,13 @@ export const FulfillmentSwitch = ({ orderId }: Props) => {
     }
   };
   // UI
+  if (!order) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="small" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <View
       style={{
