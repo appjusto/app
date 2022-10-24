@@ -90,7 +90,7 @@ export default function ({ navigation, route }: Props) {
     if (!selectedBank) return '';
     if (selectedBank.code !== '104') return selectedBank.accountPattern;
     const accountCode = getCEFAccountCode(personType, type);
-    const patternPrefix = accountCode !== '1288' ? '9' : '';
+    const patternPrefix = accountCode === '1288' ? '9' : '';
     return `${accountCode}${patternPrefix}${selectedBank.accountPattern}`;
   })();
   const accountFormatter = accountPattern
