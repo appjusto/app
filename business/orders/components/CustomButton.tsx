@@ -42,14 +42,20 @@ export const CustomButton = ({
       buttonTitle = t('Pedido pronto');
     }
     if (status === 'ready') {
-      if (dispatchingState === 'arrived-pickup') {
+      if (order.fulfillment === 'take-away') {
         buttonTitle = t('Entregar pedido');
         textColor = colors.black;
         background = colors.darkYellow;
       } else {
-        buttonTitle = t('Entregar pedido');
-        textColor = colors.white;
-        background = colors.grey700;
+        if (dispatchingState === 'arrived-pickup') {
+          buttonTitle = t('Entregar pedido');
+          textColor = colors.black;
+          background = colors.darkYellow;
+        } else {
+          buttonTitle = t('Entregar pedido');
+          textColor = colors.white;
+          background = colors.grey700;
+        }
       }
     }
   }
