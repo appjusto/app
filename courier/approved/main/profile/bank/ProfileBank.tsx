@@ -83,20 +83,17 @@ export default function ({ navigation, route }: Props) {
   const agencyFormatter = selectedBank?.agencyPattern
     ? hyphenFormatter(selectedBank?.agencyPattern.indexOf('-'))
     : undefined;
-  const accountParser = selectedBank?.accountPattern
-    ? numbersAndLettersParser(selectedBank?.accountPattern)
-    : undefined;
   const accountPattern = (() => {
-    if (!selectedBank) return '';
+    if (!selectedBank) return undefined;
     if (selectedBank.code !== '104') return selectedBank.accountPattern;
     const accountCode = getCEFAccountCode(personType, type);
     const patternPrefix = accountCode === '1288' ? '9' : '';
     return `${patternPrefix}${selectedBank.accountPattern}`;
   })();
+  const accountParser = accountPattern ? numbersAndLettersParser(accountPattern) : undefined;
   const accountFormatter = accountPattern
     ? hyphenFormatter(accountPattern.indexOf('-'))
     : undefined;
-  const accountMask = selectedBank?.accountPattern;
   //handlers
   const submitBankHandler = async () => {
     Keyboard.dismiss();
@@ -129,6 +126,7 @@ export default function ({ navigation, route }: Props) {
     track('courier updated profile with bak info');
     navigation.goBack();
   };
+  console.log(account, accountFormatter ? accountFormatter(account) : '');
   // UI
   return (
     <View style={{ ...screens.config }}>
@@ -310,7 +308,7 @@ export default function ({ navigation, route }: Props) {
                     : t('Número da conta')
                 }
                 value={account}
-                mask={accountMask}
+                mask={accountPattern}
                 parser={accountParser}
                 formatter={accountFormatter}
                 editable={!profileApproved && !!selectedBank}
@@ -321,11 +319,8 @@ export default function ({ navigation, route }: Props) {
                 blurOnSubmit
                 onChangeText={(text) => setAccount(text)}
                 onBlur={() => {
-                  if (account.length > 0) {
-                    const paddedAccount = numbersAndLettersParser(
-                      selectedBank!.accountPattern,
-                      true
-                    )(account);
+                  if (account && accountPattern) {
+                    const paddedAccount = numbersAndLettersParser(accountPattern, true)(account);
                     setAccount(paddedAccount);
                   }
                 }}
