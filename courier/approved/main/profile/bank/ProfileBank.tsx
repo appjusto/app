@@ -91,7 +91,7 @@ export default function ({ navigation, route }: Props) {
     if (selectedBank.code !== '104') return selectedBank.accountPattern;
     const accountCode = getCEFAccountCode(personType, type);
     const patternPrefix = accountCode === '1288' ? '9' : '';
-    return `${accountCode}${patternPrefix}${selectedBank.accountPattern}`;
+    return `${patternPrefix}${selectedBank.accountPattern}`;
   })();
   const accountFormatter = accountPattern
     ? hyphenFormatter(accountPattern.indexOf('-'))
@@ -109,7 +109,10 @@ export default function ({ navigation, route }: Props) {
       );
       return;
     }
-
+    let accountFormatted = accountFormatter!(account);
+    if (selectedBank.code === '104') {
+      accountFormatted = `${getCEFAccountCode(personType, type)}${accountFormatted}`;
+    }
     await dispatch(
       updateProfile(api)(courier!.id!, {
         bankAccount: {
@@ -118,7 +121,7 @@ export default function ({ navigation, route }: Props) {
           agency,
           agencyFormatted: agencyFormatter!(agency),
           account,
-          accountFormatted: accountFormatter!(account),
+          accountFormatted,
           personType,
         },
       })
