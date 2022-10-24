@@ -7,6 +7,7 @@ import { Keyboard, Pressable, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
+import { getCEFAccountCode } from '.';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../../../common/components/buttons/RadioButton';
@@ -85,31 +86,16 @@ export default function ({ navigation, route }: Props) {
   const accountParser = selectedBank?.accountPattern
     ? numbersAndLettersParser(selectedBank?.accountPattern)
     : undefined;
-  const accountFormatter = selectedBank?.accountPattern
-    ? hyphenFormatter(selectedBank?.accountPattern.indexOf('-'))
-    : undefined;
-  const cefAccountCode = (() => {
-    if (!selectedBank) return;
-    if (selectedBank.code === '104') {
-      if (personType === 'Pessoa Jurídica') {
-        if (type === 'Corrente') {
-          return '003';
-        } else if (type === 'Poupança') {
-          return '022';
-        }
-      } else if (personType === 'Pessoa Física') {
-        if (type === 'Corrente') {
-          return '001';
-        } else if (type === 'Simples') {
-          return '002';
-        } else if (type === 'Poupança') {
-          return '013';
-        } else if (type === 'Nova Poupança') {
-          return '1288';
-        }
-      }
-    } else return undefined;
+  const accountPattern = (() => {
+    if (!selectedBank) return '';
+    if (selectedBank.code !== '104') return selectedBank.accountPattern;
+    const accountCode = getCEFAccountCode(personType, type);
+    const patternPrefix = accountCode !== '1288' ? '9' : '';
+    return `${accountCode}${patternPrefix}${selectedBank.accountPattern}`;
   })();
+  const accountFormatter = accountPattern
+    ? hyphenFormatter(accountPattern.indexOf('-'))
+    : undefined;
   const accountMask = selectedBank?.accountPattern;
   //handlers
   const submitBankHandler = async () => {
@@ -123,6 +109,7 @@ export default function ({ navigation, route }: Props) {
       );
       return;
     }
+
     await dispatch(
       updateProfile(api)(courier!.id!, {
         bankAccount: {
@@ -131,12 +118,7 @@ export default function ({ navigation, route }: Props) {
           agency,
           agencyFormatted: agencyFormatter!(agency),
           account,
-          accountFormatted:
-            selectedBank.code !== '104'
-              ? accountFormatter!(account)
-              : personType === 'Pessoa Física' && type === 'Nova Poupança'
-              ? cefAccountCode + accountFormatter!(account)
-              : cefAccountCode + '0' + accountFormatter!(account),
+          accountFormatted: accountFormatter!(account),
           personType,
         },
       })
