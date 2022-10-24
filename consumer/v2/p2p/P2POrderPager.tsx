@@ -35,12 +35,9 @@ type Props = {
   selectedPaymentMethodId?: string;
   isLoading: boolean;
   navigateToAddressComplete: (returnParam: string, value?: Place) => void;
-  navigateToFillPaymentInfo: () => void;
   navigateFleetDetail: (fleetId: string) => void;
   navigateToTransportableItems: () => void;
   onSubmit: () => void;
-  navigateToPixPayment: (total: number, fleetId: string) => void;
-  navigateToAboutCharges: () => void;
   cpf: string;
   setCpf: (value: string) => void;
   wantsCpf: boolean;
@@ -62,12 +59,9 @@ export default function ({
   selectedPaymentMethodId,
   isLoading,
   navigateToAddressComplete,
-  navigateToFillPaymentInfo,
   navigateFleetDetail,
   navigateToTransportableItems,
   onSubmit,
-  navigateToAboutCharges,
-  navigateToPixPayment,
   cpf,
   setCpf,
   wantsCpf,
@@ -365,11 +359,9 @@ export default function ({
               payment={
                 <OrderPayment
                   selectedPaymentMethodId={selectedPaymentMethodId}
-                  onEditPaymentMethod={navigateToFillPaymentInfo}
                   isSubmitEnabled={canSubmit}
                   onSubmit={onSubmit}
                   activityIndicator={isLoading}
-                  navigateToAboutCharges={navigateToAboutCharges}
                   orderId={order.id}
                   navigateToCompleteProfile={navigateToCompleteProfile}
                   navigateToSelectPayment={navigateToSelectPayment}

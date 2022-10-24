@@ -20,7 +20,6 @@ import { useQuotes } from '../../../common/store/api/order/hooks/useQuotes';
 import { useProfileSummary } from '../../../common/store/api/profile/useProfileSummary';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { getConsumer } from '../../../common/store/consumer/selectors';
-import { isConsumerProfileComplete } from '../../../common/store/consumer/validators';
 import { showToast } from '../../../common/store/ui/actions';
 import { screens } from '../../../common/styles';
 import { t } from '../../../strings';
@@ -148,22 +147,6 @@ export default function ({ navigation, route }: Props) {
     },
     [navigation]
   );
-  // navigate to ProfileAddCard or ProfilePaymentMethods to add or select payment method
-  const navigateToFillPaymentInfo = React.useCallback(() => {
-    track('adding payment info');
-    // if user has no payment method, go direct to 'AddCard' screen
-    if (!isConsumerProfileComplete(consumer)) {
-      const returnScreen = !selectedPaymentMethodId ? 'ProfileAddCard' : 'CreateOrderP2P';
-      navigation.navigate('CommonProfileEdit', {
-        returnScreen,
-        returnNextScreen: 'CreateOrderP2P',
-      });
-    } else if (!selectedPaymentMethodId) {
-      navigation.navigate('ProfileAddCard', { returnScreen: 'CreateOrderP2P' });
-    } else {
-      navigation.navigate('ProfilePaymentMethods', { returnScreen: 'CreateOrderP2P' });
-    }
-  }, [consumer, navigation, selectedPaymentMethodId]);
   // navigate to complete profile
   const navigateToCompleteProfile = () => {
     navigation.navigate('CommonProfileEdit', { returnScreen: 'CreateOrderP2P' });
@@ -244,7 +227,6 @@ export default function ({ navigation, route }: Props) {
         isLoading={isLoading}
         selectedPaymentMethodId={selectedPaymentMethodId}
         navigateToAddressComplete={navigateToAddressComplete}
-        navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         navigateFleetDetail={(fleetId: string) => {
           navigation.navigate('FleetDetail', { fleetId });
         }}
@@ -252,12 +234,6 @@ export default function ({ navigation, route }: Props) {
           navigation.navigate('TransportableItems');
         }}
         onSubmit={() => placeOrderHandler(selectedFare?.fleet?.id!)}
-        navigateToPixPayment={(total, fleetId) => {
-          navigation.navigate('PayWithPix', { orderId: orderId!, total, fleetId });
-        }}
-        navigateToAboutCharges={() => {
-          navigation.navigate('AboutCharges');
-        }}
         wantsCpf={wantsCpf}
         onSwitchValueChange={() => setWantsCpf(!wantsCpf)}
         cpf={cpf}

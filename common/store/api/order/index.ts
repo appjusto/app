@@ -354,7 +354,7 @@ export default class OrderApi {
     payment: PlaceOrderPayloadPayment,
     invoiceWithCPF: boolean,
     fleetId?: string,
-    coordinates?: LatLng,
+    coordinates?: LatLng | null,
     additionalInfo?: string,
     wantToShareData?: boolean
   ) {

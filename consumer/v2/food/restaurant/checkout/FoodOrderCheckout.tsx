@@ -20,7 +20,6 @@ import { useQuotes } from '../../../../../common/store/api/order/hooks/useQuotes
 import { useProfileSummary } from '../../../../../common/store/api/profile/useProfileSummary';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
-import { isConsumerProfileComplete } from '../../../../../common/store/consumer/validators';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, screens } from '../../../../../common/styles';
@@ -277,20 +276,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
   };
   // navigate to ProfileAddCard or ProfilePaymentMethods to add or select payment method
-  const navigateToFillPaymentInfo = React.useCallback(() => {
-    // if user has no payment method, go direct to 'AddCard' screen
-    if (!isConsumerProfileComplete(consumer)) {
-      const returnScreen = !selectedPaymentMethodId ? 'ProfileAddCard' : 'FoodOrderCheckout';
-      navigation.navigate('CommonProfileEdit', {
-        returnScreen,
-        returnNextScreen: 'FoodOrderCheckout',
-      });
-    } else if (!selectedPaymentMethodId) {
-      navigation.navigate('ProfileAddCard', { returnScreen: 'FoodOrderCheckout' });
-    } else {
-      navigation.navigate('ProfilePaymentMethods', { returnScreen: 'FoodOrderCheckout' });
-    }
-  }, [consumer, navigation, selectedPaymentMethodId]);
 
   const navigateToCompleteProfile = () => {
     navigation.navigate('CommonProfileEdit', { returnScreen: 'FoodOrderCheckout' });
@@ -391,14 +376,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             selectedPaymentMethodId={selectedPaymentMethodId}
             isSubmitEnabled={canSubmit}
             activityIndicator={isLoading}
-            onEditPaymentMethod={navigateToFillPaymentInfo}
             onSubmit={() => {
               if (!shouldVerifyPhone && order.fulfillment === 'delivery')
                 setDestinationModalVisible(true);
               else placeOrderHandler();
-            }}
-            navigateToAboutCharges={() => {
-              navigation.navigate('AboutCharges');
             }}
             navigateToCompleteProfile={navigateToCompleteProfile}
             navigateToSelectPayment={() =>
