@@ -113,7 +113,6 @@ export const OrderDetail = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  console.log(order.status);
   return (
     <View style={{ ...screens.config }}>
       <ScrollView
