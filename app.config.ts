@@ -67,6 +67,11 @@ export default (context: ConfigContext): ExpoConfig => {
     },
     extra: extra(),
     hooks: hooks(),
+    // facebookScheme: 'fb' + facebookAppId,
+    // facebookAppId: create env var,
+    facebookDisplayName: 'AppJusto',
+    facebookAutoLogAppEventsEnabled: true,
+    facebookAdvertiserIDCollectionEnabled: true,
     plugins:
       flavor === 'courier'
         ? [
@@ -77,10 +82,25 @@ export default (context: ConfigContext): ExpoConfig => {
                 sounds: ['./assets/sounds/order_request.wav'],
               },
             ],
+            [
+              'expo-ads-facebook',
+              {
+                userTrackingPermission:
+                  'This identifier will be used to deliver personalized ads to you.',
+              },
+            ],
             'expo-splash-screen',
             'sentry-expo',
           ]
-        : undefined,
+        : [
+            [
+              'expo-ads-facebook',
+              {
+                userTrackingPermission:
+                  'This identifier will be used to deliver personalized ads to you.',
+              },
+            ],
+          ],
   };
   // console.log(config);
   return config;
