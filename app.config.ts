@@ -6,6 +6,7 @@ import { version, versionCode } from './version.json';
 const {
   FLAVOR,
   ENVIRONMENT,
+  FACEBOOK_APP_ID,
   FIREBASE_API_KEY_ANDROID,
   FIREBASE_API_KEY_IOS,
   FIREBASE_REGION,
@@ -67,8 +68,8 @@ export default (context: ConfigContext): ExpoConfig => {
     },
     extra: extra(),
     hooks: hooks(),
-    // facebookScheme: 'fb' + facebookAppId,
-    // facebookAppId: create env var,
+    facebookScheme: 'fb' + FACEBOOK_APP_ID,
+    facebookAppId: FACEBOOK_APP_ID,
     facebookDisplayName: 'AppJusto',
     facebookAutoLogAppEventsEnabled: true,
     facebookAdvertiserIDCollectionEnabled: true,
@@ -266,6 +267,7 @@ const extra = (): Extra => ({
     appId: ALGOLIA_APPID!,
     apiKey: ALGOLIA_APIKEY!,
   },
+  facebookAppId: FACEBOOK_APP_ID!,
 });
 
 const hooks = () => ({
