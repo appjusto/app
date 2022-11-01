@@ -49,7 +49,6 @@ export default function ({ navigation, route }: Props) {
   // tracking
   useSegmentScreen('DeliverySummary');
   if (!order?.fare?.courier || ledgerEntry === undefined) {
-    // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -58,7 +57,8 @@ export default function ({ navigation, route }: Props) {
   }
   const delivery = order.fare.courier.value - (order.fare.courier.processing?.value ?? 0);
   const tip = (order.tip?.value ?? 0) - (order.tip?.processing?.value ?? 0);
-  const total = delivery + tip;
+  const total = delivery + tip + (ledgerEntry?.value ?? 0);
+  console.log(ledgerEntry);
   // UI
   return (
     <View style={{ ...screens.default }}>
@@ -96,7 +96,12 @@ export default function ({ navigation, route }: Props) {
         </PaddedView>
         <HR height={padding} />
         <PaddedView>
-          <OrderCostBreakdown order={order} selectedFare={order.fare} hideItems />
+          <OrderCostBreakdown
+            order={order}
+            selectedFare={order.fare}
+            hideItems
+            ledgerEntry={ledgerEntry}
+          />
         </PaddedView>
       </ScrollView>
     </View>

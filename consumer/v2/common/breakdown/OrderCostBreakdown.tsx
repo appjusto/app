@@ -1,4 +1,4 @@
-import { Fare, Order, WithId } from '@appjusto/types';
+import { Fare, LedgerEntry, Order, WithId } from '@appjusto/types';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { Text, View } from 'react-native';
@@ -14,9 +14,10 @@ type Props = {
   order: WithId<Order>;
   selectedFare: Fare | undefined;
   hideItems?: boolean;
+  ledgerEntry?: LedgerEntry | null;
 };
 
-export const OrderCostBreakdown = ({ order, selectedFare, hideItems }: Props) => {
+export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry }: Props) => {
   const flavor = useSelector(getFlavor);
   return (
     <View style={{ flex: 1 }}>
@@ -70,6 +71,19 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems }: Props) =>
                   {formatCurrency(order.tip.processing.value)}
                 </Text>
               </View>
+            </View>
+          ) : null}
+          {ledgerEntry && flavor === 'courier' ? (
+            <View>
+              <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={{ ...texts.sm }}>{t('Extra *')}</Text>
+                <Text style={{ ...texts.sm }}>{formatCurrency(ledgerEntry.value)}</Text>
+              </View>
+              {ledgerEntry.description ? (
+                <Text style={{ ...texts.xs, color: colors.black, marginTop: padding }}>
+                  * {ledgerEntry.description}
+                </Text>
+              ) : null}
             </View>
           ) : null}
           {flavor === 'courier' ? (
