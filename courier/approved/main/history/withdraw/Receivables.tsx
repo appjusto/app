@@ -60,6 +60,26 @@ export const Receivables = ({ navigation, route }: Props) => {
       scrollIndicatorInsets={{ right: 1 }}
     >
       <PaddedView>
+        <PaddedView
+          style={{
+            width: '100%',
+            borderRadius: padding,
+            backgroundColor: colors.darkYellow,
+            justifyContent: 'center',
+            marginBottom: padding,
+          }}
+        >
+          <Text style={[texts.sm, texts.bold]}>
+            {t(
+              'Desde o dia 11/10/2022, os valores dos pedidos entregues já ficam disponíveis na sua conta 24 horas depois da corrida, não sendo mais necessário fazer antecipação.'
+            )}
+          </Text>
+          <Text style={[texts.sm]}>
+            {t(
+              'Você poderá continuar utilizando o fluxo normal de antecipações para corridas realizadas antes do dia 11/10/2022 que foram pagas com cartão de crédito.'
+            )}
+          </Text>
+        </PaddedView>
         <Text style={{ ...texts.sm }}>
           {t(
             'O AppJusto não fica com nada do valor do seu trabalho. Todos os pagamentos são processados com segurança pela operadora financeira Iugu.'
@@ -78,7 +98,12 @@ export const Receivables = ({ navigation, route }: Props) => {
         </View>
         <Text style={{ ...texts.sm, paddingBottom: halfPadding }}>
           {t(
-            'O prazo padrão para processar os pagamentos é de 30 dias. Para antecipar, você paga uma taxa de até 2.75% por operação. Funciona assim: se for antecipar no primeiro dia útil após a corrida, você pagará o valor cheio de 2.75%, e a taxa diminui proporcionalmente a cada dia que passa. Se você esperar 15 dias, por exemplo, pagará 0.99%.'
+            'O valor a antecipar pode variar de acordo com o valor solicitado. Isso acontece por que a Iugu seleciona o conjunto de faturas, priorizando aquelas mais próximas de sua data de compensação, em que a soma de seus valores se aproxima ao máximo do valor solicitado.'
+          )}
+        </Text>
+        <Text style={{ ...texts.sm, paddingBottom: halfPadding }}>
+          {t(
+            'O prazo padrão para processar os pagamentos é de 30 dias. Para antecipar, você paga uma taxa de até 2.75% por operação. Funciona assim: se for antecipar no primeiro dia útil após a corrida, você pagará o valor cheio de 2.75%, e a taxa diminui proporcionalmente a cada dia que passa. Se você esperar 15 dias, por exemplo, pagará 1,37% (metade dos 2,75%).'
           )}
         </Text>
         <Text style={{ ...texts.sm, color: colors.red }}>

@@ -86,7 +86,7 @@ export default function ({ order, onPress }: Props) {
         } else if (status === 'preparing') {
           title = `${businessName} ${t('está preparando seu pedido')}`;
         } else if (status === 'ready') {
-          title = `${t('Seu pedido')} ${showCode} {t('está pronto!)}`;
+          title = `${t('Seu pedido')} ${showCode} ${t('está pronto!')}`;
           detail = t('Dirija-se ao restaurante para fazer a retirada');
         }
       }
@@ -131,6 +131,7 @@ export default function ({ order, onPress }: Props) {
       detail =
         type === 'p2p'
           ? order.origin?.intructions ??
+            order.origin?.instructions ??
             `${t('Qualquer dúvida, mande uma mensagem para ')} ${order.consumer.name}`
           : `${t('Informe o código')} ${order.code}`;
     } else if (dispatchingState === 'going-destination') {
@@ -141,6 +142,7 @@ export default function ({ order, onPress }: Props) {
       detail =
         type === 'p2p'
           ? order.destination?.intructions ??
+            order.destination?.instructions ??
             `${t('Qualquer dúvida, mande uma mensagem para ')} ${order.consumer.name}`
           : `${t('Avise')} ${order.consumer.name} ${t('da sua chegada.')}`;
     }

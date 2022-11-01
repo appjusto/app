@@ -11,6 +11,7 @@ import { useCourierRecentOrdersRevenue } from '../../../../common/store/api/orde
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { borders, colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
+import { usePlatformParams } from '../../../../common/utils/platform/usePlatformParams';
 import { t } from '../../../../strings';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
@@ -34,6 +35,8 @@ export default function ({ navigation, route }: Props) {
   // state
   const info = useMarketplaceAccountInfo();
   const revenue = useCourierRecentOrdersRevenue();
+  const platformParams = usePlatformParams();
+  const minWithdrawValue = platformParams?.marketplace.minWithdrawValue ?? 600;
   // tracking
   useSegmentScreen('DeliveryHistory');
   // UI
@@ -105,7 +108,9 @@ export default function ({ navigation, route }: Props) {
                         textAlign: 'center',
                       }}
                     >
-                      {t('Valor mínimo de R$ 5,00 para transferência')}
+                      {`${t('Valor mínimo de')} ${formatCurrency(minWithdrawValue)} ${t(
+                        'para transferência'
+                      )}`}
                     </Text>
                   </View>
                 </PaddedView>

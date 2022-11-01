@@ -1,4 +1,4 @@
-import { InvoiceType, WithId } from '@appjusto/types';
+import { WithId } from '@appjusto/types';
 import { IuguInvoiceStatus } from '@appjusto/types/payment/iugu';
 import {
   collection,
@@ -17,7 +17,6 @@ import { documentsAs } from '../../types';
 interface FetchOrderInvoicesOptions {
   orderId?: string;
   consumerId?: string;
-  invoiceType?: InvoiceType;
   status?: IuguInvoiceStatus;
   limit?: number;
 }
@@ -32,7 +31,6 @@ export default class InvoiceApi {
     const constraints = [orderBy('createdOn', 'desc')];
     if (options?.orderId) constraints.push(where('orderId', '==', options.orderId));
     if (options?.consumerId) constraints.push(where('consumerId', '==', options.consumerId));
-    if (options?.invoiceType) constraints.push(where('invoiceType', '==', options.invoiceType));
     if (options?.status) constraints.push(where('status', '==', options.status));
     if (options?.limit) constraints.push(limit(options.limit));
     return onSnapshot(

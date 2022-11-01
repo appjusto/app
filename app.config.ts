@@ -194,6 +194,7 @@ const permissions = () =>
     : flavor === 'consumer'
     ? ['ACCESS_FINE_LOCATION', 'ACCESS_COARSE_LOCATION']
     : [
+        'RECEIVE_BOOT_COMPLETED',
         'ACCESS_FINE_LOCATION',
         'ACCESS_COARSE_LOCATION',
         'ACCESS_BACKGROUND_LOCATION',
