@@ -94,7 +94,8 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "sentry-expo": "^4.2.0"
+    "sentry-expo": "^4.2.0",
+    "expo-ads-facebook": "~11.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

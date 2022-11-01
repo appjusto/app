@@ -6,6 +6,7 @@ import { version, versionCode } from './version.json';
 const {
   FLAVOR,
   ENVIRONMENT,
+  FACEBOOK_APP_ID,
   FIREBASE_API_KEY_ANDROID,
   FIREBASE_API_KEY_IOS,
   FIREBASE_REGION,
@@ -67,6 +68,11 @@ export default (context: ConfigContext): ExpoConfig => {
     },
     extra: extra(),
     hooks: hooks(),
+    facebookScheme: 'fb' + FACEBOOK_APP_ID,
+    facebookAppId: FACEBOOK_APP_ID,
+    facebookDisplayName: 'AppJusto',
+    facebookAutoLogAppEventsEnabled: true,
+    facebookAdvertiserIDCollectionEnabled: true,
     plugins:
       flavor === 'courier'
         ? [
@@ -77,10 +83,25 @@ export default (context: ConfigContext): ExpoConfig => {
                 sounds: ['./assets/sounds/order_request.wav'],
               },
             ],
+            [
+              'expo-ads-facebook',
+              {
+                userTrackingPermission:
+                  'This identifier will be used to deliver personalized ads to you.',
+              },
+            ],
             'expo-splash-screen',
             'sentry-expo',
           ]
-        : undefined,
+        : [
+            [
+              'expo-ads-facebook',
+              {
+                userTrackingPermission:
+                  'This identifier will be used to deliver personalized ads to you.',
+              },
+            ],
+          ],
   };
   // console.log(config);
   return config;
@@ -194,6 +215,7 @@ const permissions = () =>
     : flavor === 'consumer'
     ? ['ACCESS_FINE_LOCATION', 'ACCESS_COARSE_LOCATION']
     : [
+        'RECEIVE_BOOT_COMPLETED',
         'ACCESS_FINE_LOCATION',
         'ACCESS_COARSE_LOCATION',
         'ACCESS_BACKGROUND_LOCATION',
@@ -245,6 +267,7 @@ const extra = (): Extra => ({
     appId: ALGOLIA_APPID!,
     apiKey: ALGOLIA_APIKEY!,
   },
+  facebookAppId: FACEBOOK_APP_ID!,
 });
 
 const hooks = () => ({
