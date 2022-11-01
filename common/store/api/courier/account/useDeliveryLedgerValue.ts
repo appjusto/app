@@ -2,11 +2,11 @@ import { LedgerEntry } from '@appjusto/types';
 import React from 'react';
 import { ApiContext } from '../../../../app/context';
 
-export const useDeliveryLedgerValue = (courierId?: string, orderId?: string) => {
+export const useDeliveryLedgerEntry = (courierId?: string, orderId?: string) => {
   // context
   const api = React.useContext(ApiContext);
   // state
-  const [ledgerEntry, setLedgerEntry] = React.useState<LedgerEntry | null>(null);
+  const [ledgerEntry, setLedgerEntry] = React.useState<LedgerEntry | null>();
   // side-effects
   React.useEffect(() => {
     if (!courierId) return;
@@ -16,5 +16,5 @@ export const useDeliveryLedgerValue = (courierId?: string, orderId?: string) => 
     })();
   }, [api, courierId, orderId]);
 
-  return ledgerEntry?.value;
+  return ledgerEntry;
 };

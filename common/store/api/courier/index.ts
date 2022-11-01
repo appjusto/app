@@ -95,6 +95,7 @@ export default class CourierApi {
         limit(1)
       )
     );
+    if (snapshot.empty) return null;
     return documentAs<LedgerEntry>(snapshot.docs[0]);
   }
 
