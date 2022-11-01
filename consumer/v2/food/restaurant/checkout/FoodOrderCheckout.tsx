@@ -166,7 +166,10 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
   }, [order?.destination?.additionalInfo]);
   // tracking
-  useSegmentScreen('FoodOrderCheckout', { consumerId: consumer?.id, businessId: business?.id });
+  useSegmentScreen('FoodOrderCheckout', {
+    consumerId: consumer?.id ?? undefined,
+    businessId: business?.id ?? undefined,
+  });
   // handlers
   const placeOrderHandler = async () => {
     Keyboard.dismiss();
