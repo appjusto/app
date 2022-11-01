@@ -2,13 +2,16 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
 import OrderMap from '../../../../common/screens/orders/OrderMap';
 import PlaceSummary from '../../../../common/screens/orders/summary/PlaceSummary';
+import { useDeliveryLedgerEntry } from '../../../../common/store/api/courier/account/useDeliveryLedgerEntry';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../../common/store/api/track';
+import { getCourier } from '../../../../common/store/courier/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import {
   formatCurrency,
@@ -31,8 +34,11 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const { orderId } = route.params;
+  // redux
+  const courier = useSelector(getCourier)!;
   // screen state
   const order = useObserveOrder(orderId);
+  const ledgerEntry = useDeliveryLedgerEntry(courier.id, orderId);
   // side effects
   // sending order code to header
   React.useLayoutEffect(() => {
@@ -42,7 +48,7 @@ export default function ({ navigation, route }: Props) {
   }, [navigation, order?.code]);
   // tracking
   useSegmentScreen('DeliverySummary');
-  if (!order?.fare?.courier) {
+  if (!order?.fare?.courier || ledgerEntry === undefined) {
     // showing the indicator until the order is loaded
     return (
       <View style={screens.centered}>
