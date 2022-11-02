@@ -13,7 +13,10 @@ import DefaultButton from '../../../../../common/components/buttons/DefaultButto
 import RadioButton from '../../../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { hyphenFormatter } from '../../../../../common/components/inputs/pattern-input/formatters';
-import { numbersAndLettersParser } from '../../../../../common/components/inputs/pattern-input/parsers';
+import {
+  bankAccountParser,
+  zeroing,
+} from '../../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../../common/components/inputs/PatternInput';
 import LabeledText from '../../../../../common/components/texts/LabeledText';
 import useBanks from '../../../../../common/store/api/platform/hooks/useBanks';
@@ -78,7 +81,7 @@ export default function ({ navigation, route }: Props) {
   }, [route.params]);
   // helpers
   const agencyParser = selectedBank?.agencyPattern
-    ? numbersAndLettersParser(selectedBank?.agencyPattern)
+    ? bankAccountParser(selectedBank?.agencyPattern)
     : undefined;
   const agencyFormatter = selectedBank?.agencyPattern
     ? hyphenFormatter(selectedBank?.agencyPattern.indexOf('-'))
@@ -90,7 +93,7 @@ export default function ({ navigation, route }: Props) {
     const patternPrefix = accountCode === '1288' ? '9' : '';
     return `${patternPrefix}${selectedBank.accountPattern}`;
   })();
-  const accountParser = accountPattern ? numbersAndLettersParser(accountPattern) : undefined;
+  const accountParser = accountPattern ? bankAccountParser(accountPattern) : undefined;
   const accountFormatter = accountPattern
     ? hyphenFormatter(accountPattern.indexOf('-'))
     : undefined;
@@ -106,7 +109,8 @@ export default function ({ navigation, route }: Props) {
       );
       return;
     }
-    let accountFormatted = accountFormatter!(account);
+
+    let accountFormatted = accountFormatter!(zeroing(accountPattern!, accountParser!(account)));
     if (selectedBank.code === '104') {
       accountFormatted = `${getCEFAccountCode(personType, type)}${accountFormatted}`;
     }
@@ -202,10 +206,7 @@ export default function ({ navigation, route }: Props) {
               onSubmitEditing={() => accountRef.current?.focus()}
               onBlur={() => {
                 if (agency.length > 0) {
-                  const paddedAgency = numbersAndLettersParser(
-                    selectedBank!.agencyPattern,
-                    true
-                  )(agency);
+                  const paddedAgency = zeroing(selectedBank!.agencyPattern, agencyParser!(agency));
                   setAgency(paddedAgency);
                 }
               }}
@@ -221,7 +222,9 @@ export default function ({ navigation, route }: Props) {
                       <RadioButton
                         title={t('001 – Conta Corrente')}
                         onPress={() => {
-                          if (!profileApproved) setType('Corrente');
+                          if (!profileApproved) {
+                            setType('Corrente');
+                          }
                         }}
                         checked={type === 'Corrente'}
                         style={{ marginBottom: halfPadding }}
@@ -229,7 +232,9 @@ export default function ({ navigation, route }: Props) {
                       <RadioButton
                         title={t('002 – Conta Simples')}
                         onPress={() => {
-                          if (!profileApproved) setType('Simples');
+                          if (!profileApproved) {
+                            setType('Simples');
+                          }
                         }}
                         checked={type === 'Simples'}
                         style={{ marginBottom: halfPadding }}
@@ -237,7 +242,9 @@ export default function ({ navigation, route }: Props) {
                       <RadioButton
                         title={t('013 – Conta Poupança')}
                         onPress={() => {
-                          if (!profileApproved) setType('Poupança');
+                          if (!profileApproved) {
+                            setType('Poupança');
+                          }
                         }}
                         checked={type === 'Poupança'}
                         style={{ marginBottom: halfPadding }}
@@ -245,7 +252,9 @@ export default function ({ navigation, route }: Props) {
                       <RadioButton
                         title={t('1288 – Conta Poupança (novo formato)')}
                         onPress={() => {
-                          if (!profileApproved) setType('Nova Poupança');
+                          if (!profileApproved) {
+                            setType('Nova Poupança');
+                          }
                         }}
                         checked={type === 'Nova Poupança'}
                       />
@@ -255,7 +264,9 @@ export default function ({ navigation, route }: Props) {
                       <RadioButton
                         title={t('003 – Conta Corrente')}
                         onPress={() => {
-                          if (!profileApproved) setType('Corrente');
+                          if (!profileApproved) {
+                            setType('Corrente');
+                          }
                         }}
                         checked={type === 'Corrente'}
                         style={{ marginBottom: halfPadding }}
@@ -263,7 +274,9 @@ export default function ({ navigation, route }: Props) {
                       <RadioButton
                         title={t('022 – Conta Poupança')}
                         onPress={() => {
-                          if (!profileApproved) setType('Poupança');
+                          if (!profileApproved) {
+                            setType('Poupança');
+                          }
                         }}
                         checked={type === 'Poupança'}
                       />
@@ -319,8 +332,8 @@ export default function ({ navigation, route }: Props) {
                 blurOnSubmit
                 onChangeText={(text) => setAccount(text)}
                 onBlur={() => {
-                  if (account && accountPattern) {
-                    const paddedAccount = numbersAndLettersParser(accountPattern, true)(account);
+                  if (account && accountPattern && accountParser) {
+                    const paddedAccount = zeroing(accountPattern, accountParser(account));
                     setAccount(paddedAccount);
                   }
                 }}
