@@ -1,6 +1,5 @@
-import { formatDate } from '@appjusto/dates';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import ArrowBox from '../../../common/components/views/ArrowBox';
 import StatusBadge from '../../../common/components/views/StatusBadge';
@@ -8,8 +7,13 @@ import { useDeliveryLedgerEntry } from '../../../common/store/api/courier/accoun
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { getOrderTime } from '../../../common/store/order/selectors';
-import { colors, halfPadding, padding, texts } from '../../../common/styles';
-import { formatCurrency, formatTime, separateWithDot } from '../../../common/utils/formatters';
+import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import {
+  formatCurrency,
+  formatDate,
+  formatTime,
+  separateWithDot,
+} from '../../../common/utils/formatters';
 
 type Props = {
   orderId: string;
@@ -22,8 +26,14 @@ export const DeliveryHistoryCard = ({ orderId, onPress }: Props) => {
   // screen state
   const order = useObserveOrder(orderId);
   const ledgerEntry = useDeliveryLedgerEntry(courier.id, orderId);
-  if (!order) return;
-  if (ledgerEntry === undefined) return;
+  // loading indicator
+  if (!order || ledgerEntry === undefined) {
+    return (
+      <View style={{ ...screens.centered, backgroundColor: colors.grey50 }}>
+        <ActivityIndicator size="small" color={colors.green500} />
+      </View>
+    );
+  }
   // helpers
   const time = getOrderTime(order);
   const delivery =
@@ -40,20 +50,22 @@ export const DeliveryHistoryCard = ({ orderId, onPress }: Props) => {
           borderBottomColor: colors.grey500,
           borderStyle: 'solid',
           borderBottomWidth: 1,
+          paddingLeft: padding,
+          paddingTop: padding,
         }}
       >
         <View style={{ flex: 1 }}>
-          <Text style={{ ...texts.sm }}>{title}</Text>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-              paddingVertical: padding,
+              paddingBottom: padding,
               paddingLeft: halfPadding,
               paddingRight: padding,
             }}
           >
             <View style={{ flex: 1 }}>
+              <Text style={{ ...texts.sm }}>{title}</Text>
               <Text
                 style={{
                   ...texts.sm,
