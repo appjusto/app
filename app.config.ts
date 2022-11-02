@@ -6,7 +6,8 @@ import { version, versionCode } from './version.json';
 const {
   FLAVOR,
   ENVIRONMENT,
-  FACEBOOK_APP_ID,
+  FACEBOOK_CONSUMER_APP_ID,
+  FACEBOOK_COURIER_APP_ID,
   FIREBASE_API_KEY_ANDROID,
   FIREBASE_API_KEY_IOS,
   FIREBASE_REGION,
@@ -68,8 +69,8 @@ export default (context: ConfigContext): ExpoConfig => {
     },
     extra: extra(),
     hooks: hooks(),
-    facebookScheme: 'fb' + FACEBOOK_APP_ID,
-    facebookAppId: FACEBOOK_APP_ID,
+    facebookScheme: 'fb' + facebokAppId(),
+    facebookAppId: facebokAppId(),
     facebookDisplayName: 'AppJusto',
     facebookAutoLogAppEventsEnabled: true,
     facebookAdvertiserIDCollectionEnabled: true,
@@ -87,7 +88,7 @@ export default (context: ConfigContext): ExpoConfig => {
               'expo-ads-facebook',
               {
                 userTrackingPermission:
-                  'This identifier will be used to deliver personalized ads to you.',
+                  'Usamos esse identificador para medir a conversão dos nossos anúncios.',
               },
             ],
             'expo-splash-screen',
@@ -98,7 +99,7 @@ export default (context: ConfigContext): ExpoConfig => {
               'expo-ads-facebook',
               {
                 userTrackingPermission:
-                  'This identifier will be used to deliver personalized ads to you.',
+                  'Usamos esse identificador para medir a conversão dos nossos anúncios.',
               },
             ],
           ],
@@ -133,6 +134,12 @@ const icon = (platform: 'ios' | 'android') => {
   return `./assets/icon-${flavor}-${platform}.png`;
 };
 
+const facebokAppId = () => {
+  if (flavor === 'consumer') return FACEBOOK_CONSUMER_APP_ID!;
+  if (flavor === 'courier') return FACEBOOK_COURIER_APP_ID!;
+  return '';
+};
+
 const ios = () => ({
   bundleIdentifier: appBundlePackage(),
   buildNumber: `${versionCode}`,
@@ -143,11 +150,14 @@ const ios = () => ({
       ? { UIBackgroundModes: ['fetch'] }
       : flavor === 'consumer'
       ? {
+          NSUserTrackingUsageDescription:
+            'Usamos esse identificador para medir a conversão dos nossos anúncios.',
           NSLocationWhenInUseUsageDescription:
             'Precisamos da sua localização para exibir os restaurantes próximos a você',
         }
       : {
           UIBackgroundModes: ['location'],
+          NSUserTrackingUsageDescription: '',
           NSLocationWhenInUseUsageDescription:
             'Precisamos da sua localização para enviar corridas próximas e monitorar a entrega.',
           NSLocationAlwaysAndWhenInUseUsageDescription:
@@ -267,7 +277,6 @@ const extra = (): Extra => ({
     appId: ALGOLIA_APPID!,
     apiKey: ALGOLIA_APIKEY!,
   },
-  facebookAppId: FACEBOOK_APP_ID!,
 });
 
 const hooks = () => ({

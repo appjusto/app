@@ -11,7 +11,6 @@ export interface Extra {
   };
   algolia: AlgoliaConfig;
   environment: Environment;
-  facebookAppId: string;
 }
 
 export interface AnalyticsConfig {
