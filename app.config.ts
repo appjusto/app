@@ -6,6 +6,8 @@ import { version, versionCode } from './version.json';
 const {
   FLAVOR,
   ENVIRONMENT,
+  FACEBOOK_CONSUMER_APP_ID,
+  FACEBOOK_COURIER_APP_ID,
   FIREBASE_API_KEY_ANDROID,
   FIREBASE_API_KEY_IOS,
   FIREBASE_REGION,
@@ -67,6 +69,11 @@ export default (context: ConfigContext): ExpoConfig => {
     },
     extra: extra(),
     hooks: hooks(),
+    facebookScheme: 'fb' + facebokAppId(),
+    facebookAppId: facebokAppId(),
+    facebookDisplayName: 'AppJusto',
+    facebookAutoLogAppEventsEnabled: true,
+    facebookAdvertiserIDCollectionEnabled: true,
     plugins:
       flavor === 'courier'
         ? [
@@ -77,10 +84,25 @@ export default (context: ConfigContext): ExpoConfig => {
                 sounds: ['./assets/sounds/order_request.wav'],
               },
             ],
+            [
+              'expo-ads-facebook',
+              {
+                userTrackingPermission:
+                  'Usamos esse identificador para medir a conversão dos nossos anúncios.',
+              },
+            ],
             'expo-splash-screen',
             'sentry-expo',
           ]
-        : undefined,
+        : [
+            [
+              'expo-ads-facebook',
+              {
+                userTrackingPermission:
+                  'Usamos esse identificador para medir a conversão dos nossos anúncios.',
+              },
+            ],
+          ],
   };
   // console.log(config);
   return config;
@@ -112,6 +134,12 @@ const icon = (platform: 'ios' | 'android') => {
   return `./assets/icon-${flavor}-${platform}.png`;
 };
 
+const facebokAppId = () => {
+  if (flavor === 'consumer') return FACEBOOK_CONSUMER_APP_ID!;
+  if (flavor === 'courier') return FACEBOOK_COURIER_APP_ID!;
+  return '';
+};
+
 const ios = () => ({
   bundleIdentifier: appBundlePackage(),
   buildNumber: `${versionCode}`,
@@ -122,11 +150,14 @@ const ios = () => ({
       ? { UIBackgroundModes: ['fetch'] }
       : flavor === 'consumer'
       ? {
+          NSUserTrackingUsageDescription:
+            'Usamos esse identificador para medir a conversão dos nossos anúncios.',
           NSLocationWhenInUseUsageDescription:
             'Precisamos da sua localização para exibir os restaurantes próximos a você',
         }
       : {
           UIBackgroundModes: ['location'],
+          NSUserTrackingUsageDescription: '',
           NSLocationWhenInUseUsageDescription:
             'Precisamos da sua localização para enviar corridas próximas e monitorar a entrega.',
           NSLocationAlwaysAndWhenInUseUsageDescription:

@@ -66,6 +66,9 @@ export const OrderDetail = ({ navigation, route }: Props) => {
         await api.order().updateOrder(order.id, { status: 'ready' });
       }
       if (order.status === 'ready') {
+        if (order.fulfillment === 'take-away') {
+          await api.order().updateOrder(order.id, { status: 'delivered' });
+        }
         if (order.dispatchingState !== 'arrived-pickup') return;
         else await api.order().updateOrder(order.id, { status: 'dispatching' });
       }
@@ -181,7 +184,11 @@ export const OrderDetail = ({ navigation, route }: Props) => {
               order={order}
               onPress={actionHandler}
               activityIndicator={isLoading}
-              disabled={order.status === 'ready' && order.dispatchingState !== 'arrived-pickup'}
+              disabled={
+                order.status === 'ready' &&
+                order.fulfillment === 'delivery' &&
+                order.dispatchingState !== 'arrived-pickup'
+              }
             />
           </View>
         </View>

@@ -18,5 +18,6 @@
     "**/.expo": true,
     "**/.expo-shared": true,
     "**/node_modules": true
-  }
+  },
+  "dotenv.enableAutocloaking": true
 }

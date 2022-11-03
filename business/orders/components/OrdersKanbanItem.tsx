@@ -59,7 +59,7 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
   const actionHandler = async () => {
     if (!order) return;
     Keyboard.dismiss();
-    const { status, dispatchingState, dispatchingStatus } = order;
+    const { status, dispatchingState, dispatchingStatus, fulfillment } = order;
     setLoading(true);
     try {
       if (status === 'confirmed') {
@@ -71,17 +71,22 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
         setLoading(false);
       }
       if (status === 'ready') {
-        if (dispatchingState === 'arrived-pickup') {
-          await api.order().updateOrder(order.id, { status: 'dispatching' });
+        if (fulfillment === 'take-away') {
+          await api.order().updateOrder(order.id, { status: 'delivered' });
           setLoading(false);
-        }
-        if (dispatchingState !== 'arrived-pickup') {
-          setLoading(false);
-          dispatch(showToast('Aguarde a chegada do entregador com o código do pedido', 'error'));
-        }
-        if (dispatchingStatus === 'outsourced') {
-          await api.order().updateOrder(order.id, { status: 'dispatching' });
-          setLoading(false);
+        } else {
+          if (dispatchingState === 'arrived-pickup') {
+            await api.order().updateOrder(order.id, { status: 'dispatching' });
+            setLoading(false);
+          }
+          if (dispatchingState !== 'arrived-pickup') {
+            setLoading(false);
+            dispatch(showToast('Aguarde a chegada do entregador com o código do pedido', 'error'));
+          }
+          if (dispatchingStatus === 'outsourced') {
+            await api.order().updateOrder(order.id, { status: 'dispatching' });
+            setLoading(false);
+          }
         }
       } else {
         setLoading(false);
