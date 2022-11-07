@@ -51,7 +51,7 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
                 <Text style={{ ...texts.sm, color: colors.red }}>{t('Taxa Iugu *')}</Text>
                 <View style={{ flex: 1 }} />
                 <Text style={{ ...texts.sm, color: colors.red }}>
-                  -{formatCurrency(selectedFare.courier.processing.value)}
+                  - {formatCurrency(selectedFare.courier.processing.value)}
                 </Text>
               </View>
             </View>
@@ -68,7 +68,7 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
                 <Text style={{ ...texts.sm, color: colors.red }}>{t('Taxa Iugu *')}</Text>
                 <View style={{ flex: 1 }} />
                 <Text style={{ ...texts.sm, color: colors.red }}>
-                  -{formatCurrency(order.tip.processing.value)}
+                  - {formatCurrency(order.tip.processing.value)}
                 </Text>
               </View>
             </View>
