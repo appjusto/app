@@ -4,9 +4,9 @@ import { Text, View } from 'react-native';
 import request from '../../../assets/lottie-icons/request.json';
 import { Lottie } from '../../../common/components/icons/Lottie';
 import RoundedText from '../../../common/components/texts/RoundedText';
-import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeContext';
 import { IconOngoingMotocycle } from '../../../common/icons/icon-ongoing-motocycle';
 import { IconOngoingStatus } from '../../../common/icons/icon-ongoing-status';
+import { useObserveBusiness } from '../../../common/store/api/business/hooks/useObserveBusiness';
 import { colors, halfPadding, padding, texts } from '../../../common/styles';
 import { formatDate, getETAWithMargin } from '../../../common/utils/formatters/datetime';
 import { t } from '../../../strings';
@@ -17,9 +17,9 @@ interface Props {
 
 export const OngoingOrderStatus = ({ order }: Props) => {
   // context
-  const getServerTime = useContextGetSeverTime();
-  const now = getServerTime();
-  const { status, dispatchingState, type, dispatchingStatus, fulfillment } = order;
+  const restaurant = useObserveBusiness(order?.business?.id);
+  const deskPhone = restaurant?.phones?.find((phone) => phone.type === 'desk');
+  const { status, dispatchingState, type, dispatchingStatus, fulfillment, flags } = order;
   let header: string | null = null;
   let description: string | null = null;
 
@@ -31,8 +31,17 @@ export const OngoingOrderStatus = ({ order }: Props) => {
         header = t('Pedido agendado');
         description = t('Você receberá uma notificação quando seu pedido sair para a entrega');
       } else if (status === 'confirmed') {
-        header = t('Aguardando restaurante');
-        description = t('Aguarde enquanto o restaurante confirma seu pedido.');
+        const overConfirmingLimit =
+          !!flags && flags.includes('waiting-confirmation') && !!deskPhone;
+        if (overConfirmingLimit) {
+          header = t('Aguardando restaurante');
+          description = `${t(
+            'Se preferir, entre em contato com o restaurante através do número: '
+          )} ${deskPhone.number}`;
+        } else {
+          header = t('Aguardando restaurante');
+          description = t('Aguarde enquanto o restaurante confirma seu pedido.');
+        }
       } else if (status === 'preparing') {
         header = t('Pedido em preparo');
         description = `${order.business!.name} ${t(
