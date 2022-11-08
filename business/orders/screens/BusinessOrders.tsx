@@ -56,7 +56,8 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
       if (!business?.status) return;
       if (!getServerTime) return;
       const today = getServerTime();
-      const shouldBeOpen = businessShouldBeOpen(today, business.schedules);
+      const shouldBeOpen =
+        businessShouldBeOpen(today, business.schedules) && business.enabled === true;
       if (shouldBeOpen && business.status === 'closed') {
         await api.business().updateBusiness(business.id, { status: 'open' });
       }
@@ -68,7 +69,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // getting business from SelectBusiness screen
   React.useEffect(() => {
     if (businessId?.length) {
-      setSelectedBusiness(undefined);
+      // setSelectedBusiness(undefined);
       return api.business().observeBusiness(businessId, setSelectedBusiness);
     }
   }, [businessId]);
@@ -86,12 +87,10 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
     // TODO: what should we do?
     return null;
   }
-
   return (
     <View style={screens.config}>
       <PaddedView style={{ backgroundColor: colors.white }}>
         <BusinessOrdersHeader
-          business={selectedBusiness}
           onSwitchBusiness={() =>
             navigation.navigate('SelectBusiness', { businessId: selectedBusiness.id })
           }

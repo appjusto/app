@@ -1,4 +1,3 @@
-import { Business, WithId } from '@appjusto/types';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useBusinessLogoURI } from '../../../common/store/api/business/hooks/useBusinessLogoURI';
@@ -8,20 +7,19 @@ import { t } from '../../../strings';
 import { BusinessAppContext } from '../../BusinessAppContext';
 
 type Props = {
-  business: WithId<Business>;
   onSwitchBusiness: () => void;
 };
 
-export const BusinessOrdersHeader = ({ business, onSwitchBusiness }: Props) => {
+export const BusinessOrdersHeader = ({ onSwitchBusiness }: Props) => {
   // context
-  const { data: logo } = useBusinessLogoURI(business.id);
-  const { businesses } = React.useContext(BusinessAppContext);
+  const { businesses, business } = React.useContext(BusinessAppContext);
+  const { data: logo } = useBusinessLogoURI(business?.id);
+  if (!business) return null;
   // helpers
   const businessStatus =
-    business.status === 'open' && business.enabled
+    business.status === 'open' && business.enabled === true
       ? t('RESTAURANTE ABERTO')
       : t('RESTAURANTE FECHADO');
-  if (!business) return null;
   return (
     <View
       style={{ height: 48, width: '100%', flexDirection: 'row', backgroundColor: colors.white }}
