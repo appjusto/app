@@ -8,6 +8,7 @@ const {
   ENVIRONMENT,
   FACEBOOK_CONSUMER_APP_ID,
   FACEBOOK_COURIER_APP_ID,
+  FACEBOOK_BUSINESS_APP_ID,
   FIREBASE_API_KEY_ANDROID,
   FIREBASE_API_KEY_IOS,
   FIREBASE_REGION,
@@ -137,6 +138,7 @@ const icon = (platform: 'ios' | 'android') => {
 const facebokAppId = () => {
   if (flavor === 'consumer') return FACEBOOK_CONSUMER_APP_ID!;
   if (flavor === 'courier') return FACEBOOK_COURIER_APP_ID!;
+  if (flavor === 'business') return FACEBOOK_BUSINESS_APP_ID!;
   return '';
 };
 
