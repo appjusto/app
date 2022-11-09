@@ -129,9 +129,7 @@ export const NotificationPreferences = ({ navigation }: Props) => {
           <View style={{ marginTop: padding }}>{createChannelCheckField('order-chat')}</View> */}
           <View>{createChannelCheckField('status')}</View>
           <View style={{ marginTop: padding }}>{createChannelCheckField('general')}</View>
-          {flavor === 'consumer' ? (
-            <View style={{ marginTop: padding }}>{createChannelCheckField('marketing')}</View>
-          ) : null}
+          <View style={{ marginTop: padding }}>{createChannelCheckField('marketing')}</View>
         </View>
       </PaddedView>
       {channelToConfirm ? (

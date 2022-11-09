@@ -7,12 +7,16 @@ import { Keyboard, Pressable, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
+import { getCEFAccountCode } from '.';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { hyphenFormatter } from '../../../../../common/components/inputs/pattern-input/formatters';
-import { numbersAndLettersParser } from '../../../../../common/components/inputs/pattern-input/parsers';
+import {
+  bankAccountParser,
+  zeroing,
+} from '../../../../../common/components/inputs/pattern-input/parsers';
 import PatternInput from '../../../../../common/components/inputs/PatternInput';
 import LabeledText from '../../../../../common/components/texts/LabeledText';
 import useBanks from '../../../../../common/store/api/platform/hooks/useBanks';
@@ -77,40 +81,22 @@ export default function ({ navigation, route }: Props) {
   }, [route.params]);
   // helpers
   const agencyParser = selectedBank?.agencyPattern
-    ? numbersAndLettersParser(selectedBank?.agencyPattern)
+    ? bankAccountParser(selectedBank?.agencyPattern)
     : undefined;
   const agencyFormatter = selectedBank?.agencyPattern
     ? hyphenFormatter(selectedBank?.agencyPattern.indexOf('-'))
     : undefined;
-  const accountParser = selectedBank?.accountPattern
-    ? numbersAndLettersParser(selectedBank?.accountPattern)
-    : undefined;
-  const accountFormatter = selectedBank?.accountPattern
-    ? hyphenFormatter(selectedBank?.accountPattern.indexOf('-'))
-    : undefined;
-  const cefAccountCode = (() => {
-    if (!selectedBank) return;
-    if (selectedBank.code === '104') {
-      if (personType === 'Pessoa Jurídica') {
-        if (type === 'Corrente') {
-          return '003';
-        } else if (type === 'Poupança') {
-          return '022';
-        }
-      } else if (personType === 'Pessoa Física') {
-        if (type === 'Corrente') {
-          return '001';
-        } else if (type === 'Simples') {
-          return '002';
-        } else if (type === 'Poupança') {
-          return '013';
-        } else if (type === 'Nova Poupança') {
-          return '1288';
-        }
-      }
-    } else return undefined;
+  const accountPattern = (() => {
+    if (!selectedBank) return undefined;
+    if (selectedBank.code !== '104') return selectedBank.accountPattern;
+    const accountCode = getCEFAccountCode(personType, type);
+    const patternPrefix = accountCode === '1288' ? '9' : '';
+    return `${patternPrefix}${selectedBank.accountPattern}`;
   })();
-  const accountMask = selectedBank?.accountPattern;
+  const accountParser = accountPattern ? bankAccountParser(accountPattern) : undefined;
+  const accountFormatter = accountPattern
+    ? hyphenFormatter(accountPattern.indexOf('-'))
+    : undefined;
   //handlers
   const submitBankHandler = async () => {
     Keyboard.dismiss();
@@ -123,6 +109,11 @@ export default function ({ navigation, route }: Props) {
       );
       return;
     }
+
+    let accountFormatted = accountFormatter!(zeroing(accountPattern!, accountParser!(account)));
+    if (selectedBank.code === '104') {
+      accountFormatted = `${getCEFAccountCode(personType, type)}${accountFormatted}`;
+    }
     await dispatch(
       updateProfile(api)(courier!.id!, {
         bankAccount: {
@@ -131,12 +122,7 @@ export default function ({ navigation, route }: Props) {
           agency,
           agencyFormatted: agencyFormatter!(agency),
           account,
-          accountFormatted:
-            selectedBank.code !== '104'
-              ? accountFormatter!(account)
-              : personType === 'Pessoa Física' && type === 'Nova Poupança'
-              ? cefAccountCode + accountFormatter!(account)
-              : cefAccountCode + '0' + accountFormatter!(account),
+          accountFormatted,
           personType,
         },
       })
@@ -144,6 +130,7 @@ export default function ({ navigation, route }: Props) {
     track('courier updated profile with bak info');
     navigation.goBack();
   };
+  console.log(account, accountFormatter ? accountFormatter(account) : '');
   // UI
   return (
     <View style={{ ...screens.config }}>
@@ -219,10 +206,7 @@ export default function ({ navigation, route }: Props) {
               onSubmitEditing={() => accountRef.current?.focus()}
               onBlur={() => {
                 if (agency.length > 0) {
-                  const paddedAgency = numbersAndLettersParser(
-                    selectedBank!.agencyPattern,
-                    true
-                  )(agency);
+                  const paddedAgency = zeroing(selectedBank!.agencyPattern, agencyParser!(agency));
                   setAgency(paddedAgency);
                 }
               }}
@@ -238,7 +222,9 @@ export default function ({ navigation, route }: Props) {
                       <RadioButton
                         title={t('001 – Conta Corrente')}
                         onPress={() => {
-                          if (!profileApproved) setType('Corrente');
+                          if (!profileApproved) {
+                            setType('Corrente');
+                          }
                         }}
                         checked={type === 'Corrente'}
                         style={{ marginBottom: halfPadding }}
@@ -246,7 +232,9 @@ export default function ({ navigation, route }: Props) {
                       <RadioButton
                         title={t('002 – Conta Simples')}
                         onPress={() => {
-                          if (!profileApproved) setType('Simples');
+                          if (!profileApproved) {
+                            setType('Simples');
+                          }
                         }}
                         checked={type === 'Simples'}
                         style={{ marginBottom: halfPadding }}
@@ -254,7 +242,9 @@ export default function ({ navigation, route }: Props) {
                       <RadioButton
                         title={t('013 – Conta Poupança')}
                         onPress={() => {
-                          if (!profileApproved) setType('Poupança');
+                          if (!profileApproved) {
+                            setType('Poupança');
+                          }
                         }}
                         checked={type === 'Poupança'}
                         style={{ marginBottom: halfPadding }}
@@ -262,7 +252,9 @@ export default function ({ navigation, route }: Props) {
                       <RadioButton
                         title={t('1288 – Conta Poupança (novo formato)')}
                         onPress={() => {
-                          if (!profileApproved) setType('Nova Poupança');
+                          if (!profileApproved) {
+                            setType('Nova Poupança');
+                          }
                         }}
                         checked={type === 'Nova Poupança'}
                       />
@@ -272,7 +264,9 @@ export default function ({ navigation, route }: Props) {
                       <RadioButton
                         title={t('003 – Conta Corrente')}
                         onPress={() => {
-                          if (!profileApproved) setType('Corrente');
+                          if (!profileApproved) {
+                            setType('Corrente');
+                          }
                         }}
                         checked={type === 'Corrente'}
                         style={{ marginBottom: halfPadding }}
@@ -280,7 +274,9 @@ export default function ({ navigation, route }: Props) {
                       <RadioButton
                         title={t('022 – Conta Poupança')}
                         onPress={() => {
-                          if (!profileApproved) setType('Poupança');
+                          if (!profileApproved) {
+                            setType('Poupança');
+                          }
                         }}
                         checked={type === 'Poupança'}
                       />
@@ -325,7 +321,7 @@ export default function ({ navigation, route }: Props) {
                     : t('Número da conta')
                 }
                 value={account}
-                mask={accountMask}
+                mask={accountPattern}
                 parser={accountParser}
                 formatter={accountFormatter}
                 editable={!profileApproved && !!selectedBank}
@@ -336,11 +332,8 @@ export default function ({ navigation, route }: Props) {
                 blurOnSubmit
                 onChangeText={(text) => setAccount(text)}
                 onBlur={() => {
-                  if (account.length > 0) {
-                    const paddedAccount = numbersAndLettersParser(
-                      selectedBank!.accountPattern,
-                      true
-                    )(account);
+                  if (account && accountPattern && accountParser) {
+                    const paddedAccount = zeroing(accountPattern, accountParser(account));
                     setAccount(paddedAccount);
                   }
                 }}

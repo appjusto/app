@@ -136,7 +136,10 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     setNotes(item.notes ?? '');
   }, [itemId, activeOrder, product]);
   // tracking
-  useSegmentScreen('ItemDetail', { consumerId: consumer?.id, businessId: business?.id });
+  useSegmentScreen('ItemDetail', {
+    consumerId: consumer?.id ?? undefined,
+    businessId: business?.id ?? undefined,
+  });
   // UI
   if (!product || !business) {
     return (

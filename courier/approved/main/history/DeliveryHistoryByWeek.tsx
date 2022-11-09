@@ -9,14 +9,12 @@ import React from 'react';
 import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
-import ConfigItem from '../../../../common/components/views/ConfigItem';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
-import StatusBadge from '../../../../common/components/views/StatusBadge';
 import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
 import { useObserveOrders } from '../../../../common/store/api/order/hooks/useObserveOrders';
 import { ObserveOrdersOptions } from '../../../../common/store/api/order/types';
 import { useSegmentScreen } from '../../../../common/store/api/track';
-import { getOrderTime, isOrderOngoing } from '../../../../common/store/order/selectors';
+import { isOrderOngoing } from '../../../../common/store/order/selectors';
 import { getUser } from '../../../../common/store/user/selectors';
 import {
   colors,
@@ -26,14 +24,9 @@ import {
   screens,
   texts,
 } from '../../../../common/styles';
-import {
-  formatCurrency,
-  formatDate,
-  formatTime,
-  separateWithDot,
-} from '../../../../common/utils/formatters';
 import { useServerTime } from '../../../../common/utils/platform/useServerTime';
 import { t } from '../../../../strings';
+import { DeliveryHistoryCard } from '../../components/DeliveryHistoryCard';
 import { ApprovedParamList } from '../../types';
 import { MainParamList } from '../types';
 import { DeliveriesNavigatorParamList } from './types';
@@ -101,22 +94,7 @@ export const DeliveryHistoryByWeek = ({ navigation, route }: Props) => {
         data={orders}
         keyExtractor={(item) => item.id!}
         renderItem={({ item }) => {
-          const time = getOrderTime(item);
-          const delivery =
-            (item.fare?.courier?.value ?? 0) - (item.fare?.courier?.processing?.value ?? 0);
-          const tip = (item.tip?.value ?? 0) - (item.tip?.processing?.value ?? 0);
-          const revenue = delivery + tip;
-          const title = formatCurrency(revenue);
-          const subtitle = `Pedido ${item.code}\n${separateWithDot(
-            formatDate(time),
-            formatTime(time)
-          )}`;
-
-          return (
-            <ConfigItem title={title} subtitle={subtitle} onPress={() => orderPressHandler(item)}>
-              <StatusBadge order={item} />
-            </ConfigItem>
-          );
+          return <DeliveryHistoryCard orderId={item.id} onPress={() => orderPressHandler(item)} />;
         }}
         ListHeaderComponent={() => (
           <View

@@ -11,6 +11,9 @@ export interface Extra {
   };
   algolia: AlgoliaConfig;
   environment: Environment;
+  eas: {
+    projectId: string;
+  };
 }
 
 export interface AnalyticsConfig {

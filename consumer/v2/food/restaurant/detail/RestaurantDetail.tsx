@@ -50,7 +50,10 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
     });
   }, [navigation, restaurant]);
   // tracking
-  useSegmentScreen('RestaurantDetail', { consumerId: consumer?.id, businessId: restaurant?.id });
+  useSegmentScreen('RestaurantDetail', {
+    consumerId: consumer?.id ?? undefined,
+    businessId: restaurant?.id ?? undefined,
+  });
   // UI
   const sections =
     categoriesWithProducts?.map((category) => ({

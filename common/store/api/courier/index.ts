@@ -8,6 +8,7 @@ import {
 import { IuguMarketplaceAccountAdvanceSimulation } from '@appjusto/types/payment/iugu';
 import {
   getDocs,
+  limit,
   onSnapshot,
   orderBy,
   query,
@@ -82,6 +83,20 @@ export default class CourierApi {
       )
     );
     return documentsAs<LedgerEntry>(snapshot.docs);
+  }
+
+  async fetchDeliveryLedgerEntry(courierId: string, orderId: string) {
+    const snapshot = await getDocs(
+      query(
+        this.firestoreRefs.getLedgerRef(),
+        where('to.accountId', '==', courierId),
+        where('orderId', '==', orderId),
+        where('status', '==', 'paid'),
+        limit(1)
+      )
+    );
+    if (snapshot.empty) return null;
+    return documentAs<LedgerEntry>(snapshot.docs[0]);
   }
 
   // callables

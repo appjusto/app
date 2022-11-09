@@ -1,11 +1,15 @@
 import { Environment, Flavor } from '@appjusto/types';
 import { ConfigContext, ExpoConfig } from '@expo/config';
 import 'dotenv/config';
+import { isEmpty } from 'lodash';
 import { Extra } from './config/types';
 import { version, versionCode } from './version.json';
 const {
   FLAVOR,
   ENVIRONMENT,
+  EXPO_BUSINESS_ID,
+  EXPO_CONSUMER_ID,
+  EXPO_COURIER_ID,
   FACEBOOK_CONSUMER_APP_ID,
   FACEBOOK_COURIER_APP_ID,
   FACEBOOK_BUSINESS_APP_ID,
@@ -41,6 +45,13 @@ const getDeeplinkDomain = (environment: Environment) =>
 const getFallbackDomain = (environment: Environment) =>
   `${environment === 'live' ? '' : `${environment}.`}login.appjusto.com.br`;
 
+const expoId = () => {
+  if (FLAVOR === 'consumer') return EXPO_CONSUMER_ID!;
+  if (FLAVOR === 'courier') return EXPO_COURIER_ID!;
+  if (FLAVOR === 'business') return EXPO_BUSINESS_ID!;
+  throw new Error('FLAVOR inválido');
+};
+
 export default (context: ConfigContext): ExpoConfig => {
   const config: ExpoConfig = {
     owner: 'appjusto',
@@ -70,11 +81,7 @@ export default (context: ConfigContext): ExpoConfig => {
     },
     extra: extra(),
     hooks: hooks(),
-    facebookScheme: 'fb' + facebokAppId(),
-    facebookAppId: facebokAppId(),
-    facebookDisplayName: 'AppJusto',
-    facebookAutoLogAppEventsEnabled: true,
-    facebookAdvertiserIDCollectionEnabled: true,
+    ...facebokConfig(),
     plugins:
       flavor === 'courier'
         ? [
@@ -135,11 +142,19 @@ const icon = (platform: 'ios' | 'android') => {
   return `./assets/icon-${flavor}-${platform}.png`;
 };
 
-const facebokAppId = () => {
-  if (flavor === 'consumer') return FACEBOOK_CONSUMER_APP_ID!;
-  if (flavor === 'courier') return FACEBOOK_COURIER_APP_ID!;
-  if (flavor === 'business') return FACEBOOK_BUSINESS_APP_ID!;
-  return '';
+const facebokConfig = (): object => {
+  let appId = '';
+  if (flavor === 'consumer') appId = FACEBOOK_CONSUMER_APP_ID!;
+  if (flavor === 'courier') appId = FACEBOOK_COURIER_APP_ID!;
+  if (flavor === 'business') appId = FACEBOOK_BUSINESS_APP_ID!;
+  if (isEmpty(appId)) return {};
+  return {
+    facebookScheme: 'fb' + facebokConfig(),
+    facebookAppId: facebokConfig(),
+    facebookDisplayName: 'AppJusto',
+    facebookAutoLogAppEventsEnabled: true,
+    facebookAdvertiserIDCollectionEnabled: true,
+  };
 };
 
 const ios = () => ({
@@ -264,6 +279,9 @@ const extra = (): Extra => ({
       enabled: process.env.FIREBASE_EMULATOR === 'true',
       host: FIREBASE_EMULATOR_HOST,
     },
+  },
+  eas: {
+    projectId: expoId(),
   },
   analytics: {
     segmentConsumerAndroidKey: SEGMENT_CONSUMER_ANDROID_KEY!,

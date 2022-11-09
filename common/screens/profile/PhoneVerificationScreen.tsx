@@ -111,6 +111,7 @@ export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
           );
           setState('unrecoverable-error');
         } else {
+          console.log(error);
           message = getFirebaseAuthErrorMessages(error);
           setState('error');
         }
