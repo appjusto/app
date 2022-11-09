@@ -149,8 +149,8 @@ const facebokConfig = (): object => {
   if (flavor === 'business') appId = FACEBOOK_BUSINESS_APP_ID!;
   if (isEmpty(appId)) return {};
   return {
-    facebookScheme: 'fb' + facebokConfig(),
-    facebookAppId: facebokConfig(),
+    facebookScheme: 'fb' + appId,
+    facebookAppId: appId,
     facebookDisplayName: 'AppJusto',
     facebookAutoLogAppEventsEnabled: true,
     facebookAdvertiserIDCollectionEnabled: true,
