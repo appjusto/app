@@ -48,7 +48,10 @@ export default class FilesApi {
 
   async getDownloadURL(path: string): Promise<string | null> {
     const fileRef = ref(this.storage, path);
+    console.log(fileRef);
+    console.log('GET DOWNLOAD URL');
     try {
+      console.log('GET DOWNLOAD URL 2');
       const uri = await getDownloadURL(fileRef);
       return uri;
     } catch (error) {

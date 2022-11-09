@@ -14,6 +14,8 @@ import RoundedText from '../../../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../../../common/components/views/ConfigItem';
 import { useDocumentImage } from '../../../../../common/hooks/useDocumentImage';
 import { useSelfie } from '../../../../../common/hooks/useSelfie';
+import useCourierDocumentImage from '../../../../../common/store/api/courier/hooks/useCourierDocumentImage';
+import useCourierSelfie from '../../../../../common/store/api/courier/hooks/useCourierSelfie';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getFlavor } from '../../../../../common/store/config/selectors';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
@@ -72,9 +74,13 @@ export default function ({ navigation }: Props) {
   type ChangeImageType = typeof setNewSelfie;
 
   const size = '1024x1024';
-  const currentSelfieQuery = useSelfie(profile.id, flavor, size);
+  const currentSelfieQuery =
+    flavor === 'courier' ? useCourierSelfie(profile.id, size) : useSelfie(profile.id, size);
   const uploadSelfie = useMutation(
-    (localUri: string) => api.user().uploadSelfie(profile.id, localUri, flavor),
+    (localUri: string) =>
+      flavor === 'courier'
+        ? api.courier().uploadSelfie(profile.id, localUri)
+        : api.consumer().uploadSelfie(profile.id, localUri),
     {
       onSuccess: () => {
         track(`${flavor} uploaded selfie`);
@@ -83,9 +89,16 @@ export default function ({ navigation }: Props) {
     }
   );
 
-  const currentDocumentImageQuery = useDocumentImage(profile.id, flavor, size); // replace this
+  const currentDocumentImageQuery =
+    flavor === 'courier'
+      ? useCourierDocumentImage(profile.id, size)
+      : useDocumentImage(profile.id, size); // replace this
   const uploadDocumentImage = useMutation(
-    (localUri: string) => api.user().uploadDocumentImage(profile.id, localUri, flavor),
+    // (localUri: string) => api.user().uploadDocumentImage(profile.id, localUri, flavor),
+    (localUri: string) =>
+      flavor === 'courier'
+        ? api.courier().uploadDocumentImage(profile.id, localUri)
+        : api.consumer().uploadDocumentImage(profile.id, localUri),
     {
       onSuccess: () => {
         track(`${flavor} uploaded document image`);

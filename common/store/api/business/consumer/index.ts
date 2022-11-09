@@ -3,10 +3,18 @@ import { CancelToken } from 'axios';
 import { t } from '../../../../../strings';
 import { getAppVersion } from '../../../../utils/version';
 import { FunctionsRef } from '../../../refs/FunctionsRef';
+import { StoragePaths } from '../../../refs/StoragePaths';
+import FilesApi from '../../files';
 import IuguApi from '../../payment/iugu';
 
 export default class ConsumerApi {
-  constructor(private functionsRef: FunctionsRef, private iugu: IuguApi) {}
+  constructor(
+    private functionsRef: FunctionsRef,
+    private iugu: IuguApi,
+    private storagePaths: StoragePaths,
+    private files: FilesApi,
+    private emulated: boolean
+  ) {}
 
   async saveCard(data: IuguCreatePaymentTokenData, cancelToken?: CancelToken) {
     const paymentToken = await this.iugu.createPaymentToken(data, cancelToken);
@@ -25,5 +33,40 @@ export default class ConsumerApi {
         meta: { version: getAppVersion() },
       })
     ).data;
+  }
+  // storage
+  // selfie
+  uploadSelfie(id: string, localUri: string, progressHandler?: (progress: number) => void) {
+    return this.files.upload(
+      this.storagePaths.getConsumerSelfieStoragePath(id),
+      localUri,
+      progressHandler
+    );
+  }
+  fetchSelfie(id: string, size?: string) {
+    return this.files.getDownloadURL(
+      this.storagePaths.getConsumerSelfieStoragePath(id, !this.emulated && size ? size : undefined)
+    );
+  }
+  // document
+  uploadDocumentImage(
+    id: string,
+    localUri: string,
+
+    progressHandler?: (progress: number) => void
+  ) {
+    return this.files.upload(
+      this.storagePaths.getConsumerDocumentStoragePath(id),
+      localUri,
+      progressHandler
+    );
+  }
+  fetchDocumentImage(id: string, size?: string) {
+    return this.files.getDownloadURL(
+      this.storagePaths.getConsumerDocumentStoragePath(
+        id,
+        !this.emulated && size ? size : undefined
+      )
+    );
   }
 }

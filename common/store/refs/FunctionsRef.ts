@@ -110,10 +110,14 @@ export class FunctionsRef {
 
   // consumer
   getConsumerStoragePath = (consumerId: string) => `consumers/${consumerId}`;
+  // getConsumerSelfieStoragePath = (consumerId: string, size?: string) =>
+  //   `${this.getConsumerStoragePath(consumerId)}/selfie${size ? `${size}` : ''}.jpg`;
   getConsumerSelfieStoragePath = (consumerId: string, size?: string) =>
-    `${this.getConsumerStoragePath(consumerId)}/selfie${size ? `${size}` : ''}.jpg`;
+    `consumers/${consumerId}/selfie${size ? `_${size}` : ''}.jpg`;
+  // getConsumerDocumentStoragePath = (consumerId: string, size?: string) =>
+  //   `${this.getConsumerStoragePath(consumerId)}/document${size ? `${size}` : ''}.jpg`;
   getConsumerDocumentStoragePath = (consumerId: string, size?: string) =>
-    `${this.getConsumerStoragePath(consumerId)}/document${size ? `${size}` : ''}.jpg`;
+    `consumers/${consumerId}/document${size ? `_${size}` : ''}.jpg`;
 
   // orders
   getOrderPODPackagePath = (orderId: string, courierId: string) =>
