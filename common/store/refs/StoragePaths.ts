@@ -4,6 +4,13 @@ export class StoragePaths {
   getCourierDocumentPath = (courierId: string, size?: string) =>
     `couriers/${courierId}/document${size ? `_${size}` : ''}.jpg`;
 
+  // consumer
+  getConsumerStoragePath = (consumerId: string) => `consumers/${consumerId}`;
+  getConsumerSelfieStoragePath = (consumerId: string, size?: string) =>
+    `${this.getConsumerStoragePath(consumerId)}/selfie${size ? `${size}` : ''}.jpg`;
+  getConsumerDocumentStoragePath = (consumerId: string, size?: string) =>
+    `${this.getConsumerStoragePath(consumerId)}/document${size ? `${size}` : ''}.jpg`;
+
   // orders
   getOrderPODPackagePath = (orderId: string, courierId: string) =>
     `orders/${orderId}/${courierId}/package.jpg`;

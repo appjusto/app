@@ -1,10 +1,18 @@
 import { Flavor, ProfileChange, UserProfile } from '@appjusto/types';
 import { addDoc, getDocs, limit, query, serverTimestamp, where } from 'firebase/firestore';
 import { FirestoreRefs } from '../../refs/FirestoreRefs';
+import { StoragePaths } from '../../refs/StoragePaths';
+import FilesApi from '../files';
 import { documentsAs } from '../types';
 
 export default class UserApi {
-  constructor(private firestoreRefs: FirestoreRefs, private flavor: Flavor) {}
+  constructor(
+    private firestoreRefs: FirestoreRefs,
+    private flavor: Flavor,
+    private storagePaths: StoragePaths,
+    private files: FilesApi,
+    private emulated: boolean
+  ) {}
 
   // firestore
   async fetchPendingChanges(accountId: string) {
@@ -28,5 +36,77 @@ export default class UserApi {
       createdOn: serverTimestamp(),
       ...changes,
     } as ProfileChange);
+  }
+
+  // storage
+  // selfie
+  uploadSelfie(
+    id: string,
+    localUri: string,
+    flavor: Flavor,
+    progressHandler?: (progress: number) => void
+  ) {
+    if (flavor === 'courier') {
+      return this.files.upload(
+        this.storagePaths.getCourierSelfiePath(id),
+        localUri,
+        progressHandler
+      );
+    } else {
+      return this.files.upload(
+        this.storagePaths.getConsumerSelfieStoragePath(id),
+        localUri,
+        progressHandler
+      );
+    }
+  }
+  fetchSelfie(id: string, flavor: Flavor, size?: string) {
+    if (flavor === 'courier') {
+      return this.files.getDownloadURL(
+        this.storagePaths.getCourierSelfiePath(id, !this.emulated && size ? size : undefined)
+      );
+    } else {
+      return this.files.getDownloadURL(
+        this.storagePaths.getConsumerSelfieStoragePath(
+          id,
+          !this.emulated && size ? size : undefined
+        )
+      );
+    }
+  }
+  // document
+  uploadDocumentImage(
+    id: string,
+    localUri: string,
+    flavor: Flavor,
+    progressHandler?: (progress: number) => void
+  ) {
+    if (flavor === 'courier') {
+      return this.files.upload(
+        this.storagePaths.getCourierDocumentPath(id),
+        localUri,
+        progressHandler
+      );
+    } else {
+      return this.files.upload(
+        this.storagePaths.getConsumerDocumentStoragePath(id),
+        localUri,
+        progressHandler
+      );
+    }
+  }
+  fetchDocumentImage(id: string, flavor: Flavor, size?: string) {
+    if (flavor === 'courier') {
+      return this.files.getDownloadURL(
+        this.storagePaths.getCourierDocumentPath(id, !this.emulated && size ? size : undefined)
+      );
+    } else {
+      return this.files.getDownloadURL(
+        this.storagePaths.getConsumerDocumentStoragePath(
+          id,
+          !this.emulated && size ? size : undefined
+        )
+      );
+    }
   }
 }

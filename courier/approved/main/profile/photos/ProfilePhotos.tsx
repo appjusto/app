@@ -12,8 +12,8 @@ import { ApiContext } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../../../common/components/views/ConfigItem';
-import useCourierDocumentImage from '../../../../../common/store/api/courier/hooks/useCourierDocumentImage';
-import useCourierSelfie from '../../../../../common/store/api/courier/hooks/useCourierSelfie';
+import { useDocumentImage } from '../../../../../common/hooks/useDocumentImage';
+import { useSelfie } from '../../../../../common/hooks/useSelfie';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getFlavor } from '../../../../../common/store/config/selectors';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
@@ -71,25 +71,24 @@ export default function ({ navigation }: Props) {
 
   type ChangeImageType = typeof setNewSelfie;
 
-  // const size = courier.situation === 'approved' ? '1024x1024' : undefined;
   const size = '1024x1024';
-  const currentSelfieQuery = useCourierSelfie(profile.id, size);
+  const currentSelfieQuery = useSelfie(profile.id, flavor, size);
   const uploadSelfie = useMutation(
-    (localUri: string) => api.courier().uploadSelfie(profile.id, localUri),
+    (localUri: string) => api.user().uploadSelfie(profile.id, localUri, flavor),
     {
       onSuccess: () => {
-        track('courier uploaded selfie');
+        track(`${flavor} uploaded selfie`);
         currentSelfieQuery.refetch();
       },
     }
   );
 
-  const currentDocumentImageQuery = useCourierDocumentImage(profile.id, size);
+  const currentDocumentImageQuery = useDocumentImage(profile.id, flavor, size); // replace this
   const uploadDocumentImage = useMutation(
-    (localUri: string) => api.courier().uploadDocumentImage(profile.id, localUri),
+    (localUri: string) => api.user().uploadDocumentImage(profile.id, localUri, flavor),
     {
       onSuccess: () => {
-        track('courier uploaded document image');
+        track(`${flavor} uploaded document image`);
         currentDocumentImageQuery.refetch();
       },
     }
@@ -237,7 +236,7 @@ export default function ({ navigation }: Props) {
             flavor === 'courier' && profile.situation === 'approved' ? t('Atualizar') : t('Avançar')
           }
           disabled={!canProceed}
-          onPress={() => navigation.goBack()}
+          onPress={() => (flavor === 'courier' ? navigation.goBack() : null)} // add consumer navigation to new feedback screen
           activityIndicator={busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading}
           style={{ marginBottom: padding, marginHorizontal: padding }}
         />
