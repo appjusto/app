@@ -51,24 +51,26 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
     description = t(
       'Para completar seu cadastro, precisamos de uma selfie e uma foto de um documento.'
     );
-  }
-  if (profile.profileIssues) {
-    profile.profileIssues.forEach((v) => {
-      if (!isEmpty(description)) description += '\n';
-      if (typeof v === 'string') description += v;
-      else {
-        description += v.title;
-        if (v.id === 'courier-profile-invalid-phone-already-in-use') {
-          header = t('Faça login com seu e-mail');
-          switchToPassword = true;
+  } else if (flavor === 'courier') {
+    if (profile.profileIssues) {
+      profile.profileIssues.forEach((v) => {
+        if (!isEmpty(description)) description += '\n';
+        if (typeof v === 'string') description += v;
+        else {
+          description += v.title;
+          if (v.id === 'courier-profile-invalid-phone-already-in-use') {
+            header = t('Faça login com seu e-mail');
+            switchToPassword = true;
+          }
         }
-      }
-    });
+      });
+    }
+    if (profile.profileIssuesMessage) {
+      description += '\n' + profile.profileIssuesMessage;
+    }
+    if (isEmpty(description)) description = t('Entre em contato com nosso suporte.');
   }
-  if (profile.profileIssuesMessage) {
-    description += '\n' + profile.profileIssuesMessage;
-  }
-  if (isEmpty(description)) description = t('Entre em contato com nosso suporte.');
+
   // handler
   const updateCourierProfileHandler = () => {
     (async () => {
@@ -104,7 +106,10 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
           situation="chat"
         />
         <View style={{ paddingBottom: padding }}>
-          <DefaultButton title={t('Avançar')} />
+          <DefaultButton
+            title={t('Avançar')}
+            onPress={() => navigation.navigate('ProfilePhotos')}
+          />
         </View>
       </View>
       {flavor === 'courier' ? (

@@ -15,10 +15,13 @@ import ConfigItem from '../../../../../common/components/views/ConfigItem';
 import useCourierDocumentImage from '../../../../../common/store/api/courier/hooks/useCourierDocumentImage';
 import useCourierSelfie from '../../../../../common/store/api/courier/hooks/useCourierSelfie';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
+import { getFlavor } from '../../../../../common/store/config/selectors';
+import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { colors, halfPadding, padding, screens } from '../../../../../common/styles';
 import { LoggedNavigatorParamList } from '../../../../../consumer/v2/types';
+import { UnapprovedConsumerParamsList } from '../../../../../consumer/v2/UnapprovedConsumerNavigator';
 import { t } from '../../../../../strings';
 import { ApprovedParamList } from '../../../types';
 import { CourierProfileParamList } from '../types';
@@ -35,7 +38,7 @@ const { height, width } = Dimensions.get('window');
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<CourierProfileParamList, 'ProfilePhotos'>,
-  StackNavigationProp<LoggedNavigatorParamList & ApprovedParamList>
+  StackNavigationProp<LoggedNavigatorParamList & ApprovedParamList & UnapprovedConsumerParamsList>
 >;
 type ScreenRouteProp = RouteProp<CourierProfileParamList, 'ProfilePhotos'>;
 
@@ -51,7 +54,10 @@ export default function ({ navigation }: Props) {
 
   // app state
   const busy = useSelector(getUIBusy);
-  const courier = useSelector(getCourier)!;
+  const flavor = useSelector(getFlavor);
+  const consumer = useSelector(getConsumer);
+  const courier = useSelector(getCourier);
+  const profile = flavor === 'courier' ? courier! : consumer!;
 
   // screen state
   const [currentSelfie, setCurrentSelfie] = React.useState<ImageURISource | undefined | null>();
@@ -67,9 +73,9 @@ export default function ({ navigation }: Props) {
 
   // const size = courier.situation === 'approved' ? '1024x1024' : undefined;
   const size = '1024x1024';
-  const currentSelfieQuery = useCourierSelfie(courier.id, size);
+  const currentSelfieQuery = useCourierSelfie(profile.id, size);
   const uploadSelfie = useMutation(
-    (localUri: string) => api.courier().uploadSelfie(courier.id, localUri),
+    (localUri: string) => api.courier().uploadSelfie(profile.id, localUri),
     {
       onSuccess: () => {
         track('courier uploaded selfie');
@@ -78,9 +84,9 @@ export default function ({ navigation }: Props) {
     }
   );
 
-  const currentDocumentImageQuery = useCourierDocumentImage(courier.id, size);
+  const currentDocumentImageQuery = useCourierDocumentImage(profile.id, size);
   const uploadDocumentImage = useMutation(
-    (localUri: string) => api.courier().uploadDocumentImage(courier.id, localUri),
+    (localUri: string) => api.courier().uploadDocumentImage(profile.id, localUri),
     {
       onSuccess: () => {
         track('courier uploaded document image');
@@ -227,7 +233,9 @@ export default function ({ navigation }: Props) {
       <View style={{ flex: 1 }} />
       <SafeAreaView>
         <DefaultButton
-          title={courier.situation === 'approved' ? t('Atualizar') : t('Avançar')}
+          title={
+            flavor === 'courier' && profile.situation === 'approved' ? t('Atualizar') : t('Avançar')
+          }
           disabled={!canProceed}
           onPress={() => navigation.goBack()}
           activityIndicator={busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading}
