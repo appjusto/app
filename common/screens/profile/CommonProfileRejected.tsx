@@ -47,6 +47,11 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
   let header = t('Seu cadastro foi recusado :(');
   let description = '';
   let switchToPassword = false;
+  if (flavor === 'consumer') {
+    description = t(
+      'Para completar seu cadastro, precisamos de uma selfie e uma foto de um documento.'
+    );
+  }
   if (profile.profileIssues) {
     profile.profileIssues.forEach((v) => {
       if (!isEmpty(description)) description += '\n';
@@ -98,6 +103,9 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
           }}
           situation="chat"
         />
+        <View style={{ paddingBottom: padding }}>
+          <DefaultButton title={t('Avançar')} />
+        </View>
       </View>
       {flavor === 'courier' ? (
         <DefaultButton
