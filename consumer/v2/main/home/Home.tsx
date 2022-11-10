@@ -1,6 +1,7 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import * as FacebookAds from 'expo-ads-facebook';
 import React from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -8,6 +9,7 @@ import PaddedView from '../../../../common/components/containers/PaddedView';
 import { MaintenanceModal } from '../../../../common/components/views/MaintenanceModal';
 import { UpgradeVersionModal } from '../../../../common/components/views/UpgradeVersionModal';
 import { useBusinessDeeplink } from '../../../../common/hooks/useBusinessDeeplink';
+import { useFacebookAds } from '../../../../common/hooks/useFacebookAds';
 import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconLogin } from '../../../../common/icons/icon-login';
 import { IconShareGreen } from '../../../../common/icons/icon-share-green';
@@ -39,12 +41,16 @@ export default function ({ navigation }: Props) {
   useUpdateLocation();
   useNotificationToken();
   useBusinessDeeplink();
+  useFacebookAds();
   //tracking
   useSegmentScreen('Home');
   // handler
   const navigateToWelcomeScreen = () => {
     navigation.navigate('WelcomeScreen');
   };
+  React.useEffect(() => {
+    FacebookAds.AdSettings.requestPermissionsAsync();
+  }, []);
   // UI
   return (
     <View style={[screens.headless, screens.config]}>
