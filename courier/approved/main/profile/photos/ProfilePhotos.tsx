@@ -39,8 +39,8 @@ export const defaultImageOptions: ImagePicker.ImagePickerOptions = {
 const { height, width } = Dimensions.get('window');
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<CourierProfileParamList, 'ProfilePhotos'>,
-  StackNavigationProp<LoggedNavigatorParamList & ApprovedParamList & UnapprovedConsumerParamsList>
+  StackNavigationProp<CourierProfileParamList & UnapprovedConsumerParamsList, 'ProfilePhotos'>,
+  StackNavigationProp<LoggedNavigatorParamList & ApprovedParamList>
 >;
 type ScreenRouteProp = RouteProp<CourierProfileParamList, 'ProfilePhotos'>;
 
@@ -249,7 +249,11 @@ export default function ({ navigation }: Props) {
             flavor === 'courier' && profile.situation === 'approved' ? t('Atualizar') : t('Avançar')
           }
           disabled={!canProceed}
-          onPress={() => (flavor === 'courier' ? navigation.goBack() : null)} // add consumer navigation to new feedback screen
+          onPress={() =>
+            flavor === 'courier'
+              ? navigation.goBack()
+              : navigation.replace('ProfileRejectedFeedback')
+          } // add consumer navigation to new feedback screen
           activityIndicator={busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading}
           style={{ marginBottom: padding, marginHorizontal: padding }}
         />

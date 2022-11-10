@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { defaultScreenOptions } from '../../common/screens/options';
 import { CommonProfileRejected } from '../../common/screens/profile/CommonProfileRejected';
 import ProfileBlocked from '../../common/screens/profile/ProfileBlocked';
+import { ProfileRejectedFeedback } from '../../common/screens/profile/ProfileRejectedFeedback';
 import { getConsumer } from '../../common/store/consumer/selectors';
 import ProfilePhotos from '../../courier/approved/main/profile/photos/ProfilePhotos';
 import { t } from '../../strings';
@@ -12,6 +13,7 @@ export type UnapprovedConsumerParamsList = {
   ProfileBlocked: undefined;
   CommonProfileRejected: undefined;
   ProfilePhotos: undefined;
+  ProfileRejectedFeedback: undefined;
 };
 
 const Stack = createStackNavigator<UnapprovedConsumerParamsList>(); // TODO: add param list
@@ -40,6 +42,11 @@ export const UnapprovedConsumerNavigator = () => {
         name="ProfilePhotos"
         component={ProfilePhotos}
         options={{ title: t('Fotos e Documentos') }}
+      />
+      <Stack.Screen
+        name="ProfileRejectedFeedback"
+        component={ProfileRejectedFeedback}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
