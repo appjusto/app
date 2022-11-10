@@ -50,12 +50,7 @@ export default class ConsumerApi {
     );
   }
   // document
-  uploadDocumentImage(
-    id: string,
-    localUri: string,
-
-    progressHandler?: (progress: number) => void
-  ) {
+  uploadDocumentImage(id: string, localUri: string, progressHandler?: (progress: number) => void) {
     return this.files.upload(
       this.functionsRef.getConsumerDocumentStoragePath(id),
       localUri,

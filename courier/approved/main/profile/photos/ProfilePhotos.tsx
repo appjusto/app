@@ -3,7 +3,15 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import React from 'react';
-import { Dimensions, Image, ImageURISource, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Dimensions,
+  Image,
+  ImageURISource,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
@@ -255,7 +263,10 @@ export default function ({ navigation }: Props) {
               : navigation.replace('ProfileRejectedFeedback')
           } // add consumer navigation to new feedback screen
           activityIndicator={busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading}
-          style={{ marginBottom: padding, marginHorizontal: padding }}
+          style={{
+            marginBottom: Platform.OS === 'android' ? padding : undefined,
+            marginHorizontal: padding,
+          }}
         />
       </SafeAreaView>
     </ScrollView>

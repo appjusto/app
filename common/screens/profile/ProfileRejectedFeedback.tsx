@@ -5,11 +5,9 @@ import { UnapprovedConsumerParamsList } from '../../../consumer/v2/UnapprovedCon
 import { DeliveryProblemCard } from '../../../courier/approved/ongoing/delivery-problem/DeliveryProblemCard';
 import { t } from '../../../strings';
 import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
-import DefaultButton from '../../components/buttons/DefaultButton';
 import FeedbackView from '../../components/views/FeedbackView';
 import { IconConeYellow } from '../../icons/icon-cone-yellow';
 import { track } from '../../store/api/track';
-import { padding } from '../../styles';
 
 type ScreenNavigationProp = StackNavigationProp<
   UnapprovedConsumerParamsList,
@@ -35,11 +33,6 @@ export const ProfileRejectedFeedback = ({ navigation }: Props) => {
           Linking.openURL(AppJustoAssistanceWhatsAppURL);
         }}
         situation="chat"
-      />
-      <DefaultButton
-        title={t('Avançar')}
-        onPress={() => navigation.navigate('CommonProfileRejected')}
-        style={{ marginBottom: padding }}
       />
     </FeedbackView>
   );
