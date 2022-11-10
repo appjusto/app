@@ -38,14 +38,15 @@ export default class ConsumerApi {
   // selfie
   uploadSelfie(id: string, localUri: string, progressHandler?: (progress: number) => void) {
     return this.files.upload(
-      this.storagePaths.getConsumerSelfieStoragePath(id),
+      this.functionsRef.getConsumerSelfieStoragePath(id),
       localUri,
       progressHandler
     );
   }
   fetchSelfie(id: string, size?: string) {
+    console.log('FETCH SELFIE');
     return this.files.getDownloadURL(
-      this.storagePaths.getConsumerSelfieStoragePath(id, !this.emulated && size ? size : undefined)
+      this.functionsRef.getConsumerSelfieStoragePath(id, !this.emulated && size ? size : undefined)
     );
   }
   // document
@@ -56,14 +57,14 @@ export default class ConsumerApi {
     progressHandler?: (progress: number) => void
   ) {
     return this.files.upload(
-      this.storagePaths.getConsumerDocumentStoragePath(id),
+      this.functionsRef.getConsumerDocumentStoragePath(id),
       localUri,
       progressHandler
     );
   }
   fetchDocumentImage(id: string, size?: string) {
     return this.files.getDownloadURL(
-      this.storagePaths.getConsumerDocumentStoragePath(
+      this.functionsRef.getConsumerDocumentStoragePath(
         id,
         !this.emulated && size ? size : undefined
       )
