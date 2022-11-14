@@ -6,16 +6,8 @@ export class StoragePaths {
 
   // consumer
   getConsumerStoragePath = (consumerId: string) => `consumers/${consumerId}`;
-  // getConsumerSelfieStoragePath = (consumerId: string, size?: string) =>
-  //   `${this.getConsumerStoragePath(consumerId)}/selfie${size ? `${size}` : ''}.jpg`;
-  getConsumerSelfieStoragePath = (consumerId: string, size?: string) => {
-    const path = `consumers/${consumerId}/selfie${size ? `_${size}` : ''}.jpg`;
-    console.log('chegamos no path');
-    return path;
-  };
-
-  // getConsumerDocumentStoragePath = (consumerId: string, size?: string) =>
-  //   `${this.getConsumerStoragePath(consumerId)}/document${size ? `${size}` : ''}.jpg`;
+  getConsumerSelfieStoragePath = (consumerId: string, size?: string) =>
+    `consumers/${consumerId}/selfie${size ? `_${size}` : ''}.jpg`;
   getConsumerDocumentStoragePath = (consumerId: string, size?: string) =>
     `consumers/${consumerId}/document${size ? `_${size}` : ''}.jpg`;
 
