@@ -48,9 +48,7 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
   let description = '';
   let switchToPassword = false;
   if (flavor === 'consumer') {
-    description = t(
-      'Para completar seu cadastro, precisamos de uma selfie e uma foto de um documento.'
-    );
+    description = t('Para continuar, precisamos de uma selfie e uma foto de um documento.');
   } else if (flavor === 'courier') {
     if (profile.profileIssues) {
       profile.profileIssues.forEach((v) => {
