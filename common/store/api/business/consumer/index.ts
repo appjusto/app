@@ -38,28 +38,27 @@ export default class ConsumerApi {
   // selfie
   uploadSelfie(id: string, localUri: string, progressHandler?: (progress: number) => void) {
     return this.files.upload(
-      this.functionsRef.getConsumerSelfieStoragePath(id),
+      this.storagePaths.getConsumerSelfieStoragePath(id),
       localUri,
       progressHandler
     );
   }
   fetchSelfie(id: string, size?: string) {
-    console.log('FETCH SELFIE');
     return this.files.getDownloadURL(
-      this.functionsRef.getConsumerSelfieStoragePath(id, !this.emulated && size ? size : undefined)
+      this.storagePaths.getConsumerSelfieStoragePath(id, !this.emulated && size ? size : undefined)
     );
   }
   // document
   uploadDocumentImage(id: string, localUri: string, progressHandler?: (progress: number) => void) {
     return this.files.upload(
-      this.functionsRef.getConsumerDocumentStoragePath(id),
+      this.storagePaths.getConsumerDocumentStoragePath(id),
       localUri,
       progressHandler
     );
   }
   fetchDocumentImage(id: string, size?: string) {
     return this.files.getDownloadURL(
-      this.functionsRef.getConsumerDocumentStoragePath(
+      this.storagePaths.getConsumerDocumentStoragePath(
         id,
         !this.emulated && size ? size : undefined
       )
