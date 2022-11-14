@@ -22,9 +22,14 @@ export const UnapprovedConsumerNavigator = () => {
   // redux
   const consumer = useSelector(getConsumer)!;
   // helpers
-  let initialRouteName: 'ProfileBlocked' | 'CommonProfileRejected' | undefined = undefined;
-  if (consumer.situation === 'blocked' || consumer.situation === 'deleted')
-    initialRouteName = 'ProfileBlocked';
+  const { situation } = consumer;
+  let initialRouteName:
+    | 'ProfileBlocked'
+    | 'CommonProfileRejected'
+    | 'ProfileRejectedFeedback'
+    | undefined = undefined;
+  if (situation === 'blocked' || situation === 'deleted') initialRouteName = 'ProfileBlocked';
+  if (situation === 'pending') initialRouteName = 'ProfileRejectedFeedback';
   else initialRouteName = 'CommonProfileRejected';
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions} initialRouteName={initialRouteName}>

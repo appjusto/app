@@ -78,6 +78,7 @@ export default function ({ navigation }: Props) {
   const [newDocumentImage, setNewDocumentImage] = React.useState<
     ImageURISource | undefined | null
   >();
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   type ChangeImageType = typeof setNewSelfie;
 
@@ -147,6 +148,18 @@ export default function ({ navigation }: Props) {
       uploadDocumentImage.mutate(newDocumentImage.uri);
     }
   }, [newDocumentImage]);
+
+  // updating situation to 'pending' after consumer upload photos
+  React.useEffect(() => {
+    if (flavor === 'courier') return;
+    (async () => {
+      if (canProceed) {
+        setLoading(true);
+        await api.profile().updateProfile(profile.id, { situation: 'pending' });
+        setLoading(false);
+      }
+    })();
+  }, [api, canProceed, flavor, profile.id]);
 
   // handlers
   const pickFromCamera = async (changeImage: ChangeImageType, aspect: [number, number]) => {
@@ -262,7 +275,9 @@ export default function ({ navigation }: Props) {
               ? navigation.goBack()
               : navigation.replace('ProfileRejectedFeedback')
           } // add consumer navigation to new feedback screen
-          activityIndicator={busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading}
+          activityIndicator={
+            busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading || loading
+          }
           style={{
             marginBottom: Platform.OS === 'android' ? padding : undefined,
             marginHorizontal: padding,
