@@ -1,10 +1,12 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeContext';
 import { useBusinessLogoURI } from '../../../common/store/api/business/hooks/useBusinessLogoURI';
 import { colors, halfPadding, padding, texts } from '../../../common/styles';
 import { ListItemImage } from '../../../consumer/v2/food/common/ListItemImage';
 import { t } from '../../../strings';
 import { BusinessAppContext } from '../../BusinessAppContext';
+import { businessShouldBeOpen } from '../helpers';
 
 type Props = {
   onSwitchBusiness: () => void;
@@ -14,12 +16,13 @@ export const BusinessOrdersHeader = ({ onSwitchBusiness }: Props) => {
   // context
   const { businesses, business } = React.useContext(BusinessAppContext);
   const { data: logo } = useBusinessLogoURI(business?.id);
+  const getServerTime = useContextGetSeverTime();
   if (!business) return null;
   // helpers
-  const businessStatus =
-    business.status === 'open' && business.enabled === true
-      ? t('RESTAURANTE ABERTO')
-      : t('RESTAURANTE FECHADO');
+  const today = getServerTime();
+  const shouldBeOpen = businessShouldBeOpen(today, business.schedules) && business.enabled === true;
+
+  const businessStatus = shouldBeOpen ? t('RESTAURANTE ABERTO') : t('RESTAURANTE FECHADO');
   return (
     <View
       style={{ height: 48, width: '100%', flexDirection: 'row', backgroundColor: colors.white }}
