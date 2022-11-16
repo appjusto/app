@@ -70,7 +70,7 @@ export const BusinessOrdersHeader = ({ onSwitchBusiness }: Props) => {
                 height: 12,
                 width: 12,
                 borderRadius: 6,
-                backgroundColor: business.status === 'open' ? colors.green500 : colors.red,
+                backgroundColor: shouldBeOpen ? colors.green500 : colors.red,
                 marginRight: halfPadding,
                 marginTop: halfPadding,
                 bottom: 4,
