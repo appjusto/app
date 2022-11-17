@@ -149,18 +149,6 @@ export default function ({ navigation }: Props) {
     }
   }, [newDocumentImage]);
 
-  // updating situation to 'pending' after consumer upload photos
-  React.useEffect(() => {
-    if (flavor === 'courier') return;
-    (async () => {
-      if (canProceed) {
-        setLoading(true);
-        await api.profile().updateProfile(profile.id, { situation: 'pending' });
-        setLoading(false);
-      }
-    })();
-  }, [api, canProceed, flavor, profile.id]);
-
   // handlers
   const pickFromCamera = async (changeImage: ChangeImageType, aspect: [number, number]) => {
     const { granted } = await ImagePicker.requestCameraPermissionsAsync();
@@ -205,6 +193,21 @@ export default function ({ navigation }: Props) {
         }
       }
     );
+  const advanceHandler = () => {
+    if (!canProceed) return;
+    if (flavor === 'consumer') {
+      setLoading(true);
+      api
+        .profile()
+        .updateProfile(profile.id, { situation: 'pending' })
+        .then(() => {
+          setLoading(false);
+          navigation.replace('ProfileRejectedFeedback');
+        });
+    } else {
+      navigation.goBack();
+    }
+  };
   // UI
   return (
     <ScrollView
@@ -270,11 +273,7 @@ export default function ({ navigation }: Props) {
             flavor === 'courier' && profile.situation === 'approved' ? t('Atualizar') : t('Avançar')
           }
           disabled={!canProceed}
-          onPress={() =>
-            flavor === 'courier'
-              ? navigation.goBack()
-              : navigation.replace('ProfileRejectedFeedback')
-          } // add consumer navigation to new feedback screen
+          onPress={advanceHandler}
           activityIndicator={
             busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading || loading
           }
