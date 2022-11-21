@@ -29,7 +29,6 @@ export const UnapprovedConsumerNavigator = () => {
     | 'ProfileRejectedFeedback'
     | undefined = undefined;
   if (situation === 'blocked' || situation === 'deleted') initialRouteName = 'ProfileBlocked';
-  if (situation === 'pending') initialRouteName = 'ProfileRejectedFeedback';
   else initialRouteName = 'CommonProfileRejected';
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions} initialRouteName={initialRouteName}>

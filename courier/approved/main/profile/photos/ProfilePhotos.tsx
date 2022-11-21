@@ -78,7 +78,6 @@ export default function ({ navigation }: Props) {
   const [newDocumentImage, setNewDocumentImage] = React.useState<
     ImageURISource | undefined | null
   >();
-  const [loading, setLoading] = React.useState<boolean>(false);
 
   type ChangeImageType = typeof setNewSelfie;
 
@@ -196,14 +195,7 @@ export default function ({ navigation }: Props) {
   const advanceHandler = () => {
     if (!canProceed) return;
     if (flavor === 'consumer') {
-      setLoading(true);
-      api
-        .profile()
-        .updateProfile(profile.id, { situation: 'pending' })
-        .then(() => {
-          setLoading(false);
-          navigation.replace('ProfileRejectedFeedback');
-        });
+      navigation.replace('ProfileRejectedFeedback');
     } else {
       navigation.goBack();
     }
@@ -274,9 +266,7 @@ export default function ({ navigation }: Props) {
           }
           disabled={!canProceed}
           onPress={advanceHandler}
-          activityIndicator={
-            busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading || loading
-          }
+          activityIndicator={busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading}
           style={{
             marginBottom: Platform.OS === 'android' ? padding : undefined,
             marginHorizontal: padding,
