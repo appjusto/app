@@ -1,6 +1,6 @@
 import { Order } from '@appjusto/types';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Linking, Text, TouchableWithoutFeedback, View } from 'react-native';
 import request from '../../../assets/lottie-icons/request.json';
 import { Lottie } from '../../../common/components/icons/Lottie';
 import RoundedText from '../../../common/components/texts/RoundedText';
@@ -22,7 +22,8 @@ export const OngoingOrderStatus = ({ order }: Props) => {
   const { status, dispatchingState, type, dispatchingStatus, fulfillment, flags } = order;
   let header: string | null = null;
   let description: string | null = null;
-
+  // helpers
+  const overConfirmingLimit = !!flags && flags.includes('waiting-confirmation') && !!deskPhone;
   if (type === 'food') {
     if (fulfillment === 'delivery') {
       if (status === 'confirming' || status === 'charged') {
@@ -31,8 +32,6 @@ export const OngoingOrderStatus = ({ order }: Props) => {
         header = t('Pedido agendado');
         description = t('Você receberá uma notificação quando seu pedido sair para a entrega');
       } else if (status === 'confirmed') {
-        const overConfirmingLimit =
-          !!flags && flags.includes('waiting-confirmation') && !!deskPhone;
         if (overConfirmingLimit) {
           header = t('Aguardando restaurante');
           description = `${t(
@@ -177,6 +176,11 @@ export const OngoingOrderStatus = ({ order }: Props) => {
       description = '';
     }
   }
+  const onCallRestaurantHandler = () => {
+    if (overConfirmingLimit) {
+      Linking.openURL(`tel:${deskPhone.number}`);
+    }
+  };
   // UI
   const iconsUI = () => {
     if (status === 'preparing' || status === 'confirmed' || status === 'charged')
@@ -189,7 +193,6 @@ export const OngoingOrderStatus = ({ order }: Props) => {
     if (!order) return;
     if (order.status === 'scheduled') {
       return (
-        // TODO: add delivery time
         <RoundedText color={colors.grey700} backgroundColor={colors.grey50} noBorder>{`${t(
           'Previsão de entrega:'
         )} ${formatDate(order.scheduledTo!)}, ${getETAWithMargin(
@@ -221,15 +224,17 @@ export const OngoingOrderStatus = ({ order }: Props) => {
     <View style={{ paddingHorizontal: padding, paddingVertical: padding }}>
       {iconsUI()}
       <Text style={{ marginTop: halfPadding, ...texts.xl }}>{header}</Text>
-      <Text
-        style={{
-          ...texts.sm,
-          color: colors.grey700,
-          marginTop: halfPadding,
-        }}
-      >
-        {description}
-      </Text>
+      <TouchableWithoutFeedback onPress={onCallRestaurantHandler}>
+        <Text
+          style={{
+            ...texts.sm,
+            color: colors.grey700,
+            marginTop: halfPadding,
+          }}
+        >
+          {description}
+        </Text>
+      </TouchableWithoutFeedback>
       {order.arrivals?.destination?.estimate &&
         order.dispatchingState !== 'arrived-destination' && (
           <View style={{ marginTop: padding }}>{etaUI()}</View>
