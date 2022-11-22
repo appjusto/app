@@ -92,6 +92,7 @@ export default class CourierApi {
         where('to.accountId', '==', courierId),
         where('orderId', '==', orderId),
         where('status', '==', 'paid'),
+        where('operation', '==', 'others'),
         limit(1)
       )
     );
