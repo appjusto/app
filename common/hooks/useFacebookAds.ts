@@ -23,9 +23,11 @@ export const useFacebookAds = () => {
   // side effects
   // required for iOS > 14
   React.useEffect(() => {
-    if (status === 'granted') {
-      FacebookAds.AdSettings.setAdvertiserTrackingEnabled(true);
-    }
+    (async () => {
+      if (status === 'granted') {
+        FacebookAds.AdSettings.setAdvertiserTrackingEnabled(true);
+      }
+    })();
   }, [status]);
   // initial
   React.useEffect(() => {
