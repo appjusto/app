@@ -18,12 +18,13 @@ import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, halfPadding, screens, texts } from '../../../../../common/styles';
+import { ApprovedParamList } from '../../../../../courier/approved/types';
 import { t } from '../../../../../strings';
 import { LoggedNavigatorParamList } from '../../../types';
 import { FoodOrderNavigatorParamList } from '../../types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<FoodOrderNavigatorParamList, 'RecommendRestaurant'>,
+  StackNavigationProp<FoodOrderNavigatorParamList & ApprovedParamList, 'RecommendRestaurant'>,
   StackNavigationProp<LoggedNavigatorParamList & UnloggedParamList>
 >;
 

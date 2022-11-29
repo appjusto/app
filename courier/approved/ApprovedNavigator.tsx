@@ -4,6 +4,7 @@ import { PlatformParamsContextProvider } from '../../common/contexts/PlatformPar
 import { GetServerTimeContextProvider } from '../../common/contexts/ServerTimeContext';
 import { defaultScreenOptions } from '../../common/screens/options';
 import { PermissionDenied } from '../../common/screens/PermissionDenied';
+import { RecommendRestaurant } from '../../consumer/v2/food/restaurant/recommend/RecommendRestaurant';
 import { t } from '../../strings';
 import DeliveriesNavigator from './main/history/DeliveriesNavigator';
 import MainNavigator from './main/MainNavigator';
@@ -71,6 +72,11 @@ export default function () {
             name="RejectedMatchingFeedback"
             component={RejectedMatchingFeedback}
             options={{ title: t('Informações enviadas') }}
+          />
+          <Stack.Screen
+            name="RecommendRestaurant"
+            component={RecommendRestaurant}
+            options={{ title: t('Indicar restaurante') }}
           />
         </Stack.Navigator>
       </GetServerTimeContextProvider>
