@@ -106,14 +106,14 @@ export default class BusinessApi {
   // recommendations
   async addRecomendation(
     recommendedBusiness: Place,
-    consumerId?: string,
+    userId?: string,
     instagram?: string,
     phone?: string,
     owner?: string
   ) {
     await addDoc(this.firestoreRefs.getRecommendationsRef(), {
       recommendedBusiness,
-      consumerId: consumerId ?? null,
+      userId: userId ?? null,
       instagram: instagram ?? null,
       phone: phone ?? null,
       owner: owner ?? null,

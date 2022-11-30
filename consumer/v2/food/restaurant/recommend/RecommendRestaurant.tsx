@@ -15,7 +15,9 @@ import PatternInput from '../../../../../common/components/inputs/PatternInput';
 import LabeledText from '../../../../../common/components/texts/LabeledText';
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
+import { getFlavor } from '../../../../../common/store/config/selectors';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
+import { getCourier } from '../../../../../common/store/courier/selectors';
 import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, halfPadding, screens, texts } from '../../../../../common/styles';
 import { ApprovedParamList } from '../../../../../courier/approved/types';
@@ -42,7 +44,10 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // redux
+  const flavor = useSelector(getFlavor);
   const consumer = useSelector(getConsumer);
+  const courier = useSelector(getCourier);
+  const profile = flavor === 'courier' ? courier! : consumer!;
   // screen state
   const [name, setName] = React.useState<string | undefined>();
   const [instagram, setInstagram] = React.useState<string>('');
@@ -66,8 +71,8 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
     (async () => {
       try {
         setLoading(true);
-        await api.business().addRecomendation(place, consumer?.id, instagram, phone, owner);
-        track('consumer sent a restaurant recommendation to database');
+        await api.business().addRecomendation(place, profile?.id, instagram, phone, owner);
+        track(`${flavor} sent a restaurant recommendation to database`);
         setLoading(false);
         navigation.replace('RecommendationFeedback', { returnToHome });
       } catch (error) {
@@ -76,6 +81,10 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
       setLoading(false);
     })();
   };
+  // helper
+  const courierMandatoryFields = Boolean(place && phone.length > 0 && owner.length > 0);
+  const consumerMandatoryFields = Boolean(place);
+  const canNotAdvance = flavor === 'consumer' ? !consumerMandatoryFields : !courierMandatoryFields;
   // UI
   return (
     <KeyboardAwareScrollView
@@ -153,7 +162,7 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
         <DefaultButton
           title={t('Indicar restaurante')}
           onPress={sendRecommendationHandler}
-          disabled={!place}
+          disabled={canNotAdvance}
           activityIndicator={isLoading}
         />
       </PaddedView>
