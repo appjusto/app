@@ -71,7 +71,7 @@ export const RecommendRestaurant = ({ navigation, route }: Props) => {
     (async () => {
       try {
         setLoading(true);
-        await api.business().addRecomendation(place, profile?.id, instagram, phone, owner);
+        await api.business().addRecomendation(place, flavor, profile?.id, instagram, phone, owner);
         track(`${flavor} sent a restaurant recommendation to database`);
         setLoading(false);
         navigation.replace('RecommendationFeedback', { returnToHome });
