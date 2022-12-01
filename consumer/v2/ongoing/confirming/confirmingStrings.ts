@@ -22,4 +22,4 @@ const confirmingStrings: string[] = [
 ];
 
 export const randomConfirmingString =
-  confirmingStrings[Math.floor(Math.random() * confirmingStrings.length)];
+  confirmingStrings[~~(Math.random() * confirmingStrings.length)];
