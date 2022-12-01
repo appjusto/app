@@ -1,4 +1,4 @@
-export const confirmingStrings: string[] = [
+const confirmingStrings: string[] = [
   'Uma simples mudança de hábito capaz de impactar positivamente a sociedade.',
   'Seu pedido entregue com responsabilidade social.',
   'Juntos por relações mais justas no delivery.',
@@ -20,3 +20,6 @@ export const confirmingStrings: string[] = [
   'Que tal compartilhar a diferença de preço deste pedido nas redes sociais?',
   'Ajude o AppJusto a chegar para mais gente, compartilhe!',
 ];
+
+export const randomConfirmingString =
+  confirmingStrings[Math.floor(Math.random() * confirmingStrings.length)];

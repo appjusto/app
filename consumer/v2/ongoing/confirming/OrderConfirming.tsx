@@ -68,8 +68,6 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  console.log(order.status);
-  console.log(order.dispatchingStatus);
   const { paymentMethod, type, scheduledTo, fulfillment, dispatchingStatus } = order;
   if (paymentMethod === 'pix') {
     if (type === 'p2p') {
