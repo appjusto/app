@@ -40,7 +40,7 @@ export const AboutTransparency = () => {
         </Text>
         <Text style={{ ...texts.md, marginTop: 24 }}>
           {t(
-            'Os pagamentos por cartão de crédito serão recebidos em 30 dias e os feitos com Pix no mesmo dia.'
+            'Todos pedidos são recebidos em 24h e as gorjetas pagas por cartão de crédito serão recebidos em 30 dias e os feitos com Pix em 24 horas.'
           )}
         </Text>
         <Text style={{ ...texts.md, marginTop: 24 }}>
@@ -53,7 +53,7 @@ export const AboutTransparency = () => {
         </Text>
         <Text style={{ ...texts.md, marginTop: 24 }}>
           {t(
-            'Para transferir para a sua conta, o custo é de R$ 2,00. Em breve, teremos transferências grátis por Pix!'
+            'Para transferir para a sua conta, o custo é de R$ 1,00 e você pode transferir quantas vezes quiser.'
           )}
         </Text>
       </PaddedView>
