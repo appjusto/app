@@ -28,3 +28,7 @@ export type BusinessNavParamsList = {
   BusinessProfile: undefined;
   NotificationPreferences: undefined;
 };
+
+export type UnnaprovedBusinessParamsList = {
+  BusinessPending: undefined;
+};
