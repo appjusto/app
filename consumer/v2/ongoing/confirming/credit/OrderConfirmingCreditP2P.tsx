@@ -9,6 +9,7 @@ import { colors, padding } from '../../../../../common/styles';
 import { DeliveryProblemCard } from '../../../../../courier/approved/ongoing/delivery-problem/DeliveryProblemCard';
 import { t } from '../../../../../strings';
 import { AppJustoAssistanceWhatsAppURL } from '../../../../../strings/values';
+import { randomConfirmingString } from '../confirmingStrings';
 
 interface Props {
   onCancel: () => void;
@@ -18,9 +19,7 @@ export const OrderConfirmingCreditP2P = ({ onCancel }: Props) => {
   return (
     <FeedbackView
       header={t('Procurando um entregador')}
-      description={t(
-        'Você sabia que o AppJusto não fica com nada do valor da entrega? Ao pedir pelo AppJusto, você ajuda esse entregador a receber mais por seu trabalho. Justo, né?'
-      )}
+      description={t(randomConfirmingString)}
       icon={<Lottie animationObject={p2pJson} iconStyle={{ width: 114, height: 114 }} />}
       background={colors.white}
     >
