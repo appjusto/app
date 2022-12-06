@@ -3,7 +3,15 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import React from 'react';
-import { Dimensions, Image, ImageURISource, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Dimensions,
+  Image,
+  ImageURISource,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
@@ -12,13 +20,18 @@ import { ApiContext } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../../../common/components/views/ConfigItem';
+import { useDocumentImage } from '../../../../../common/hooks/useDocumentImage';
+import { useSelfie } from '../../../../../common/hooks/useSelfie';
 import useCourierDocumentImage from '../../../../../common/store/api/courier/hooks/useCourierDocumentImage';
 import useCourierSelfie from '../../../../../common/store/api/courier/hooks/useCourierSelfie';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
+import { getFlavor } from '../../../../../common/store/config/selectors';
+import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { colors, halfPadding, padding, screens } from '../../../../../common/styles';
 import { LoggedNavigatorParamList } from '../../../../../consumer/v2/types';
+import { UnapprovedConsumerParamsList } from '../../../../../consumer/v2/UnapprovedConsumerNavigator';
 import { t } from '../../../../../strings';
 import { ApprovedParamList } from '../../../types';
 import { CourierProfileParamList } from '../types';
@@ -34,7 +47,7 @@ export const defaultImageOptions: ImagePicker.ImagePickerOptions = {
 const { height, width } = Dimensions.get('window');
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<CourierProfileParamList, 'ProfilePhotos'>,
+  StackNavigationProp<CourierProfileParamList & UnapprovedConsumerParamsList, 'ProfilePhotos'>,
   StackNavigationProp<LoggedNavigatorParamList & ApprovedParamList>
 >;
 type ScreenRouteProp = RouteProp<CourierProfileParamList, 'ProfilePhotos'>;
@@ -51,7 +64,10 @@ export default function ({ navigation }: Props) {
 
   // app state
   const busy = useSelector(getUIBusy);
-  const courier = useSelector(getCourier)!;
+  const flavor = useSelector(getFlavor);
+  const consumer = useSelector(getConsumer);
+  const courier = useSelector(getCourier);
+  const profile = flavor === 'courier' ? courier! : consumer!;
 
   // screen state
   const [currentSelfie, setCurrentSelfie] = React.useState<ImageURISource | undefined | null>();
@@ -65,25 +81,35 @@ export default function ({ navigation }: Props) {
 
   type ChangeImageType = typeof setNewSelfie;
 
-  // const size = courier.situation === 'approved' ? '1024x1024' : undefined;
   const size = '1024x1024';
-  const currentSelfieQuery = useCourierSelfie(courier.id, size);
+  const currentSelfieQuery =
+    flavor === 'courier' ? useCourierSelfie(profile.id, size) : useSelfie(profile.id, size);
   const uploadSelfie = useMutation(
-    (localUri: string) => api.courier().uploadSelfie(courier.id, localUri),
+    (localUri: string) =>
+      flavor === 'courier'
+        ? api.courier().uploadSelfie(profile.id, localUri)
+        : api.consumer().uploadSelfie(profile.id, localUri),
     {
       onSuccess: () => {
-        track('courier uploaded selfie');
+        track(`${flavor} uploaded selfie`);
         currentSelfieQuery.refetch();
       },
     }
   );
 
-  const currentDocumentImageQuery = useCourierDocumentImage(courier.id, size);
+  const currentDocumentImageQuery =
+    flavor === 'courier'
+      ? useCourierDocumentImage(profile.id, size)
+      : useDocumentImage(profile.id, size); // replace this
   const uploadDocumentImage = useMutation(
-    (localUri: string) => api.courier().uploadDocumentImage(courier.id, localUri),
+    // (localUri: string) => api.user().uploadDocumentImage(profile.id, localUri, flavor),
+    (localUri: string) =>
+      flavor === 'courier'
+        ? api.courier().uploadDocumentImage(profile.id, localUri)
+        : api.consumer().uploadDocumentImage(profile.id, localUri),
     {
       onSuccess: () => {
-        track('courier uploaded document image');
+        track(`${flavor} uploaded document image`);
         currentDocumentImageQuery.refetch();
       },
     }
@@ -166,6 +192,14 @@ export default function ({ navigation }: Props) {
         }
       }
     );
+  const advanceHandler = () => {
+    if (!canProceed) return;
+    if (flavor === 'consumer') {
+      navigation.replace('ProfileRejectedFeedback');
+    } else {
+      navigation.goBack();
+    }
+  };
   // UI
   return (
     <ScrollView
@@ -227,11 +261,16 @@ export default function ({ navigation }: Props) {
       <View style={{ flex: 1 }} />
       <SafeAreaView>
         <DefaultButton
-          title={courier.situation === 'approved' ? t('Atualizar') : t('Avançar')}
+          title={
+            flavor === 'courier' && profile.situation === 'approved' ? t('Atualizar') : t('Avançar')
+          }
           disabled={!canProceed}
-          onPress={() => navigation.goBack()}
+          onPress={advanceHandler}
           activityIndicator={busy || uploadSelfie.isLoading || uploadDocumentImage.isLoading}
-          style={{ marginBottom: padding, marginHorizontal: padding }}
+          style={{
+            marginBottom: Platform.OS === 'android' ? padding : undefined,
+            marginHorizontal: padding,
+          }}
         />
       </SafeAreaView>
     </ScrollView>

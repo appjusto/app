@@ -1,7 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { Keyboard, Linking, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Linking, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { UnapprovedConsumerParamsList } from '../../../consumer/v2/UnapprovedConsumerNavigator';
@@ -12,13 +12,15 @@ import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
 import { ApiContext, AppDispatch } from '../../app/context';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import FeedbackView from '../../components/views/FeedbackView';
+import { useDocumentImage } from '../../hooks/useDocumentImage';
+import { useSelfie } from '../../hooks/useSelfie';
 import { IconConeYellow } from '../../icons/icon-cone-yellow';
 import { track, useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
 import { getConsumer } from '../../store/consumer/selectors';
 import { getCourier } from '../../store/courier/selectors';
 import { showToast } from '../../store/ui/actions';
-import { padding } from '../../styles';
+import { colors, padding, screens } from '../../styles';
 
 type ScreenNavigationProp = StackNavigationProp<
   UnapprovedConsumerParamsList & ProfileIssuesParamsList,
@@ -36,10 +38,17 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
   // app state
   const flavor = useSelector(getFlavor);
   const consumer = useSelector(getConsumer);
+  const consumerSelfie = useSelfie(consumer?.id);
+  const consumerDoc = useDocumentImage(consumer?.id);
   const courier = useSelector(getCourier);
   const profile = flavor === 'courier' ? courier! : consumer!;
   // state
   const [isLoading, setLoading] = React.useState(false);
+  // helpers
+  const checkingConsumerPhotos =
+    flavor === 'consumer' && consumerSelfie.data === undefined && consumerDoc.data === undefined;
+  const consumerHasNotSentPhotos =
+    flavor === 'consumer' && isEmpty(consumerSelfie.data) && isEmpty(consumerDoc.data);
   // side effects
   // tracking
   useSegmentScreen('CommonProfileRejected');
@@ -47,23 +56,33 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
   let header = t('Seu cadastro foi recusado :(');
   let description = '';
   let switchToPassword = false;
-  if (profile.profileIssues) {
-    profile.profileIssues.forEach((v) => {
-      if (!isEmpty(description)) description += '\n';
-      if (typeof v === 'string') description += v;
-      else {
-        description += v.title;
-        if (v.id === 'courier-profile-invalid-phone-already-in-use') {
-          header = t('Faça login com seu e-mail');
-          switchToPassword = true;
+  if (flavor === 'consumer') {
+    if (consumerHasNotSentPhotos)
+      description = t('Para continuar, precisamos de uma selfie e uma foto de um documento.');
+    else {
+      header = t('Fotos enviadas');
+      description = t('Aguarde enquanto analisamos os documentos');
+    }
+  } else if (flavor === 'courier') {
+    if (profile.profileIssues) {
+      profile.profileIssues.forEach((v) => {
+        if (!isEmpty(description)) description += '\n';
+        if (typeof v === 'string') description += v;
+        else {
+          description += v.title;
+          if (v.id === 'courier-profile-invalid-phone-already-in-use') {
+            header = t('Faça login com seu e-mail');
+            switchToPassword = true;
+          }
         }
-      }
-    });
+      });
+    }
+    if (profile.profileIssuesMessage) {
+      description += '\n' + profile.profileIssuesMessage;
+    }
+    if (isEmpty(description)) description = t('Entre em contato com nosso suporte.');
   }
-  if (profile.profileIssuesMessage) {
-    description += '\n' + profile.profileIssuesMessage;
-  }
-  if (isEmpty(description)) description = t('Entre em contato com nosso suporte.');
+
   // handler
   const updateCourierProfileHandler = () => {
     (async () => {
@@ -86,6 +105,13 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
     })();
   };
   // UI
+  if (checkingConsumerPhotos) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <FeedbackView header={header} description={description} icon={<IconConeYellow />}>
       <View>
@@ -98,6 +124,14 @@ export const CommonProfileRejected = ({ navigation }: Props) => {
           }}
           situation="chat"
         />
+        {consumerHasNotSentPhotos ? (
+          <View style={{ paddingBottom: padding }}>
+            <DefaultButton
+              title={t('Avançar')}
+              onPress={() => navigation.navigate('ProfilePhotos')}
+            />
+          </View>
+        ) : null}
       </View>
       {flavor === 'courier' ? (
         <DefaultButton

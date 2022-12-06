@@ -46,14 +46,19 @@ export const LoggedNavigator = () => {
   useObserveOngoingOrders(options);
   // UI
   const situation = consumer?.situation;
-  if (!situation || situation === 'pending') {
+  if (!situation) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
   }
-  if (situation === 'blocked' || situation === 'deleted' || situation === 'rejected') {
+  if (
+    situation === 'blocked' ||
+    situation === 'deleted' ||
+    situation === 'rejected' ||
+    situation === 'pending'
+  ) {
     return <UnapprovedConsumerNavigator />;
   }
   const { onboarded } = consumer;
