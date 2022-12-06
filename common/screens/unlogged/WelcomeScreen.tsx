@@ -111,7 +111,7 @@ export default function ({ navigation, route }: Props) {
   if (flavor === 'courier') welcomeMessage = t('Ganhe mais, com autonomia e transparência.');
   if (flavor === 'business')
     welcomeMessage = t('Gerencie seu restaurante de forma fácil e automatizada.');
-  else welcomeMessage = t('Um delivery aberto, transparente e consciente.');
+  else welcomeMessage = t('Delivery e entregas com modelo sustentável.');
   const actionButtonTitle =
     flavor === 'courier'
       ? authMode === 'phone'
@@ -215,7 +215,7 @@ export default function ({ navigation, route }: Props) {
                     title={t('Acesse sua conta')}
                     placeholder={t('Digite seu e-mail')}
                     onChangeText={(value) => setEmail(value.toLowerCase())}
-                    autoCompleteType="email"
+                    autoComplete="email"
                     keyboardType="email-address"
                     blurOnSubmit
                     autoCapitalize="none"

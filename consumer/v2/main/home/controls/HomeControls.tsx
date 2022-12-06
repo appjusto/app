@@ -24,7 +24,7 @@ export const HomeControls = ({ onStartOrderPress }: Props) => {
           },
         ]}
       >
-        {t('Um delivery aberto, transparente e consciente.')}
+        {t('Delivery e entregas com modelo sustentável.')}
       </Text>
       <View
         style={{
