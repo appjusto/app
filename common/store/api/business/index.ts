@@ -24,6 +24,7 @@ import {
   where,
 } from 'firebase/firestore';
 import * as Sentry from 'sentry-expo';
+import { Flavor } from '../../../../../types';
 import { FirestoreRefs } from '../../refs/FirestoreRefs';
 import { StoragePaths } from '../../refs/StoragePaths';
 import FilesApi from '../files';
@@ -106,14 +107,16 @@ export default class BusinessApi {
   // recommendations
   async addRecomendation(
     recommendedBusiness: Place,
-    consumerId?: string,
+    flavor: Flavor,
+    userId?: string,
     instagram?: string,
     phone?: string,
     owner?: string
   ) {
     await addDoc(this.firestoreRefs.getRecommendationsRef(), {
       recommendedBusiness,
-      consumerId: consumerId ?? null,
+      flavor,
+      userId: userId ?? null,
       instagram: instagram ?? null,
       phone: phone ?? null,
       owner: owner ?? null,

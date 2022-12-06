@@ -17,7 +17,7 @@
   "dependencies": {
     "@appjusto/dates": "github:appjusto/dates",
     "@appjusto/menu": "^0.1.4",
-    "@appjusto/types": "^7.15.5",
+    "@appjusto/types": "^10.5.0",
     "@expo/react-native-action-sheet": "^3.13.0",
     "@expo/vector-icons": "^13.0.0",
     "@fnando/cnpj": "^1.0.2",
@@ -39,6 +39,7 @@
     "dayjs": "^1.8.36",
     "dotenv": "^8.2.0",
     "expo": "^45.0.0",
+    "expo-ads-facebook": "~11.2.0",
     "expo-analytics-segment": "~11.2.0",
     "expo-app-loading": "~2.0.0",
     "expo-application": "~4.1.0",
@@ -94,8 +95,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "sentry-expo": "^4.2.0",
-    "expo-ads-facebook": "~11.2.0"
+    "sentry-expo": "^4.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
