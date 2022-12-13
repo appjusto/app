@@ -22,11 +22,11 @@ import { MessagesIcon } from './orders/components/MessagesIcon';
 import { BusinessChats } from './orders/screens/BusinessChats';
 import { BusinessOptions } from './orders/screens/BusinessOptions';
 import { BusinessOrders } from './orders/screens/BusinessOrders';
-import { BusinessPending } from './orders/screens/BusinessPending';
 import { BusinessProfile } from './orders/screens/BusinessProfile';
 import { OrderDetail } from './orders/screens/OrderDetail';
 import { SelectBusiness } from './orders/screens/SelectBusiness';
 import { BusinessNavParamsList, LoggedBusinessNavParamsList } from './types';
+import { UnaprovedBusinessNavigator } from './UnapprovedBusinessNavigator';
 import { KEEP_ALIVE_INTERVAL, startKeepAliveTask, stopKeepAliveTask } from './utils/keepAlive';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'BusinessNavigator'>;
@@ -40,6 +40,8 @@ export const BusinessNavigator = () => {
   const { business, unreadCount } = React.useContext(BusinessAppContext);
   const status = business?.status;
   const manager = useSelector(getManager);
+  const managerSituation = manager?.situation;
+  const businessSituation = business?.situation;
   // side effects
   useNotificationToken();
   // starting/stoping keepAlive task/internval
@@ -111,15 +113,11 @@ export const BusinessNavigator = () => {
       </View>
     );
   }
+  if (managerSituation !== 'approved' || businessSituation !== 'approved') {
+    return <UnaprovedBusinessNavigator />;
+  }
   return (
-    <Stack.Navigator
-      screenOptions={defaultScreenOptions}
-      initialRouteName={
-        business.situation !== 'approved' || manager.situation !== 'approved'
-          ? 'BusinessPending'
-          : 'BusinessOrders'
-      }
-    >
+    <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen
         name="BusinessOrders"
         component={BusinessOrders}
@@ -142,11 +140,11 @@ export const BusinessNavigator = () => {
           ),
         })}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="BusinessPending"
         component={BusinessPending}
         options={{ title: t('Cadastro pendente') }}
-      />
+      /> */}
       <Stack.Screen
         name="OrderDetail"
         component={OrderDetail}
