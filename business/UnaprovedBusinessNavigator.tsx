@@ -8,11 +8,11 @@ import { colors, screens } from '../common/styles';
 import { t } from '../strings';
 import { BusinessAppContext } from './BusinessAppContext';
 import { BusinessPending } from './orders/screens/BusinessPending';
-import { UnnaprovedBusinessParamsList } from './types';
+import { UnaprovedBusinessParamsList } from './types';
 
-const Stack = createStackNavigator<UnnaprovedBusinessParamsList>();
+const Stack = createStackNavigator<UnaprovedBusinessParamsList>();
 
-export const UnnaprovedBusinessNavigator = () => {
+export const UnaprovedBusinessNavigator = () => {
   // context
   const { business } = React.useContext(BusinessAppContext);
   const manager = useSelector(getManager);

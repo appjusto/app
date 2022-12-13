@@ -29,6 +29,6 @@ export type BusinessNavParamsList = {
   NotificationPreferences: undefined;
 };
 
-export type UnnaprovedBusinessParamsList = {
+export type UnaprovedBusinessParamsList = {
   BusinessPending: undefined;
 };

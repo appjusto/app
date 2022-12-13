@@ -26,7 +26,7 @@ import { BusinessProfile } from './orders/screens/BusinessProfile';
 import { OrderDetail } from './orders/screens/OrderDetail';
 import { SelectBusiness } from './orders/screens/SelectBusiness';
 import { BusinessNavParamsList, LoggedBusinessNavParamsList } from './types';
-import { UnnaprovedBusinessNavigator } from './UnnaprovedBusinessNavigator';
+import { UnaprovedBusinessNavigator } from './UnaprovedBusinessNavigator';
 import { KEEP_ALIVE_INTERVAL, startKeepAliveTask, stopKeepAliveTask } from './utils/keepAlive';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'BusinessNavigator'>;
@@ -114,7 +114,7 @@ export const BusinessNavigator = () => {
     );
   }
   if (managerSituation !== 'approved' || businessSituation !== 'approved') {
-    return <UnnaprovedBusinessNavigator />;
+    return <UnaprovedBusinessNavigator />;
   }
   return (
     <Stack.Navigator screenOptions={defaultScreenOptions}>
