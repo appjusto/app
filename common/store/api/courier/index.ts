@@ -72,20 +72,8 @@ export default class CourierApi {
     } as Partial<CourierOrderRequest>);
   }
 
-  async fetchCourierLedgerPendingInvoices(courierId: string) {
-    const ref = this.firestoreRefs.getLedgerRef();
-    const snapshot = await getDocs(
-      query(
-        ref,
-        where('to.accountId', '==', courierId),
-        where('status', '==', 'pending'),
-        orderBy('createdOn', 'desc')
-      )
-    );
-    return documentsAs<LedgerEntry>(snapshot.docs);
-  }
-
-  async fetchDeliveryLedgerEntry(courierId: string, orderId: string) {
+  // ledger
+  async fetchOtherLedgerEntries(courierId: string, orderId: string) {
     const snapshot = await getDocs(
       query(
         this.firestoreRefs.getLedgerRef(),

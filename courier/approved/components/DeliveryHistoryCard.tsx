@@ -1,11 +1,9 @@
 import React from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
-import { useSelector } from 'react-redux';
 import ArrowBox from '../../../common/components/views/ArrowBox';
 import StatusBadge from '../../../common/components/views/StatusBadge';
 import { useDeliveryLedgerEntry } from '../../../common/store/api/courier/account/useDeliveryLedgerEntry';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
-import { getCourier } from '../../../common/store/courier/selectors';
 import { getOrderTime } from '../../../common/store/order/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import {
@@ -21,11 +19,9 @@ type Props = {
 };
 
 export const DeliveryHistoryCard = ({ orderId, onPress }: Props) => {
-  // redux store
-  const courier = useSelector(getCourier)!;
   // screen state
   const order = useObserveOrder(orderId);
-  const ledgerEntry = useDeliveryLedgerEntry(courier.id, orderId);
+  const ledgerEntry = useDeliveryLedgerEntry(orderId);
   // loading indicator
   if (!order || ledgerEntry === undefined) {
     return (
