@@ -3,14 +3,10 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { FlatList, View } from 'react-native';
-import { useSelector } from 'react-redux';
-import { ApiContext } from '../../../common/app/context';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../common/components/views/ConfigItem';
-import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
-import { useobservePendingOrderRequests } from '../../../common/store/api/courier/hooks/useobservePendingOrderRequests';
+import { useObserveActiveOrderRequests } from '../../../common/store/api/courier/hooks/useObserveActiveOrderRequests';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { getCourier } from '../../../common/store/courier/selectors';
 import { screens } from '../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../common/utils/formatters';
 import { ApprovedParamList } from '../types';
@@ -28,14 +24,8 @@ type Props = {
 };
 
 export default function ({ navigation, route }: Props) {
-  // context
-  const courier = useSelector(getCourier)!;
-  const api = React.useContext(ApiContext);
   // state
-  const requests = useobservePendingOrderRequests(courier.id);
-  const { coords } = useLastKnownLocation();
-
-  // side effects
+  const requests = useObserveActiveOrderRequests();
 
   // tracking
   useSegmentScreen('OrderRequests');

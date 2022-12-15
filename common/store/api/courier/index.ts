@@ -35,37 +35,30 @@ export default class CourierApi {
   ) {}
 
   // firestore
-  observePendingOrderRequests(
+  observeActiveOrderRequests(
     courierId: string,
-    resultHandler: (orders: CourierOrderRequest[]) => void
+    resultHandler: (orders: CourierOrderRequest[]) => void,
+    orderId?: string
   ): Unsubscribe {
+    const constraints = [
+      where('courierId', '==', courierId),
+      where('situation', 'in', ['pending', 'viewed']),
+      orderBy('createdOn', 'desc'),
+    ];
+    if (orderId) constraints.push(where('orderId', '==', orderId));
     return onSnapshot(
-      query(
-        this.firestoreRefs.getCourierRequestsRef(courierId),
-        where('situation', 'in', ['pending', 'viewed']),
-        orderBy('createdOn', 'desc')
-      ),
-      (querySnapshot) => resultHandler(documentsAs<CourierOrderRequest>(querySnapshot.docs)),
+      query(this.firestoreRefs.getCourierRequestsRef(), ...constraints),
+      (snapshot) => {
+        if (snapshot.empty) resultHandler([]);
+        else resultHandler(documentsAs<CourierOrderRequest>(snapshot.docs));
+      },
       (error) => {
         console.log(error);
         Sentry.Native.captureException(error);
       }
     );
   }
-  observeOrderRequest(
-    courierId: string,
-    orderId: string,
-    resultHandler: (order: CourierOrderRequest) => void
-  ): Unsubscribe {
-    return onSnapshot(
-      this.firestoreRefs.getCourierOrderRequestsRef(courierId, orderId),
-      (snapshot) => resultHandler(documentAs<CourierOrderRequest>(snapshot)),
-      (error) => {
-        console.log(error);
-        Sentry.Native.captureException(error);
-      }
-    );
-  }
+
   viewOrderRequest(courierId: string, orderId: string) {
     return updateDoc(this.firestoreRefs.getCourierOrderRequestsRef(courierId, orderId), {
       situation: 'viewed',

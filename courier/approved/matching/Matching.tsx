@@ -12,7 +12,7 @@ import RoundedText from '../../../common/components/texts/RoundedText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
 import OrderMap from '../../../common/screens/orders/OrderMap';
-import { useObserveOrderRequest } from '../../../common/store/api/courier/hooks/useObserveOrderRequest';
+import { useObserveActiveOrderRequests } from '../../../common/store/api/courier/hooks/useObserveActiveOrderRequests';
 import { screen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
@@ -54,7 +54,7 @@ export default function ({ navigation, route }: Props) {
   const tallerDevice = useTallerDevice();
   // state
   const { coords, lastKnownLocation } = useLastKnownLocation();
-  const request = useObserveOrderRequest(courier.id, orderId);
+  const request = useObserveActiveOrderRequests(orderId)?.find(() => true);
   const situation = request?.situation;
   const canAccept = situation === 'pending' || situation === 'viewed';
   const [routeDistanceToOrigin, setRouteDistanceToOrigin] = React.useState<number>();
