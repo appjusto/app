@@ -12,7 +12,7 @@ import RoundedText from '../../../common/components/texts/RoundedText';
 import useTallerDevice from '../../../common/hooks/useTallerDevice';
 import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
 import OrderMap from '../../../common/screens/orders/OrderMap';
-import { useObserveOrderRequest } from '../../../common/store/api/courier/hooks/useObserveOrderRequest';
+import { useObserveOrderRequests } from '../../../common/store/api/courier/hooks/useObserveOrderRequests';
 import { screen } from '../../../common/store/api/track';
 import { getCourier } from '../../../common/store/courier/selectors';
 import { showToast } from '../../../common/store/ui/actions';
@@ -54,7 +54,7 @@ export default function ({ navigation, route }: Props) {
   const tallerDevice = useTallerDevice();
   // state
   const { coords, lastKnownLocation } = useLastKnownLocation();
-  const request = useObserveOrderRequest(courier.id, orderId);
+  const request = useObserveOrderRequests(orderId)?.find(() => true);
   const situation = request?.situation;
   const canAccept = situation === 'pending' || situation === 'viewed';
   const [routeDistanceToOrigin, setRouteDistanceToOrigin] = React.useState<number>();
@@ -117,7 +117,7 @@ export default function ({ navigation, route }: Props) {
   // when situation changes
   React.useEffect(() => {
     if (situation === 'pending') {
-      api.courier().viewOrderRequest(courier.id, orderId);
+      api.courier().viewOrderRequest(request!.id);
     } else if (situation === 'accepted') {
       navigation.replace('OngoingDeliveryNavigator', {
         screen: 'OngoingDelivery',
@@ -130,7 +130,7 @@ export default function ({ navigation, route }: Props) {
     } else if (situation === 'rejected') {
       navigation.popToTop();
     }
-  }, [situation, orderId, courier.id, api, navigation]);
+  }, [situation, request, orderId, courier.id, api, navigation]);
   // UI handlers
   const acceptHandler = async () => {
     try {

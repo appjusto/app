@@ -98,9 +98,9 @@ export class FirestoreRefs {
   getCouriersRef = () => collection(getFirestore(), 'couriers');
   getCourierRef = (id: string) => doc(this.getCouriersRef(), id);
   getCourierReviewsRef = (id: string) => collection(this.getCourierRef(id), 'reviews');
-  getCourierRequestsRef = (id: string) => collection(this.getCourierRef(id), 'requests');
-  getCourierOrderRequestsRef = (courierId: string, orderId: string) =>
-    doc(this.getCourierRequestsRef(courierId), orderId);
+
+  // courier requests
+  getCourierRequestsRef = () => collection(getFirestore(), 'courier-requests');
 
   // ledger
   getLedgerRef = () => collection(getFirestore(), 'ledger');

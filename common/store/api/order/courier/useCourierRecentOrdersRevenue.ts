@@ -6,6 +6,7 @@ import { useContextGetSeverTime } from '../../../../contexts/ServerTimeContext';
 import { getUser } from '../../../user/selectors';
 import { useObserveOrders } from '../hooks/useObserveOrders';
 import { ObserveOrdersOptions } from '../types';
+import { getOrderRevenue } from './getOrderRevenue';
 
 interface Result {
   today: number;
@@ -31,13 +32,11 @@ export const useCourierRecentOrdersRevenue = () => {
     let today = 0;
     let week = 0;
     orders.forEach((order) => {
-      const delivery =
-        (order.fare?.courier?.value ?? 0) - (order.fare?.courier?.processing?.value ?? 0);
-      const tip = (order.tip?.value ?? 0) - (order.tip?.processing?.value ?? 0);
-      const revenue = delivery + tip;
-      week += revenue;
+      if (!order.fare?.courier?.value) return;
+      const value = getOrderRevenue(order);
+      week += value;
       if (Dayjs((order.createdOn as Timestamp).toDate()).diff(getServerTime(), 'day') === 0) {
-        today += revenue;
+        today += value;
       }
     });
     setResult({ today, week });

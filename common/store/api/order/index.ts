@@ -411,12 +411,6 @@ export default class OrderApi {
   }
 
   async tipCourier(orderId: string, tip: number) {
-    // await this.functionsRef.getTipCourierCallable()({
-    //   orderId,
-    //   tip,
-    //   meta: { version: getAppVersion() },
-    // });
-
     await this.updateOrder(orderId, { tip: { value: tip } });
   }
 

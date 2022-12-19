@@ -7,6 +7,7 @@ import {
 } from '@appjusto/types';
 import { IuguMarketplaceAccountAdvanceSimulation } from '@appjusto/types/payment/iugu';
 import {
+  doc,
   getDocs,
   limit,
   onSnapshot,
@@ -18,6 +19,7 @@ import {
   where,
 } from 'firebase/firestore';
 import * as Sentry from 'sentry-expo';
+import { WithId } from '../../../../../types';
 import { getAppVersion } from '../../../utils/version';
 import { FirestoreRefs } from '../../refs/FirestoreRefs';
 import { FunctionsRef } from '../../refs/FunctionsRef';
@@ -35,57 +37,59 @@ export default class CourierApi {
   ) {}
 
   // firestore
-  observePendingOrderRequests(
+  observeActiveRequests(
     courierId: string,
-    resultHandler: (orders: CourierOrderRequest[]) => void
+    resultHandler: (orders: WithId<CourierOrderRequest>[]) => void
   ): Unsubscribe {
+    const constraints = [
+      where('courierId', '==', courierId),
+      where('situation', 'in', ['pending', 'viewed']),
+      orderBy('createdOn', 'desc'),
+    ];
     return onSnapshot(
-      query(
-        this.firestoreRefs.getCourierRequestsRef(courierId),
-        where('situation', 'in', ['pending', 'viewed']),
-        orderBy('createdOn', 'desc')
-      ),
-      (querySnapshot) => resultHandler(documentsAs<CourierOrderRequest>(querySnapshot.docs)),
+      query(this.firestoreRefs.getCourierRequestsRef(), ...constraints),
+      (snapshot) => {
+        if (snapshot.empty) resultHandler([]);
+        else resultHandler(documentsAs<CourierOrderRequest>(snapshot.docs));
+      },
       (error) => {
         console.log(error);
         Sentry.Native.captureException(error);
       }
     );
   }
-  observeOrderRequest(
+
+  observeOrderRequests(
     courierId: string,
-    orderId: string,
-    resultHandler: (order: CourierOrderRequest) => void
+    resultHandler: (orders: WithId<CourierOrderRequest>[]) => void,
+    orderId: string
   ): Unsubscribe {
+    const constraints = [
+      where('courierId', '==', courierId),
+      where('orderId', '==', orderId),
+      orderBy('createdOn', 'desc'),
+    ];
     return onSnapshot(
-      this.firestoreRefs.getCourierOrderRequestsRef(courierId, orderId),
-      (snapshot) => resultHandler(documentAs<CourierOrderRequest>(snapshot)),
+      query(this.firestoreRefs.getCourierRequestsRef(), ...constraints),
+      (snapshot) => {
+        if (snapshot.empty) resultHandler([]);
+        else resultHandler(documentsAs<CourierOrderRequest>(snapshot.docs));
+      },
       (error) => {
         console.log(error);
         Sentry.Native.captureException(error);
       }
     );
   }
-  viewOrderRequest(courierId: string, orderId: string) {
-    return updateDoc(this.firestoreRefs.getCourierOrderRequestsRef(courierId, orderId), {
+
+  viewOrderRequest(requestId: string) {
+    return updateDoc(doc(this.firestoreRefs.getCourierRequestsRef(), requestId), {
       situation: 'viewed',
     } as Partial<CourierOrderRequest>);
   }
 
-  async fetchCourierLedgerPendingInvoices(courierId: string) {
-    const ref = this.firestoreRefs.getLedgerRef();
-    const snapshot = await getDocs(
-      query(
-        ref,
-        where('to.accountId', '==', courierId),
-        where('status', '==', 'pending'),
-        orderBy('createdOn', 'desc')
-      )
-    );
-    return documentsAs<LedgerEntry>(snapshot.docs);
-  }
-
-  async fetchDeliveryLedgerEntry(courierId: string, orderId: string) {
+  // ledger
+  async fetchOtherLedgerEntries(courierId: string, orderId: string) {
     const snapshot = await getDocs(
       query(
         this.firestoreRefs.getLedgerRef(),

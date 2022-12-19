@@ -15,7 +15,7 @@ import { IconPartners } from '../../../../common/icons/icon-partners';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
-import { useobservePendingOrderRequests } from '../../../../common/store/api/courier/hooks/useobservePendingOrderRequests';
+import { useObserveActiveRequests } from '../../../../common/store/api/courier/hooks/useObserveActiveRequests';
 import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getCourier } from '../../../../common/store/courier/selectors';
@@ -48,7 +48,7 @@ export default function ({ navigation }: Props) {
   const working = status !== undefined && status !== ('unavailable' as CourierStatus);
   // state
   const { shouldVerifyPhone } = useProfileSummary();
-  const requests = useobservePendingOrderRequests(courier.id);
+  const requests = useObserveActiveRequests();
   // side effects
   useNotificationToken();
   // tracking
