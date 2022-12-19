@@ -5,7 +5,7 @@ import React from 'react';
 import { FlatList, View } from 'react-native';
 import RoundedText from '../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../common/components/views/ConfigItem';
-import { useObserveActiveOrderRequests } from '../../../common/store/api/courier/hooks/useObserveActiveOrderRequests';
+import { useObserveActiveRequests } from '../../../common/store/api/courier/hooks/useObserveActiveRequests';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { screens } from '../../../common/styles';
 import { formatCurrency, formatDistance } from '../../../common/utils/formatters';
@@ -25,7 +25,7 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // state
-  const requests = useObserveActiveOrderRequests();
+  const requests = useObserveActiveRequests();
 
   // tracking
   useSegmentScreen('OrderRequests');

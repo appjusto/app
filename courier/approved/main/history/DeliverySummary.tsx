@@ -8,6 +8,7 @@ import HR from '../../../../common/components/views/HR';
 import OrderMap from '../../../../common/screens/orders/OrderMap';
 import PlaceSummary from '../../../../common/screens/orders/summary/PlaceSummary';
 import { useDeliveryLedgerEntry } from '../../../../common/store/api/courier/account/useDeliveryLedgerEntry';
+import { getOrderRevenue } from '../../../../common/store/api/order/courier/getOrderRevenue';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
@@ -51,10 +52,8 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
-  const delivery = order.fare.courier.value - (order.fare.courier.processing?.value ?? 0);
-  const tip = (order.tip?.value ?? 0) - (order.tip?.processing?.value ?? 0);
-  const total = delivery + tip + (ledgerEntry?.value ?? 0);
-  console.log(ledgerEntry);
+  let value = getOrderRevenue(order);
+  if (ledgerEntry?.value) value += ledgerEntry.value;
   // UI
   return (
     <View style={{ ...screens.default }}>
@@ -87,7 +86,7 @@ export default function ({ navigation, route }: Props) {
             }}
           >
             <Text style={{ ...texts.md, ...texts.bold }}>{t('Valor recebido')}</Text>
-            <Text style={{ ...texts.xl }}>{formatCurrency(total)}</Text>
+            <Text style={{ ...texts.xl }}>{formatCurrency(value)}</Text>
           </View>
         </PaddedView>
         <HR height={padding} />

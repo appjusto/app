@@ -7,6 +7,7 @@ import {
 } from '@appjusto/types';
 import { IuguMarketplaceAccountAdvanceSimulation } from '@appjusto/types/payment/iugu';
 import {
+  doc,
   getDocs,
   limit,
   onSnapshot,
@@ -18,6 +19,7 @@ import {
   where,
 } from 'firebase/firestore';
 import * as Sentry from 'sentry-expo';
+import { WithId } from '../../../../../types';
 import { getAppVersion } from '../../../utils/version';
 import { FirestoreRefs } from '../../refs/FirestoreRefs';
 import { FunctionsRef } from '../../refs/FunctionsRef';
@@ -35,17 +37,15 @@ export default class CourierApi {
   ) {}
 
   // firestore
-  observeActiveOrderRequests(
+  observeActiveRequests(
     courierId: string,
-    resultHandler: (orders: CourierOrderRequest[]) => void,
-    orderId?: string
+    resultHandler: (orders: WithId<CourierOrderRequest>[]) => void
   ): Unsubscribe {
     const constraints = [
       where('courierId', '==', courierId),
       where('situation', 'in', ['pending', 'viewed']),
       orderBy('createdOn', 'desc'),
     ];
-    if (orderId) constraints.push(where('orderId', '==', orderId));
     return onSnapshot(
       query(this.firestoreRefs.getCourierRequestsRef(), ...constraints),
       (snapshot) => {
@@ -59,8 +59,31 @@ export default class CourierApi {
     );
   }
 
-  viewOrderRequest(courierId: string, orderId: string) {
-    return updateDoc(this.firestoreRefs.getCourierOrderRequestsRef(courierId, orderId), {
+  observeOrderRequests(
+    courierId: string,
+    resultHandler: (orders: WithId<CourierOrderRequest>[]) => void,
+    orderId: string
+  ): Unsubscribe {
+    const constraints = [
+      where('courierId', '==', courierId),
+      where('orderId', '==', orderId),
+      orderBy('createdOn', 'desc'),
+    ];
+    return onSnapshot(
+      query(this.firestoreRefs.getCourierRequestsRef(), ...constraints),
+      (snapshot) => {
+        if (snapshot.empty) resultHandler([]);
+        else resultHandler(documentsAs<CourierOrderRequest>(snapshot.docs));
+      },
+      (error) => {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
+    );
+  }
+
+  viewOrderRequest(requestId: string) {
+    return updateDoc(doc(this.firestoreRefs.getCourierRequestsRef(), requestId), {
       situation: 'viewed',
     } as Partial<CourierOrderRequest>);
   }
