@@ -137,6 +137,7 @@ export default function ({ navigation, route }: Props) {
       setLoading(true);
       await api.order().matchOrder(orderId, routeDistanceToOrigin);
     } catch (error) {
+      console.log(error);
       navigation.replace('MatchingError');
     }
   };

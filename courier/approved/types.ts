@@ -1,6 +1,7 @@
-import { IssueType } from '@appjusto/types';
+import { IssueType, Place } from '@appjusto/types';
 import { PermissionDeniedParamList } from '../../common/screens/PermissionDenied';
 import { NestedNavigatorParams } from '../../common/types';
+import { AddressCompleteParamList } from '../../consumer/v2/common/AddressComplete';
 import { DeliveriesNavigatorParamList } from './main/history/types';
 import { PaymentNavigatorParamList } from './main/payment/types';
 import { CourierProfileParamList } from './main/profile/types';
@@ -21,4 +22,12 @@ export type ApprovedParamList = {
   };
   DropOrderFeedback: undefined;
   RejectedMatchingFeedback: undefined;
-} & PermissionDeniedParamList;
+  RecommendRestaurant?: {
+    place?: Place;
+    returnToHome?: boolean;
+  };
+  RecommendationFeedback?: {
+    returnToHome?: boolean;
+  };
+} & PermissionDeniedParamList &
+  AddressCompleteParamList;

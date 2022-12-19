@@ -6,6 +6,7 @@ import { Lottie } from '../../../../../common/components/icons/Lottie';
 import FeedbackView from '../../../../../common/components/views/FeedbackView';
 import { borders, colors, padding } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
+import { randomConfirmingString } from '../confirmingStrings';
 
 interface Props {
   onCancel: () => void;
@@ -39,9 +40,7 @@ export const OrderConfirmingCreditFood = ({
     buttonTitle = t('Cancelar pedido');
   } else {
     header = t('Criando seu pedido...');
-    description = t(
-      'Você sabia que o AppJusto não fica com nada do valor da entrega? Ao pedir pelo AppJusto, você ajuda esse entregador a receber mais por seu trabalho. Justo, né?'
-    );
+    description = t(randomConfirmingString);
     buttonTitle = t('Cancelar pedido');
   }
   return (

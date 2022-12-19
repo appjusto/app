@@ -26,6 +26,7 @@ import { getConsumer } from '../../../common/store/consumer/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatAddress } from '../../../common/utils/formatters';
+import { ApprovedParamList } from '../../../courier/approved/types';
 import { t } from '../../../strings';
 import { FoodOrderNavigatorParamList } from '../food/types';
 import { P2POrderNavigatorParamList } from '../p2p/types';
@@ -40,7 +41,7 @@ export type AddressCompleteParamList = {
 };
 
 type ScreenNavigationProp = StackNavigationProp<
-  P2POrderNavigatorParamList & FoodOrderNavigatorParamList,
+  P2POrderNavigatorParamList & FoodOrderNavigatorParamList & ApprovedParamList,
   'AddressComplete'
 >;
 type ScreenRouteProp = RouteProp<AddressCompleteParamList, 'AddressComplete'>;

@@ -86,7 +86,13 @@ export default class Api {
       !!emulated
     );
     this._fleet = new FleetApi(this._firestoreRefs);
-    this._consumer = new ConsumerApi(this._functionsRefs, this._iugu);
+    this._consumer = new ConsumerApi(
+      this._functionsRefs,
+      this._iugu,
+      this._storagePaths,
+      this._files,
+      !!emulated
+    );
     this._order = new OrderApi(this._firestoreRefs, this._functionsRefs, this.firestore);
     this._reviews = new ReviewsApi(this._firestoreRefs);
     this._maps = new MapsApi(this._functionsRefs);

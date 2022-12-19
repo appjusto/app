@@ -12,6 +12,7 @@ import { UpgradeVersionModal } from '../../../../common/components/views/Upgrade
 import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { IconHomeCourierRequests } from '../../../../common/icons/icon-home-courier-requests';
 import { IconPartners } from '../../../../common/icons/icon-partners';
+import { IconShareGreen } from '../../../../common/icons/icon-share-green';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
@@ -156,6 +157,18 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('RecommendRestaurant')}
+            style={{ marginTop: padding }}
+          >
+            <HomeCard
+              icon={<IconShareGreen />}
+              title={t('Indique um restaurante')}
+              subtitle={t(
+                'Conhece algum restaurante que ainda não está no AppJusto? Manda pra gente!'
+              )}
+            />
+          </TouchableOpacity>
           <MaintenanceModal />
           <UpgradeVersionModal />
         </PaddedView>
