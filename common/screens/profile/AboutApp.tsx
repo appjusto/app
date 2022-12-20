@@ -18,7 +18,7 @@ import { IconVersion } from '../../icons/icon-version';
 import { track, useSegmentScreen } from '../../store/api/track';
 import { showToast } from '../../store/ui/actions';
 import { screens } from '../../styles';
-import { getNativeAndManifestVersion } from '../../utils/version';
+import { getAppVersion } from '../../utils/version';
 import HomeCard from '../home/cards/HomeCard';
 
 export type AboutAppParamList = {
@@ -46,7 +46,7 @@ export const AboutApp = ({ navigation }: Props) => {
   // tracking
   useSegmentScreen('AboutApp');
   // UI
-  const appVersion = `${t('Versão:')} ${getNativeAndManifestVersion()}`;
+  const appVersion = `${t('Versão:')} ${getAppVersion()}`;
   const brand = Device.brand ?? Device.manufacturer ?? '';
   const model = Device.modelName ?? Device.modelId ?? Device.productName ?? '';
   const os = `${brand} ${model} ${Device.osVersion} ${
