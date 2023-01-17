@@ -22,6 +22,17 @@
       },
       "expoCli": "5.2.0"
     },
+    "consumer-v10-internal": {
+      "env": {
+        "FLAVOR": "consumer"
+      },
+      "releaseChannel": "v10",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "expoCli": "5.2.0"
+    },
     "courier-v10-internal-dev": {
       "extends": "courier-v10-internal",
       "env": {
@@ -30,6 +41,12 @@
     },
     "courier-v10-internal-staging": {
       "extends": "courier-v10-internal",
+      "env": {
+        "ENV": "staging"
+      }
+    },
+    "consumer-v10-internal-staging": {
+      "extends": "consumer-v10-internal",
       "env": {
         "ENV": "staging"
       }

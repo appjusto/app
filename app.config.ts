@@ -192,7 +192,7 @@ const ios = () => ({
 
 const intentFilter = (host: string, pathPrefix: string) => ({
   action: 'VIEW',
-  autoVerify: false,
+  autoVerify: true,
   data: [
     {
       scheme: 'https',
@@ -202,9 +202,12 @@ const intentFilter = (host: string, pathPrefix: string) => ({
   ],
   category: ['BROWSABLE', 'DEFAULT'],
 });
+
+// looks like intent filters are restrict one per domain
+// in case we need more deeplinks we would need to add multiple objects inside data
+// TODO: test it with eas
 const intentFilters = () =>
   [
-    intentFilter(getBaseDomain(environment), `/${flavor}`),
     intentFilter(getDeeplinkDomain(environment), `/${flavor}`),
     intentFilter(getFallbackDomain(environment), `/${flavor}`),
   ]
