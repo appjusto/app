@@ -3,8 +3,10 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
 import { useBusinessLogoURI } from '../../../../../common/store/api/business/hooks/useBusinessLogoURI';
+import { isAvailable } from '../../../../../common/store/api/business/selectors';
 import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
 import { formatDistance } from '../../../../../common/utils/formatters';
+import { useServerTime } from '../../../../../common/utils/platform/useServerTime';
 import { t } from '../../../../../strings';
 import { ListItemImage } from './ListItemImage';
 
@@ -19,10 +21,11 @@ type Props = {
 export const RestaurantListItem = ({ id, restaurant, cuisine, distance, secondary }: Props) => {
   const { data: logo } = useBusinessLogoURI(id);
   const outOfRange = (restaurant.deliveryRange ?? 0) < (distance ?? 0);
+  const now = useServerTime();
   // helpers
   const discount = `-${restaurant.averageDiscount}%`;
   const onlyScheduledOrders =
-    restaurant.status === 'closed' && restaurant.preparationModes?.includes('scheduled');
+    !isAvailable(restaurant.schedules, now()) && restaurant.preparationModes?.includes('scheduled');
   return (
     <View style={{ justifyContent: 'center' }}>
       <View

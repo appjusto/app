@@ -18,7 +18,7 @@ export const sectionsFromResults = (
   const openOutOfRange: (BusinessAlgolia | WithId<Business>)[] = [];
   const closed: (BusinessAlgolia | WithId<Business>)[] = [];
   uniqBy(items, (item) => ('id' in item ? item.id : item.objectID)).forEach((item) => {
-    if (item.status === 'open' || item.preparationModes?.includes('scheduled')) {
+    if (item.status === 'available') {
       if (!isOutOfRange(item, currentLocation)) open.push(item);
       else openOutOfRange.push(item);
     } else {

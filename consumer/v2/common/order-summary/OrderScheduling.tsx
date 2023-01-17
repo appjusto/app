@@ -45,35 +45,23 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
             />
           );
         } else {
-          if (business.status === 'open') {
-            // without scheduledTo
-            if (order.arrivals?.destination?.estimate) {
-              return (
-                <RectangularListItemText
-                  text={`Entrega: ${getETAWithMargin(order.arrivals?.destination?.estimate!)}`}
-                  selected
-                  onSelect={() => null}
-                />
-              );
-            }
+          // without scheduledTo
+          if (order.arrivals?.destination?.estimate) {
+            return (
+              <RectangularListItemText
+                text={`Entrega: ${getETAWithMargin(order.arrivals?.destination?.estimate!)}`}
+                selected
+                onSelect={() => null}
+              />
+            );
+          } else {
             return (
               <View style={screens.centered}>
                 <ActivityIndicator size="small" color={colors.green500} />
               </View>
             );
           }
-          if (business.status === 'closed') {
-            // without scheduledTo
-            return (
-              <View>
-                <Text style={{ ...texts.sm, flexWrap: 'wrap' }} numberOfLines={3}>
-                  {t('Somente agendamento')}
-                </Text>
-              </View>
-            );
-          }
         }
-        return null;
       }
       // no realtime, only scheduling
       else {

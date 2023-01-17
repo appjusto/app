@@ -68,10 +68,10 @@ export const RestaurantList = ({
         )
       }
       renderSectionHeader={({ section }) => {
-        const closed = section.data.find(() => true)?.status === 'closed';
+        const closed = section.data.find(() => true)?.status === 'unavailable';
         const openOutOfRange = section.data.filter(
           (restaurant) =>
-            restaurant.status === 'open' &&
+            restaurant.status === 'available' &&
             (restaurant.deliveryRange ?? 0) <
               (location && restaurant.businessAddress?.latlng
                 ? distanceBetweenLatLng(location, restaurant.businessAddress.latlng)
@@ -125,7 +125,7 @@ export const RestaurantList = ({
       keyExtractor={(item) => ('id' in item ? item.id : item.objectID)}
       renderItem={({ item, section }) => {
         const id = 'id' in item ? item.id : item.objectID;
-        const closed = section.data.find(() => true)?.status === 'closed';
+        const closed = section.data.find(() => true)?.status === 'unavailable';
         return (
           <View
             style={{
@@ -138,7 +138,7 @@ export const RestaurantList = ({
                 id={id}
                 restaurant={item}
                 cuisine={item.cuisine}
-                secondary={section.data.find(() => true)?.status === 'closed'}
+                secondary={section.data.find(() => true)?.status === 'unavailable'}
                 distance={
                   location && item.businessAddress?.latlng
                     ? distanceBetweenLatLng(location, item.businessAddress.latlng)
