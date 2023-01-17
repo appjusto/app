@@ -1,4 +1,3 @@
-import { Feather } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { toNumber, trim } from 'lodash';
@@ -8,7 +7,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 import { AcceptedCreditCards } from '../../../../assets/icons/credit-card/AcceptedCreditCards';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
-import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import {
@@ -20,7 +18,7 @@ import PatternInput from '../../../../common/components/inputs/PatternInput';
 import useAxiosCancelToken from '../../../../common/hooks/useAxiosCancelToken';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { showToast } from '../../../../common/store/ui/actions';
-import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { halfPadding, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { RestaurantNavigatorParamList } from '../../food/restaurant/types';
 import { OngoingOrderNavigatorParamList } from '../../ongoing/types';
@@ -154,7 +152,7 @@ export default function ({ navigation, route }: Props) {
             errorMessage={cardTypeFeedback}
             keyboardType="number-pad"
             textContentType="creditCardNumber"
-            autoCompleteType="cc-number"
+            autoComplete="cc-number"
             returnKeyType="next"
             blurOnSubmit={false}
             onChangeText={(text) => {
@@ -174,7 +172,7 @@ export default function ({ navigation, route }: Props) {
               maxLength={2}
               keyboardType="number-pad"
               returnKeyType="next"
-              autoCompleteType="cc-exp-month"
+              autoComplete="cc-exp-month"
               errorMessage={
                 cardValidation === 'month-invalid'
                   ? t('Mês inválido')
@@ -197,7 +195,7 @@ export default function ({ navigation, route }: Props) {
               maxLength={2}
               keyboardType="number-pad"
               returnKeyType="next"
-              autoCompleteType="cc-exp-year"
+              autoComplete="cc-exp-year"
               errorMessage={
                 cardValidation === 'year-invalid'
                   ? t('Ano inválido')
@@ -220,7 +218,7 @@ export default function ({ navigation, route }: Props) {
               maxLength={3}
               keyboardType="number-pad"
               returnKeyType="next"
-              autoCompleteType="cc-csc"
+              autoComplete="cc-csc"
               errorMessage={cardValidation === 'cvv-invalid' ? t('Inválido') : ''}
               blurOnSubmit={false}
               onChangeText={(text) => {
@@ -238,38 +236,10 @@ export default function ({ navigation, route }: Props) {
             keyboardType="default"
             returnKeyType="next"
             textContentType="name"
-            autoCompleteType="name"
+            autoComplete="name"
             autoCapitalize="characters"
             blurOnSubmit
             onChangeText={setName}
-          />
-        </View>
-
-        <View style={{ flex: 1 }} />
-        <View style={{ backgroundColor: colors.white, flex: 1, padding }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: padding }}>
-            <Feather name="info" size={14} />
-            <Text style={{ ...texts.md, marginLeft: halfPadding }}>
-              {t('Informações sobre a cobrança')}
-            </Text>
-          </View>
-          <Text style={{ ...texts.xs }}>
-            {t(
-              'Para sermos mais justos, o AppJusto cobra o valor total do pedido dividido em duas cobranças no cartão. Por exemplo, se o valor total do seu pedido é de R$ 30, vamos gerar duas cobranças que somadas custarão R$ 30.'
-            )}
-          </Text>
-          <Text style={{ ...texts.xs, marginTop: padding }}>
-            {t(
-              'Cada uma dessas cobranças vai pra uma conta específica, facilitando a divisão entre restaurantes e entregadores/as.'
-            )}
-          </Text>
-          <View style={{ flex: 1 }} />
-          <DefaultButton
-            style={{ paddingVertical: padding }}
-            title={t('Salvar')}
-            onPress={saveCardHandler}
-            disabled={cardValidation !== null || isLoading}
-            activityIndicator={isLoading}
           />
         </View>
       </View>

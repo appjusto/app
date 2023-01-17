@@ -400,9 +400,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
                 setDestinationModalVisible(true);
               else placeOrderHandler();
             }}
-            navigateToAboutCharges={() => {
-              navigation.navigate('AboutCharges');
-            }}
             navigateToCompleteProfile={navigateToCompleteProfile}
             navigateToSelectPayment={() =>
               navigation.navigate('SelectPaymentMethod', {

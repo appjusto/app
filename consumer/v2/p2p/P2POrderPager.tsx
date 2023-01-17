@@ -40,7 +40,6 @@ type Props = {
   navigateToTransportableItems: () => void;
   onSubmit: () => void;
   navigateToPixPayment: (total: number, fleetId: string) => void;
-  navigateToAboutCharges: () => void;
   cpf: string;
   setCpf: (value: string) => void;
   wantsCpf: boolean;
@@ -66,7 +65,6 @@ export default function ({
   navigateFleetDetail,
   navigateToTransportableItems,
   onSubmit,
-  navigateToAboutCharges,
   navigateToPixPayment,
   cpf,
   setCpf,
@@ -369,7 +367,6 @@ export default function ({
                   isSubmitEnabled={canSubmit}
                   onSubmit={onSubmit}
                   activityIndicator={isLoading}
-                  navigateToAboutCharges={navigateToAboutCharges}
                   orderId={order.id}
                   navigateToCompleteProfile={navigateToCompleteProfile}
                   navigateToSelectPayment={navigateToSelectPayment}

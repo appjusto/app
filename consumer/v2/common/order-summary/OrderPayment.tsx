@@ -1,5 +1,4 @@
 import { PayableWith } from '@appjusto/types';
-import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -22,7 +21,6 @@ interface Props {
   activityIndicator: boolean;
   onEditPaymentMethod: () => void;
   onSubmit: () => void;
-  navigateToAboutCharges: () => void;
   navigateToCompleteProfile: () => void;
   navigateToSelectPayment: () => void;
   onPayWithPix: () => void;
@@ -37,7 +35,6 @@ export const OrderPayment = ({
   activityIndicator,
   onEditPaymentMethod,
   onSubmit,
-  navigateToAboutCharges,
   onPayWithPix,
   navigateToCompleteProfile,
   navigateToSelectPayment,
@@ -76,25 +73,6 @@ export const OrderPayment = ({
               <Text style={{ ...texts.md, color: colors.green600 }}>{t('Trocar')}</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={{ marginTop: halfPadding, paddingHorizontal: padding, marginBottom: padding }}
-            onPress={navigateToAboutCharges}
-          >
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                width: '95%',
-              }}
-            >
-              <Feather name="info" size={14} />
-              <Text
-                style={{ ...texts.xs, marginLeft: halfPadding, textDecorationLine: 'underline' }}
-              >
-                {t('O valor total pode ser dividido em duas cobranças. Clique para saber mais')}
-              </Text>
-            </View>
-          </TouchableOpacity>
         </View>
       ) : null}
       {payMethod === 'pix' ? (

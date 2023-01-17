@@ -17,7 +17,6 @@ export type P2POrderNavigatorParamList = {
     payMethod?: PayableWith;
   };
   TransportableItems: undefined;
-  AboutCharges: undefined;
   AvailableFleets: {
     orderId: string;
     selectedFare: Fare;

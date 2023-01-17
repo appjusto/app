@@ -11,7 +11,6 @@ import { PayWithPix } from '../common/PayWithPix';
 import ProfileAddCard from '../main/profile/ProfileAddCard';
 import ProfilePaymentMethods from '../main/profile/ProfilePaymentMethods';
 import { SelectPaymentMethod } from '../main/profile/SelectPaymentMethod';
-import { AboutCharges } from './AboutCharges';
 import CreateOrderP2P from './CreateOrderP2P';
 import { TransportableItems } from './TransportableItems';
 import { P2POrderNavigatorParamList } from './types';
@@ -65,11 +64,6 @@ export const P2POrderNavigator = () => {
         name="SelectPaymentMethod"
         component={SelectPaymentMethod}
         options={{ title: t('Selecionar pagamento') }}
-      />
-      <Stack.Screen
-        name="AboutCharges"
-        component={AboutCharges}
-        options={{ title: t('Formas de pagamento') }}
       />
       <Stack.Screen
         name="FleetDetail"

@@ -24,7 +24,6 @@ export type RestaurantNavigatorParamList = {
     returnParam: string;
     value?: Place | null;
   };
-  AboutCharges: undefined;
   AvailableFleets: {
     orderId: string;
     selectedFare: Fare;
