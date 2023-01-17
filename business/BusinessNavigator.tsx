@@ -5,7 +5,6 @@ import React from 'react';
 import { ActivityIndicator, Image, TouchableWithoutFeedback, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { headerMenu } from '../assets/icons';
-import { ApiContext } from '../common/app/context';
 import { useNotificationToken } from '../common/hooks/useNotificationToken';
 import Chat from '../common/screens/Chat';
 import { defaultScreenOptions } from '../common/screens/options';
@@ -27,7 +26,6 @@ import { OrderDetail } from './orders/screens/OrderDetail';
 import { SelectBusiness } from './orders/screens/SelectBusiness';
 import { BusinessNavParamsList, LoggedBusinessNavParamsList } from './types';
 import { UnaprovedBusinessNavigator } from './UnapprovedBusinessNavigator';
-import { KEEP_ALIVE_INTERVAL, startKeepAliveTask, stopKeepAliveTask } from './utils/keepAlive';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'BusinessNavigator'>;
 
@@ -35,31 +33,13 @@ const Stack = createStackNavigator<BusinessNavParamsList>();
 
 export const BusinessNavigator = () => {
   // context
-  const api = React.useContext(ApiContext);
   const navigation = useNavigation<ScreenNavigationProp>();
   const { business, unreadCount } = React.useContext(BusinessAppContext);
-  const status = business?.status;
   const manager = useSelector(getManager);
   const managerSituation = manager?.situation;
   const businessSituation = business?.situation;
   // side effects
   useNotificationToken();
-  // starting/stoping keepAlive task/internval
-  React.useEffect(() => {
-    if (!status) return;
-    (async () => {
-      if (status === 'open') {
-        await api.business().sendKeepAlive(business.id);
-        await startKeepAliveTask();
-        const keepAliveInterval = setInterval(async () => {
-          await api.business().sendKeepAlive(business.id);
-        }, KEEP_ALIVE_INTERVAL * 1000);
-        return () => clearInterval(keepAliveInterval);
-      } else if (status === 'closed') {
-        await stopKeepAliveTask();
-      }
-    })();
-  }, [status]);
   // push notifications
   // handlers
   const handler = React.useCallback(

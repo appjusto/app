@@ -17,7 +17,6 @@ import { BusinessNavParamsList } from '../../types';
 import { BusinessOrdersHeader } from '../components/BusinessOrdersHeader';
 import { ListFilterButton } from '../components/ListFilterButton';
 import { OrdersKanbanItem } from '../components/OrdersKanbanItem';
-import { businessShouldBeOpen } from '../helpers';
 
 type ScreenNavigationProp = StackNavigationProp<BusinessNavParamsList, 'BusinessOrders'>;
 type ScreenRouteProp = RouteProp<BusinessNavParamsList, 'BusinessOrders'>;
@@ -48,24 +47,6 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
     if (selectedFilter === 'scheduled') setKanbanOrders(scheduledOrders);
     else setKanbanOrders(filterOrdersByStatus(orders, selectedFilter!));
   }, [orders, selectedFilter, scheduledOrders, activeOrders]);
-  // setting business status to open whenever a manager logs in during business hours
-  React.useEffect(() => {
-    (async () => {
-      if (!business?.enabled) return;
-      if (!business?.schedules) return;
-      if (!business?.status) return;
-      if (!getServerTime) return;
-      const today = getServerTime();
-      const shouldBeOpen =
-        businessShouldBeOpen(today, business.schedules) && business.enabled === true;
-      if (shouldBeOpen && business.status === 'closed') {
-        await api.business().updateBusiness(business.id, { status: 'open' });
-      }
-      if (!shouldBeOpen && business.status === 'open') {
-        await api.business().updateBusiness(business.id, { status: 'closed' });
-      }
-    })();
-  }, [business?.enabled, business?.schedules, business?.id, business?.status, getServerTime, api]);
   // getting business from SelectBusiness screen
   React.useEffect(() => {
     if (businessId?.length) {
