@@ -17,7 +17,6 @@ import {
 } from 'firebase/auth';
 import { addDoc, serverTimestamp } from 'firebase/firestore';
 import { Extra } from '../../../../config/types';
-import { getExtra } from '../../../utils/config';
 import { getDeeplinkDomain, getFallbackDomain } from '../../../utils/domains';
 import { getAppVersion } from '../../../utils/version';
 import { FirestoreRefs } from '../../refs/FirestoreRefs';
@@ -35,7 +34,7 @@ export default class AuthApi {
     private extra: Extra
   ) {
     this.auth.languageCode = 'pt';
-    this.defaultAuthMode = getExtra().flavor === 'courier' ? 'phone' : 'passwordless';
+    this.defaultAuthMode = 'phone';
   }
 
   observeAuthState(handler: (a: User | null) => any): Unsubscribe {
