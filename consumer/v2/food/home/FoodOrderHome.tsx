@@ -1,13 +1,12 @@
-import { BusinessAlgolia } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { ApiContext, AppDispatch } from '../../../../common/app/context';
+import { AppDispatch } from '../../../../common/app/context';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
+import { useGeosearch } from '../../../../common/store/api/business/geosearch/useGeosearch';
 import { useLastRestaurants } from '../../../../common/store/api/order/hooks/useLastRestaurants';
-import { useSearch } from '../../../../common/store/api/search/useSearch';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
   updateCurrentLocation,
@@ -17,8 +16,8 @@ import { getConsumer, getCurrentLocation } from '../../../../common/store/consum
 import { SearchFilter } from '../../../../common/store/consumer/types';
 import { colors, padding } from '../../../../common/styles';
 import { LoggedNavigatorParamList } from '../../types';
-import { sectionsFromResults } from '../restaurant/list';
 import { RestaurantList } from '../restaurant/list/RestaurantList';
+import { sectionsFromGeosearch } from '../restaurant/list/sectionsFromGeosearch';
 import { FoodOrderNavigatorParamList } from '../types';
 import { FoodOrderHomeHeader } from './FoodOrderHomeHeader';
 
@@ -37,21 +36,23 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   // params
   const { place } = route.params ?? {};
   // context
-  const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // redux store
   const currentLocation = useSelector(getCurrentLocation);
   const consumer = useSelector(getConsumer);
   // state
   const [filters, setFilters] = React.useState<SearchFilter[]>([]);
-  const {
-    results: restaurants,
-    isLoading,
-    refetch,
-    fetchNextPage,
-  } = useSearch<BusinessAlgolia>(true, 'restaurant', 'distance', filters, currentLocation, '');
+  // const {
+  //   results: restaurants,
+  //   isLoading,
+  //   refetch,
+  //   fetchNextPage,
+  // } = useSearch<BusinessAlgolia>(true, 'restaurant', 'distance', filters, currentLocation, '');
   const [refreshing, setRefreshing] = React.useState(false);
   const mostRecentRestaurants = useLastRestaurants(consumer?.id);
+  const { loading, available, unavailable, refetch, fetchNextPage } = useGeosearch();
+  // console.log('>>> AVAILABLE:', available);
+  // console.log('>>> UNAVAILABLE:', unavailable);
   // side effects
   React.useEffect(() => {
     if (place) {
@@ -65,14 +66,13 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   // handlers
   const refresh = async () => {
     setRefreshing(true);
-    await api.search().clearCache();
     await refetch();
     setRefreshing(false);
   };
   // UI
   return (
     <RestaurantList
-      sections={sectionsFromResults(restaurants, currentLocation)}
+      sections={sectionsFromGeosearch(available, unavailable)}
       onEndReached={() => {
         fetchNextPage();
       }}
@@ -113,7 +113,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
           screen: 'RestaurantDetail',
         });
       }}
-      loading={isLoading}
+      loading={loading}
       refreshing={refreshing}
       onRefresh={() => refresh()}
       onRecommend={() => {

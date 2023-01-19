@@ -17,7 +17,7 @@ export const scheduleFromDate = (schedule: BusinessSchedule, date: Date) => {
   return [...schedule.slice(index, 7), ...schedule.slice(0, index)];
 };
 
-export const isAvailable = (schedule: BusinessSchedule | undefined, date: Date) => {
+export const isBusinessOpen = (schedule: BusinessSchedule | undefined, date: Date) => {
   if (!schedule) return true; // is schedule is missing consider is open
   const daySchedule = getDaySchedule(schedule, date);
   return (

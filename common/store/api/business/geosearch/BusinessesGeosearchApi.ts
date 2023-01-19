@@ -1,19 +1,26 @@
-import { Business, LatLng, WithId } from '@appjusto/types';
+import { BusinessProfile, Cuisine, LatLng, WithDistance, WithId } from '@appjusto/types';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import * as geofirestore from 'geofirestore';
 import GeoFirestoreApi from '../../GeoFirestoreApi';
+
+interface FetchBusinessesAroundOptions {
+  location: LatLng;
+  page?: number;
+  cuisine?: Cuisine;
+}
 
 export default class BusinessesGeosearchApi {
   private geofirestore: geofirestore.GeoFirestore;
   constructor(geofirestoreapi: GeoFirestoreApi) {
     this.geofirestore = geofirestoreapi.getGeoFirestore();
   }
-  async fetchBusinessesAround({ latitude, longitude }: LatLng, n: number = 0, cuisine?: string) {
-    const limit = n === 0 ? 50 : n + 15;
+  async fetchBusinessesAround({ location, cuisine, page = 1 }: FetchBusinessesAroundOptions) {
+    // console.log('fetchBusinessesAround');
+    const { latitude, longitude } = location;
+    const limit = page * 15;
     let query = this.geofirestore
-      .collection('businesses')
-      .where('situation', '==', 'approved')
+      .collection('businesses-profiles')
       .where('enabled', '==', true)
       .near({ center: new firebase.firestore.GeoPoint(latitude, longitude), radius: 25, limit })
       .limit(limit);
@@ -21,6 +28,12 @@ export default class BusinessesGeosearchApi {
     const snapshot = await query.get();
     if (snapshot.empty) return [];
     const docs = snapshot.docs.sort((a, b) => a.distance - b.distance);
-    return docs.map((doc) => ({ ...doc.data(), id: doc.id } as WithId<Business>));
+    // console.log(docs.map((d) => d.data().name));
+    return docs.map(
+      (doc) =>
+        ({ ...doc.data(), id: doc.id, distance: doc.distance } as WithDistance<
+          WithId<BusinessProfile>
+        >)
+    );
   }
 }

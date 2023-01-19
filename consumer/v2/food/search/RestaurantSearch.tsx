@@ -57,7 +57,7 @@ export default function ({ navigation }: Props) {
     refetch: refetchRestaurants,
     isLoading: loadingRestaurants,
   } = useSearch<BusinessAlgolia>(
-    kind === 'restaurant',
+    kind === 'restaurant' && search.length > 0,
     kind,
     order,
     filters,

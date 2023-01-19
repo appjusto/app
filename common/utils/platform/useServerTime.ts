@@ -49,11 +49,11 @@ export const useServerTime = () => {
       if (expired(info)) {
         const serverTime = await api.getServerTime();
         const newDelta = serverTime - new Date().getTime();
-        console.log('Atualizando o sever time com delta de ', newDelta);
+        // console.log('Atualizando o sever time com delta de ', newDelta);
         await store(newDelta);
         setDelta(newDelta);
       } else {
-        console.log('Recuperando o delta de server time', info!.delta);
+        // console.log('Recuperando o delta de server time', info!.delta);
         setDelta(info!.delta);
       }
     })();

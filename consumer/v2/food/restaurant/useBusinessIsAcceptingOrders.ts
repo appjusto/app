@@ -2,7 +2,7 @@ import { Business, LatLng } from '@appjusto/types';
 import { toNumber } from 'lodash';
 import { usePlatformParamsContext } from '../../../../common/contexts/PlatformParamsContext';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
-import { isAvailable } from '../../../../common/store/api/business/selectors';
+import { isBusinessOpen } from '../../../../common/store/api/business/selectors';
 import { distanceBetweenLatLng } from '../../../../common/store/api/helpers';
 import { formatTime } from '../../../../common/utils/formatters';
 
@@ -34,7 +34,7 @@ export const useBusinessIsAcceptingOrders = (
 
   if (business.status !== 'available') return 'closed';
 
-  if (!isAvailable(business.schedules, now) && !business.preparationModes?.includes('scheduled'))
+  if (!isBusinessOpen(business.schedules, now) && !business.preparationModes?.includes('scheduled'))
     return 'closed';
 
   return 'accepting';

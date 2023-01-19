@@ -17,7 +17,7 @@ import { useModalToastContext } from '../../../../../common/contexts/ModalToastC
 import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTimeContext';
 import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
 import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
-import { isAvailable } from '../../../../../common/store/api/business/selectors';
+import { isBusinessOpen } from '../../../../../common/store/api/business/selectors';
 import { useQuotes } from '../../../../../common/store/api/order/hooks/useQuotes';
 import { useProfileSummary } from '../../../../../common/store/api/profile/useProfileSummary';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
@@ -87,7 +87,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [payMethod, setPayMethod] = React.useState<PayableWith>(
     consumer.paymentChannel?.mostRecentPaymentMethod ?? 'credit_card'
   );
-  const available = isAvailable(business?.schedules, now);
+  const available = isBusinessOpen(business?.schedules, now);
   const canScheduleOrder =
     business &&
     !available &&

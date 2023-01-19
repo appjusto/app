@@ -5,7 +5,7 @@ import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { RectangularListItemText } from '../../../../common/components/list items/RectangularListItemText';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
-import { isAvailable } from '../../../../common/store/api/business/selectors';
+import { isBusinessOpen } from '../../../../common/store/api/business/selectors';
 import { useContextBusiness } from '../../../../common/store/context/business';
 import { useContextActiveOrder } from '../../../../common/store/context/order';
 import { colors, padding, screens, texts } from '../../../../common/styles';
@@ -31,7 +31,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
     now.getTime() + (business.averageCookingTime ? business.averageCookingTime * 1000 : 3600 * 1000)
   );
   const { fulfillment, scheduledTo } = order;
-  const available = isAvailable(business.schedules, now);
+  const available = isBusinessOpen(business.schedules, now);
   const canScheduleUI = () => {
     // realtime and scheduling
     if (fulfillment === 'delivery') {

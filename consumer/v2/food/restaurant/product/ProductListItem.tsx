@@ -2,7 +2,7 @@ import { BusinessSchedule } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
-import { isAvailable } from '../../../../../common/store/api/business/selectors';
+import { isBusinessOpen } from '../../../../../common/store/api/business/selectors';
 import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
@@ -31,7 +31,7 @@ export const ProductListItem = ({
   showRestaurantName,
 }: Props) => {
   const { data: imageURI } = useProductImageURI(business.id, product.id);
-  const available = isAvailable(product.availability, new Date());
+  const available = isBusinessOpen(product.availability, new Date());
   // UI
   if (!available) return null;
   return (

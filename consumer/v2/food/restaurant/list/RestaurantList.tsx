@@ -1,4 +1,4 @@
-import { Business, BusinessAlgolia, WithId } from '@appjusto/types';
+import { Business, BusinessAlgolia, BusinessProfile, WithDistance, WithId } from '@appjusto/types';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -22,7 +22,10 @@ import { RestaurantListItem } from './RestaurantListItem';
 import { RestaurantListSection } from './types';
 
 interface Props
-  extends SectionListProps<BusinessAlgolia | WithId<Business>, RestaurantListSection> {
+  extends SectionListProps<
+    BusinessAlgolia | WithId<Business> | WithDistance<WithId<BusinessProfile>>,
+    RestaurantListSection
+  > {
   loading?: boolean;
   onSelect: (id: string) => void;
   onRecommend?: () => void;
@@ -54,7 +57,7 @@ export const RestaurantList = ({
         )
       }
       ListEmptyComponent={
-        refreshing ? null : loading ? (
+        refreshing || loading ? (
           <View style={{ ...screens.centered, marginTop: padding }}>
             <ActivityIndicator size="large" color={colors.green500} />
           </View>

@@ -1,9 +1,9 @@
-import { Business, BusinessAlgolia, WithId } from '@appjusto/types';
+import { Business, BusinessAlgolia, BusinessProfile, WithDistance, WithId } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
 import { useBusinessLogoURI } from '../../../../../common/store/api/business/hooks/useBusinessLogoURI';
-import { isAvailable } from '../../../../../common/store/api/business/selectors';
+import { isBusinessOpen } from '../../../../../common/store/api/business/selectors';
 import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
 import { formatDistance } from '../../../../../common/utils/formatters';
 import { useServerTime } from '../../../../../common/utils/platform/useServerTime';
@@ -12,7 +12,7 @@ import { ListItemImage } from './ListItemImage';
 
 type Props = {
   id: string;
-  restaurant: BusinessAlgolia | WithId<Business>;
+  restaurant: BusinessAlgolia | WithId<Business> | WithDistance<WithId<BusinessProfile>>;
   cuisine: string | undefined;
   distance: number | undefined;
   secondary?: boolean;
@@ -25,7 +25,8 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance, secondar
   // helpers
   const discount = `-${restaurant.averageDiscount}%`;
   const onlyScheduledOrders =
-    !isAvailable(restaurant.schedules, now()) && restaurant.preparationModes?.includes('scheduled');
+    !isBusinessOpen(restaurant.schedules, now()) &&
+    restaurant.preparationModes?.includes('scheduled');
   return (
     <View style={{ justifyContent: 'center' }}>
       <View
