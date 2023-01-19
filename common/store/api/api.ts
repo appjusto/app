@@ -49,7 +49,7 @@ export default class Api {
   private _files: FilesApi;
   private _iugu: IuguApi;
   private _business: BusinessApi;
-  private _businessesGeoSearch: BusinessesGeosearchApi;
+  private _businessesGeosearch: BusinessesGeosearchApi;
   private _search: SearchApi;
   private _user: UserApi;
 
@@ -97,7 +97,7 @@ export default class Api {
     this._reviews = new ReviewsApi(this._firestoreRefs);
     this._maps = new MapsApi(this._functionsRefs);
     this._business = new BusinessApi(this._firestoreRefs, this._storagePaths, this._files);
-    this._businessesGeoSearch = new BusinessesGeosearchApi(new GeoFirestoreApi(extra));
+    this._businessesGeosearch = new BusinessesGeosearchApi(new GeoFirestoreApi(extra));
     this._search = new SearchApi(extra.algolia, extra.environment);
     this._user = new UserApi(this._firestoreRefs, extra.flavor);
   }
@@ -151,7 +151,7 @@ export default class Api {
   }
 
   businessesGeosearch() {
-    return this._businessesGeoSearch;
+    return this._businessesGeosearch;
   }
 
   search() {
