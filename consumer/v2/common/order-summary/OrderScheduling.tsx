@@ -5,6 +5,7 @@ import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { RectangularListItemText } from '../../../../common/components/list items/RectangularListItemText';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
+import { isAvailable } from '../../../../common/store/api/business/selectors';
 import { useContextBusiness } from '../../../../common/store/context/business';
 import { useContextActiveOrder } from '../../../../common/store/context/order';
 import { colors, padding, screens, texts } from '../../../../common/styles';
@@ -30,6 +31,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
     now.getTime() + (business.averageCookingTime ? business.averageCookingTime * 1000 : 3600 * 1000)
   );
   const { fulfillment, scheduledTo } = order;
+  const available = isAvailable(business.schedules, now);
   const canScheduleUI = () => {
     // realtime and scheduling
     if (fulfillment === 'delivery') {
@@ -45,23 +47,35 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
             />
           );
         } else {
-          // without scheduledTo
-          if (order.arrivals?.destination?.estimate) {
-            return (
-              <RectangularListItemText
-                text={`Entrega: ${getETAWithMargin(order.arrivals?.destination?.estimate!)}`}
-                selected
-                onSelect={() => null}
-              />
-            );
-          } else {
+          if (available) {
+            // without scheduledTo
+            if (order.arrivals?.destination?.estimate) {
+              return (
+                <RectangularListItemText
+                  text={`Entrega: ${getETAWithMargin(order.arrivals?.destination?.estimate!)}`}
+                  selected
+                  onSelect={() => null}
+                />
+              );
+            }
             return (
               <View style={screens.centered}>
                 <ActivityIndicator size="small" color={colors.green500} />
               </View>
             );
           }
+          if (!available) {
+            // without scheduledTo
+            return (
+              <View>
+                <Text style={{ ...texts.sm, flexWrap: 'wrap' }} numberOfLines={3}>
+                  {t('Somente agendamento')}
+                </Text>
+              </View>
+            );
+          }
         }
+        return null;
       }
       // no realtime, only scheduling
       else {

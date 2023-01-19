@@ -3,6 +3,7 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
+import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { getPaymentMethodById } from '../../../../common/store/api/consumer/selectors';
@@ -11,7 +12,7 @@ import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixE
 import { useP2PPix } from '../../../../common/store/api/order/ui/useP2PPix';
 import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
-import { colors, doublePadding, padding, texts } from '../../../../common/styles';
+import { colors, doublePadding, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
 interface Props {
@@ -25,6 +26,7 @@ interface Props {
   onPayWithPix: () => void;
   payMethod: PayableWith;
   orderId: string;
+  showWarning?: boolean;
 }
 
 export const OrderPayment = ({
@@ -38,6 +40,7 @@ export const OrderPayment = ({
   navigateToSelectPayment,
   payMethod,
   orderId,
+  showWarning,
 }: Props) => {
   // context
   const order = useObserveOrder(orderId);
@@ -92,6 +95,20 @@ export const OrderPayment = ({
         </View>
       ) : null}
       <View style={{ paddingHorizontal: padding, backgroundColor: colors.white }}>
+        {showWarning && canPlaceOrder ? (
+          <PaddedView
+            half
+            style={{
+              backgroundColor: colors.darkYellow,
+              borderRadius: halfPadding,
+              marginTop: halfPadding,
+            }}
+          >
+            <Text style={{ ...texts.sm }}>
+              {t('Você precisa agendar um horário antes de fazer o pedido.')}
+            </Text>
+          </PaddedView>
+        ) : null}
         {!canPlaceOrder && !activityIndicator ? (
           <DefaultButton
             variant="secondary"

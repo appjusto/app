@@ -14,8 +14,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import { useModalToastContext } from '../../../../../common/contexts/ModalToastContext';
+import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTimeContext';
 import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
 import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
+import { isAvailable } from '../../../../../common/store/api/business/selectors';
 import { useQuotes } from '../../../../../common/store/api/order/hooks/useQuotes';
 import { useProfileSummary } from '../../../../../common/store/api/profile/useProfileSummary';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
@@ -59,6 +61,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const { showModalToast } = useModalToastContext();
   const business = useObserveBusiness(order?.business?.id);
+  const getServerTime = useContextGetSeverTime();
+  const now = getServerTime();
   // redux store
   const consumer = useSelector(getConsumer)!;
   // state
@@ -83,7 +87,15 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [payMethod, setPayMethod] = React.useState<PayableWith>(
     consumer.paymentChannel?.mostRecentPaymentMethod ?? 'credit_card'
   );
+  const available = isAvailable(business?.schedules, now);
+  const canScheduleOrder =
+    business &&
+    !available &&
+    !isEmpty(business.preparationModes) &&
+    business.preparationModes!.includes('scheduled') &&
+    !isEmpty(order?.scheduledTo);
   const canSubmit =
+    (available || canScheduleOrder) &&
     (payMethod === 'pix' ||
       (payMethod === 'credit_card' && selectedPaymentMethodId !== undefined)) &&
     selectedFare !== undefined &&
@@ -407,6 +419,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             onPayWithPix={() => {
               setPayMethod('pix');
             }}
+            showWarning={!canScheduleOrder && !available}
           />
         }
       />
