@@ -1,4 +1,4 @@
-import { BusinessProfile, Cuisine, LatLng, WithDistance, WithId } from '@appjusto/types';
+import { BusinessProfile, CuisineName, LatLng, WithDistance, WithId } from '@appjusto/types';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import * as geofirestore from 'geofirestore';
@@ -7,7 +7,7 @@ import GeoFirestoreApi from '../../GeoFirestoreApi';
 interface FetchBusinessesAroundOptions {
   location: LatLng;
   page?: number;
-  cuisine?: Cuisine;
+  cuisine?: CuisineName;
 }
 
 export default class BusinessesGeosearchApi {
@@ -16,9 +16,9 @@ export default class BusinessesGeosearchApi {
     this.geofirestore = geofirestoreapi.getGeoFirestore();
   }
   async fetchBusinessesAround({ location, cuisine, page = 1 }: FetchBusinessesAroundOptions) {
-    // console.log('fetchBusinessesAround');
+    console.log('fetchBusinessesAround', page);
     const { latitude, longitude } = location;
-    const limit = page * 15;
+    const limit = page * 50;
     let query = this.geofirestore
       .collection('businesses-profiles')
       .where('enabled', '==', true)

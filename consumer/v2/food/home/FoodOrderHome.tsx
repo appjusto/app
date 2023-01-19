@@ -12,8 +12,7 @@ import {
   updateCurrentLocation,
   updateCurrentPlace,
 } from '../../../../common/store/consumer/actions';
-import { getConsumer, getCurrentLocation } from '../../../../common/store/consumer/selectors';
-import { SearchFilter } from '../../../../common/store/consumer/types';
+import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { colors, padding } from '../../../../common/styles';
 import { LoggedNavigatorParamList } from '../../types';
 import { RestaurantList } from '../restaurant/list/RestaurantList';
@@ -38,10 +37,8 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   // context
   const dispatch = useDispatch<AppDispatch>();
   // redux store
-  const currentLocation = useSelector(getCurrentLocation);
   const consumer = useSelector(getConsumer);
   // state
-  const [filters, setFilters] = React.useState<SearchFilter[]>([]);
   // const {
   //   results: restaurants,
   //   isLoading,
@@ -50,7 +47,8 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   // } = useSearch<BusinessAlgolia>(true, 'restaurant', 'distance', filters, currentLocation, '');
   const [refreshing, setRefreshing] = React.useState(false);
   const mostRecentRestaurants = useLastRestaurants(consumer?.id);
-  const { loading, available, unavailable, refetch, fetchNextPage } = useGeosearch();
+  const { loading, available, unavailable, refetch, fetchNextPage, cuisine, setCuisine } =
+    useGeosearch();
   // console.log('>>> AVAILABLE:', available);
   // console.log('>>> UNAVAILABLE:', unavailable);
   // side effects
@@ -76,7 +74,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
       onEndReached={() => {
         fetchNextPage();
       }}
-      onEndReachedThreshold={0.7}
+      onEndReachedThreshold={5}
       ListHeaderComponent={
         <View style={{ backgroundColor: colors.white, paddingBottom: padding }}>
           <FoodOrderHomeHeader
@@ -86,7 +84,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
                 screen: 'RestaurantDetail',
               });
             }}
-            selectedCuisineId={filters.find(() => true)?.value}
+            selectedCuisineId={cuisine}
             onChangePlace={() => {
               navigation.navigate('AddressComplete', {
                 returnParam: 'place',
@@ -97,7 +95,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
               navigation.navigate('RestaurantSearch');
             }}
             onCuisineSelect={(cuisine) => {
-              setFilters(cuisine ? [{ type: 'cuisine', value: cuisine.name }] : []);
+              setCuisine(cuisine ? cuisine.name : undefined);
             }}
             consumer={consumer}
             onLogin={() => {

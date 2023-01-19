@@ -1,4 +1,4 @@
-import { BusinessProfile, Cuisine, WithDistance, WithId } from '@appjusto/types';
+import { BusinessProfile, CuisineName, WithDistance, WithId } from '@appjusto/types';
 import { uniqBy } from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -15,7 +15,7 @@ export const useGeosearch = () => {
   // state
   const [loading, setLoading] = React.useState(true);
   const [page, setPage] = React.useState(1);
-  const [cuisine, setCuisine] = React.useState<Cuisine>();
+  const [cuisine, setCuisine] = React.useState<CuisineName>();
   const [businesses, setBusinesses] = React.useState<WithDistance<WithId<BusinessProfile>>[]>([]);
   const [available, setAvailable] = React.useState<typeof businesses>([]);
   const [unavailable, setUnavailable] = React.useState<typeof businesses>([]);
@@ -64,7 +64,9 @@ export const useGeosearch = () => {
     setUnavailable(uniqBy(tUnavailable, (doc) => doc.id).sort((a, b) => a.distance - b.distance));
   }, [businesses]);
   // result
-  const fetchNextPage = () => setPage((current) => current + 1);
+  const fetchNextPage = () => {
+    if (!loading) setPage((current) => current + 1);
+  };
   const refetch = async () => {
     setBusinesses([]);
     await fetch();

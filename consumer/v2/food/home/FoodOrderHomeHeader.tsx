@@ -1,4 +1,4 @@
-import { Business, ConsumerProfile, Cuisine, WithId } from '@appjusto/types';
+import { Business, ConsumerProfile, Cuisine, CuisineName, WithId } from '@appjusto/types';
 import React from 'react';
 import { Image, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -15,7 +15,7 @@ import { CuisineSelector } from './CuisineSelector';
 import { LocationBar } from './LocationBar';
 
 type Props = {
-  selectedCuisineId?: string;
+  selectedCuisineId?: CuisineName;
   onChangePlace: () => void;
   onSearchPress: () => void;
   onCuisineSelect: (cuisine: WithId<Cuisine> | null) => void;
