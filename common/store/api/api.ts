@@ -13,8 +13,8 @@ import { FunctionsRef } from '../refs/FunctionsRef';
 import { StoragePaths } from '../refs/StoragePaths';
 import AuthApi from './auth';
 import BusinessApi from './business';
-import BusinessesGeoSearchApi from './business/BusinessesGeoSearchApi';
-import ConsumerApi from './business/consumer';
+import BusinessesGeosearchApi from './business/geosearch/BusinessesGeosearchApi';
+import ConsumerApi from './consumer';
 import CourierApi from './courier';
 import FilesApi from './files';
 import FleetApi from './fleet';
@@ -49,7 +49,7 @@ export default class Api {
   private _files: FilesApi;
   private _iugu: IuguApi;
   private _business: BusinessApi;
-  private _businessesGeoSearch: BusinessesGeoSearchApi;
+  private _businessesGeoSearch: BusinessesGeosearchApi;
   private _search: SearchApi;
   private _user: UserApi;
 
@@ -97,7 +97,7 @@ export default class Api {
     this._reviews = new ReviewsApi(this._firestoreRefs);
     this._maps = new MapsApi(this._functionsRefs);
     this._business = new BusinessApi(this._firestoreRefs, this._storagePaths, this._files);
-    this._businessesGeoSearch = new BusinessesGeoSearchApi(new GeoFirestoreApi(extra));
+    this._businessesGeoSearch = new BusinessesGeosearchApi(new GeoFirestoreApi(extra));
     this._search = new SearchApi(extra.algolia, extra.environment);
     this._user = new UserApi(this._firestoreRefs, extra.flavor);
   }
@@ -150,7 +150,7 @@ export default class Api {
     return this._business;
   }
 
-  businessesGeoSearch() {
+  businessesGeosearch() {
     return this._businessesGeoSearch;
   }
 

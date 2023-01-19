@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
-import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
+import { getPaymentMethodById } from '../../../../common/store/api/consumer/selectors';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
 import { useP2PPix } from '../../../../common/store/api/order/ui/useP2PPix';

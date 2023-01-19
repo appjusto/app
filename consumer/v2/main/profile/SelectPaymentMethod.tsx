@@ -6,7 +6,7 @@ import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import { getPaymentMethodById } from '../../../../common/store/api/business/consumer/selectors';
+import { getPaymentMethodById } from '../../../../common/store/api/consumer/selectors';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
 import { useP2PPix } from '../../../../common/store/api/order/ui/useP2PPix';

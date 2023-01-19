@@ -1,11 +1,11 @@
 import { IuguCreatePaymentTokenData } from '@appjusto/types/payment/iugu';
 import { CancelToken } from 'axios';
-import { t } from '../../../../../strings';
-import { getAppVersion } from '../../../../utils/version';
-import { FunctionsRef } from '../../../refs/FunctionsRef';
-import { StoragePaths } from '../../../refs/StoragePaths';
-import FilesApi from '../../files';
-import IuguApi from '../../payment/iugu';
+import { t } from '../../../../strings';
+import { getAppVersion } from '../../../utils/version';
+import { FunctionsRef } from '../../refs/FunctionsRef';
+import { StoragePaths } from '../../refs/StoragePaths';
+import FilesApi from '../files';
+import IuguApi from '../payment/iugu';
 
 export default class ConsumerApi {
   constructor(
