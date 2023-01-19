@@ -5,6 +5,7 @@ import React from 'react';
 import { ActivityIndicator, Image, TouchableWithoutFeedback, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { headerMenu } from '../assets/icons';
+import { ApiContext } from '../common/app/context';
 import { useNotificationToken } from '../common/hooks/useNotificationToken';
 import Chat from '../common/screens/Chat';
 import { defaultScreenOptions } from '../common/screens/options';
@@ -33,6 +34,7 @@ const Stack = createStackNavigator<BusinessNavParamsList>();
 
 export const BusinessNavigator = () => {
   // context
+  const api = React.useContext(ApiContext);
   const navigation = useNavigation<ScreenNavigationProp>();
   const { business, unreadCount } = React.useContext(BusinessAppContext);
   const manager = useSelector(getManager);
@@ -40,6 +42,14 @@ export const BusinessNavigator = () => {
   const businessSituation = business?.situation;
   // side effects
   useNotificationToken();
+  // starting/stoping keepAlive task/internval
+  React.useEffect(() => {
+    if (!business?.id) return;
+    (async () => {
+      await api.business().sendKeepAlive(business.id);
+    })();
+  }, [api, business?.id]);
+
   // push notifications
   // handlers
   const handler = React.useCallback(
