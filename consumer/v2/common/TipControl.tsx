@@ -22,7 +22,7 @@ type Props = {
 };
 
 const calculateValue = (value: number, { fixed, percent }: Fee) =>
-  Math.floor(value / (1 - percent / 100));
+  Math.floor((value + fixed) / (1 - percent / 100));
 
 const getTipValues = (fee: Fee): HorizontalSelectItem[] => {
   return [0, 3, 5, 8, 10, 30].map((value) => {
@@ -80,7 +80,6 @@ export default function ({ order, tip, isLoading = false, onChange, onConfirm, t
                 selected={selectedtip}
                 onSelect={(tip) => onChange(tip.data)}
               />
-              <Text>Valor com taxas: </Text>
               {onConfirm && (
                 <DefaultButton
                   style={{ marginTop: padding }}

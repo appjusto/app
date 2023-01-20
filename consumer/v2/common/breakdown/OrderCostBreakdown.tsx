@@ -39,17 +39,25 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
               <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.platform.value)}</Text>
             </View>
           ) : null}
-          {selectedFare?.courier?.netValue ? (
+          {flavor === 'consumer' && selectedFare?.courier?.value ? (
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ ...texts.sm }}>{t('Entrega')}</Text>
+              <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.courier.value)}</Text>
+            </View>
+          ) : null}
+          {flavor === 'courier' && selectedFare?.courier?.netValue ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ ...texts.sm }}>{t('Entrega')}</Text>
               <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.courier.netValue)}</Text>
             </View>
           ) : null}
-          {order.tip?.value ? (
+          {order.tip?.status ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ ...texts.sm }}>{t('Caixinha')}</Text>
               <Text style={{ ...texts.sm }}>
-                {formatCurrency(order.tip.value - (order.tip.processing?.value ?? 0))}
+                {formatCurrency(
+                  order.tip.value - (flavor === 'courier' ? order.tip.processing?.value ?? 0 : 0)
+                )}
               </Text>
             </View>
           ) : null}
