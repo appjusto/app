@@ -9,6 +9,7 @@ import React from 'react';
 import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../common/app/context';
+import RoundedText from '../../../../common/components/texts/RoundedText';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
 import StatusBadge from '../../../../common/components/views/StatusBadge';
@@ -166,7 +167,25 @@ export default function ({ navigation, route }: Props) {
                       )
                     }
                   >
-                    <StatusBadge order={item} onRemove={() => removeItemHandler(item.id)} />
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <StatusBadge order={item} onRemove={() => removeItemHandler(item.id)} />
+                      {item.status === 'delivered' && item.type === 'food' ? (
+                        <TouchableOpacity
+                          onPress={() => {
+                            navigation.navigate('FoodOrderNavigator', {
+                              screen: 'RestaurantNavigator',
+                              params: {
+                                restaurantId: item.business!.id,
+                                screen: 'RestaurantDetail',
+                              },
+                            });
+                          }}
+                          style={{ marginLeft: halfPadding }}
+                        >
+                          <RoundedText>Ver restaurante</RoundedText>
+                        </TouchableOpacity>
+                      ) : null}
+                    </View>
                   </ConfigItem>
                 );
               }}

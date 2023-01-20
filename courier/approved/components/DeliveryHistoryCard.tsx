@@ -1,7 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
-import RoundedText from '../../../common/components/texts/RoundedText';
 import ArrowBox from '../../../common/components/views/ArrowBox';
 import StatusBadge from '../../../common/components/views/StatusBadge';
 import { useDeliveryLedgerEntry } from '../../../common/store/api/courier/account/useDeliveryLedgerEntry';
@@ -21,7 +19,6 @@ type Props = {
 };
 
 export const DeliveryHistoryCard = ({ orderId, onPress }: Props) => {
-  const navigation = useNavigation();
   // screen state
   const order = useObserveOrder(orderId);
   const ledgerEntry = useDeliveryLedgerEntry(orderId);
@@ -84,21 +81,6 @@ export const DeliveryHistoryCard = ({ orderId, onPress }: Props) => {
               style={{ paddingRight: padding, paddingBottom: padding, paddingLeft: halfPadding }}
             >
               <StatusBadge order={order} />
-              {order.status === 'delivered' && order.type === 'food' ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('FoodOrderNavigator', {
-                      screen: 'RestaurantNavigator',
-                      params: {
-                        restaurantId: order.business!.id,
-                        screen: 'RestaurantDetail',
-                      },
-                    });
-                  }}
-                >
-                  <RoundedText>Ver restaurante</RoundedText>
-                </TouchableOpacity>
-              ) : null}
             </View>
           ) : null}
         </View>
