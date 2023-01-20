@@ -70,7 +70,7 @@ export default ({ navigation, route }: Props) => {
   const description = (() => {
     if (flavor === 'courier') {
       if (cancelInfo) {
-        if (cancelInfo.params.refund.includes('delivery')) return undefined;
+        if (cancelInfo.params?.refund.includes('delivery')) return undefined;
       } else return t('Como você já iniciou o pedido, você receberá: ');
     }
     if (flavor === 'consumer') {
@@ -85,8 +85,8 @@ export default ({ navigation, route }: Props) => {
   })();
   const value = (() => {
     if (cancelInfo) {
-      if (flavor === 'courier' && !cancelInfo.params.refund.includes('delivery'))
-        return formatCurrency(order.fare!.courier.value);
+      if (flavor === 'courier' && !cancelInfo.params?.refund.includes('delivery'))
+        return formatCurrency(order.fare!.courier!.value);
     } else return undefined;
   })();
   const header = (() => {

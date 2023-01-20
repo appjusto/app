@@ -1,10 +1,4 @@
-import {
-  BusinessSchedule,
-  ChatMessage,
-  Order,
-  OrderCancellationParams,
-  WithId,
-} from '@appjusto/types';
+import { BusinessSchedule, ChatMessage, WithId } from '@appjusto/types';
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
@@ -31,17 +25,6 @@ export const businessShouldBeOpen = (today: Date, schedules: BusinessSchedule) =
     n++;
   }
   return shouldBeOpen;
-};
-
-export const calculateCancellationCosts = (order: Order, params: OrderCancellationParams) => {
-  let costs = 0;
-  if (order.fare?.business && params.refund.indexOf('products') !== -1)
-    costs += order.fare.business.value;
-  if (order.fare?.courier && params.refund.indexOf('delivery') !== -1)
-    costs += order.fare.courier.value;
-  if (order.fare?.platform && params.refund.indexOf('platform') !== -1)
-    costs += order.fare.platform.value;
-  return costs;
 };
 
 export const getConversationKey = (message: ChatMessage) =>

@@ -39,38 +39,18 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
               <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.platform.value)}</Text>
             </View>
           ) : null}
-          {selectedFare?.courier?.value ? (
+          {selectedFare?.courier?.netValue ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ ...texts.sm }}>{t('Entrega')}</Text>
-              <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.courier.value)}</Text>
-            </View>
-          ) : null}
-          {selectedFare?.courier?.processing?.value && flavor === 'courier' ? (
-            <View>
-              <View style={{ flex: 1, flexDirection: 'row' }}>
-                <Text style={{ ...texts.sm, color: colors.red }}>{t('Taxa Iugu *')}</Text>
-                <View style={{ flex: 1 }} />
-                <Text style={{ ...texts.sm, color: colors.red }}>
-                  - {formatCurrency(selectedFare.courier.processing.value)}
-                </Text>
-              </View>
+              <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.courier.netValue)}</Text>
             </View>
           ) : null}
           {order.tip?.value ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ ...texts.sm }}>{t('Caixinha')}</Text>
-              <Text style={{ ...texts.sm }}>{formatCurrency(order.tip.value)}</Text>
-            </View>
-          ) : null}
-          {order.tip?.processing?.value && flavor === 'courier' ? (
-            <View>
-              <View style={{ flex: 1, flexDirection: 'row' }}>
-                <Text style={{ ...texts.sm, color: colors.red }}>{t('Taxa Iugu *')}</Text>
-                <View style={{ flex: 1 }} />
-                <Text style={{ ...texts.sm, color: colors.red }}>
-                  - {formatCurrency(order.tip.processing.value)}
-                </Text>
-              </View>
+              <Text style={{ ...texts.sm }}>
+                {formatCurrency(order.tip.value - (order.tip.processing?.value ?? 0))}
+              </Text>
             </View>
           ) : null}
           {ledgerEntry && flavor === 'courier' ? (
@@ -84,15 +64,6 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
                   * {ledgerEntry.description}
                 </Text>
               ) : null}
-            </View>
-          ) : null}
-          {flavor === 'courier' ? (
-            <View>
-              <Text style={{ ...texts.xs, color: colors.red, marginTop: padding }}>
-                {t(
-                  '* Essa taxa é descontada do valor de cada corrida aceita para efetuar a transação bancária na sua conta. Nada desse valor fica para o AppJusto.'
-                )}
-              </Text>
             </View>
           ) : null}
         </View>

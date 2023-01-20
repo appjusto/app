@@ -16,7 +16,7 @@ type Props = {
   onDelivery: () => void;
   isLoading: boolean;
   onNoCodeDelivery: () => void;
-  dispatchingState: DispatchingState | undefined;
+  dispatchingState?: DispatchingState | null;
 };
 
 export const OngoingDeliveryCode = ({

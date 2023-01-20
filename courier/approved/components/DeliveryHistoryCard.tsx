@@ -5,6 +5,7 @@ import RoundedText from '../../../common/components/texts/RoundedText';
 import ArrowBox from '../../../common/components/views/ArrowBox';
 import StatusBadge from '../../../common/components/views/StatusBadge';
 import { useDeliveryLedgerEntry } from '../../../common/store/api/courier/account/useDeliveryLedgerEntry';
+import { getOrderRevenue } from '../../../common/store/api/order/courier/getOrderRevenue';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getOrderTime } from '../../../common/store/order/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
@@ -35,10 +36,7 @@ export const DeliveryHistoryCard = ({ orderId, onPress }: Props) => {
   }
   // helpers
   const time = getOrderTime(order);
-  const delivery =
-    (order.fare?.courier?.value ?? 0) - (order.fare?.courier?.processing?.value ?? 0);
-  const tip = (order.tip?.value ?? 0) - (order.tip?.processing?.value ?? 0);
-  const revenue = delivery + tip + (ledgerEntry?.value ?? 0);
+  const revenue = getOrderRevenue(order) + (ledgerEntry?.value ?? 0);
   const title = formatCurrency(revenue);
   const subtitle = `Pedido ${order.code}\n${separateWithDot(formatDate(time), formatTime(time))}`;
   // UI
