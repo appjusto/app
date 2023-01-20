@@ -63,7 +63,7 @@ export default (context: ConfigContext): ExpoConfig => {
     version,
     orientation: 'portrait',
     splash: {
-      image: flavor === 'business' ? './assets/splash-business.png' : './assets/splash.png',
+      image: './assets/splash.png',
       resizeMode: 'cover',
       backgroundColor: '#9ce592',
     },
