@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "10.3.7",
+  "version": "10.4.0",
   "license": "Apache-2.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
