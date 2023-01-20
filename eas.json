@@ -45,6 +45,12 @@
         "ENV": "staging"
       }
     },
+    "consumer-v10-internal-dev": {
+      "extends": "consumer-v10-internal",
+      "env": {
+        "ENV": "dev"
+      }
+    },
     "consumer-v10-internal-staging": {
       "extends": "consumer-v10-internal",
       "env": {
