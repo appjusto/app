@@ -32,7 +32,7 @@ export const useBusinessIsAcceptingOrders = (
     return 'unsupported';
   }
 
-  if (business.status !== 'available') return 'closed';
+  if (business.status !== 'available') return 'disconnected';
 
   if (!isAvailable(business.schedules, now) && !business.preparationModes?.includes('scheduled'))
     return 'closed';
