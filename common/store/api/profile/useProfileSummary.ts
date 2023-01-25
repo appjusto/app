@@ -34,7 +34,7 @@ export const useProfileSummary = () => {
         ? consumer!.statistics.totalOrders > 0
         : courier!.statistics.deliveries > 0
     );
-  }, [api, flavor, consumer?.statistics?.totalOrders, courier?.statistics?.deliveries]);
+  }, [flavor, consumer?.statistics?.totalOrders, courier?.statistics?.deliveries]);
   // updating when phone or countryCode changes
   React.useEffect(update, [api, profile.countryCode, profile.phone]);
   // updating whenever screen is focused
@@ -49,10 +49,7 @@ export const useProfileSummary = () => {
   // result
   const isProfileComplete =
     situation === 'approved' && (flavor === 'courier' || isConsumerProfileComplete(consumer));
-  const shouldVerifyPhone =
-    isProfilePhoneVerified === false &&
-    isProfileComplete &&
-    (flavor === 'courier' || hasOrdered === false);
+  const shouldVerifyPhone = isProfilePhoneVerified === false && isProfileComplete;
   const canUpdateProfile = !isProfileComplete || (flavor === 'consumer' && !hasOrdered);
 
   return {
