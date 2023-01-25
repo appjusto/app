@@ -2,7 +2,7 @@ import { ChatMessageUser, Flavor } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
@@ -12,7 +12,8 @@ import { useObserveOrderCourierLocation } from '../../../common/store/api/order/
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useObserveOrderConfirmation } from '../../../common/store/api/order/hooks/useObserveOrderConfirmation';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
-import { colors, halfPadding, padding, screens } from '../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
+import { formatCurrency } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { OrderCostBreakdown } from '../common/breakdown/OrderCostBreakdown';
 import { LoggedNavigatorParamList } from '../types';
@@ -110,8 +111,6 @@ export default function ({ navigation, route }: Props) {
       }
     } else if (order.dispatchingStatus === 'no-match') {
       navigation.navigate('OngoingOrderNoMatch', { orderId });
-    } else if (order.dispatchingStatus === 'declined') {
-      navigation.replace('OngoingOrderDeclined', { orderId });
     }
   }, [navigation, order, orderId]);
   // header title
@@ -188,7 +187,25 @@ export default function ({ navigation, route }: Props) {
         <View style={{ paddingTop: halfPadding }}>
           <OrderCostBreakdown order={order} selectedFare={order.fare} />
         </View>
-        <HR height={padding} />
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginHorizontal: padding,
+              flex: 1,
+            }}
+          >
+            <Text style={{ ...texts.md, ...texts.bold }}>{t('Total')}</Text>
+            <Text style={{ ...texts.xl }}>{formatCurrency(order.fare?.total ?? 0)}</Text>
+          </View>
+        </View>
         <View style={{ paddingBottom: 24 }}>
           <OngoingActions
             order={order}

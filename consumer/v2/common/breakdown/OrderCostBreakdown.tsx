@@ -39,19 +39,33 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
               <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.platform.value)}</Text>
             </View>
           ) : null}
-          {flavor === 'consumer' && selectedFare?.courier?.value ? (
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ ...texts.sm }}>{t('Entrega')}</Text>
-              <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.courier.value)}</Text>
-            </View>
-          ) : null}
-          {flavor === 'courier' && selectedFare?.courier?.netValue ? (
+          {selectedFare?.courier?.netValue ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ ...texts.sm }}>{t('Entrega')}</Text>
               <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.courier.netValue)}</Text>
             </View>
           ) : null}
-          {order.tip?.status ? (
+          {selectedFare?.courier?.value && !selectedFare?.courier?.netValue ? (
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ ...texts.sm }}>{t('Entrega')}</Text>
+              <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.courier.value)}</Text>
+            </View>
+          ) : null}
+          {flavor === 'consumer' && selectedFare?.courier?.insurance ? (
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ ...texts.sm }}>{t('Seguro')}</Text>
+              <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.courier.insurance)}</Text>
+            </View>
+          ) : null}
+          {flavor === 'consumer' && selectedFare?.courier?.processing?.value ? (
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ ...texts.sm }}>{t('Taxas')}</Text>
+              <Text style={{ ...texts.sm }}>
+                {formatCurrency(selectedFare.courier.processing?.value)}
+              </Text>
+            </View>
+          ) : null}
+          {order.tip?.status === 'paid' ? (
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ ...texts.sm }}>{t('Caixinha')}</Text>
               <Text style={{ ...texts.sm }}>
