@@ -5,7 +5,7 @@ export const getFirebaseAuthErrorMessages = (error: unknown) => {
   if (!error) return t('Não foi possível acessar o servidor. Por favor, tente novamente.');
   else if ((error as FirebaseError).code === 'auth/account-exists-with-different-credential')
     return t(
-      'Já existe um número de telefone associado à essa conta. Por favor, entre em contato com o suporte '
+      'Esse número de telefone já está associado à outra conta. Por favor, entre em contato com o suporte '
     );
   else if ((error as FirebaseError).code === 'auth/invalid-credential')
     return t('Credencial expirada ou inválida. Faça login novamente e tente outra vez.');
