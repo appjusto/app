@@ -48,7 +48,8 @@ export const useProfileSummary = () => {
   }, []);
   // result
   const isProfileComplete =
-    situation === 'approved' && (flavor === 'courier' || isConsumerProfileComplete(consumer));
+    situation === 'approved' &&
+    (flavor === 'courier' || (isConsumerProfileComplete(consumer) && isProfilePhoneVerified));
   const shouldVerifyPhone = isProfilePhoneVerified === false && isProfileComplete;
   const canUpdateProfile = !isProfileComplete || (flavor === 'consumer' && !hasOrdered);
 
