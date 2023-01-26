@@ -16,7 +16,7 @@ interface Props {
 
 export const FleetListItem = ({ item, selectedFare, onFareSelect, onFleetDetail }: Props) => {
   // helpers
-  const total = formatCurrency(item.courier?.value ?? 0);
+  const total = formatCurrency(item.courier?.netValue ?? 0);
   // UI
   return (
     <TouchableOpacity onPress={() => onFareSelect(item)}>

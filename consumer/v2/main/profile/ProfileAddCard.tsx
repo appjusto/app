@@ -7,6 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 import { AcceptedCreditCards } from '../../../../assets/icons/credit-card/AcceptedCreditCards';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
+import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import {
@@ -240,6 +241,16 @@ export default function ({ navigation, route }: Props) {
             autoCapitalize="characters"
             blurOnSubmit
             onChangeText={setName}
+          />
+        </View>
+        <View style={{ flex: 1 }} />
+        <View style={{ padding }}>
+          <DefaultButton
+            style={{ paddingVertical: padding }}
+            title={t('Salvar')}
+            onPress={saveCardHandler}
+            disabled={cardValidation !== null || isLoading}
+            activityIndicator={isLoading}
           />
         </View>
       </View>

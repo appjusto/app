@@ -9,7 +9,7 @@
       "android": {
         "buildType": "apk"
       },
-      "expoCli": "5.2.0"
+      "expoCli": "6.1.0"
     },
     "courier-v10-internal": {
       "env": {
@@ -20,7 +20,7 @@
       "android": {
         "buildType": "apk"
       },
-      "expoCli": "5.2.0"
+      "expoCli": "6.1.0"
     },
     "consumer-v10-internal": {
       "env": {
@@ -31,7 +31,7 @@
       "android": {
         "buildType": "apk"
       },
-      "expoCli": "5.2.0"
+      "expoCli": "6.1.0"
     },
     "courier-v10-internal-dev": {
       "extends": "courier-v10-internal",
@@ -43,6 +43,12 @@
       "extends": "courier-v10-internal",
       "env": {
         "ENV": "staging"
+      }
+    },
+    "consumer-v10-internal-dev": {
+      "extends": "consumer-v10-internal",
+      "env": {
+        "ENV": "dev"
       }
     },
     "consumer-v10-internal-staging": {
@@ -67,7 +73,7 @@
       "android": {
         "buildType": "app-bundle"
       },
-      "expoCli": "5.2.0"
+      "expoCli": "6.1.0"
     },
     "courier-v9-internal-dev": {
       "extends": "courier-v9-internal",
@@ -97,7 +103,7 @@
       "android": {
         "buildType": "app-bundle"
       },
-      "expoCli": "5.2.0"
+      "expoCli": "6.1.0"
     }
   },
   "cli": {

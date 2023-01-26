@@ -2,9 +2,9 @@ import { Business, LatLng, WithId } from '@appjusto/types';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import * as geofirestore from 'geofirestore';
-import GeoFirestoreApi from '../GeoFirestoreApi';
+import GeoFirestoreApi from '../../GeoFirestoreApi';
 
-export default class BusinessesGeoSearchApi {
+export default class BusinessesGeosearchApi {
   private geofirestore: geofirestore.GeoFirestore;
   constructor(geofirestoreapi: GeoFirestoreApi) {
     this.geofirestore = geofirestoreapi.getGeoFirestore();

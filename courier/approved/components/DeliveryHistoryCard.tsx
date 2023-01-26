@@ -1,10 +1,9 @@
-import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
-import RoundedText from '../../../common/components/texts/RoundedText';
 import ArrowBox from '../../../common/components/views/ArrowBox';
 import StatusBadge from '../../../common/components/views/StatusBadge';
 import { useDeliveryLedgerEntry } from '../../../common/store/api/courier/account/useDeliveryLedgerEntry';
+import { getOrderRevenue } from '../../../common/store/api/order/courier/getOrderRevenue';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getOrderTime } from '../../../common/store/order/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
@@ -21,7 +20,6 @@ type Props = {
 };
 
 export const DeliveryHistoryCard = ({ orderId, onPress }: Props) => {
-  const navigation = useNavigation();
   // screen state
   const order = useObserveOrder(orderId);
   const ledgerEntry = useDeliveryLedgerEntry(orderId);
@@ -35,10 +33,7 @@ export const DeliveryHistoryCard = ({ orderId, onPress }: Props) => {
   }
   // helpers
   const time = getOrderTime(order);
-  const delivery =
-    (order.fare?.courier?.value ?? 0) - (order.fare?.courier?.processing?.value ?? 0);
-  const tip = (order.tip?.value ?? 0) - (order.tip?.processing?.value ?? 0);
-  const revenue = delivery + tip + (ledgerEntry?.value ?? 0);
+  const revenue = getOrderRevenue(order) + (ledgerEntry?.value ?? 0);
   const title = formatCurrency(revenue);
   const subtitle = `Pedido ${order.code}\n${separateWithDot(formatDate(time), formatTime(time))}`;
   // UI
@@ -84,21 +79,6 @@ export const DeliveryHistoryCard = ({ orderId, onPress }: Props) => {
               style={{ paddingRight: padding, paddingBottom: padding, paddingLeft: halfPadding }}
             >
               <StatusBadge order={order} />
-              {order.status === 'delivered' && order.type === 'food' ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('FoodOrderNavigator', {
-                      screen: 'RestaurantNavigator',
-                      params: {
-                        restaurantId: order.business!.id,
-                        screen: 'RestaurantDetail',
-                      },
-                    });
-                  }}
-                >
-                  <RoundedText>Ver restaurante</RoundedText>
-                </TouchableOpacity>
-              ) : null}
             </View>
           ) : null}
         </View>

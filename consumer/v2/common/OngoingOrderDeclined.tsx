@@ -107,30 +107,14 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
       });
     }
   };
-  const changePaymentHandler = () => {
-    if (dispatchingStatus === 'declined') {
-      navigation.navigate('ProfilePaymentMethods', {
-        returnScreen: 'OngoingOrderDeclined',
-        courierFee: order.fare!.courier.value,
-        fleetName: order.fare!.fleet.name,
-      });
-    } else navigation.navigate('ProfilePaymentMethods', { returnScreen: 'OngoingOrderDeclined' });
-  };
   const header = (() => {
-    if (dispatchingStatus === 'declined')
-      return `${t('Problemas no pagamento do entregador\n')}${order.issue ?? ''}`;
     if (order.status === 'canceled') return t('Esse pedido foi cancelado');
     else return `${t('Problemas no pagamento\n')}${order.issue ?? ''}`;
   })();
   const description = (() => {
-    if (dispatchingStatus === 'declined')
-      return t(
-        'O pedido está pronto, porém não conseguimos efetuar a cobrança destinada à entrega. Altere a forma de pagamento para continuar.'
-      );
-    else
-      return t(
-        'Não conseguimos efetuar a cobrança. Por favor, altere a forma de pagamento e tente novamente.'
-      );
+    return t(
+      'Não conseguimos efetuar a cobrança. Por favor, altere a forma de pagamento e tente novamente.'
+    );
   })();
   // UI
   return (
@@ -146,11 +130,6 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
         icon={<IconConeYellow />}
         background={colors.white}
       >
-        {order.dispatchingStatus === 'declined' ? (
-          <View>
-            <DefaultButton title={t('Alterar forma de pagamento')} onPress={changePaymentHandler} />
-          </View>
-        ) : null}
         {order.status === 'declined' ? (
           <View style={{ paddingVertical: padding }}>
             <DefaultButton

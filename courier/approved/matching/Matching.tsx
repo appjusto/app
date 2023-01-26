@@ -154,7 +154,7 @@ export default function ({ navigation, route }: Props) {
     );
   // helpers
   const totalDistance = (matchRequest.distance + routeDistanceToOrigin) / 1000;
-  const fee = matchRequest.fee - matchRequest.processing.value;
+  const fee = matchRequest.netValue;
   const feePerKm = fee / 100 / totalDistance;
   const roundedFeePerKm = round(feePerKm, 2);
   return (
@@ -179,17 +179,8 @@ export default function ({ navigation, route }: Props) {
               {`Frota: ${courier.fleet.name}`}
             </Text>
             <Text style={{ ...texts.xs, marginBottom: 2 }}>{`${formatCurrency(
-              matchRequest.fee
-            )} da frota - ${formatCurrency(
-              matchRequest.processing.value
-            )} da tarifa bancária`}</Text>
-            <Text style={{ ...texts.xs, color: colors.red }}>
-              {`${t('(tarifa de')} ${matchRequest.processing.fee.percent}%${
-                matchRequest.processing.fee.fixed > 0
-                  ? ` + ${formatCurrency(matchRequest.processing.fee.fixed)}`
-                  : ''
-              } ${t('por transação')})`}
-            </Text>
+              matchRequest.netValue
+            )}`}</Text>
           </PaddedView>
         ) : (
           <View

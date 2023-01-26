@@ -1,4 +1,4 @@
-import { Order } from '@appjusto/types';
+import { Fee, Order } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -9,6 +9,7 @@ import RoundedProfileImg from '../../../common/components/icons/RoundedProfileIm
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import { colors, halfPadding, padding, texts } from '../../../common/styles';
 import { formatCurrency, formatDate } from '../../../common/utils/formatters';
+import { usePlatformFees } from '../../../common/utils/platform/usePlatformFees';
 import { t } from '../../../strings';
 
 type Props = {
@@ -20,23 +21,33 @@ type Props = {
   tipSent?: boolean;
 };
 
-const data: HorizontalSelectItem[] = [
-  { id: '0', title: t('Sem caixinha'), data: 0 },
-  { id: '3', title: formatCurrency(300), data: 300 },
-  { id: '5', title: formatCurrency(500), data: 500 },
-  { id: '8', title: formatCurrency(800), data: 800 },
-  { id: '10', title: formatCurrency(1000), data: 1000 },
-  { id: '15', title: formatCurrency(1500), data: 1500 },
-  { id: '30', title: formatCurrency(3000), data: 3000 },
-];
+const calculateValue = (value: number, { fixed, percent }: Fee) =>
+  Math.floor((value + fixed) / (1 - percent / 100));
+
+const getTipValues = (fee: Fee): HorizontalSelectItem[] => {
+  return [0, 3, 5, 8, 10, 30].map((value) => {
+    const cents = calculateValue(value * 100, fee);
+    return {
+      id: `${value}`,
+      title: !value ? t('Sem caixinha') : formatCurrency(cents),
+      data: cents,
+    };
+  });
+};
 
 export default function ({ order, tip, isLoading = false, onChange, onConfirm, tipSent }: Props) {
   const alreadyTipped = Boolean(order.tip?.value);
+  const fees = usePlatformFees()?.fees?.processing?.iugu?.credit_card ?? {
+    fixed: 9,
+    percent: 2.42,
+  };
+  const data = getTipValues(fees);
   const selectedtip =
-    data.find((item) => item.data === order.tip?.value || (!alreadyTipped && item.data === tip)) ??
-    data[0];
+    data.find((item) => {
+      if (!order.tip?.value) return item.data === tip;
+      return order.tip.value === item.data || calculateValue(order.tip.value, fees) === item.data;
+    }) ?? data[0];
   // UI
-  // if (order.paymentMethod !== 'credit_card') return null;
   return (
     <View>
       {order.paymentMethod === 'credit_card' ? (
@@ -55,7 +66,7 @@ export default function ({ order, tip, isLoading = false, onChange, onConfirm, t
                   <View style={{ marginLeft: halfPadding }}>
                     <Text style={[texts.sm]}>{order.courier?.name}</Text>
                     <Text style={{ ...texts.xs, color: colors.grey700 }}>
-                      {t('No appJusto desde')}
+                      {t('No AppJusto desde')}
                     </Text>
                     <Text style={{ ...texts.xs }}>
                       {formatDate(order.courier?.joined, 'monthYear')}
