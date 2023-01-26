@@ -63,6 +63,7 @@ export default function ({ navigation, route }: Props) {
     try {
       setLoading(true);
       const fleet = await api.fleet().createFleet({
+        type: 'public',
         name,
         description,
         distanceThreshold,
@@ -71,7 +72,10 @@ export default function ({ navigation, route }: Props) {
         maxDistance,
         maxDistanceToOrigin,
         situation: 'approved',
-        createdBy: courier.id,
+        createdBy: {
+          flavor: 'courier',
+          id: courier.id,
+        },
         participantsOnline: 0,
       });
       api.search().clearCache();

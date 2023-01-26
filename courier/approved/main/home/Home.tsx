@@ -81,11 +81,11 @@ export default function ({ navigation }: Props) {
     <View style={[screens.config, screens.headless]}>
       <ScrollView scrollIndicatorInsets={{ right: 1 }}>
         <HomeControls
-          onFleetDetail={() => {
+          onFleetDetail={(fleetId) => {
             navigation.navigate('ProfileNavigator', {
               screen: 'ChooseFleet',
               params: {
-                fleetId: courier.fleet!.id,
+                fleetId,
               },
             });
           }}

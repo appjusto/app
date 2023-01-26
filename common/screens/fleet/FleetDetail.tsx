@@ -1,8 +1,5 @@
-import { CourierFleet } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { serverTimestamp } from 'firebase/firestore';
-import { omit } from 'lodash';
 import React, { useContext } from 'react';
 import { ActivityIndicator, Keyboard, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -71,10 +68,7 @@ export default function ({ navigation, route }: Props) {
     api
       .profile()
       .updateProfile(courier.id, {
-        fleet: {
-          ...(omit(fleet, ['partipantsOnline', 'situation']) as CourierFleet),
-          joinedOn: serverTimestamp(),
-        },
+        fleetsIds: [fleet.id],
       })
       .then(null);
     navigation.navigate('ChooseFleet');
@@ -207,7 +201,7 @@ export default function ({ navigation, route }: Props) {
               additional={fleet.additionalPerKmAfterThreshold}
             />
             <PaddedView>
-              {courier.fleet!.id !== fleet.id && (
+              {!courier.fleetsIds?.includes(fleet.id) && (
                 <DefaultButton
                   title={t('Ingressar nessa frota')}
                   onPress={confirmFleet}

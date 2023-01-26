@@ -4,6 +4,7 @@ import { CompositeNavigationProp, useNavigation } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   Keyboard,
   StyleSheet,
@@ -17,11 +18,12 @@ import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import { IconMotocycleCentered } from '../../../../common/icons/icon-motocycle-centered';
+import useObserveFleet from '../../../../common/store/api/fleet/hooks/useObserveFleet';
 import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { updateProfile } from '../../../../common/store/user/actions';
-import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
+import { borders, colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import {
   formatCurrency,
   formatDate,
@@ -39,7 +41,7 @@ type ScreenNavigationProp = CompositeNavigationProp<
 >;
 
 type Props = {
-  onFleetDetail: () => void;
+  onFleetDetail: (fleetId: string) => void;
 };
 
 const { width } = Dimensions.get('window');
@@ -54,6 +56,7 @@ export default function ({ onFleetDetail }: Props) {
   const { status } = courier;
   const working = status === 'available';
   // state
+  const fleet = useObserveFleet(courier.fleetsIds?.find(() => true));
   const { shouldVerifyPhone } = useProfileSummary();
   const [modalVisible, setModalVisible] = React.useState(false);
   const [updatedOn, setUpdatedOn] = React.useState(courier.updatedOn);
@@ -146,39 +149,45 @@ export default function ({ onFleetDetail }: Props) {
               </View>
             </View>
             <View style={[styles.controlItem, { backgroundColor: colors.white }]}>
-              <Text
-                style={{
-                  ...texts.sm,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginBottom: 12,
-                }}
-              >
-                {t('Frota')} {courier.fleet?.name}
-              </Text>
-              <View style={[styles.priceTag]}>
-                <Text style={[texts.xs]}>{t('R$')}</Text>
-                <Text style={[texts.x40l]}>
-                  {formatCurrency(courier.fleet?.minimumFee ?? 0, {
-                    unit: '',
-                    strip_insignificant_zeros: false,
-                  })}
-                </Text>
-              </View>
-              <Text style={[texts.xs, { marginTop: padding, color: colors.grey700 }]}>
-                {`+ ${formatCurrency(
-                  courier.fleet?.additionalPerKmAfterThreshold ?? 0
-                )} km/adicional`}
-              </Text>
-              <Text style={[texts.xs, { color: colors.grey700 }]}>
-                {t('Distância mínima')} {formatDistance(courier.fleet!.distanceThreshold)}
-              </Text>
-              <View style={{ flex: 1 }} />
-              <TouchableOpacity onPress={() => onFleetDetail()}>
-                <View style={{ marginTop: padding, alignItems: 'flex-start' }}>
-                  <RoundedText>{t('Mudar de frota')}</RoundedText>
+              {fleet ? (
+                <View>
+                  <Text
+                    style={{
+                      ...texts.sm,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginBottom: 12,
+                    }}
+                  >
+                    {t('Frota')} {fleet?.name}
+                  </Text>
+                  <View style={[styles.priceTag]}>
+                    <Text style={[texts.xs]}>{t('R$')}</Text>
+                    <Text style={[texts.x40l]}>
+                      {formatCurrency(fleet?.minimumFee ?? 0, {
+                        unit: '',
+                        strip_insignificant_zeros: false,
+                      })}
+                    </Text>
+                  </View>
+                  <Text style={[texts.xs, { marginTop: padding, color: colors.grey700 }]}>
+                    {`+ ${formatCurrency(fleet?.additionalPerKmAfterThreshold ?? 0)} km/adicional`}
+                  </Text>
+                  <Text style={[texts.xs, { color: colors.grey700 }]}>
+                    {t('Distância mínima')} {formatDistance(fleet!.distanceThreshold)}
+                  </Text>
+                  <View style={{ flex: 1 }} />
+                  <TouchableOpacity onPress={() => onFleetDetail(fleet.id)}>
+                    <View style={{ marginTop: padding, alignItems: 'flex-start' }}>
+                      <RoundedText>{t('Mudar de frota')}</RoundedText>
+                    </View>
+                  </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
+              ) : (
+                <View style={screens.centered}>
+                  <ActivityIndicator size="small" color={colors.green500} />
+                </View>
+              )}
             </View>
           </View>
         </View>

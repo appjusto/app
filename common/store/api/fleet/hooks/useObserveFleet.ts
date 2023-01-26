@@ -14,7 +14,7 @@ export default function (fleetId: string | undefined) {
   React.useEffect(() => {
     if (!fleetId) return;
     return api.fleet().observeFleet(fleetId, setFleet);
-  }, [fleetId]);
+  }, [api, fleetId]);
 
   return fleet;
 }

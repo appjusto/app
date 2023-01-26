@@ -146,12 +146,13 @@ export default function ({ navigation, route }: Props) {
     navigation.replace('RejectedMatching', { orderId });
   };
   // UI
-  if (isLoading || routeDistanceToOrigin === undefined)
+  if (isLoading || routeDistanceToOrigin === undefined) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
+  }
   // helpers
   const totalDistance = (matchRequest.distance + routeDistanceToOrigin) / 1000;
   const fee = matchRequest.netValue;
@@ -164,7 +165,7 @@ export default function ({ navigation, route }: Props) {
       scrollIndicatorInsets={{ right: 1 }}
     >
       <View style={{ paddingVertical: padding, flex: 1 }}>
-        {courier.fleet?.name ? (
+        {request?.fleetName ? (
           <PaddedView
             style={{
               backgroundColor: colors.grey50,
@@ -176,7 +177,7 @@ export default function ({ navigation, route }: Props) {
             }}
           >
             <Text style={{ ...texts.md, ...texts.bold, marginBottom: 4 }}>
-              {`Frota: ${courier.fleet.name}`}
+              {`Frota: ${request.fleetName}`}
             </Text>
             <Text style={{ ...texts.xs, marginBottom: 2 }}>{`${formatCurrency(
               matchRequest.netValue

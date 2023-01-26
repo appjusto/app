@@ -9,7 +9,6 @@ import useObserveFleet from '../../../../../common/store/api/fleet/hooks/useObse
 import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { colors, padding, screens, texts } from '../../../../../common/styles';
-import { formatDate } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import { CourierProfileParamList } from '../types';
 import { CourierFleetCard } from './components/CourierFleetCard';
@@ -26,7 +25,7 @@ export default function ({ navigation, route }: Props) {
   // redux store
   const courier = useSelector(getCourier)!;
   // state
-  const fleet = useObserveFleet(courier.fleet!.id);
+  const fleet = useObserveFleet(courier.fleetsIds?.find(() => true));
   // side effects
   // tracking
   useSegmentScreen('ChooseFleet');
@@ -47,17 +46,6 @@ export default function ({ navigation, route }: Props) {
       <View style={{ flex: 1 }}>
         <PaddedView>
           <Text style={{ ...texts.x2l, marginBottom: padding }}>{t('Sua frota atual')}</Text>
-          {courier.fleet!.joinedOn && (
-            <Text
-              style={{
-                ...texts.sm,
-                color: colors.grey700,
-                marginBottom: 24,
-              }}
-            >
-              {`${t('Você está nessa frota desde')} ${formatDate(courier.fleet!.joinedOn)} `}
-            </Text>
-          )}
           <CourierFleetCard fleet={fleet} listItem onPress={() => navigateFleetDetail(fleet.id)} />
           <View style={{ marginTop: 24 }}>
             <DefaultButton
