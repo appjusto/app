@@ -104,6 +104,7 @@ export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
         await api.auth().confirmPhoneSignIn(verificationId, verificationCode);
         setState('success');
       } catch (err: any) {
+        Sentry.Native.captureException(err);
         let message: string = err.message;
         if (message.indexOf('linked to one identity') > 0) {
           message = t(
