@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
+import { isEmpty } from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../app/context';
@@ -47,9 +48,12 @@ export const useProfileSummary = () => {
     return () => navigation.removeListener('focus', update);
   }, []);
   // result
-  const isProfileComplete =
-    situation === 'approved' &&
-    (flavor === 'courier' || (isConsumerProfileComplete(consumer) && isProfilePhoneVerified));
+  const isProfileComplete = (() => {
+    if (situation !== 'approved') return false;
+    if (flavor === 'courier') return !isEmpty(profile.birthday);
+    if (flavor === 'consumer') return isConsumerProfileComplete(consumer) && isProfilePhoneVerified;
+    return true;
+  })();
   const shouldVerifyPhone = isProfilePhoneVerified === false && isProfileComplete;
   const canUpdateProfile = !isProfileComplete || (flavor === 'consumer' && !hasOrdered);
 

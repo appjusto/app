@@ -1,8 +1,9 @@
+import { Dayjs } from '@appjusto/dates';
 import { UserProfile } from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { trim } from 'lodash';
+import { isEmpty, trim } from 'lodash';
 import React from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -20,6 +21,8 @@ import DefaultButton from '../../components/buttons/DefaultButton';
 import PaddedView from '../../components/containers/PaddedView';
 import DefaultInput from '../../components/inputs/DefaultInput';
 import {
+  birthdayFormatter,
+  birthdayMask,
   cpfFormatter,
   cpfMask,
   phoneFormatter,
@@ -72,6 +75,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const nameRef = React.useRef<TextInput>(null);
   const surnameRef = React.useRef<TextInput>(null);
   const cpfRef = React.useRef<TextInput>(null);
+  const birthdayRef = React.useRef<TextInput>(null);
   const phoneRef = React.useRef<TextInput>(null);
   // redux
   const flavor = useSelector(getFlavor);
@@ -91,6 +95,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const [surname, setSurname] = React.useState(profile.surname ?? '');
   const [cpf, setCpf] = React.useState(profile.cpf ?? '');
   const [phone, setPhone] = React.useState(profile.phone ?? api.auth().getPhoneNumber(true) ?? '');
+  const [birthday, setBirthday] = React.useState(profile.birthday ?? '');
   const [focusedField, setFocusedField] = React.useState<string>();
   const [isLoading, setLoading] = React.useState(false);
   const countryCode = profile.countryCode ?? '55';
@@ -100,8 +105,20 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
     surname: surname.trim(),
     cpf: cpf.trim(),
     phone: phone.trim(),
+    birthday: birthday.trim(),
     countryCode,
   };
+  const birthdayError = (() => {
+    if (isEmpty(birthday)) return 'Preencha sua data de nascimento';
+    if (birthday.length !== 8) return 'Data inválida';
+    const b = `${birthday.slice(0, 2)}/${birthday.slice(2, 4)}/${birthday.slice(4)}`;
+    const d = Dayjs(b, 'DD/MM/YYYY');
+    if (!d.isValid()) return 'Data inválida';
+    const diff = Dayjs(new Date()).diff(d, 'y');
+    if (diff < 18) return 'Você precisa ter pelo menos 18 anos.';
+    if (diff > 70) return 'Data inválida';
+    return null;
+  })();
   // side effects
   // tracking
   useSegmentScreen('CommonProfileEdit');
@@ -253,7 +270,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           formatter={cpfFormatter}
           keyboardType="number-pad"
           returnKeyType="default"
-          onSubmitEditing={() => phoneRef.current?.focus()}
+          onSubmitEditing={() => birthdayRef.current?.focus()}
           onChangeText={(text) => setCpf(trim(text))}
           onFocus={() => setFocusedField('cpf')}
           blurOnSubmit={canSubmit && isProfilePhoneVerified}
@@ -273,6 +290,40 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
             {t('O CPF digitado não é válido.')}
           </Text>
         ) : null}
+        {flavor === 'courier' ? (
+          <View>
+            <PatternInput
+              ref={birthdayRef}
+              style={{ marginTop: padding }}
+              title={t('Data de nascimento')}
+              value={birthday}
+              placeholder={t('Apenas números')}
+              mask={birthdayMask}
+              parser={numbersOnlyParser}
+              formatter={birthdayFormatter}
+              keyboardType="number-pad"
+              returnKeyType="next"
+              onChangeText={(text) => setBirthday(trim(text))}
+              onSubmitEditing={() => phoneRef.current?.focus()}
+              onFocus={() => setFocusedField('birthday')}
+              onBlur={() => setFocusedField(undefined)}
+              editable={canUpdateProfile || isEmpty(profile.birthday)}
+            />
+            {focusedField !== 'birthday' && birthdayError ? (
+              <Text
+                style={{
+                  ...texts.sm,
+                  ...texts.bold,
+                  color: colors.red,
+                  marginTop: padding,
+                  marginLeft: 6,
+                }}
+              >
+                {birthdayError}
+              </Text>
+            ) : null}
+          </View>
+        ) : null}
         <PatternInput
           ref={phoneRef}
           style={{ marginTop: padding }}
@@ -288,6 +339,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           onChangeText={(text) => setPhone(trim(text))}
           editable={canUpdateProfile && !api.auth().getPhoneNumber()}
         />
+
         <View style={{ flex: 1 }}>
           <View style={{ flex: 1 }} />
           <DefaultButton

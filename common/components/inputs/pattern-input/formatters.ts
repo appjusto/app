@@ -17,6 +17,14 @@ export const cnpjFormatter = (value: string = '') => {
   }, '');
 };
 
+export const birthdayMask = '00/00/0000';
+export const birthdayFormatter = (value: string = '') => {
+  return value.split('').reduce((result, digit, index) => {
+    if (index === 2 || index === 4) return `${result}/${digit}`;
+    return `${result}${digit}`;
+  }, '');
+};
+
 export const hyphenFormatter = (hyphenLocation: number) => (value: string | undefined) => {
   if (!value) return '';
   if (hyphenLocation < 0) return value;
