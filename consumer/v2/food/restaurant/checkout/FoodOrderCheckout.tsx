@@ -87,12 +87,13 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [payMethod, setPayMethod] = React.useState<PayableWith>(
     consumer.paymentChannel?.mostRecentPaymentMethod ?? 'credit_card'
   );
+  const highDemandFee = selectedFare?.courier?.locationFee ?? 0;
   const available = isAvailable(business?.schedules, now);
   const canScheduleOrder =
-    business &&
+    !!business &&
     !available &&
     !isEmpty(business.preparationModes) &&
-    business.preparationModes!.includes('scheduled') &&
+    !!business.preparationModes!.includes('scheduled') &&
     !isEmpty(order?.scheduledTo);
   const canSubmit =
     (available || canScheduleOrder) &&
@@ -258,17 +259,16 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
               key: cpf,
             } as PlaceOrderPayloadPaymentPix);
       const fleetId = order.fulfillment === 'delivery' ? selectedFare?.fleet?.id : undefined;
-      await api
-        .order()
-        .placeOrder(
-          order.id,
-          paymentPayload,
-          wantsCpf,
-          fleetId,
-          coords,
-          orderAdditionalInfo,
-          shareDataWithBusiness
-        );
+      await api.order().placeOrder({
+        orderId: order.id,
+        payment: paymentPayload,
+        fleetId,
+        highDemandFee,
+        wantToShareData: shareDataWithBusiness,
+        coordinates: coords ?? undefined,
+        additionalInfo: orderAdditionalInfo,
+        invoiceWithCPF: wantsCpf,
+      });
       track('consumer placed a food order');
       setDestinationModalVisible(false);
       setLoading(false);

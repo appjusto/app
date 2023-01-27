@@ -62,6 +62,7 @@ export default function ({ navigation, route }: Props) {
   const quotes = useQuotes(order?.id);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
   const [payMethod, setPayMethod] = React.useState<PayableWith>('credit_card');
+  const highDemandFee = selectedFare?.courier?.locationFee ?? 0;
   const canSubmit =
     (payMethod !== 'credit_card' || selectedPaymentMethodId !== undefined) &&
     selectedFare !== undefined &&
@@ -223,7 +224,14 @@ export default function ({ navigation, route }: Props) {
     }
     try {
       setLoading(true);
-      await api.order().placeOrder(orderId, paymentPayload, wantsCpf, fleetId, coords);
+      await api.order().placeOrder({
+        orderId,
+        payment: paymentPayload,
+        highDemandFee,
+        invoiceWithCPF: wantsCpf,
+        fleetId,
+        coordinates: coords ?? undefined,
+      });
 
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {
@@ -253,7 +261,12 @@ export default function ({ navigation, route }: Props) {
         }}
         onSubmit={() => placeOrderHandler(selectedFare?.fleet?.id!)}
         navigateToPixPayment={(total, fleetId) => {
-          navigation.navigate('PayWithPix', { orderId: orderId!, total, fleetId });
+          navigation.navigate('PayWithPix', {
+            orderId: orderId!,
+            total,
+            fleetId,
+            highDemandFee,
+          });
         }}
         wantsCpf={wantsCpf}
         onSwitchValueChange={() => setWantsCpf(!wantsCpf)}

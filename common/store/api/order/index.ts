@@ -48,6 +48,17 @@ import { ObserveOrdersOptions } from './types';
 
 export type QueryOrdering = 'asc' | 'desc';
 
+interface PlaceOrderOptions {
+  orderId: string;
+  payment: PlaceOrderPayloadPayment;
+  highDemandFee: number;
+  invoiceWithCPF?: boolean;
+  fleetId?: string;
+  coordinates?: LatLng;
+  additionalInfo?: string;
+  wantToShareData?: boolean;
+}
+
 export default class OrderApi {
   private _invoices: InvoiceApi;
 
@@ -102,7 +113,7 @@ export default class OrderApi {
       },
       origin,
       destination,
-      createdOn: serverTimestamp(),
+      createdOn: serverTimestamp() as Timestamp,
       items,
     };
     const order = await addDoc(this.firestoreRefs.getOrdersRef(), payload);
@@ -121,7 +132,7 @@ export default class OrderApi {
         name: consumer.name ?? '',
       },
       origin,
-      createdOn: serverTimestamp(),
+      createdOn: serverTimestamp() as Timestamp,
     };
     const order = await addDoc(this.firestoreRefs.getOrdersRef(), payload);
     return documentAs<Order>(await getDoc(order));
@@ -349,15 +360,16 @@ export default class OrderApi {
     ).data;
   }
 
-  async placeOrder(
-    orderId: string,
-    payment: PlaceOrderPayloadPayment,
-    invoiceWithCPF: boolean,
-    fleetId?: string,
-    coordinates?: LatLng,
-    additionalInfo?: string,
-    wantToShareData?: boolean
-  ) {
+  async placeOrder({
+    orderId,
+    payment,
+    highDemandFee,
+    invoiceWithCPF,
+    fleetId,
+    coordinates,
+    additionalInfo,
+    wantToShareData,
+  }: PlaceOrderOptions) {
     let ip: string | undefined;
     try {
       ip = await fetchPublicIP();
@@ -367,11 +379,12 @@ export default class OrderApi {
     await this.functionsRef.getPlaceOrderCallable()({
       orderId,
       payment,
-      invoiceWithCPF,
+      invoiceWithCPF: Boolean(invoiceWithCPF),
       fleetId,
       coordinates,
       additionalInfo,
       wantToShareData,
+      highDemandFee,
       meta: { version: getAppVersion(), ip },
     });
   }

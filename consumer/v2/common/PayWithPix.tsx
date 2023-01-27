@@ -25,6 +25,7 @@ export type PixParamList = {
     orderId: string;
     total: number;
     fleetId: string;
+    highDemandFee: number;
   };
 };
 type ScreenNavigationProp = CompositeNavigationProp<
@@ -40,7 +41,7 @@ type Props = {
 
 export const PayWithPix = ({ navigation, route }: Props) => {
   // params
-  const { orderId, total, fleetId } = route.params;
+  const { orderId, total, fleetId, highDemandFee } = route.params;
   //context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -67,15 +68,15 @@ export const PayWithPix = ({ navigation, route }: Props) => {
       if (pixKey !== consumer.pix) {
         await api.profile().updateProfile(consumer.id, { pix: pixKey });
       }
-      await api.order().placeOrder(
+      await api.order().placeOrder({
         orderId,
-        {
+        payment: {
           payableWith: 'pix',
           key: pixKey,
         },
-        false,
-        fleetId
-      );
+        fleetId,
+        highDemandFee,
+      });
       track('placing order with Pix payment');
       setLoading(false);
       navigation.replace('OngoingOrderNavigator', {
