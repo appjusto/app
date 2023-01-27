@@ -1,5 +1,7 @@
 export const numbersOnlyParser = (value: string) => value.replace(/[^0-9]/g, '');
 
+export const birthdayParser = (value: string) => value.replace(/[^0-9/]/g, '');
+
 export const bankAccountParser = (mask: string) => (value: string) => {
   let result = numbersOnlyParser(value);
   if (mask.endsWith('X')) result += 'X';
