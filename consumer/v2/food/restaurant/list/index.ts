@@ -27,7 +27,7 @@ export const sectionsFromResults = (
   const scheduledOnly: (BusinessAlgolia | WithId<Business>)[] = [];
   const closed: (BusinessAlgolia | WithId<Business>)[] = [];
   uniqBy(items, (item) => ('id' in item ? item.id : item.objectID)).forEach((item) => {
-    if (item.status !== 'available') {
+    if (item.status !== 'available' || isOutOfRange(item, currentLocation)) {
       closed.push(item);
     } else if (
       isAvailable(item.schedules, new Date()) &&
@@ -56,7 +56,7 @@ export const sectionsFromResults = (
       ...sections,
       {
         title: t('Restaurantes indisponíveis'),
-        subtitle: t('Fora do horário de funcionamento'),
+        subtitle: t('Fechados ou fora da área de entrega'),
         data: closed,
       },
     ];
