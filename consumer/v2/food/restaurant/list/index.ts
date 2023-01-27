@@ -27,8 +27,9 @@ export const sectionsFromResults = (
   const scheduledOnly: (BusinessAlgolia | WithId<Business>)[] = [];
   const closed: (BusinessAlgolia | WithId<Business>)[] = [];
   uniqBy(items, (item) => ('id' in item ? item.id : item.objectID)).forEach((item) => {
-    if (
-      item.status === 'available' &&
+    if (item.status !== 'available') {
+      closed.push(item);
+    } else if (
       isAvailable(item.schedules, new Date()) &&
       item.preparationModes?.includes('realtime')
     ) {

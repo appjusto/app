@@ -246,8 +246,8 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         </View>
       );
     } else if (
-      (acceptingStatus === 'closed' || acceptingStatus === 'disconnected') &&
-      !canScheduleOrder
+      acceptingStatus === 'unavailable' ||
+      (acceptingStatus === 'closed' && !canScheduleOrder)
     ) {
       const nextOpeningDay = getNextAvailableDate(business.schedules, new Date());
       return (

@@ -6,7 +6,7 @@ import { isAvailable } from '../../../../common/store/api/business/selectors';
 import { distanceBetweenLatLng } from '../../../../common/store/api/helpers';
 import { formatTime } from '../../../../common/utils/formatters';
 
-type AcceptingStatus = 'disconnected' | 'closed' | 'out-of-range' | 'unsupported' | 'accepting';
+type AcceptingStatus = 'unavailable' | 'closed' | 'out-of-range' | 'unsupported' | 'accepting';
 
 export const useBusinessIsAcceptingOrders = (
   business?: Business,
@@ -14,15 +14,9 @@ export const useBusinessIsAcceptingOrders = (
 ): AcceptingStatus => {
   const platformParams = usePlatformParamsContext();
   const getServerTime = useContextGetSeverTime();
-  if (!platformParams || !getServerTime || !business) return 'disconnected';
+  if (!platformParams || !getServerTime || !business) return 'unavailable';
   const now = getServerTime();
-  const distance =
-    destination && business?.businessAddress?.latlng
-      ? distanceBetweenLatLng(destination, business.businessAddress.latlng)
-      : 0;
-  if (business.deliveryRange) {
-    if (business.deliveryRange < distance ?? 0) return 'out-of-range';
-  }
+
   // out of support time
   const hour = toNumber(formatTime(now, 'raw'));
   if (
@@ -32,7 +26,17 @@ export const useBusinessIsAcceptingOrders = (
     return 'unsupported';
   }
 
-  if (business.status !== 'available') return 'disconnected';
+  console.log('business.status', business.status, business.status !== 'available');
+
+  if (business.status !== 'available') return 'unavailable';
+
+  const distance =
+    destination && business?.businessAddress?.latlng
+      ? distanceBetweenLatLng(destination, business.businessAddress.latlng)
+      : 0;
+  if (business.deliveryRange) {
+    if (business.deliveryRange < distance ?? 0) return 'out-of-range';
+  }
 
   if (!isAvailable(business.schedules, now) && !business.preparationModes?.includes('scheduled'))
     return 'closed';
