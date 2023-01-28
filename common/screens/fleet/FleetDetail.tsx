@@ -143,17 +143,6 @@ export default function ({ navigation, route }: Props) {
             'Valor adicional por Km que os entregadores dessa frota receberão ao percorrer uma distância acima da Distância Inicial Mínima.'
           )}
         </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 32,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Text style={{ ...texts.md, color: colors.red }}>{t('Tarifa bancária por corrida')}</Text>
-          <RoundedText color={colors.red}>2,42%</RoundedText>
-        </View>
         <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 8 }}>
           {t(
             'Essa taxa é descontada do valor de cada corrida aceita para efetuar a transação bancária na sua conta. Nada desse valor fica para o AppJusto.'

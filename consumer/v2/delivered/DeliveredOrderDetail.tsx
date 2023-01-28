@@ -56,6 +56,13 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const showChatButton = useChatIsEnabled(order);
   // tracking
   useSegmentScreen('DeliveredOrderDetail');
+  // effects
+  React.useLayoutEffect(() => {
+    if (!order) return;
+    navigation.setOptions({
+      title: `${t('Pedido')} #${order.code}`,
+    });
+  }, [navigation, order]);
 
   // helpers
   const openChat = React.useCallback(
