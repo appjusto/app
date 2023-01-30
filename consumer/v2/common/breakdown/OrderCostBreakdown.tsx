@@ -152,8 +152,15 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
               </Text>
             </View>
           ) : null}
-          {order.tip?.status === 'paid' ? (
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+          {order.tip?.value && (flavor === 'consumer' || order.tip?.status === 'paid') ? (
+            <View
+              style={{
+                marginTop: halfPadding,
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
               <Text style={{ ...texts.sm }}>{t('Caixinha')}</Text>
               <Text style={{ ...texts.sm }}>
                 {formatCurrency(
