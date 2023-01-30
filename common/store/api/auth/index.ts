@@ -34,7 +34,7 @@ export default class AuthApi {
     private extra: Extra
   ) {
     this.auth.languageCode = 'pt';
-    this.defaultAuthMode = 'phone';
+    this.defaultAuthMode = extra.flavor === 'business' ? 'password' : 'phone';
   }
 
   observeAuthState(handler: (a: User | null) => any): Unsubscribe {

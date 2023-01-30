@@ -87,6 +87,7 @@ export default class BusinessApi {
     const snapshot = await getDocs(
       query(
         this.firestoreRefs.getBusinessesRef(),
+        where('situation', '==', 'approved'),
         where('managers', 'array-contains', email),
         orderBy('createdOn', 'desc')
         // limit(1)
