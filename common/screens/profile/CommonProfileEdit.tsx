@@ -3,6 +3,7 @@ import { UserProfile } from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { isEmpty, trim } from 'lodash';
 import React from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
@@ -39,6 +40,8 @@ import { getCourier } from '../../store/courier/selectors';
 import { courierInfoSet } from '../../store/courier/validators';
 import { showToast } from '../../store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../styles';
+
+Dayjs.extend(customParseFormat);
 
 export type ProfileEditParamList = {
   CommonProfileEdit?: {
@@ -111,6 +114,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const getBirthday = () => {
     if (birthday.length !== 8) return null;
     const b = `${birthday.slice(0, 2)}/${birthday.slice(2, 4)}/${birthday.slice(4)}`;
+
     const d = Dayjs(b, 'DD/MM/YYYY');
     return d;
   };
