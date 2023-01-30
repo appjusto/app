@@ -116,7 +116,7 @@ export const RestaurantDetail = React.memo(({ navigation }: Props) => {
         </PaddedView>
       ) : null}
       {consumer &&
-      (restaurant.status === 'open' || restaurant.preparationModes?.includes('scheduled')) ? (
+      (restaurant.status === 'available' || restaurant.preparationModes?.includes('scheduled')) ? (
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('FoodOrderCheckout');
