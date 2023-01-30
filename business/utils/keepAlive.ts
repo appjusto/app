@@ -33,7 +33,7 @@ const keepAliveExecutor = (store: AppStore, api: Api) => async () => {
     const state = store.getState();
     const business = getBusiness(state);
     // console.log('business.status: ', business?.status);
-    if (business?.status === 'open') {
+    if (business?.status === 'available') {
       await api.business().sendKeepAlive(business.id);
       return BackgroundFetch.BackgroundFetchResult.NewData;
     } else {

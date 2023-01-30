@@ -446,7 +446,7 @@ export default class OrderApi {
       query(
         this.firestoreRefs.getBusinessesRef(),
         where(documentId(), 'in', businessIds),
-        where('status', '==', 'open'),
+        where('status', '==', 'available'),
         limit(max)
       )
     );
