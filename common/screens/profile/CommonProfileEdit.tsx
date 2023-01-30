@@ -108,12 +108,16 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
     birthday: birthday.trim(),
     countryCode,
   };
-  const birthdayError = (() => {
-    if (isEmpty(birthday)) return 'Preencha sua data de nascimento';
-    if (birthday.length !== 8) return 'Data inválida';
+  const getBirthday = () => {
+    if (birthday.length !== 8) return null;
     const b = `${birthday.slice(0, 2)}/${birthday.slice(2, 4)}/${birthday.slice(4)}`;
     const d = Dayjs(b, 'DD/MM/YYYY');
-    if (!d.isValid()) return 'Data inválida';
+    return d;
+  };
+  const birthdayError = (() => {
+    if (isEmpty(birthday)) return 'Preencha sua data de nascimento';
+    const d = getBirthday();
+    if (!d || !d.isValid()) return 'Data inválida';
     const diff = Dayjs(new Date()).diff(d, 'y');
     if (diff < 18) return 'Você precisa ter pelo menos 18 anos.';
     if (diff > 70) return 'Data inválida';
@@ -123,6 +127,8 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   // tracking
   useSegmentScreen('CommonProfileEdit');
   // helpers
+  const showOnlyBirthdayField =
+    flavor === 'courier' && profile.situation === 'approved' && isEmpty(profile.birthday);
   const canSubmit =
     flavor === 'consumer' ? isConsumerProfileComplete(updatedUser) : courierInfoSet(updatedUser);
   // handlers
@@ -177,10 +183,11 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const subtitle = (() => {
     if (flavor === 'consumer') {
       if (!isProfileComplete) return t('Edite seus dados:');
-      else
+      else {
         return t(
           'Seus dados pessoais serão usados somente para a criação das faturas e receber atendimento quando for necessário.'
         );
+      }
     } else {
       return undefined;
     }
@@ -216,79 +223,83 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
           </Text>
         ) : null}
 
-        <DefaultInput
-          ref={emailRef}
-          style={{ marginTop: halfPadding }}
-          title={t('E-mail')}
-          placeholder={t('Digite seu e-mail')}
-          value={email}
-          editable={canUpdateProfile && !api.auth().getEmail()}
-          returnKeyType="next"
-          blurOnSubmit={false}
-          keyboardType="email-address"
-          autoCorrect={false}
-          autoCapitalize="none"
-          onChangeText={(text) => setEmail(text)}
-          onSubmitEditing={() => nameRef.current?.focus()}
-        />
-        <DefaultInput
-          ref={nameRef}
-          style={{ marginTop: padding }}
-          title={t('Nome')}
-          placeholder={t('Digite seu nome')}
-          value={name}
-          returnKeyType="next"
-          blurOnSubmit={false}
-          onChangeText={(text) => setName(text)}
-          onSubmitEditing={() => surnameRef.current?.focus()}
-          keyboardType="default"
-          maxLength={30}
-          editable={canUpdateProfile}
-        />
-        <DefaultInput
-          ref={surnameRef}
-          style={{ marginTop: padding }}
-          title={t('Sobrenome')}
-          placeholder={t('Digite seu sobrenome')}
-          value={surname}
-          returnKeyType="next"
-          blurOnSubmit={false}
-          onChangeText={(text) => setSurname(text)}
-          onSubmitEditing={() => cpfRef.current?.focus()}
-          keyboardType="default"
-          maxLength={30}
-          editable={canUpdateProfile}
-        />
-        <PatternInput
-          ref={cpfRef}
-          style={{ marginTop: padding }}
-          title={t('CPF')}
-          value={cpf}
-          placeholder={t('Seu CPF, apenas números')}
-          mask={cpfMask}
-          parser={numbersOnlyParser}
-          formatter={cpfFormatter}
-          keyboardType="number-pad"
-          returnKeyType="default"
-          onSubmitEditing={() => birthdayRef.current?.focus()}
-          onChangeText={(text) => setCpf(trim(text))}
-          onFocus={() => setFocusedField('cpf')}
-          blurOnSubmit={canSubmit && isProfilePhoneVerified}
-          onBlur={() => setFocusedField(undefined)}
-          editable={canUpdateProfile}
-        />
-        {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' ? (
-          <Text
-            style={{
-              ...texts.sm,
-              ...texts.bold,
-              color: colors.red,
-              marginTop: padding,
-              marginLeft: 6,
-            }}
-          >
-            {t('O CPF digitado não é válido.')}
-          </Text>
+        {!showOnlyBirthdayField ? (
+          <>
+            <DefaultInput
+              ref={emailRef}
+              style={{ marginTop: halfPadding }}
+              title={t('E-mail')}
+              placeholder={t('Digite seu e-mail')}
+              value={email}
+              editable={canUpdateProfile && !api.auth().getEmail()}
+              returnKeyType="next"
+              blurOnSubmit={false}
+              keyboardType="email-address"
+              autoCorrect={false}
+              autoCapitalize="none"
+              onChangeText={(text) => setEmail(text)}
+              onSubmitEditing={() => nameRef.current?.focus()}
+            />
+            <DefaultInput
+              ref={nameRef}
+              style={{ marginTop: padding }}
+              title={t('Nome')}
+              placeholder={t('Digite seu nome')}
+              value={name}
+              returnKeyType="next"
+              blurOnSubmit={false}
+              onChangeText={(text) => setName(text)}
+              onSubmitEditing={() => surnameRef.current?.focus()}
+              keyboardType="default"
+              maxLength={30}
+              editable={canUpdateProfile}
+            />
+            <DefaultInput
+              ref={surnameRef}
+              style={{ marginTop: padding }}
+              title={t('Sobrenome')}
+              placeholder={t('Digite seu sobrenome')}
+              value={surname}
+              returnKeyType="next"
+              blurOnSubmit={false}
+              onChangeText={(text) => setSurname(text)}
+              onSubmitEditing={() => cpfRef.current?.focus()}
+              keyboardType="default"
+              maxLength={30}
+              editable={canUpdateProfile}
+            />
+            <PatternInput
+              ref={cpfRef}
+              style={{ marginTop: padding }}
+              title={t('CPF')}
+              value={cpf}
+              placeholder={t('Seu CPF, apenas números')}
+              mask={cpfMask}
+              parser={numbersOnlyParser}
+              formatter={cpfFormatter}
+              keyboardType="number-pad"
+              returnKeyType="default"
+              onSubmitEditing={() => birthdayRef.current?.focus()}
+              onChangeText={(text) => setCpf(trim(text))}
+              onFocus={() => setFocusedField('cpf')}
+              blurOnSubmit={canSubmit && isProfilePhoneVerified}
+              onBlur={() => setFocusedField(undefined)}
+              editable={canUpdateProfile}
+            />
+            {cpf.length > 0 && !cpfutils.isValid(cpf) && focusedField !== 'cpf' ? (
+              <Text
+                style={{
+                  ...texts.sm,
+                  ...texts.bold,
+                  color: colors.red,
+                  marginTop: padding,
+                  marginLeft: 6,
+                }}
+              >
+                {t('O CPF digitado não é válido.')}
+              </Text>
+            ) : null}
+          </>
         ) : null}
         {flavor === 'courier' ? (
           <View>
@@ -324,21 +335,23 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
             ) : null}
           </View>
         ) : null}
-        <PatternInput
-          ref={phoneRef}
-          style={{ marginTop: padding }}
-          title={t('Celular')}
-          value={phone}
-          placeholder={t('Número com DDD')}
-          mask={phoneMask}
-          parser={numbersOnlyParser}
-          formatter={phoneFormatter}
-          keyboardType="number-pad"
-          returnKeyType="next"
-          blurOnSubmit
-          onChangeText={(text) => setPhone(trim(text))}
-          editable={canUpdateProfile && !api.auth().getPhoneNumber()}
-        />
+        {!showOnlyBirthdayField ? (
+          <PatternInput
+            ref={phoneRef}
+            style={{ marginTop: padding }}
+            title={t('Celular')}
+            value={phone}
+            placeholder={t('Número com DDD')}
+            mask={phoneMask}
+            parser={numbersOnlyParser}
+            formatter={phoneFormatter}
+            keyboardType="number-pad"
+            returnKeyType="next"
+            blurOnSubmit
+            onChangeText={(text) => setPhone(trim(text))}
+            editable={canUpdateProfile && !api.auth().getPhoneNumber()}
+          />
+        ) : null}
 
         <View style={{ flex: 1 }}>
           <View style={{ flex: 1 }} />
