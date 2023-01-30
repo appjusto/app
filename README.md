@@ -113,5 +113,5 @@ FLAVOR=courier expo build:android -t app-bundle
 # 7. Bulding with eas
 
 ```bash
-cat .dev.env | grep "=" | awk -F "=" '{print "--name="$1" --value="$2}' | FLAVOR=courier xargs -n2 eas secret:create --force
+cat .live.env | grep "=" | awk -F "=" '{print "--name="$1" --value="$2}' | ENV=live ENVIRONMENT=live FLAVOR=courier xargs -n2 eas secret:create --type string --force
 ```

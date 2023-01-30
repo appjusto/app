@@ -57,6 +57,24 @@
         "ENV": "staging"
       }
     },
+    "consumer-v10-internal-live": {
+      "extends": "consumer-v10-internal",
+      "env": {
+        "ENV": "live"
+      }
+    },
+    "consumer-v10-store-live": {
+      "env": {
+        "FLAVOR": "consumer",
+        "ENV": "live"
+      },
+      "releaseChannel": "v10",
+      "distribution": "store",
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "expoCli": "6.1.0"
+    },
     "courier-v10-internal-live": {
       "extends": "courier-v10-internal",
       "env": {
