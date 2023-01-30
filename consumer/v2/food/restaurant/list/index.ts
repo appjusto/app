@@ -30,12 +30,12 @@ export const sectionsFromResults = (
     if (item.status !== 'available' || isOutOfRange(item, currentLocation)) {
       closed.push(item);
     } else if (
-      isAvailable(item.schedules, new Date()) &&
-      item.preparationModes?.includes('realtime')
+      (isAvailable(item.schedules, new Date()) && item.preparationModes?.includes('realtime')) ||
+      item.preparationModes?.includes('scheduled')
     ) {
       open.push(item);
-    } else if (item.preparationModes?.includes('scheduled')) {
-      scheduledOnly.push(item);
+      // } else if (item.preparationModes?.includes('scheduled')) {
+      //   scheduledOnly.push(item);
     } else {
       closed.push(item);
     }
