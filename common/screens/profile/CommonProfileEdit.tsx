@@ -114,7 +114,6 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
   const getBirthday = () => {
     if (birthday.length !== 8) return null;
     const b = `${birthday.slice(0, 2)}/${birthday.slice(2, 4)}/${birthday.slice(4)}`;
-
     const d = Dayjs(b, 'DD/MM/YYYY');
     return d;
   };
@@ -324,7 +323,7 @@ export const CommonProfileEdit = ({ route, navigation }: Props) => {
               onBlur={() => setFocusedField(undefined)}
               editable={canUpdateProfile || isEmpty(profile.birthday)}
             />
-            {focusedField !== 'birthday' && birthdayError ? (
+            {focusedField !== 'birthday' && !isEmpty(birthday) && birthdayError ? (
               <Text
                 style={{
                   ...texts.sm,

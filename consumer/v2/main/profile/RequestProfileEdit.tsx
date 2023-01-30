@@ -1,9 +1,11 @@
+import { Dayjs } from '@appjusto/dates';
 import { UserProfile } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import * as cpfutils from '@fnando/cpf';
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { trim } from 'lodash';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { isEmpty, trim } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Keyboard, Text, TextInput, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -13,6 +15,8 @@ import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
 import {
+  birthdayFormatter,
+  birthdayMask,
   cpfFormatter,
   cpfMask,
   phoneFormatter,
@@ -29,6 +33,8 @@ import { showToast } from '../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { ProfileParamList } from './types';
+
+Dayjs.extend(customParseFormat);
 
 type ScreenNavigationProp = StackNavigationProp<ProfileParamList, 'RequestProfileEdit'>;
 type ScreenRouteProp = RouteProp<ProfileParamList, 'RequestProfileEdit'>;
@@ -49,6 +55,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   const [surname, setSurname] = React.useState<string>('');
   const [cpf, setCpf] = React.useState<string>('');
   const [phone, setPhone] = React.useState<string>('');
+  const [birthday, setBirthday] = React.useState<string>('');
   const [requestSent, setRequestSent] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
   const requestedChanges = useRequestedProfileChanges(profile.id);
@@ -56,12 +63,30 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   const nameRef = React.useRef<TextInput>(null);
   const surnameRef = React.useRef<TextInput>(null);
   const cpfRef = React.useRef<TextInput>(null);
+  const birthdayRef = React.useRef<TextInput>(null);
   const phoneRef = React.useRef<TextInput>(null);
   //tracking
   useSegmentScreen('RequestProfileEdit');
   // helpers
-  const canEdit = requestedChanges.length === 0;
-  const disabledButton = !name && !surname && !cpf && !phone;
+  const getBirthday = () => {
+    if (birthday.length !== 8) return null;
+    const b = `${birthday.slice(0, 2)}/${birthday.slice(2, 4)}/${birthday.slice(4)}`;
+    const d = Dayjs(b, 'DD/MM/YYYY');
+    return d;
+  };
+  const birthdayError = (() => {
+    if (isEmpty(birthday)) return 'Preencha sua data de nascimento';
+    const d = getBirthday();
+    if (!d || !d.isValid()) return 'Data inválida';
+    const diff = Dayjs(new Date()).diff(d, 'y');
+    if (diff < 18) return 'Você precisa ter pelo menos 18 anos.';
+    if (diff > 70) return 'Data inválida';
+    return null;
+  })();
+  const hasPendingChange = Boolean(requestedChanges);
+  const canSubmit =
+    !isLoading &&
+    (!isEmpty(name) || !isEmpty(surname) || !isEmpty(cpf) || !isEmpty(phone) || !isEmpty(birthday));
   const description = (() => {
     if (flavor === 'consumer') {
       return t(
@@ -74,17 +99,26 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   })();
   const userData = profile.name && profile.surname && profile.cpf && profile.phone;
   const userChanges: Partial<UserProfile> = {};
+  // side effects
+  React.useEffect(() => {
+    if (!requestedChanges) return;
+    if (requestedChanges.name) setName(requestedChanges.name);
+    if (requestedChanges.surname) setSurname(requestedChanges.surname);
+    if (requestedChanges.cpf) setCpf(requestedChanges.cpf);
+    if (requestedChanges.phone) setPhone(requestedChanges.phone);
+    if (requestedChanges.birthday) setBirthday(requestedChanges.birthday);
+  }, [requestedChanges]);
   // handlers
   const changeProfileHandler = async () => {
     Keyboard.dismiss();
     try {
-      if (name) userChanges.name = name;
-      if (surname) userChanges.surname = surname;
-      if (cpf) {
-        if (cpf.length > 0 && cpfutils.isValid(cpf)) userChanges.cpf = cpf;
-        else return;
+      if (!isEmpty(name.trim())) userChanges.name = name.trim();
+      if (!isEmpty(surname.trim())) userChanges.surname = surname.trim();
+      if (!isEmpty(cpf.trim()) && cpfutils.isValid(cpf.trim())) {
+        userChanges.cpf = cpf.trim();
       }
-      if (phone) userChanges.phone = phone;
+      if (!isEmpty(phone.trim())) userChanges.phone = phone.trim();
+      if (!isEmpty(surname.trim())) userChanges.birthday = birthday.trim();
       setLoading(true);
       await api.user().requestProfileChange(profile.id, userChanges);
       track('profile edit requested');
@@ -129,7 +163,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
         scrollIndicatorInsets={{ right: 1 }}
       >
         <View style={{ flex: 1 }}>
-          {canEdit ? (
+          {!hasPendingChange ? (
             <View style={{ paddingHorizontal: padding, paddingTop: padding }}>
               <Text
                 style={{
@@ -170,7 +204,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
             <DefaultInput
               ref={nameRef}
               title={t('Nome')}
-              placeholder={profile.name}
+              placeholder={requestedChanges?.name ?? profile.name}
               value={name}
               returnKeyType="next"
               blurOnSubmit={false}
@@ -178,13 +212,13 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
               onSubmitEditing={() => surnameRef.current?.focus()}
               keyboardType="default"
               maxLength={30}
-              editable={canEdit}
+              editable={!hasPendingChange}
             />
             <DefaultInput
               ref={surnameRef}
               style={{ marginTop: padding }}
               title={t('Sobrenome')}
-              placeholder={profile.surname}
+              placeholder={requestedChanges?.surname ?? profile.surname}
               value={surname}
               returnKeyType="next"
               blurOnSubmit={false}
@@ -192,23 +226,23 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
               onSubmitEditing={() => cpfRef.current?.focus()}
               keyboardType="default"
               maxLength={30}
-              editable={canEdit}
+              editable={!hasPendingChange}
             />
             <PatternInput
               ref={cpfRef}
               style={{ marginTop: padding }}
               title={t('CPF')}
               value={cpf}
-              placeholder={cpfFormatter(profile.cpf)}
+              placeholder={cpfFormatter(requestedChanges?.cpf ?? profile.cpf)}
               mask={cpfMask}
               parser={numbersOnlyParser}
               formatter={cpfFormatter}
               keyboardType="number-pad"
               returnKeyType="default"
               blurOnSubmit={false}
-              onSubmitEditing={() => phoneRef.current?.focus()}
+              onSubmitEditing={() => birthdayRef.current?.focus()}
               onChangeText={(text) => setCpf(trim(text))}
-              editable={canEdit}
+              editable={!hasPendingChange}
             />
             {cpf.length > 0 && !cpfutils.isValid(cpf) ? (
               <Text
@@ -228,7 +262,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
               style={{ marginTop: padding }}
               title={t('Celular')}
               value={phone}
-              placeholder={phoneFormatter(profile.phone)}
+              placeholder={phoneFormatter(requestedChanges?.phone ?? profile.phone)}
               mask={phoneMask}
               parser={numbersOnlyParser}
               formatter={phoneFormatter}
@@ -236,11 +270,30 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
               returnKeyType="next"
               blurOnSubmit
               onChangeText={(text) => setPhone(trim(text))}
-              editable={canEdit}
+              editable={!hasPendingChange}
             />
+            {flavor === 'courier' ? (
+              <View>
+                <PatternInput
+                  ref={birthdayRef}
+                  style={{ marginTop: padding }}
+                  title={t('Data de nascimento')}
+                  value={birthday}
+                  placeholder={birthdayFormatter(requestedChanges?.birthday ?? profile.birthday)}
+                  mask={birthdayMask}
+                  parser={numbersOnlyParser}
+                  formatter={birthdayFormatter}
+                  keyboardType="number-pad"
+                  returnKeyType="next"
+                  onChangeText={(text) => setBirthday(trim(text))}
+                  onSubmitEditing={() => phoneRef.current?.focus()}
+                  editable={!hasPendingChange}
+                />
+              </View>
+            ) : null}
           </View>
         </View>
-        {canEdit ? (
+        {!hasPendingChange ? (
           <View style={{ flex: 1 }}>
             <View style={{ flex: 1 }} />
             <PaddedView style={{ flex: 1, backgroundColor: colors.white }}>
@@ -255,7 +308,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
               <DefaultButton
                 title={t('Solicitar alteração')}
                 onPress={changeProfileHandler}
-                disabled={!canEdit || disabledButton}
+                disabled={hasPendingChange || !canSubmit}
               />
             </PaddedView>
           </View>
