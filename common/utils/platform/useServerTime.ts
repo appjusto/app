@@ -53,7 +53,6 @@ export const useServerTime = () => {
         await store(newDelta);
         setDelta(newDelta);
       } else {
-        console.log('Recuperando o delta de server time', info!.delta);
         setDelta(info!.delta);
       }
     })();
