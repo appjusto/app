@@ -10,7 +10,7 @@ import { distanceBetweenLatLng } from '../../../../common/store/api/helpers';
 import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
-import { RestaurantListItem } from '../restaurant/list/RestaurantListItem';
+import { RestaurantListItem } from '../restaurant/list/item/RestaurantListItem';
 import { CuisineSelector } from './CuisineSelector';
 import { LocationBar } from './LocationBar';
 

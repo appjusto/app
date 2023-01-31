@@ -1,7 +1,10 @@
 import { Business, WithId } from '@appjusto/types';
 import * as Notifications from 'expo-notifications';
 import React from 'react';
-import { getOpeningDates, scheduleFromDate } from '../../common/store/api/business/selectors';
+import {
+  getOpeningDates,
+  scheduleFromDate,
+} from '../../common/store/api/business/availability/selectors';
 import { t } from '../../strings';
 
 export const useConfigureBusinessNotifications = (business: WithId<Business> | undefined) => {

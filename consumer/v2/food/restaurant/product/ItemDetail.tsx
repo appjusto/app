@@ -21,10 +21,12 @@ import HR from '../../../../../common/components/views/HR';
 import { usePlatformParamsContext } from '../../../../../common/contexts/PlatformParamsContext';
 import { IconSemaphoreSmall } from '../../../../../common/icons/icon-semaphore-small';
 import { UnloggedParamList } from '../../../../../common/screens/unlogged/types';
+import { getBusinessAvailability } from '../../../../../common/store/api/business/availability/getBusinessAvailability';
+import { isDestinationInDeliveryRange } from '../../../../../common/store/api/business/delivery-range';
 import { useProduct } from '../../../../../common/store/api/business/hooks/useProduct';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
-import { getNextAvailableDate } from '../../../../../common/store/api/business/selectors';
 import * as helpers from '../../../../../common/store/api/order/helpers';
+import { usePlatformAvailability } from '../../../../../common/store/api/platform/availability/usePlatformAvailability';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import {
   getConsumer,
@@ -49,11 +51,12 @@ import {
   texts,
 } from '../../../../../common/styles';
 import { formatCurrency, formatHour } from '../../../../../common/utils/formatters';
+import { useServerTime } from '../../../../../common/utils/platform/useServerTime';
 import { t } from '../../../../../strings';
 import { LoggedNavigatorParamList } from '../../../types';
 import { FoodOrderNavigatorParamList } from '../../types';
 import { RestaurantNavigatorParamList } from '../types';
-import { useBusinessIsAcceptingOrders } from '../useBusinessIsAcceptingOrders';
+import { BusinessClosed } from './BusinessClosed';
 import { ItemComplements } from './ItemComplements';
 import { ItemQuantity } from './ItemQuantity';
 
@@ -75,6 +78,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   // params
   const { productId, itemId } = route.params;
   // context
+  const now = useServerTime();
   const api = React.useContext(ApiContext);
   const business = useContextBusiness();
   const businessId = useContextBusinessId();
@@ -85,10 +89,20 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   // redux store
   const consumer = useSelector(getConsumer);
   const currentPlace = useSelector(getCurrentPlace);
-  // state
   const location = useSelector(getCurrentLocation);
-  const destination = activeOrder?.destination?.location ?? currentPlace?.location ?? location;
-  const acceptingStatus = useBusinessIsAcceptingOrders(business, destination);
+  // state
+  const platformAvailability = usePlatformAvailability();
+  const businessAvailability = getBusinessAvailability({ business, date: now() });
+  const destination =
+    activeOrder?.destination?.location ?? currentPlace?.location ?? location ?? undefined;
+  const isInDeliveryRange = isDestinationInDeliveryRange(business, destination);
+  const canScheduleOrder = Boolean(business?.preparationModes?.includes('scheduled'));
+  const canPlaceOrder =
+    platformAvailability === 'in-service' &&
+    isInDeliveryRange &&
+    (businessAvailability === 'open' || canScheduleOrder);
+  // const acceptingStatus = useBusinessIsAcceptingOrders(business, destination);
+  // const canScheduleOrder = business?.preparationModes?.includes('scheduled') && isInDeliveryRange;
   const product = useProduct(businessId, productId);
   const { data: imageURI } = useProductImageURI(businessId, productId, '1008x720');
   // screen state
@@ -115,8 +129,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     return helpers.hasSatisfiedAllGroups(product, complements);
   }, [product, complements]);
   // business can take scheduled orders
-  const canScheduleOrder =
-    business?.preparationModes?.includes('scheduled') && acceptingStatus !== 'out-of-range';
+
   // side effects
   // when product is loaded
   React.useLayoutEffect(() => {
@@ -141,7 +154,8 @@ export const ItemDetail = ({ navigation, route }: Props) => {
     businessId: business?.id ?? undefined,
   });
   // UI
-  if (!product || !business) {
+  const loading = !product || !business || !platformAvailability || !businessAvailability;
+  if (loading) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -213,66 +227,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         </PaddedView>
       );
     }
-    if (acceptingStatus === 'out-of-range' || acceptingStatus === 'unsupported') {
-      let header = '';
-      let body = '';
-      if (acceptingStatus === 'out-of-range') {
-        header = t('Restaurante fora da área de entrega');
-        body = t(
-          'Infelizmente ainda não atendemos seu endereço, mas você pode continuar explorando o cardápio'
-        );
-      } else if (acceptingStatus === 'unsupported') {
-        header = t('Fora do horário de atendimento');
-        body = t(
-          `O horário de atendimento da plataforma atualmente é entre ${formatHour(
-            platformParams?.consumer.support.starts ?? '1000'
-          )} e ${formatHour(platformParams?.consumer.support.ends ?? '2300')}.`
-        );
-      }
-      return (
-        <View
-          style={{
-            margin: padding,
-            paddingHorizontal: padding,
-            paddingVertical: 24,
-            alignItems: 'center',
-            backgroundColor: colors.grey50,
-            ...borders.default,
-          }}
-        >
-          <IconSemaphoreSmall />
-          <Text style={{ ...texts.sm, marginTop: halfPadding }}>{header}</Text>
-          <Text style={{ ...texts.xs, color: colors.grey700, textAlign: 'center' }}>{body}</Text>
-        </View>
-      );
-    } else if (
-      acceptingStatus === 'unavailable' ||
-      (acceptingStatus === 'closed' && !canScheduleOrder)
-    ) {
-      const nextOpeningDay = getNextAvailableDate(business.schedules, new Date());
-      return (
-        <View
-          style={{
-            margin: padding,
-            padding: 25,
-            alignItems: 'center',
-            backgroundColor: colors.grey50,
-            ...borders.default,
-          }}
-        >
-          <Feather name="clock" size={26} />
-          <Text style={texts.sm}>{t('Desculpe, estamos fechados agora')}</Text>
-          {acceptingStatus === 'closed' && nextOpeningDay ? (
-            <>
-              <Text style={{ ...texts.xs, color: colors.grey700 }}>
-                {`${t('Abriremos')} ${nextOpeningDay![0]} ${t('às')}`}
-              </Text>
-              <Text style={texts.x2l}>{formatHour(nextOpeningDay![1])}</Text>
-            </>
-          ) : null}
-        </View>
-      );
-    } else {
+    if (canPlaceOrder) {
       return (
         <View style={{ flex: 1 }}>
           <ItemComplements
@@ -314,6 +269,42 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           <View style={{ flex: 1 }} />
         </View>
       );
+    } else {
+      if (!isInDeliveryRange || platformAvailability === 'out-of-service') {
+        let header = '';
+        let body = '';
+        if (!isInDeliveryRange) {
+          header = t('Restaurante fora da área de entrega');
+          body = t(
+            'Infelizmente ainda não atendemos seu endereço, mas você pode continuar explorando o cardápio'
+          );
+        } else if (platformAvailability === 'out-of-service') {
+          header = t('Fora do horário de atendimento');
+          body = t(
+            `O horário de atendimento da plataforma atualmente é entre ${formatHour(
+              platformParams?.consumer.support.starts ?? '1000'
+            )} e ${formatHour(platformParams?.consumer.support.ends ?? '2300')}.`
+          );
+        }
+        return (
+          <View
+            style={{
+              margin: padding,
+              paddingHorizontal: padding,
+              paddingVertical: 24,
+              alignItems: 'center',
+              backgroundColor: colors.grey50,
+              ...borders.default,
+            }}
+          >
+            <IconSemaphoreSmall />
+            <Text style={{ ...texts.sm, marginTop: halfPadding }}>{header}</Text>
+            <Text style={{ ...texts.xs, color: colors.grey700, textAlign: 'center' }}>{body}</Text>
+          </View>
+        );
+      } else {
+        return <BusinessClosed business={business} />;
+      }
     }
   };
   return (
@@ -331,7 +322,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           <View
             style={{
               paddingHorizontal: padding,
-              marginBottom: acceptingStatus === 'accepting' ? 24 : undefined,
+              marginBottom: canPlaceOrder ? 24 : undefined,
             }}
           >
             {imageURI ? (
@@ -359,7 +350,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
           <View style={{ flex: 1, justifyContent: 'center' }}>{getActionsUI()}</View>
         </View>
       </KeyboardAwareScrollView>
-      {acceptingStatus === 'accepting' ? (
+      {canPlaceOrder ? (
         <View>
           <HR />
           <PaddedView>

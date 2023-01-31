@@ -18,7 +18,7 @@ import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 import { getCurrentLocation } from '../../../../../common/store/consumer/selectors';
 import { colors, doublePadding, padding, screens } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
-import { RestaurantListItem } from './RestaurantListItem';
+import { RestaurantListItem } from './item/RestaurantListItem';
 import { RestaurantListSection } from './types';
 
 interface Props

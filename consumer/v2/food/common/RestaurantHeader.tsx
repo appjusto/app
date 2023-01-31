@@ -15,7 +15,7 @@ import {
   separateWithDot,
 } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
-import { ListItemImage } from '../restaurant/list/ListItemImage';
+import { ListItemImage } from '../restaurant/list/item/ListItemImage';
 
 type Props = {
   restaurant: WithId<Business>;

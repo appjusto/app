@@ -1,14 +1,16 @@
 import { Business, BusinessAlgolia, WithId } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
-import RoundedText from '../../../../../common/components/texts/RoundedText';
-import { useBusinessLogoURI } from '../../../../../common/store/api/business/hooks/useBusinessLogoURI';
-import { isAvailable } from '../../../../../common/store/api/business/selectors';
-import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
-import { formatDistance } from '../../../../../common/utils/formatters';
-import { useServerTime } from '../../../../../common/utils/platform/useServerTime';
-import { t } from '../../../../../strings';
+import RoundedText from '../../../../../../common/components/texts/RoundedText';
+import { getBusinessAvailability } from '../../../../../../common/store/api/business/availability/getBusinessAvailability';
+import { isDistanceInDeliveryRange } from '../../../../../../common/store/api/business/delivery-range';
+import { useBusinessLogoURI } from '../../../../../../common/store/api/business/hooks/useBusinessLogoURI';
+import { colors, halfPadding, padding, texts } from '../../../../../../common/styles';
+import { formatDistance } from '../../../../../../common/utils/formatters';
+import { useServerTime } from '../../../../../../common/utils/platform/useServerTime';
+import { t } from '../../../../../../strings';
 import { ListItemImage } from './ListItemImage';
+import { RestaurantNextAvailableDateLabel } from './RestaurantNextAvailableDateLabel';
 
 type Props = {
   id: string;
@@ -19,13 +21,16 @@ type Props = {
 };
 
 export const RestaurantListItem = ({ id, restaurant, cuisine, distance, secondary }: Props) => {
-  const { data: logo } = useBusinessLogoURI(id);
-  const outOfRange = (restaurant.deliveryRange ?? 0) < (distance ?? 0);
+  // context
   const now = useServerTime();
-  // helpers
+  // state
+  const { data: logo } = useBusinessLogoURI(id);
+  const isInDeliveryRange = isDistanceInDeliveryRange(restaurant, distance);
+  const businessAvailability = getBusinessAvailability({ business: restaurant, date: now() });
+  const canScheduleOrder = Boolean(restaurant?.preparationModes?.includes('scheduled'));
+  const canOnlyScheduleOrders = businessAvailability === 'closed' && canScheduleOrder;
+  // UI
   const discount = `-${restaurant.averageDiscount}%`;
-  const onlyScheduledOrders =
-    !isAvailable(restaurant.schedules, now()) && restaurant.preparationModes?.includes('scheduled');
   return (
     <View style={{ justifyContent: 'center' }}>
       <View
@@ -60,24 +65,20 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance, secondar
           <Text style={{ ...texts.xs, color: secondary ? colors.grey700 : colors.green600 }}>
             {t(cuisine ?? '')}
           </Text>
-          {distance ? (
+          {distance && isInDeliveryRange ? (
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={{ ...texts.xs, color: secondary ? colors.green600 : colors.grey700 }}>
                 {formatDistance(distance)}
               </Text>
-              {onlyScheduledOrders ? (
-                <View style={{ marginLeft: padding }}>
-                  <RoundedText backgroundColor={colors.green100} color={colors.black} noBorder>
-                    {t('Somente agendamento')}
-                  </RoundedText>
-                </View>
+              {canOnlyScheduleOrders ? (
+                <RestaurantNextAvailableDateLabel business={restaurant} />
               ) : null}
             </View>
           ) : null}
-          {distance && outOfRange ? (
+          {restaurant.deliveryRange && !isInDeliveryRange ? (
             <View style={{ marginTop: halfPadding }}>
               <RoundedText backgroundColor={colors.grey50} color={colors.grey700} noBorder>
-                {`${t('Fora do raio de entrega de')} ${formatDistance(restaurant.deliveryRange!)}`}
+                {`${t('Fora do raio de entrega de')} ${formatDistance(restaurant.deliveryRange)}`}
               </RoundedText>
             </View>
           ) : null}

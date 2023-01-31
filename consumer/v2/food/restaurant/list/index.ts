@@ -1,6 +1,6 @@
 import { Business, BusinessAlgolia, LatLng, WithId } from '@appjusto/types';
 import { uniqBy } from 'lodash';
-import { isAvailable } from '../../../../../common/store/api/business/selectors';
+import { isAvailable } from '../../../../../common/store/api/business/availability/selectors';
 import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 import { t } from '../../../../../strings';
 import { RestaurantListSection } from './types';

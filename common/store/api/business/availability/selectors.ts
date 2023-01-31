@@ -1,7 +1,7 @@
 import { BusinessSchedule, ScheduleObject } from '@appjusto/types';
 import dayjs from 'dayjs';
 import { isEmpty, toNumber } from 'lodash';
-import { formatTime } from '../../../utils/formatters';
+import { formatTime } from '../../../../utils/formatters';
 
 const getDayIndex = (date: Date) => {
   const day = date.getDay();
@@ -18,7 +18,7 @@ export const scheduleFromDate = (schedule: BusinessSchedule, date: Date) => {
 };
 
 export const isAvailable = (schedule: BusinessSchedule | undefined, date: Date) => {
-  if (!schedule) return true; // is schedule is missing consider is open
+  if (!schedule) return true; // is schedule is missing consider it's open
   const daySchedule = getDaySchedule(schedule, date);
   return (
     daySchedule.checked &&

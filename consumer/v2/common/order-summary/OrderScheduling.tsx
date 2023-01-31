@@ -5,7 +5,7 @@ import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { RectangularListItemText } from '../../../../common/components/list items/RectangularListItemText';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
-import { isAvailable } from '../../../../common/store/api/business/selectors';
+import { isAvailable } from '../../../../common/store/api/business/availability/selectors';
 import { useContextBusiness } from '../../../../common/store/context/business';
 import { useContextActiveOrder } from '../../../../common/store/context/order';
 import { colors, padding, screens, texts } from '../../../../common/styles';
