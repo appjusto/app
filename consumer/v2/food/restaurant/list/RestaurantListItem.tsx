@@ -1,11 +1,15 @@
 import { Business, BusinessAlgolia, WithId } from '@appjusto/types';
+import { capitalize } from 'lodash';
 import React from 'react';
 import { Text, View } from 'react-native';
 import RoundedText from '../../../../../common/components/texts/RoundedText';
 import { useBusinessLogoURI } from '../../../../../common/store/api/business/hooks/useBusinessLogoURI';
-import { isAvailable } from '../../../../../common/store/api/business/selectors';
+import {
+  getNextAvailableDate,
+  isAvailable,
+} from '../../../../../common/store/api/business/selectors';
 import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
-import { formatDistance } from '../../../../../common/utils/formatters';
+import { formatDistance, formatHour } from '../../../../../common/utils/formatters';
 import { useServerTime } from '../../../../../common/utils/platform/useServerTime';
 import { t } from '../../../../../strings';
 import { ListItemImage } from './ListItemImage';
@@ -19,13 +23,16 @@ type Props = {
 };
 
 export const RestaurantListItem = ({ id, restaurant, cuisine, distance, secondary }: Props) => {
+  // context
+  const now = useServerTime();
+  // state
   const { data: logo } = useBusinessLogoURI(id);
   const outOfRange = (restaurant.deliveryRange ?? 0) < (distance ?? 0);
-  const now = useServerTime();
-  // helpers
-  const discount = `-${restaurant.averageDiscount}%`;
-  const onlyScheduledOrders =
+  const canOnlyScheduleOrders =
     !isAvailable(restaurant.schedules, now()) && restaurant.preparationModes?.includes('scheduled');
+  const [day, hour] = getNextAvailableDate(restaurant.schedules, now()) ?? [];
+  // UI
+  const discount = `-${restaurant.averageDiscount}%`;
   return (
     <View style={{ justifyContent: 'center' }}>
       <View
@@ -65,10 +72,10 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance, secondar
               <Text style={{ ...texts.xs, color: secondary ? colors.green600 : colors.grey700 }}>
                 {formatDistance(distance)}
               </Text>
-              {onlyScheduledOrders ? (
+              {canOnlyScheduleOrders && day && hour ? (
                 <View style={{ marginLeft: padding }}>
                   <RoundedText backgroundColor={colors.green100} color={colors.black} noBorder>
-                    {t('Somente agendamento')}
+                    {`Abre ${capitalize(day)} às ${formatHour(hour)}`}
                   </RoundedText>
                 </View>
               ) : null}
