@@ -14,7 +14,8 @@ const getDaySchedule = (schedule: BusinessSchedule, date: Date) => {
 
 export const scheduleFromDate = (schedule: BusinessSchedule, date: Date) => {
   const index = getDayIndex(date);
-  return [...schedule.slice(index, 7), ...schedule.slice(0, index)];
+  if (Array.isArray(schedule)) return [...schedule.slice(index, 7), ...schedule.slice(0, index)];
+  return [];
 };
 
 export const isAvailable = (schedule: BusinessSchedule | undefined, date: Date) => {

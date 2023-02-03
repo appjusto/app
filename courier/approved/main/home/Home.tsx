@@ -103,7 +103,7 @@ export default function ({ navigation }: Props) {
                 <HomeCard
                   icon={<IconHomeCourierRequests />}
                   title={t('Novos pedidos disponíveis')}
-                  subtitle={t('Existe pedidos que você pode aceitar agora mesmo!')}
+                  subtitle={t('Existem pedidos que você pode aceitar agora mesmo!')}
                   bgColor={colors.yellow}
                   borderColor={colors.black}
                 />
