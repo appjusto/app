@@ -178,7 +178,11 @@ export default class Api {
   }
 
   async getServerTime(): Promise<number> {
-    const result = await this._functionsRefs.getServerTimeCallable()();
-    return (result.data as any).time;
+    try {
+      const result = await this._functionsRefs.getServerTimeCallable()();
+      return (result.data as any).time;
+    } catch (error) {
+      return new Date().getTime();
+    }
   }
 }
