@@ -27,6 +27,7 @@ export const startLocationUpdatesTask = async () => {
       },
     });
   } catch (error: any) {
+    console.log('startLocationUpdatesTask');
     Sentry.Native.captureException(error);
   }
 };
@@ -50,6 +51,7 @@ const locationTaskExecutor =
   (store: AppStore, api: Api): TaskManager.TaskManagerTaskExecutor =>
   (body: TaskManager.TaskManagerTaskBody) => {
     if (body.error) {
+      console.log('locationTaskExecutor #1');
       Sentry.Native.captureException(body.error);
       return;
     }
@@ -129,6 +131,7 @@ const locationTaskExecutor =
           .catch((error) => console.error(error));
       }
     } catch (error: any) {
+      console.log('locationTaskExecutor #3');
       Sentry.Native.captureException(error);
     }
   };
@@ -137,6 +140,7 @@ export const defineLocationUpdatesTask = (store: AppStore, api: Api) => {
   try {
     TaskManager.defineTask(TASK_FETCH_LOCATION, locationTaskExecutor(store, api));
   } catch (error: any) {
+    console.error('defineLocationUpdatesTask');
     Sentry.Native.captureException(error);
   }
 };

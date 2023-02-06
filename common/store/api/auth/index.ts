@@ -16,6 +16,7 @@ import {
   User,
 } from 'firebase/auth';
 import { addDoc, serverTimestamp } from 'firebase/firestore';
+import * as Sentry from 'sentry-expo';
 import { Extra } from '../../../../config/types';
 import { getDeeplinkDomain, getFallbackDomain } from '../../../utils/domains';
 import { getAppVersion } from '../../../utils/version';
@@ -38,7 +39,11 @@ export default class AuthApi {
   }
 
   observeAuthState(handler: (a: User | null) => any): Unsubscribe {
-    return onAuthStateChanged(this.auth, handler);
+    return onAuthStateChanged(this.auth, handler, (error) => {
+      console.log('observeAuthState');
+      console.error(error);
+      Sentry.Native.captureException(error);
+    });
   }
 
   // email sign in

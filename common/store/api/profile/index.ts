@@ -75,7 +75,8 @@ export default class ProfileApi {
         } else resultHandler(documentAs<UserProfile>(snapshot));
       },
       (error) => {
-        console.log('error');
+        console.error('observeProfile', id);
+        console.error(error);
         Sentry.Native.captureException(error);
       }
     );

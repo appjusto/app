@@ -38,7 +38,8 @@ export const getSignInEmail = () => {
   try {
     return AsyncStorage.getItem('email');
   } catch (error) {
-    console.log(error);
+    console.error('getSignInEmail');
+    console.error(error);
     Sentry.Native.captureException(error);
     return Promise.resolve(null);
   }

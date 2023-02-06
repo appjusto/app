@@ -18,6 +18,7 @@ export const getInstallationId = async () => {
     }
     return value;
   } catch (e: any) {
+    console.error('getInstallationId');
     Sentry.Native.captureException(e);
   }
   return null;
