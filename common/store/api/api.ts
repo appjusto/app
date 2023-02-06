@@ -7,6 +7,7 @@ import { connectFirestoreEmulator, Firestore, getFirestore } from 'firebase/fire
 import { connectFunctionsEmulator, Functions, getFunctions } from 'firebase/functions';
 import { connectStorageEmulator, FirebaseStorage, getStorage } from 'firebase/storage';
 import { Platform } from 'react-native';
+import * as Sentry from 'sentry-expo';
 import { Extra } from '../../../config/types';
 import { FirestoreRefs } from '../refs/FirestoreRefs';
 import { FunctionsRef } from '../refs/FunctionsRef';
@@ -179,10 +180,15 @@ export default class Api {
 
   async getServerTime(): Promise<number> {
     try {
-      const result = await this._functionsRefs.getServerTimeCallable()();
-      return (result.data as any).time;
+      if (this._auth.getUserId()) {
+        const result = await this._functionsRefs.getServerTimeCallable()();
+        return (result.data as any).time;
+      }
     } catch (error) {
-      return new Date().getTime();
+      console.error('getServerTime');
+      console.error(error);
+      Sentry.Native.captureException(error);
     }
+    return new Date().getTime();
   }
 }
