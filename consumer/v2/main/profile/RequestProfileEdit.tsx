@@ -68,21 +68,6 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
   //tracking
   useSegmentScreen('RequestProfileEdit');
   // helpers
-  const getBirthday = () => {
-    if (birthday.length !== 8) return null;
-    const b = `${birthday.slice(0, 2)}/${birthday.slice(2, 4)}/${birthday.slice(4)}`;
-    const d = Dayjs(b, 'DD/MM/YYYY');
-    return d;
-  };
-  const birthdayError = (() => {
-    if (isEmpty(birthday)) return 'Preencha sua data de nascimento';
-    const d = getBirthday();
-    if (!d || !d.isValid()) return 'Data inválida';
-    const diff = Dayjs(new Date()).diff(d, 'y');
-    if (diff < 18) return 'Você precisa ter pelo menos 18 anos.';
-    if (diff > 70) return 'Data inválida';
-    return null;
-  })();
   const hasPendingChange = Boolean(requestedChanges);
   const canSubmit =
     !isLoading &&
@@ -118,7 +103,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
         userChanges.cpf = cpf.trim();
       }
       if (!isEmpty(phone.trim())) userChanges.phone = phone.trim();
-      if (!isEmpty(surname.trim())) userChanges.birthday = birthday.trim();
+      if (!isEmpty(birthday.trim())) userChanges.birthday = birthday.trim();
       setLoading(true);
       await api.user().requestProfileChange(profile.id, userChanges);
       track('profile edit requested');
