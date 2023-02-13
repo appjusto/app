@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import React from 'react';
 import { Keyboard, TextInput, View, ViewProps } from 'react-native';
 import { DigitInput } from './DigitInput';
@@ -21,6 +22,7 @@ export const CodeInput = ({ value, onChange, length = 3, style, ...props }: Prop
     nextInputRef?: React.RefObject<TextInput>,
     previousInputRef?: React.RefObject<TextInput>
   ) => {
+    console.log('updateValues', char, index);
     onChange([...values.slice(0, index), char, ...values.slice(index + 1)].join(''));
     if (char) {
       if (nextInputRef?.current) nextInputRef.current.focus();
@@ -57,13 +59,22 @@ export const CodeInput = ({ value, onChange, length = 3, style, ...props }: Prop
             value={values[index]}
             blurOnSubmit={false}
             returnKeyType={index + 1 === refs.length ? 'done' : 'next'}
-            onChangeText={(char) => updateValues(char, index, refs[index + 1], refs[index - 1])}
+            onChangeText={(text) => {
+              console.log(text);
+              if (isEmpty(text)) updateValues(text, index, refs[index + 1], refs[index - 1]);
+              else {
+                text.split('').forEach((char, i) => {
+                  const ii = index + i;
+                  updateValues(char, ii, refs[ii + 1], refs[ii - 1]);
+                });
+              }
+            }}
             onSubmitEditing={() => {
               if (index + 1 < refs.length) refs[index + 1]?.current?.focus();
               else Keyboard.dismiss();
             }}
             importantForAutofill="no"
-            maxLength={1}
+            // maxLength={1}
           />
         </View>
       ))}

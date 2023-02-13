@@ -7,6 +7,7 @@ interface Props extends TextInputProps {
   onChangeText: (text: string) => void;
 }
 
+//
 export const DigitInput = React.forwardRef(
   ({ value, onChangeText, ...props }: Props, externalRef) => {
     return (
@@ -22,7 +23,6 @@ export const DigitInput = React.forwardRef(
               height: 60,
             },
           ]}
-          maxLength={1}
           keyboardType="number-pad"
           selectTextOnFocus
           value={value}
