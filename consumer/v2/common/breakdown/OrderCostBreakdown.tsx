@@ -183,7 +183,7 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
             </View>
           ) : null}
         </View>
-        {flavor === 'consumer' && selectedFare ? (
+        {flavor === 'consumer' && selectedFare?.courier ? (
           <View style={{ marginTop: padding }}>
             <DefaultButton
               style={{ paddingVertical: halfPadding }}
