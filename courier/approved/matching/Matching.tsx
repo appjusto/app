@@ -1,4 +1,5 @@
 import { LatLng } from '@appjusto/types';
+import { MaterialIcons } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { round } from 'lodash';
@@ -56,6 +57,7 @@ export default function ({ navigation, route }: Props) {
   const { coords, lastKnownLocation } = useLastKnownLocation();
   const request = useObserveOrderRequests(orderId)?.find(() => true);
   const situation = request?.situation;
+  console.log(request?.id);
   const canAccept = situation === 'pending' || situation === 'viewed';
   const [routeDistanceToOrigin, setRouteDistanceToOrigin] = React.useState<number>();
   const [isLoading, setLoading] = React.useState(true);
@@ -160,7 +162,7 @@ export default function ({ navigation, route }: Props) {
   const roundedFeePerKm = round(feePerKm, 2);
   return (
     <ScrollView
-      style={[screens.default]}
+      style={[screens.default, screens.headless]}
       contentContainerStyle={{ flexGrow: 1 }}
       scrollIndicatorInsets={{ right: 1 }}
     >
@@ -177,11 +179,18 @@ export default function ({ navigation, route }: Props) {
             }}
           >
             <Text style={{ ...texts.md, ...texts.bold, marginBottom: 4 }}>
-              {`Frota: ${request.fleetName}`}
+              {`Frota ${request.fleetName}`}
             </Text>
-            <Text style={{ ...texts.xs, marginBottom: 2 }}>{`${formatCurrency(
-              matchRequest.netValue
-            )}`}</Text>
+            {request.locationFee ? (
+              <View>
+                <RoundedText
+                  backgroundColor={colors.yellow}
+                  leftIcon={<MaterialIcons name="trending-up" size={20} />}
+                >
+                  {`Alta demanda + ${formatCurrency(request.locationFee)}`}
+                </RoundedText>
+              </View>
+            ) : null}
           </PaddedView>
         ) : (
           <View
@@ -204,6 +213,7 @@ export default function ({ navigation, route }: Props) {
             </Text>
           </View>
         )}
+        <View style={{ flex: 1 }} />
         <View
           style={{
             marginTop: padding,
@@ -249,6 +259,7 @@ export default function ({ navigation, route }: Props) {
             </Text>
           </View>
         </View>
+        <View style={{ flex: 1 }} />
         <View style={{ alignItems: 'center', paddingHorizontal: padding, paddingTop: padding }}>
           {matchRequest.readyAt ? (
             <RoundedText color={colors.white} backgroundColor={colors.black}>
@@ -260,7 +271,7 @@ export default function ({ navigation, route }: Props) {
             </RoundedText>
           ) : null}
         </View>
-        {tallerDevice ? <View style={{ flex: 1 }} /> : null}
+        <View style={{ flex: 1 }} />
         {/* map */}
         <View
           style={{
