@@ -15,10 +15,16 @@ export const sectionsFromResults = (
   currentLocation?: LatLng | null
 ) => {
   const open: BusinessAlgolia[] = [];
+  // const outOfRange: BusinessAlgolia[] = [];
   const closed: BusinessAlgolia[] = [];
-  uniqBy(items, (item) => ('id' in item ? item.id : item.objectID)).forEach((item) => {
-    if (item.opened && !isOutOfRange(item, currentLocation)) {
-      open.push(item);
+  uniqBy(items, (item) => item.objectID).forEach((item) => {
+    if (item.opened) {
+      if (!isOutOfRange(item, currentLocation)) {
+        open.push(item);
+      } else {
+        // outOfRange.push(item);
+        closed.push(item);
+      }
     } else {
       closed.push(item);
     }
@@ -27,18 +33,27 @@ export const sectionsFromResults = (
   if (open.length > 0) {
     sections = [
       {
-        title: t('Restaurantes disponíveis'),
+        title: t('Restaurantes abertos'),
         subtitle: t('Peça agora ou agende seu pedido'),
         data: open,
       },
     ];
   }
+  // if (outOfRange.length > 0) {
+  //   sections = [
+  //     {
+  //       title: t('Fora da área de entrega'),
+  //       subtitle: t('Abertos mas não entregam no seu endereço'),
+  //       data: outOfRange,
+  //     },
+  //   ];
+  // }
   if (closed.length > 0) {
     sections = [
       ...sections,
       {
         title: t('Restaurantes indisponíveis'),
-        subtitle: t('Fechados ou fora da área de entrega'),
+        subtitle: t('Fora da área de entrega ou fechados no momento'),
         data: closed,
       },
     ];
