@@ -121,7 +121,10 @@ export default function ({ navigation, route }: Props) {
     if (order === null) {
       navigation.replace('OrderNull');
     } else if (order.status === 'delivered') {
-      navigation.replace('DeliveryCompleted', { orderId, fee: order.fare!.courier!.netValue! });
+      navigation.replace('DeliveryCompleted', {
+        orderId,
+        fee: order.fare!.courier!.netValue! + (order.fare?.courier?.locationFee ?? 0),
+      });
     } else if (order.status === 'canceled') {
       navigation.replace('OrderCanceled', { orderId });
     }
