@@ -3,6 +3,7 @@ import * as TaskManager from 'expo-task-manager';
 import * as Sentry from 'sentry-expo';
 import { AppStore } from '../../common/app/context';
 import Api from '../../common/store/api/api';
+import { isAvailable } from '../../common/store/api/business/selectors';
 import { getBusiness } from '../../common/store/business/selectors';
 import { getExtra } from '../../common/utils/config';
 
@@ -33,7 +34,7 @@ const keepAliveExecutor = (store: AppStore, api: Api) => async () => {
     const state = store.getState();
     const business = getBusiness(state);
     // console.log('business.status: ', business?.status);
-    if (business?.status === 'open') {
+    if (business?.schedules && isAvailable(business.schedules)) {
       await api.business().sendKeepAlive(business.id);
       return BackgroundFetch.BackgroundFetchResult.NewData;
     } else {

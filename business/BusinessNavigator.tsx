@@ -5,12 +5,14 @@ import React from 'react';
 import { ActivityIndicator, Image, TouchableWithoutFeedback, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { headerMenu } from '../assets/icons';
+import { ApiContext } from '../common/app/context';
 import { useNotificationToken } from '../common/hooks/useNotificationToken';
 import Chat from '../common/screens/Chat';
 import { defaultScreenOptions } from '../common/screens/options';
 import { AboutApp } from '../common/screens/profile/AboutApp';
 import { NotificationPreferences } from '../common/screens/profile/notifications/NotificationPreferences';
 import Terms from '../common/screens/unlogged/Terms';
+import { isAvailable } from '../common/store/api/business/selectors';
 import { track } from '../common/store/api/track';
 import { getManager } from '../common/store/business/selectors';
 import { colors, screens } from '../common/styles';
@@ -26,6 +28,7 @@ import { BusinessProfile } from './orders/screens/BusinessProfile';
 import { OrderDetail } from './orders/screens/OrderDetail';
 import { SelectBusiness } from './orders/screens/SelectBusiness';
 import { BusinessNavParamsList, LoggedBusinessNavParamsList } from './types';
+import { KEEP_ALIVE_INTERVAL, startKeepAliveTask, stopKeepAliveTask } from './utils/keepAlive';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedBusinessNavParamsList, 'BusinessNavigator'>;
 
@@ -33,12 +36,30 @@ const Stack = createStackNavigator<BusinessNavParamsList>();
 
 export const BusinessNavigator = () => {
   // context
+  const api = React.useContext(ApiContext);
   const navigation = useNavigation<ScreenNavigationProp>();
   const { business, unreadCount } = React.useContext(BusinessAppContext);
   const manager = useSelector(getManager);
   // side effects
   useNotificationToken();
-  // push notifications
+  // starting/stoping keepAlive task/internval
+  React.useEffect(() => {
+    if (!business?.schedules) return;
+    const opened = isAvailable(business.schedules, new Date());
+    (async () => {
+      if (opened) {
+        await api.business().sendKeepAlive(business.id);
+        await startKeepAliveTask();
+        const keepAliveInterval = setInterval(async () => {
+          await api.business().sendKeepAlive(business.id);
+        }, KEEP_ALIVE_INTERVAL * 1000);
+        return () => clearInterval(keepAliveInterval);
+      } else {
+        await stopKeepAliveTask();
+      }
+    })();
+  }, [api, business?.id, business?.schedules]);
+
   // handlers
   const handler = React.useCallback(
     (data: PushMessageData, clicked?: boolean, remove?: () => void) => {
