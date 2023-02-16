@@ -41,6 +41,7 @@ import { OrderCourierLocationLog } from '../../../../../types';
 import { getAppVersion } from '../../../utils/version';
 import { FirestoreRefs } from '../../refs/FirestoreRefs';
 import { FunctionsRef } from '../../refs/FunctionsRef';
+import { isAvailable } from '../business/selectors';
 import { fetchPublicIP } from '../externals/ipify';
 import { documentAs, documentsAs } from '../types';
 import InvoiceApi from './invoices/InvoiceApi';
@@ -435,9 +436,9 @@ export default class OrderApi {
         where('type', '==', 'food' as OrderType),
         where('status', '==', 'delivered' as OrderStatus),
         where('consumer.id', '==', consumerId),
-        limit(max * 3)
+        limit(max * 3) // we fetch more than we need to have some latitude to deal with repeated restaurants
       )
-    ); // we fetch more than we need to have some latitude for consumers whose order to the same restaurant
+    );
     if (ordersSnapshot.empty) return [];
     const businessIds = uniq(
       documentsAs<Order>(ordersSnapshot.docs).map((order) => order.business!.id)
@@ -446,16 +447,16 @@ export default class OrderApi {
       query(
         this.firestoreRefs.getBusinessesRef(),
         where(documentId(), 'in', businessIds),
-        where('status', '==', 'available'),
         limit(max)
       )
     );
     if (lastRestsQuerySnapshot.empty) return [];
-    const businesses = documentsAs<Business>(lastRestsQuerySnapshot.docs);
-    return businessIds
-      .slice(0, max)
-      .map((id) => businesses.find((b) => b.id === id)!)
-      .filter((b) => !!b);
+    const businesses = documentsAs<Business>(lastRestsQuerySnapshot.docs).filter((business) =>
+      isAvailable(business.schedules, new Date())
+    );
+    return businesses
+      .sort((a, b) => businessIds.indexOf(a.id) - businessIds.indexOf(b.id))
+      .slice(0, max);
   }
   // courier
   async matchOrder(orderId: string, distanceToOrigin: number = 0) {
