@@ -20,6 +20,7 @@ import DefaultButton from '../../../../../common/components/buttons/DefaultButto
 import { DayBoxListItem } from '../../../../../common/components/list items/DayBoxListItem';
 import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTimeContext';
 import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
+import { isAvailable } from '../../../../../common/store/api/business/selectors';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { showToast } from '../../../../../common/store/ui/actions';
 import {
@@ -71,7 +72,10 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
   const margin = 60;
   const nextDateSlots: Date[][] = business ? getNextDateSlots(business, now, margin, 1) : [];
   const realTimeDelivery =
-    business?.status === 'available' && business?.preparationModes?.includes('realtime');
+    business?.status === 'available' &&
+    business.schedules &&
+    isAvailable(business.schedules, now) &&
+    business?.preparationModes?.includes('realtime');
 
   //side effects
   // loading the first Date[] with slots as selectedDay
