@@ -148,7 +148,9 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
                 ) : null}
               </View>
               <Text style={{ ...texts.sm }}>
-                {formatCurrency(selectedFare.courier.processing?.value)}
+                {formatCurrency(
+                  selectedFare.courier.processing.value + (selectedFare?.courier?.insurance ?? 0)
+                )}
               </Text>
             </View>
           ) : null}
