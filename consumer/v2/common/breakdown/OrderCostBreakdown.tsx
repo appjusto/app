@@ -142,7 +142,7 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
                 </Text>
 
                 {selectedFare?.courier?.insurance ? (
-                  <View style={{ marginLeft: padding }}>
+                  <View style={{ marginLeft: halfPadding }}>
                     <IzaIcon />
                   </View>
                 ) : null}

@@ -85,6 +85,7 @@ export default class CourierApi {
   viewOrderRequest(requestId: string) {
     return updateDoc(doc(this.firestoreRefs.getCourierRequestsRef(), requestId), {
       situation: 'viewed',
+      viewed: true,
     } as Partial<CourierOrderRequest>);
   }
 
