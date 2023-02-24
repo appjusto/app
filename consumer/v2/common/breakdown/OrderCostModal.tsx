@@ -75,7 +75,8 @@ export const OrderCostModal = ({ fare, visible, setModalVisible }: Props) => {
                   <Text style={{ ...texts.sm }}>{formatCurrency(fare.courier.insurance)}</Text>
                 </View>
                 <Text style={{ marginTop: halfPadding, ...texts.xs, color: colors.grey700 }}>
-                  Durante esta corrida o entregador está coberto pelo seguro contra acidentes Iza.
+                  Durante esta corrida o entregador da rede AppJusto estará coberto pelo seguro
+                  contra acidentes Iza.
                 </Text>
               </View>
             ) : null}
