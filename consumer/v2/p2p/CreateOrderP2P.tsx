@@ -62,7 +62,6 @@ export default function ({ navigation, route }: Props) {
   const quotes = useQuotes(order?.id);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
   const [payMethod, setPayMethod] = React.useState<PayableWith>('credit_card');
-  const highDemandFee = selectedFare?.courier?.locationFee ?? 0;
   const canSubmit =
     (payMethod !== 'credit_card' || selectedPaymentMethodId !== undefined) &&
     selectedFare !== undefined &&
@@ -227,7 +226,6 @@ export default function ({ navigation, route }: Props) {
       await api.order().placeOrder({
         orderId,
         payment: paymentPayload,
-        highDemandFee,
         invoiceWithCPF: wantsCpf,
         fleetId,
         coordinates: coords ?? undefined,
@@ -265,7 +263,6 @@ export default function ({ navigation, route }: Props) {
             orderId: orderId!,
             total,
             fleetId,
-            highDemandFee,
           });
         }}
         wantsCpf={wantsCpf}

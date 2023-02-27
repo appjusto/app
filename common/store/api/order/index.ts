@@ -52,7 +52,6 @@ export type QueryOrdering = 'asc' | 'desc';
 interface PlaceOrderOptions {
   orderId: string;
   payment: PlaceOrderPayloadPayment;
-  highDemandFee: number;
   invoiceWithCPF?: boolean;
   fleetId?: string;
   coordinates?: LatLng;
@@ -364,7 +363,6 @@ export default class OrderApi {
   async placeOrder({
     orderId,
     payment,
-    highDemandFee,
     invoiceWithCPF,
     fleetId,
     coordinates,
@@ -385,7 +383,6 @@ export default class OrderApi {
       coordinates,
       additionalInfo,
       wantToShareData,
-      highDemandFee,
       meta: { version: getAppVersion(), ip },
     });
   }

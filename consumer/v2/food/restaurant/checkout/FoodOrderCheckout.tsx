@@ -87,7 +87,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [payMethod, setPayMethod] = React.useState<PayableWith>(
     consumer.paymentChannel?.mostRecentPaymentMethod ?? 'credit_card'
   );
-  const highDemandFee = selectedFare?.courier?.locationFee ?? 0;
   const available = isAvailable(business?.schedules, now);
   const canScheduleOrder =
     !!business &&
@@ -263,7 +262,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         orderId: order.id,
         payment: paymentPayload,
         fleetId,
-        highDemandFee,
         wantToShareData: shareDataWithBusiness,
         coordinates: coords ?? undefined,
         additionalInfo: orderAdditionalInfo,

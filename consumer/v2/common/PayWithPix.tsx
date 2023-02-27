@@ -25,7 +25,6 @@ export type PixParamList = {
     orderId: string;
     total: number;
     fleetId: string;
-    highDemandFee: number;
   };
 };
 type ScreenNavigationProp = CompositeNavigationProp<
@@ -41,7 +40,7 @@ type Props = {
 
 export const PayWithPix = ({ navigation, route }: Props) => {
   // params
-  const { orderId, total, fleetId, highDemandFee } = route.params;
+  const { orderId, total, fleetId } = route.params;
   //context
   const api = useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -75,7 +74,6 @@ export const PayWithPix = ({ navigation, route }: Props) => {
           key: pixKey,
         },
         fleetId,
-        highDemandFee,
       });
       track('placing order with Pix payment');
       setLoading(false);
