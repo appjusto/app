@@ -27,7 +27,7 @@ export const DeliveryInfo = ({ order, courierLocation, onCourierDetail }: Props)
               flex: 1,
             }}
           >
-            <Text style={[texts.md]}>{order.courier?.name ?? 'Nome do courier'}</Text>
+            <Text style={[texts.md]}>{order.courier.name}</Text>
             <Text style={[texts.xs, { color: colors.grey700 }]}>
               {t('Entregador externo alocado')}
             </Text>
