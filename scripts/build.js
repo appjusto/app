@@ -5,7 +5,7 @@ require('dotenv').config();
 
 // Usage: ENV=dev FLAVOR=courier npm run build-js
 // Usage: ENV=staging FLAVOR=courier PLATFORM=ios npm run build-js
-// Usage: ENV=live FLAVOR=courier DISTRIBUTION=store npm run build-js
+// Usage: ENV=live FLAVOR=consumer DISTRIBUTION=store npm run build-js
 
 const run = async () => {
   if (!ENV) {
@@ -38,7 +38,7 @@ const run = async () => {
 
   spawnSync('npm', ['run', 'prepare-env']);
 
-  const tool = TOOL ?? (FLAVOR === 'courier' ? 'eas' : 'expo');
+  const tool = TOOL ?? (FLAVOR === 'business' ? 'expo' : 'eas');
   if (tool === 'eas') {
     process.env['EAS_NO_VCS'] = '1';
     spawn('eas', ['build', '--platform', platform, '--profile', profile], { stdio: 'inherit' });
