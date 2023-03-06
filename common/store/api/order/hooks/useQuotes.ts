@@ -15,7 +15,7 @@ export const useQuotes = (orderId?: string) => {
   // helper callback
   const getOrderQuotes = async () => {
     if (!order) return;
-    if (!order.origin?.location || !order.route?.distance) {
+    if (!order.origin?.location || !order.route?.distance || !order.destination?.location) {
       if (order.route?.issue) dispatch(showToast(order.route.issue, 'error'));
       return;
     }
