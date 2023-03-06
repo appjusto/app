@@ -52,12 +52,18 @@ const expoId = () => {
   throw new Error('FLAVOR inválido');
 };
 
+const scheme = () => {
+  const scheme = flavor === 'consumer' ? 'appjusto' : 'appjusto' + flavor;
+  if (environment !== 'live') return `${scheme}${environment}`;
+  return scheme;
+};
+
 export default (context: ConfigContext): ExpoConfig => {
   const config: ExpoConfig = {
     owner: 'appjusto',
     name: name(),
     slug: slug(),
-    // scheme: scheme(),
+    scheme: scheme(),
     privacy: 'hidden',
     platforms: ['ios', 'android'],
     version,
