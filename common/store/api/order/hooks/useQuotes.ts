@@ -32,6 +32,13 @@ export const useQuotes = (orderId?: string) => {
   // update quotes
   React.useEffect(() => {
     getOrderQuotes();
-  }, [order?.id, order?.route?.distance, order?.route?.issue, order?.items, order?.fulfillment]);
+  }, [
+    order?.id,
+    order?.route?.distance,
+    order?.route?.issue,
+    order?.items,
+    order?.fulfillment,
+    order?.destination?.location?.latitude,
+  ]);
   return quotes;
 };
