@@ -12,7 +12,6 @@ import { borders, colors, halfPadding, padding, texts } from '../../../../common
 import { t } from '../../../../strings';
 import { RestaurantListItem } from '../restaurant/list/RestaurantListItem';
 import { CuisineSelector } from './CuisineSelector';
-import { LocationBar } from './LocationBar';
 
 type Props = {
   selectedCuisineId?: string;
@@ -40,9 +39,6 @@ export const FoodOrderHomeHeader = ({
   // console.log('HEADER CURRENTLOCATION', location);
   return (
     <View>
-      <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>
-        <LocationBar onChangePlace={onChangePlace} />
-      </View>
       {/* login */}
       {!consumer ? (
         <TouchableOpacity onPress={onLogin} style={{ marginTop: 24, paddingHorizontal: padding }}>
