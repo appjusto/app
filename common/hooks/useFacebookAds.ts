@@ -7,6 +7,11 @@ import {
 import React from 'react';
 import { Settings } from 'react-native-fbsdk-next';
 
+// let Settings: any;
+// try {
+//   Settings = require('react-native-fbsdk-next').Settings;
+// } catch {}
+
 export const useFacebookAds = () => {
   // state
   const [status, setStatus] = React.useState<PermissionStatus>(PermissionStatus.UNDETERMINED);
@@ -27,13 +32,13 @@ export const useFacebookAds = () => {
   // side effects
   // required for iOS > 14
   React.useEffect(() => {
-    if (status === 'granted') {
+    if (status === 'granted' && Settings) {
       Settings.setAdvertiserTrackingEnabled(true);
     }
   }, [status]);
   // initial
   React.useEffect(() => {
-    if (Device.isDevice) {
+    if (Device.isDevice && Settings) {
       Settings.initializeSDK();
       askPermission()
         .then(() => null)
