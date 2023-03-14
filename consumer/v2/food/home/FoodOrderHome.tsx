@@ -86,19 +86,6 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
                 screen: 'RestaurantDetail',
               });
             }}
-            selectedCuisineId={filters.find(() => true)?.value}
-            onChangePlace={() => {
-              navigation.navigate('AddressComplete', {
-                returnParam: 'place',
-                returnScreen: 'FoodOrderHome',
-              });
-            }}
-            onSearchPress={() => {
-              navigation.navigate('RestaurantSearch');
-            }}
-            onCuisineSelect={(cuisine) => {
-              setFilters(cuisine ? [{ type: 'cuisine', value: cuisine.name }] : []);
-            }}
             consumer={consumer}
             onLogin={() => {
               navigation.replace('WelcomeScreen');

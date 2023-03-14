@@ -81,20 +81,6 @@ export const FoodOrderHomeV3 = ({ route, navigation }: Props) => {
       ListHeaderComponent={
         <View style={{ backgroundColor: colors.white, paddingBottom: padding }}>
           <FoodOrderHomeHeaderV3
-            onChangePlace={() => {
-              navigation.navigate('AddressComplete', {
-                returnParam: 'place',
-                returnScreen: 'FoodOrderHome',
-              });
-            }}
-          />
-          <FoodOrderHomeHeader
-            onSelectRestaurant={(restaurantId) => {
-              navigation.push('RestaurantNavigator', {
-                restaurantId,
-                screen: 'RestaurantDetail',
-              });
-            }}
             selectedCuisineId={filters.find(() => true)?.value}
             onChangePlace={() => {
               navigation.navigate('AddressComplete', {
@@ -105,8 +91,22 @@ export const FoodOrderHomeV3 = ({ route, navigation }: Props) => {
             onSearchPress={() => {
               navigation.navigate('RestaurantSearch');
             }}
+            onSelectBusiness={(restaurantId) => {
+              navigation.push('RestaurantNavigator', {
+                restaurantId,
+                screen: 'RestaurantDetail',
+              });
+            }}
             onCuisineSelect={(cuisine) => {
               setFilters(cuisine ? [{ type: 'cuisine', value: cuisine.name }] : []);
+            }}
+          />
+          <FoodOrderHomeHeader
+            onSelectRestaurant={(restaurantId) => {
+              navigation.push('RestaurantNavigator', {
+                restaurantId,
+                screen: 'RestaurantDetail',
+              });
             }}
             consumer={consumer}
             onLogin={() => {

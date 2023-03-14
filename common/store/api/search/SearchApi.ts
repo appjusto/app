@@ -69,7 +69,7 @@ export default class SearchApi {
     }
   }
 
-  search<T>(
+  async search<T>(
     kind: SearchKind,
     order: SearchOrder,
     filters: SearchFilter[],
@@ -80,13 +80,15 @@ export default class SearchApi {
   ) {
     const index = this.getSearchIndex(kind, order);
     if (!index) throw new Error('Invalid index');
-    return index.search<T>(query, {
+    const result = await index.search<T>(query, {
       aroundLatLng: `${aroundLocation.latitude}, ${aroundLocation.longitude}`,
       minimumAroundRadius: 7000,
       filters: this.createFilters(kind, filters),
       page,
       hitsPerPage,
     });
+    console.log(result);
+    return result;
   }
 
   searchFleets(query: string = '', page?: number, hitsPerPage: number = 10) {

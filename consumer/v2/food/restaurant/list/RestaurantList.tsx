@@ -26,12 +26,14 @@ interface Props
   loading?: boolean;
   onSelect: (id: string) => void;
   onRecommend?: () => void;
+  hideEmptyFeedback?: boolean;
 }
 
 export const RestaurantList = ({
   sections,
   loading,
   refreshing = false,
+  hideEmptyFeedback,
   onSelect,
   onRecommend,
   ...props
@@ -39,6 +41,24 @@ export const RestaurantList = ({
   // redux
   const location = useSelector(getCurrentLocation);
   // UI
+  const emptyComponent = (() => {
+    if (refreshing || hideEmptyFeedback) return null;
+    if (loading) {
+      return (
+        <View style={{ ...screens.centered, marginTop: padding }}>
+          <ActivityIndicator size="large" color={colors.green500} />
+        </View>
+      );
+    }
+    return (
+      <FeedbackView
+        description={t(
+          'Não encontramos nenhum resultado para a sua busca. Refaça a pesquisa ou utilize filtros diferentes.'
+        )}
+        icon={<IconConeYellow />}
+      />
+    );
+  })();
   return (
     <SectionList
       keyboardShouldPersistTaps="handled"
@@ -53,20 +73,7 @@ export const RestaurantList = ({
           />
         )
       }
-      ListEmptyComponent={
-        refreshing ? null : loading ? (
-          <View style={{ ...screens.centered, marginTop: padding }}>
-            <ActivityIndicator size="large" color={colors.green500} />
-          </View>
-        ) : (
-          <FeedbackView
-            description={t(
-              'Não encontramos nenhum resultado para a sua busca. Refaça a pesquisa ou utilize filtros diferentes.'
-            )}
-            icon={<IconConeYellow />}
-          />
-        )
-      }
+      ListEmptyComponent={emptyComponent}
       renderSectionHeader={({ section }) => {
         const closed = section.data.find(() => true)?.status === 'unavailable';
         const openOutOfRange = section.data.filter(

@@ -12,6 +12,7 @@ import { colors, halfPadding, padding, texts } from '../../../../../common/style
 import { formatDistance, formatHour } from '../../../../../common/utils/formatters';
 import { useServerTime } from '../../../../../common/utils/platform/useServerTime';
 import { t } from '../../../../../strings';
+import { borderRadius2 } from '../../../../v3/common/styles/borders';
 import { ListItemImage } from './ListItemImage';
 
 type Props = {
@@ -34,14 +35,13 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance, secondar
   // UI
   const discount = `-${restaurant.averageDiscount}%`;
   return (
-    <View style={{ justifyContent: 'center' }}>
-      <View
-        style={{
-          borderTopColor: secondary ? colors.white : colors.grey50,
-          borderTopWidth: 1,
-          paddingTop: halfPadding,
-        }}
-      />
+    <View
+      style={{
+        justifyContent: 'center',
+        backgroundColor: colors.grey50,
+        borderRadius: borderRadius2,
+      }}
+    >
       <View
         style={{
           flexDirection: 'row',

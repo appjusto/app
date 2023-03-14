@@ -1,10 +1,10 @@
 import { Cuisine } from '@appjusto/types';
 import React from 'react';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import { useCuisineImageURI } from '../../../../common/store/api/platform/hooks/useCuisineImageURI';
-import { colors, halfPadding } from '../../../../common/styles';
-import { t } from '../../../../strings';
+import { colors, halfPadding, texts } from '../../../../common/styles';
+import { borderRadius2 } from '../../../v3/common/styles/borders';
 import { ListItemImage } from '../common/ListItemImage';
 
 type Props = {
@@ -19,15 +19,19 @@ export default function ({ cuisine, selected }: Props) {
       style={{
         height: 154,
         width: 120,
-        borderRadius: 8,
         marginRight: halfPadding,
+        alignItems: 'center',
       }}
     >
-      <ListItemImage uri={imageURI} height={120} width={120} />
+      <ListItemImage uri={imageURI} height={120} width={120} radius={borderRadius2} />
       <View style={{ paddingTop: 4 }}>
-        <RoundedText backgroundColor={selected ? colors.green500 : colors.grey50} noBorder>
-          {t(cuisine.name)}
-        </RoundedText>
+        {selected ? (
+          <RoundedText backgroundColor={selected ? colors.green500 : colors.grey50} noBorder>
+            {cuisine.name}
+          </RoundedText>
+        ) : (
+          <Text style={{ ...texts.xs }}>{cuisine.name}</Text>
+        )}
       </View>
     </View>
   );

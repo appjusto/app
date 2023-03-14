@@ -448,8 +448,12 @@ export default class OrderApi {
       )
     );
     if (lastRestsQuerySnapshot.empty) return [];
-    const businesses = documentsAs<Business>(lastRestsQuerySnapshot.docs).filter((business) =>
-      isAvailable(business.schedules, new Date())
+    const businesses = documentsAs<Business>(lastRestsQuerySnapshot.docs).filter(
+      (business) =>
+        business.enabled &&
+        business.situation === 'approved' &&
+        business.status === 'available' &&
+        isAvailable(business.schedules, new Date())
     );
     return businesses
       .sort((a, b) => businessIds.indexOf(a.id) - businessIds.indexOf(b.id))

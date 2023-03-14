@@ -1,5 +1,6 @@
 import { BusinessAlgolia, ProductAlgolia } from '@appjusto/types';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { isEmpty } from 'lodash';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -57,7 +58,7 @@ export default function ({ navigation }: Props) {
     refetch: refetchRestaurants,
     isLoading: loadingRestaurants,
   } = useSearch<BusinessAlgolia>(
-    kind === 'restaurant',
+    kind === 'restaurant' && search.length > 0,
     kind,
     order,
     filters,
@@ -70,7 +71,7 @@ export default function ({ navigation }: Props) {
     isLoading: loadingProducts,
     fetchNextPage,
   } = useSearch<ProductAlgolia>(
-    kind === 'product',
+    kind === 'product' && search.length > 0,
     'product',
     order,
     filters,
@@ -97,6 +98,24 @@ export default function ({ navigation }: Props) {
     setRefreshing(false);
   };
   //UI
+  const emptyProductsComponent = (() => {
+    if (refreshing || isEmpty(search)) return null;
+    if (loadingProducts) {
+      return (
+        <View style={{ ...screens.centered, marginTop: padding }}>
+          <ActivityIndicator size="large" color={colors.green500} />
+        </View>
+      );
+    }
+    return (
+      <FeedbackView
+        description={t(
+          'Não encontramos nenhum resultado para a sua busca. Refaça a pesquisa ou utilize filtros diferentes.'
+        )}
+        icon={<IconConeYellow />}
+      />
+    );
+  })();
   return (
     <View style={{ ...screens.default }}>
       <PaddedView>
@@ -129,6 +148,7 @@ export default function ({ navigation }: Props) {
       </PaddedView>
       {kind === 'restaurant' ? (
         <RestaurantList
+          hideEmptyFeedback={isEmpty(search)}
           sections={sectionsFromResults(restaurants, currentLocation)}
           onSelect={(restaurantId) => {
             track('selected a restaurant from search results');
@@ -172,20 +192,7 @@ export default function ({ navigation }: Props) {
               />
             </TouchableOpacity>
           )}
-          ListEmptyComponent={
-            loadingProducts ? (
-              <View style={{ ...screens.centered, marginTop: padding }}>
-                <ActivityIndicator size="small" color={colors.green500} />
-              </View>
-            ) : (
-              <FeedbackView
-                description={t(
-                  'Não encontramos nenhum resultado para a sua busca. Refaça a pesquisa ou utilize filtros diferentes.'
-                )}
-                icon={<IconConeYellow />}
-              />
-            )
-          }
+          ListEmptyComponent={emptyProductsComponent}
           refreshing={refreshing}
           onRefresh={() => refreshProducts()}
         />
