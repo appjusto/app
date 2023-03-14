@@ -11,8 +11,11 @@ const {
   EXPO_CONSUMER_ID,
   EXPO_COURIER_ID,
   FACEBOOK_CONSUMER_APP_ID,
+  FACEBOOK_CONSUMER_CLIENT_TOKEN,
   FACEBOOK_COURIER_APP_ID,
+  FACEBOOK_COURIER_CLIENT_TOKEN,
   FACEBOOK_BUSINESS_APP_ID,
+  FACEBOOK_BUSINESS_CLIENT_TOKEN,
   FIREBASE_API_KEY_ANDROID,
   FIREBASE_API_KEY_IOS,
   FIREBASE_REGION,
@@ -58,6 +61,35 @@ const scheme = () => {
   return scheme;
 };
 
+type Plugins = (string | [] | [string] | [string, unknown])[];
+const plugins = (): Plugins => {
+  let list: Plugins = [
+    'expo-splash-screen',
+    'sentry-expo',
+    ['react-native-fbsdk-next', facebokConfig()],
+    [
+      'expo-tracking-transparency',
+      {
+        userTrackingPermission:
+          'Usamos esse identificador para medir a conversão dos nossos anúncios.',
+      },
+    ],
+  ];
+  if (FLAVOR === 'courier') {
+    list = [
+      ...list,
+      [
+        'expo-notifications',
+        {
+          icon: './assets/notification-icon.png',
+          sounds: ['./assets/sounds/order_request.wav'],
+        },
+      ],
+    ];
+  }
+  return list;
+};
+
 export default (context: ConfigContext): ExpoConfig => {
   const config: ExpoConfig = {
     owner: 'appjusto',
@@ -87,36 +119,7 @@ export default (context: ConfigContext): ExpoConfig => {
     },
     extra: extra(),
     hooks: hooks(),
-    ...facebokConfig(),
-    plugins:
-      flavor === 'courier'
-        ? [
-            [
-              'expo-notifications',
-              {
-                icon: './assets/notification-icon.png',
-                sounds: ['./assets/sounds/order_request.wav'],
-              },
-            ],
-            [
-              'expo-ads-facebook',
-              {
-                userTrackingPermission:
-                  'Usamos esse identificador para medir a conversão dos nossos anúncios.',
-              },
-            ],
-            'expo-splash-screen',
-            'sentry-expo',
-          ]
-        : [
-            [
-              'expo-ads-facebook',
-              {
-                userTrackingPermission:
-                  'Usamos esse identificador para medir a conversão dos nossos anúncios.',
-              },
-            ],
-          ],
+    plugins: plugins(),
   };
   // console.log(config);
   return config;
@@ -149,17 +152,30 @@ const icon = (platform: 'ios' | 'android') => {
 };
 
 const facebokConfig = (): object => {
-  let appId = '';
-  if (flavor === 'consumer') appId = FACEBOOK_CONSUMER_APP_ID!;
-  if (flavor === 'courier') appId = FACEBOOK_COURIER_APP_ID!;
-  if (flavor === 'business') appId = FACEBOOK_BUSINESS_APP_ID!;
-  if (isEmpty(appId)) return {};
+  let appID = '';
+  let clientToken = '';
+  if (flavor === 'consumer') {
+    appID = FACEBOOK_CONSUMER_APP_ID!;
+    clientToken = FACEBOOK_CONSUMER_CLIENT_TOKEN!;
+  }
+  if (flavor === 'courier') {
+    appID = FACEBOOK_COURIER_APP_ID!;
+    clientToken = FACEBOOK_COURIER_CLIENT_TOKEN!;
+  }
+  if (flavor === 'business') {
+    appID = FACEBOOK_BUSINESS_APP_ID!;
+    clientToken = FACEBOOK_BUSINESS_CLIENT_TOKEN!;
+  }
+  if (isEmpty(appID) || isEmpty(clientToken)) return {};
   return {
-    facebookScheme: 'fb' + appId,
-    facebookAppId: appId,
-    facebookDisplayName: 'AppJusto',
-    facebookAutoLogAppEventsEnabled: true,
-    facebookAdvertiserIDCollectionEnabled: true,
+    appID,
+    scheme: 'fb' + appID,
+    clientToken,
+    displayName: 'AppJusto',
+    advertiserIDCollectionEnabled: true,
+    autoLogAppEventsEnabled: true,
+    iosUserTrackingPermission:
+      'Usamos esse identificador para medir a conversão dos nossos anúncios.',
   };
 };
 

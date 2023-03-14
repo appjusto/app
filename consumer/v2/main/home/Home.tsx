@@ -1,7 +1,6 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import * as FacebookAds from 'expo-ads-facebook';
 import React from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -48,9 +47,6 @@ export default function ({ navigation }: Props) {
   const navigateToWelcomeScreen = () => {
     navigation.navigate('WelcomeScreen');
   };
-  React.useEffect(() => {
-    FacebookAds.AdSettings.requestPermissionsAsync();
-  }, []);
   // UI
   return (
     <View style={[screens.headless, screens.config]}>
