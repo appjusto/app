@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { getConsumer } from '../../../../../../common/store/consumer/selectors';
-import { halfPadding } from '../../../../../../common/styles';
+import { doublePadding, halfPadding } from '../../../../../../common/styles';
 import { borderRadius2 } from '../../../../common/styles/borders';
 import { colors } from '../../../../common/styles/colors';
 import { texts } from '../../../../common/styles/fonts';
@@ -28,8 +28,7 @@ export const ConsumerCarouselLoginItem = () => {
       <Text style={{ ...texts.md, marginTop: padding4, color: colors.white }}>
         Você precisa estar logado para fazer um pedido
       </Text>
-      <View style={{ flex: 1 }} />
-      <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+      <View style={{ marginTop: doublePadding, flexDirection: 'row', alignItems: 'flex-end' }}>
         <Text style={{ ...texts.x2s, color: colors.white }}>ENTRAR</Text>
         <Feather
           style={{ marginLeft: halfPadding }}
