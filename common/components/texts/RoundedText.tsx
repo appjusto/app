@@ -35,6 +35,7 @@ export default function ({
             ...borders.default,
             borderRadius: 32,
             borderColor: noBorder ? colors.grey50 : quote ? colors.green500 : tintColor,
+            borderWidth: noBorder ? 0 : 1,
             backgroundColor: bg ?? colors.white,
           },
           style,
@@ -42,7 +43,7 @@ export default function ({
         {...props}
       >
         {leftIcon}
-        <Text style={[texts.xs, { textAlign: 'center', color: tintColor, paddingBottom: 2 }]}>
+        <Text style={[texts.x2s, { textAlign: 'center', color: tintColor, paddingBottom: 2 }]}>
           {children}
         </Text>
       </View>

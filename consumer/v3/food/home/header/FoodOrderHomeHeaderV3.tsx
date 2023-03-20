@@ -9,6 +9,7 @@ import { FoodOrderHomeHeaderRestaurantSearch } from './search/FoodOrderHomeHeade
 
 interface Props {
   selectedCuisineId?: string;
+  onLoginClick: () => void;
   onChangePlace: () => void;
   onSearchPress: () => void;
   onCuisineSelect: (cuisine: WithId<Cuisine> | null) => void;
@@ -17,6 +18,7 @@ interface Props {
 
 export const FoodOrderHomeHeaderV3 = ({
   selectedCuisineId,
+  onLoginClick,
   onChangePlace,
   onSearchPress,
   onCuisineSelect,
@@ -25,7 +27,7 @@ export const FoodOrderHomeHeaderV3 = ({
   return (
     <View>
       <LocationBar onChangePlace={onChangePlace} />
-      <ConsumerCarousel />
+      <ConsumerCarousel onLoginClick={onLoginClick} />
       <FoodOrderHomeHeaderRestaurantSearch onSearchPress={onSearchPress} />
       <CuisineSelector selectedCuisineId={selectedCuisineId} onSelect={onCuisineSelect} />
       <FoodOrderHomeRecent onSelectBusiness={onSelectBusiness} />

@@ -1,9 +1,9 @@
 import { Cuisine } from '@appjusto/types';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import { useCuisineImageURI } from '../../../../common/store/api/platform/hooks/useCuisineImageURI';
-import { colors, halfPadding, texts } from '../../../../common/styles';
+import { colors, halfPadding } from '../../../../common/styles';
 import { borderRadius2 } from '../../../v3/common/styles/borders';
 import { ListItemImage } from '../common/ListItemImage';
 
@@ -25,13 +25,9 @@ export default function ({ cuisine, selected }: Props) {
     >
       <ListItemImage uri={imageURI} height={120} width={120} radius={borderRadius2} />
       <View style={{ paddingTop: 4 }}>
-        {selected ? (
-          <RoundedText backgroundColor={selected ? colors.green500 : colors.grey50} noBorder>
-            {cuisine.name}
-          </RoundedText>
-        ) : (
-          <Text style={{ ...texts.xs }}>{cuisine.name}</Text>
-        )}
+        <RoundedText backgroundColor={selected ? colors.green500 : colors.white} noBorder>
+          {cuisine.name}
+        </RoundedText>
       </View>
     </View>
   );
