@@ -87,7 +87,6 @@ export default class SearchApi {
       page,
       hitsPerPage,
     });
-    console.log(result);
     return result;
   }
 

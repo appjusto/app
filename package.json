@@ -17,7 +17,7 @@
   "dependencies": {
     "@appjusto/dates": "^0.8.0",
     "@appjusto/menu": "^0.1.4",
-    "@appjusto/types": "^19.1.4",
+    "@appjusto/types": "^19.4.14",
     "@expo/react-native-action-sheet": "^3.13.0",
     "@expo/vector-icons": "^13.0.0",
     "@fnando/cnpj": "^1.0.2",

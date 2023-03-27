@@ -14,6 +14,7 @@ export const sectionsFromResults = (
   uniqBy(items, (item) => item.objectID).forEach((item) => {
     if (item.opened) {
       if (currentLocation && inDeliveryRange(item, currentLocation)) {
+        console.log(item.name, 'opened');
         available.push(item);
       } else {
         // outOfRange.push(item);

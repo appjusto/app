@@ -2,6 +2,7 @@ import { CourierStatus } from '@appjusto/types';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, useNavigation } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
+import Constants from 'expo-constants';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -75,7 +76,11 @@ export default function ({ onFleetDetail }: Props) {
       return;
     }
     const newStatus: CourierStatus = working ? 'unavailable' : 'available';
-    if (!courier.notificationToken && newStatus === 'available') {
+    if (
+      Constants.appOwnership !== 'expo' &&
+      !courier.notificationToken &&
+      newStatus === 'available'
+    ) {
       navigation.navigate('PermissionDenied', {
         title: t('Precisamos de permissão para te enviar mensagens'),
         subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),

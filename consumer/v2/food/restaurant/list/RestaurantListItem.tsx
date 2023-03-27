@@ -81,7 +81,7 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance }: Props)
         >
           <View>
             <ListItemImage uri={logo} height={80} width={80} borderRadius={80} />
-            {restaurant.averageDiscount ? (
+            {restaurant.averageDiscount || restaurant.tags?.includes('appjusto-only') ? (
               <View style={{ position: 'absolute', alignSelf: 'flex-end' }}>
                 <View
                   style={{
