@@ -1,6 +1,7 @@
 import { Environment, Flavor } from '@appjusto/types';
 import { ConfigContext, ExpoConfig } from '@expo/config';
 import 'dotenv/config';
+import { withBuildProperties } from 'expo-build-properties';
 import { isEmpty } from 'lodash';
 import { Extra } from './config/types';
 import { version, versionCode } from './version.json';
@@ -61,7 +62,7 @@ const scheme = () => {
   return scheme;
 };
 
-type Plugins = (string | [] | [string] | [string, unknown])[];
+type Plugins = (string | [] | [string] | [string, unknown] | any)[];
 const plugins = (): Plugins => {
   let list: Plugins = [
     'expo-splash-screen',
@@ -72,6 +73,14 @@ const plugins = (): Plugins => {
       {
         userTrackingPermission:
           'Usamos esse identificador para medir a conversão dos nossos anúncios.',
+      },
+    ],
+    [
+      withBuildProperties,
+      {
+        ios: {
+          deploymentTarget: '13.0',
+        },
       },
     ],
   ];

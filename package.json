@@ -97,7 +97,8 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "sentry-expo": "^4.2.0",
-    "expo-tracking-transparency": "~2.2.0"
+    "expo-tracking-transparency": "~2.2.0",
+    "expo-build-properties": "~0.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
