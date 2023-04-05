@@ -126,7 +126,9 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
               </Text>
             </View>
           ) : null}
-          {flavor === 'consumer' && selectedFare?.courier?.processing?.value ? (
+          {flavor === 'consumer' &&
+          selectedFare?.courier?.processing?.value &&
+          selectedFare.courier.payee !== 'business' ? (
             <View
               style={{
                 marginTop: halfPadding,
@@ -185,7 +187,9 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
             </View>
           ) : null}
         </View>
-        {flavor === 'consumer' && selectedFare?.courier?.value ? (
+        {flavor === 'consumer' &&
+        selectedFare?.courier?.value &&
+        selectedFare.courier.payee !== 'business' ? (
           <View style={{ marginTop: padding }}>
             <DefaultButton
               style={{ paddingVertical: halfPadding }}
