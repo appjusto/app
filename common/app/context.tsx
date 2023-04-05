@@ -1,5 +1,6 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { NavigationContainer } from '@react-navigation/native';
+import { AnalyticsProvider } from '@segment/analytics-react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StatusBar } from 'expo-status-bar';
 import React, { ReactNode } from 'react';
@@ -10,21 +11,23 @@ import Toast from '../components/views/Toast';
 import { ModalToastProvider } from '../contexts/ModalToastContext';
 import { createStore } from '../store';
 import Api from '../store/api/api';
+import { segmentClient } from '../store/api/track';
 import { getExtra } from '../utils/config';
 import { getDeeplinkDomain } from '../utils/domains';
 import { defineLocationUpdatesTask } from '../utils/location';
-import * as analytics from './analytics';
 import NotificationContainer from './notifications/NotificationContainer';
+import * as sentry from './sentry';
 
 const extra = getExtra();
+const { flavor } = extra;
 const api = new Api(extra);
 const store = createStore(extra);
 const queryClient = new QueryClient();
 
-if (extra.flavor === 'courier') defineLocationUpdatesTask(store, api);
-else if (extra.flavor === 'business') definekeepAliveTask(store, api);
+if (flavor === 'courier') defineLocationUpdatesTask(store, api);
+else if (flavor === 'business') definekeepAliveTask(store, api);
 
-analytics.init(extra.analytics);
+sentry.init(extra.analytics);
 
 export const ApiContext = React.createContext<Api>(api);
 export type AppDispatch = typeof store.dispatch;
@@ -47,19 +50,21 @@ export const AppContext = ({ children }: Props) => {
   // UI
   return (
     <ApiContext.Provider value={api}>
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <NotificationContainer>
-            <NavigationContainer linking={linking}>
-              <ModalToastProvider>
-                <ActionSheetProvider>{children}</ActionSheetProvider>
-                <Toast />
-                <StatusBar style="dark" backgroundColor="#FFFFFF" />
-              </ModalToastProvider>
-            </NavigationContainer>
-          </NotificationContainer>
-        </QueryClientProvider>
-      </Provider>
+      <AnalyticsProvider client={segmentClient}>
+        <Provider store={store}>
+          <QueryClientProvider client={queryClient}>
+            <NotificationContainer>
+              <NavigationContainer linking={linking}>
+                <ModalToastProvider>
+                  <ActionSheetProvider>{children}</ActionSheetProvider>
+                  <Toast />
+                  <StatusBar style="dark" backgroundColor="#FFFFFF" />
+                </ModalToastProvider>
+              </NavigationContainer>
+            </NotificationContainer>
+          </QueryClientProvider>
+        </Provider>
+      </AnalyticsProvider>
     </ApiContext.Provider>
   );
 };
