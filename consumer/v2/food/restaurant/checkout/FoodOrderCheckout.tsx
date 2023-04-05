@@ -279,6 +279,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     } catch (error: any) {
       setLoading(false);
       Keyboard.dismiss();
+      console.log(error.toString());
       dispatch(showToast(error.toString(), 'error'));
       showModalToast(error.toString(), 'error');
     }

@@ -4,10 +4,10 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "prepare-env": "cp .$ENV.env .env",
-    "start": "npm run prepare-env && expo start -c",
+    "start": "npm run prepare-env && npx expo start -c",
     "publish-js": "node ./scripts/publish",
     "build-js": "node ./scripts/build",
-    "start-dev-client": "expo start -c --dev-client",
+    "start-dev-client": "npx expo start -c --dev-client",
     "lint": "eslint **/*.ts **/*.tsx",
     "clear-cache": "watchman watch-del-all && rm -rf node_modules/ && rm -f package-lock.json && npm install --legacy-peer-deps",
     "inc-version": "node ./version-inc",
