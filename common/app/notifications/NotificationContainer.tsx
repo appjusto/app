@@ -1,7 +1,7 @@
 import { PushMessage, PushMessageActionType, PushMessageData } from '@appjusto/types';
+import { useQueryClient } from '@tanstack/react-query';
 import * as Notifications from 'expo-notifications';
 import React from 'react';
-import { useQueryClient } from 'react-query';
 import { init } from '.';
 
 type Props = {

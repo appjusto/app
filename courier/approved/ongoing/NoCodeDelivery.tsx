@@ -1,5 +1,6 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useMutation } from '@tanstack/react-query';
 import * as ImagePicker from 'expo-image-picker';
 import React from 'react';
 import {
@@ -14,7 +15,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useMutation } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { box, house } from '../../../assets/icons';
 import { ApiContext, AppDispatch } from '../../../common/app/context';

@@ -1,7 +1,11 @@
 import React from 'react';
 import { ToastType } from '../store/ui/types';
 
-type ModalToastConfigType = { type: ToastType; message: string; duration: number };
+type ModalToastConfigType = {
+  type: ToastType;
+  message: string;
+  duration: number;
+};
 
 type ToastContextType = {
   modalToastConfig: ModalToastConfigType | null;
