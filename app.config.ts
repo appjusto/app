@@ -68,11 +68,12 @@ const plugins = (): Plugins => {
   let list: Plugins = [
     'expo-splash-screen',
     'sentry-expo',
+    './scripts/react-maps-plugin',
     [
       withBuildProperties,
       {
         ios: {
-          deploymentTarget: '13.0',
+          useFrameworks: 'static',
         },
       },
     ],
