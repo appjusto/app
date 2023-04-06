@@ -66,14 +66,14 @@ const plugins = (): Plugins => {
   let list: Plugins = [
     'expo-splash-screen',
     'sentry-expo',
-    ['react-native-fbsdk-next', facebokConfig()],
-    [
-      'expo-tracking-transparency',
-      {
-        userTrackingPermission:
-          'Usamos esse identificador para medir a conversão dos nossos anúncios.',
-      },
-    ],
+    // ['react-native-fbsdk-next', facebokConfig()],
+    // [
+    //   'expo-tracking-transparency',
+    //   {
+    //     userTrackingPermission:
+    //       'Usamos esse identificador para medir a conversão dos nossos anúncios.',
+    //   },
+    // ],
   ];
   if (FLAVOR === 'courier') {
     list = [
