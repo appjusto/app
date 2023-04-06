@@ -259,7 +259,6 @@ const android = () =>
             flavor === 'business' ? '#2F422C' : flavor === 'consumer' ? '#78E08F' : '#FFE493',
         },
         googleServicesFile: `./google-services-${environment}.json`,
-        useNextNotificationsApi: true,
         softwareKeyboardLayoutMode: 'pan',
         permissions: permissions(),
         intentFilters: intentFilters(),
