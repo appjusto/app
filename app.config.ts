@@ -72,6 +72,11 @@ const plugins = (): Plugins => {
     [
       withBuildProperties,
       {
+        android: {
+          compileSdkVersion: 33,
+          targetSdkVersion: 33,
+          buildToolsVersion: '33.0.1',
+        },
         ios: {
           useFrameworks: 'static',
         },
