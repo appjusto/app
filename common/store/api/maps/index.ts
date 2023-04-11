@@ -9,7 +9,7 @@ const { flavor } = getExtra();
 export default class MapsApi {
   constructor(private functionsRefs: FunctionsRef) {}
   async googlePlacesAutocomplete(input: string, sessionToken: string, coords?: LatLng) {
-    console.log('MapsApi.googlePlacesAutocomplete: ', input, coords);
+    console.warn('MapsApi.googlePlacesAutocomplete: ', input, coords);
 
     try {
       return (
@@ -23,14 +23,14 @@ export default class MapsApi {
         })
       ).data as Address[];
     } catch (error: any) {
-      console.log(error);
+      console.warn(error);
       Sentry.Native.captureException(error);
       return null;
     }
   }
 
   async googleGeocode(address: string) {
-    console.log('MapsApi.googleGeocode: ', address);
+    console.warn('MapsApi.googleGeocode: ', address);
     try {
       return (
         await this.functionsRefs.getQueryGoogleMapsCallable()({
@@ -41,14 +41,14 @@ export default class MapsApi {
         })
       ).data as LatLng;
     } catch (error: any) {
-      console.log(error);
+      console.warn(error);
       Sentry.Native.captureException(error);
       return null;
     }
   }
 
   async googleReverseGeocode(coords: LatLng) {
-    console.log('MapsApi.googleReverseGeocode: ', coords);
+    console.warn('MapsApi.googleReverseGeocode: ', coords);
     try {
       return (
         await this.functionsRefs.getQueryGoogleMapsCallable()({
@@ -59,7 +59,7 @@ export default class MapsApi {
         })
       ).data as Address;
     } catch (error: any) {
-      console.log(error);
+      console.warn(error);
       Sentry.Native.captureException(error);
       return null;
     }
@@ -70,7 +70,7 @@ export default class MapsApi {
     destination: string | LatLng,
     mode: CourierMode = 'motorcycle'
   ) {
-    console.log('MapsApi.googleDirections: ', origin, destination);
+    console.warn('MapsApi.googleDirections: ', origin, destination);
     try {
       return (
         await this.functionsRefs.getQueryGoogleMapsCallable()({
@@ -83,7 +83,7 @@ export default class MapsApi {
         })
       ).data as RouteDetails;
     } catch (error: any) {
-      console.log(error);
+      console.warn(error);
       Sentry.Native.captureException(error);
       return null;
     }
