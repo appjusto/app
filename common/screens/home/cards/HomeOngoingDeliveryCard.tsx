@@ -24,6 +24,7 @@ export default function ({ order, onPress }: Props) {
   const showCode = order.code ? `#${order.code}` : null;
   let title = '';
   let detail = '';
+  const deliveredByBusiness = order.fare?.fleet?.createdBy?.flavor === 'business';
   if (flavor === 'consumer') {
     if (type === 'food') {
       const businessName = business!.name;
@@ -48,7 +49,9 @@ export default function ({ order, onPress }: Props) {
           } else if (status === 'dispatching') {
             title = t('Seu pedido está à caminho!');
           }
-          if (dispatchingStatus === 'confirmed' || dispatchingStatus === 'outsourced') {
+          if (deliveredByBusiness) {
+            detail = 'Entrega feita pelo restaurante';
+          } else if (dispatchingStatus === 'confirmed' || dispatchingStatus === 'outsourced') {
             if (dispatchingState === 'going-pickup') {
               detail = `${courier?.name ?? t('Entregador/a')} ${t(
                 'está indo para'
