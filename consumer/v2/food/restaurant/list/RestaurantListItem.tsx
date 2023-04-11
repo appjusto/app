@@ -8,9 +8,10 @@ import { colors, halfPadding, padding, texts } from '../../../../../common/style
 import { formatDistance, formatHour } from '../../../../../common/utils/formatters';
 import { useServerTime } from '../../../../../common/utils/platform/useServerTime';
 import { t } from '../../../../../strings';
-import { borderRadius2 } from '../../../../v3/common/styles/borders';
-import { ItemTag } from './item/ItemTag';
+import { borderRadius1 } from '../../../../v3/common/styles/borders';
+import { AppJustoOnlyIcon } from '../../../../v3/food/home/header/carousel/icons/AppJustoOnlyIcon';
 import { ListItemImage } from './ListItemImage';
+import { ItemTag } from './item/ItemTag';
 
 type Props = {
   id: string;
@@ -38,20 +39,25 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance }: Props)
     }
     return null;
   })();
-  const discount = `${restaurant.averageDiscount}%`;
+  let discount = '';
+  if (restaurant.averageDiscount) {
+    const padding = restaurant.averageDiscount < 10 ? '  ' : ' ';
+    discount = `${padding}${restaurant.averageDiscount}%`;
+  }
   return (
     <View
       style={{
-        backgroundColor: colors.grey50,
-        borderRadius: borderRadius2,
+        backgroundColor: colors.white,
         paddingVertical: halfPadding,
-        paddingHorizontal: padding,
+        borderBottomColor: colors.grey500,
+        borderBottomWidth: 1,
       }}
     >
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
+          paddingHorizontal: padding,
         }}
       >
         <View style={{ justifyContent: 'center' }}>
@@ -80,20 +86,34 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance }: Props)
           }}
         >
           <View>
-            <ListItemImage uri={logo} height={80} width={80} borderRadius={80} />
-            {restaurant.averageDiscount || restaurant.tags?.includes('appjusto-only') ? (
-              <View style={{ position: 'absolute', alignSelf: 'flex-end' }}>
+            <ListItemImage uri={logo} height={80} width={80} borderRadius={borderRadius1} />
+            {restaurant.averageDiscount ? (
+              <View style={{ position: 'absolute', alignSelf: 'flex-start' }}>
                 <View
                   style={{
                     borderRadius: 32,
-                    paddingHorizontal: 8,
-                    paddingVertical: 12,
-                    top: -2,
-                    left: 10,
+                    paddingHorizontal: 10,
+                    paddingVertical: 14,
+                    top: -10,
+                    left: -36,
                     backgroundColor: colors.green500,
                   }}
                 >
                   <Text style={{ ...texts.x2s, ...texts.bold }}>{discount}</Text>
+                </View>
+              </View>
+            ) : null}
+            {restaurant.tags?.includes('appjusto-only') ? (
+              <View style={{ position: 'absolute', alignSelf: 'flex-start' }}>
+                <View
+                  style={{
+                    borderRadius: 32,
+                    top: -10,
+                    left: -36,
+                    backgroundColor: colors.green500,
+                  }}
+                >
+                  <AppJustoOnlyIcon style={{ transform: [{ scale: 0.8 }] }} />
                 </View>
               </View>
             ) : null}

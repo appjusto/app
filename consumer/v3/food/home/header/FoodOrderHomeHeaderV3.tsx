@@ -30,7 +30,7 @@ export const FoodOrderHomeHeaderV3 = ({
       <ConsumerCarousel onLoginClick={onLoginClick} />
       <FoodOrderHomeHeaderRestaurantSearch onSearchPress={onSearchPress} />
       <CuisineSelector selectedCuisineId={selectedCuisineId} onSelect={onCuisineSelect} />
-      <FoodOrderHomeRecent onSelectBusiness={onSelectBusiness} />
+      {!selectedCuisineId ? <FoodOrderHomeRecent onSelectBusiness={onSelectBusiness} /> : null}
     </View>
   );
 };

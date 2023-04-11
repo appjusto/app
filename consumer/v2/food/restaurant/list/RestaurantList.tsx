@@ -112,7 +112,7 @@ export const RestaurantList = ({
             {section.title && section.subtitle ? (
               <View
                 style={{
-                  paddingHorizontal: biggerPadding,
+                  paddingHorizontal: padding,
                   marginBottom: padding,
                 }}
               >
@@ -128,7 +128,6 @@ export const RestaurantList = ({
         return (
           <View
             style={{
-              paddingHorizontal: padding,
               marginBottom: halfPadding,
             }}
           >
