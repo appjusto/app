@@ -46,7 +46,6 @@
         "FLAVOR": "consumer"
       },
       "releaseChannel": "v10",
-      "distribution": "internal",
       "android": {
         "buildType": "apk"
       },
