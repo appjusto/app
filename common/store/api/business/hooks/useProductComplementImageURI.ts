@@ -1,5 +1,5 @@
+import { useQuery } from '@tanstack/react-query';
 import { useContext } from 'react';
-import { useQuery } from 'react-query';
 import { ApiContext } from '../../../../app/context';
 
 export const useProductComplementImageURI = (businessId: string, complementId?: string) => {

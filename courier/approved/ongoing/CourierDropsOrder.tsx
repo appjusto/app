@@ -1,7 +1,6 @@
 import { Issue, WithId } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { track } from 'expo-analytics-segment';
 import React from 'react';
 import { ActivityIndicator, Keyboard, View } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -10,7 +9,7 @@ import RadioButton from '../../../common/components/buttons/RadioButton';
 import { ReportIssueView } from '../../../common/components/views/ReportIssueView';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import useIssues from '../../../common/store/api/platform/hooks/useIssues';
-import { useSegmentScreen } from '../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';

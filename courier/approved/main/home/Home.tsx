@@ -2,7 +2,6 @@ import { CourierStatus } from '@appjusto/types';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { track } from 'expo-analytics-segment';
 import React from 'react';
 import { Linking, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -18,7 +17,7 @@ import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOng
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { useObserveActiveRequests } from '../../../../common/store/api/courier/hooks/useObserveActiveRequests';
 import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
-import { useSegmentScreen } from '../../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { getCourier } from '../../../../common/store/courier/selectors';
 import { colors, padding, screens } from '../../../../common/styles';
 import {

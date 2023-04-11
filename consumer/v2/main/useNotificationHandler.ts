@@ -1,9 +1,9 @@
 import { PushMessage, PushMessageData } from '@appjusto/types';
 import { useNavigation } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import * as Notifications from 'expo-notifications';
 import React from 'react';
-import { useQuery, useQueryClient } from 'react-query';
 import { LoggedNavigatorParamList } from '../types';
 
 type ScreenNavigationProp = StackNavigationProp<LoggedNavigatorParamList, 'MainNavigator'>;

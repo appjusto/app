@@ -19,7 +19,6 @@ import {
 } from 'firebase/firestore';
 import { hash } from 'geokit';
 import { Platform } from 'react-native';
-import * as Sentry from 'sentry-expo';
 import { getInstallationId } from '../../../utils/getInstallationId';
 import AuthApi from '../auth';
 import { fetchPublicIP } from '../externals/ipify';
@@ -77,7 +76,7 @@ export default class ProfileApi {
       (error) => {
         console.error('observeProfile', id);
         console.error(error);
-        Sentry.Native.captureException(error);
+        // Sentry.Native.captureException(error);
       }
     );
   }

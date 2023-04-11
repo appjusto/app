@@ -62,10 +62,14 @@ export const Withdraws = ({ navigation, route }: Props) => {
         description: t('O valor será transferido para sua conta em até 1 dia útil.'),
       });
     } catch (error) {
-      console.log(error);
       Sentry.Native.captureException(error);
+      const message = JSON.stringify(error)
+        .replace('FirebaseError:', '')
+        .replace('Error:', '')
+        .trim();
+      console.log(message);
       Keyboard.dismiss();
-      dispatch(showToast('Não foi possível realizar a requisição. Tente novamente.', 'error'));
+      dispatch(showToast(message, 'error'));
       setWithdrawing(false);
     }
   };

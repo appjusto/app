@@ -46,11 +46,20 @@
         "FLAVOR": "consumer"
       },
       "releaseChannel": "v10",
-      "distribution": "internal",
       "android": {
         "buildType": "apk"
       },
       "expoCli": "6.1.0"
+    },
+    "consumer-v10-devclient-dev": {
+      "extends": "consumer-v10-internal",
+      "developmentClient": true,
+      "ios": {
+        "simulator": true
+      },
+      "env": {
+        "ENV": "dev"
+      }
     },
     "consumer-v10-internal-dev": {
       "extends": "consumer-v10-internal",
@@ -58,10 +67,30 @@
         "ENV": "dev"
       }
     },
+    "consumer-v10-devclient-staging": {
+      "extends": "consumer-v10-internal",
+      "developmentClient": true,
+      "ios": {
+        "simulator": true
+      },
+      "env": {
+        "ENV": "staging"
+      }
+    },
     "consumer-v10-internal-staging": {
       "extends": "consumer-v10-internal",
       "env": {
         "ENV": "staging"
+      }
+    },
+    "consumer-v10-devclient-live": {
+      "extends": "consumer-v10-internal",
+      "developmentClient": true,
+      "ios": {
+        "simulator": true
+      },
+      "env": {
+        "ENV": "live"
       }
     },
     "consumer-v10-internal-live": {

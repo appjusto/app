@@ -23,6 +23,7 @@ import DefaultInput from '../../components/inputs/DefaultInput';
 import { phoneFormatter, phoneMask } from '../../components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../components/inputs/pattern-input/parsers';
 import PatternInput from '../../components/inputs/PatternInput';
+import { useFacebookAds } from '../../hooks/useFacebookAds';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconIntroBusiness } from '../../icons/icon-intro-business';
 import { IconLogoGreen } from '../../icons/icon-logoGreen';
@@ -64,6 +65,7 @@ export default function ({ navigation, route }: Props) {
   // side effects
   // tracking
   useSegmentScreen('Welcome');
+  useFacebookAds();
   React.useEffect(() => {
     const update = () => setAuthMode(api.auth().defaultAuthMode);
     navigation.addListener('focus', update);

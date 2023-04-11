@@ -1,10 +1,10 @@
 import { ProfileSituation } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useQueryClient } from '@tanstack/react-query';
 import { GeoPoint } from 'firebase/firestore';
 import React from 'react';
 import { Alert, Keyboard, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../common/app/context';

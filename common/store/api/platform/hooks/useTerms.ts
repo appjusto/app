@@ -1,7 +1,7 @@
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { parse } from 'marked';
 import React from 'react';
-import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 import * as terms from '../../../../data/terms';
 import { getFlavor } from '../../../config/selectors';
