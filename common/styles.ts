@@ -10,13 +10,14 @@ export const colors = {
   black: '#000000',
   green50: '#F2FFE8',
   green100: '#B8E994',
-  green500: '#78E08F',
+  green500: '#6CE787',
   green600: '#4EA031',
   green700: '#2F422C',
   yellow: '#FFE493',
   darkYellow: '#FFBE00',
   lightRed: '#FFF8F8',
   red: '#DC3545',
+  red50: '#FF8C4B',
 };
 
 export const halfPadding = 8;

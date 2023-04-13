@@ -10,7 +10,6 @@ import HR from '../../../common/components/views/HR';
 import { useNotificationToken } from '../../../common/hooks/useNotificationToken';
 import { useObserveOrderCourierLocation } from '../../../common/store/api/order/courier/useObserveOrderCourierLocation';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
-import { useObserveOrderConfirmation } from '../../../common/store/api/order/hooks/useObserveOrderConfirmation';
 import { track, useSegmentScreen } from '../../../common/store/api/track';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatCurrency } from '../../../common/utils/formatters';
@@ -42,11 +41,9 @@ export default function ({ navigation, route }: Props) {
   // screen state
   const order = useObserveOrder(orderId);
   const courierLocation = useObserveOrderCourierLocation(orderId, order?.courier?.id);
-  const confirmation = useObserveOrderConfirmation(orderId);
   const courierId = order?.courier?.id;
   const businessId = order?.business?.id;
   useNotificationToken();
-  const [wantsCode, setWantsCode] = React.useState(false);
   // tracking
   useSegmentScreen('Ongoing Delivery');
   // helpers
@@ -157,9 +154,6 @@ export default function ({ navigation, route }: Props) {
       <View style={{ flex: 1 }}>
         {/* top */}
         <OngoingOrderStatus order={order} />
-        {order.fulfillment === 'delivery' && order.status !== 'dispatching' ? (
-          <HR height={padding} />
-        ) : null}
         <OngoingMapAndInfo
           order={order}
           courierLocation={courierLocation}
@@ -170,14 +164,7 @@ export default function ({ navigation, route }: Props) {
         {order.dispatchingStatus !== 'outsourced' &&
         order.status !== 'scheduled' &&
         order.fulfillment === 'delivery' ? (
-          <DeliveryConfirmation
-            switchValue={wantsCode}
-            onChangeCodeDelivery={() => {
-              track('changed code delivery preferences');
-              setWantsCode(!wantsCode);
-            }}
-            confirmation={confirmation}
-          />
+          <DeliveryConfirmation order={order} />
         ) : null}
         {order.type === 'food' && order.fulfillment === 'take-away' ? (
           <OrderNumber code={order.code} businessId={businessId!} />

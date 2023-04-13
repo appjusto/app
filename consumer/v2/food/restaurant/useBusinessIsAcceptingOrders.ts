@@ -3,7 +3,7 @@ import { toNumber } from 'lodash';
 import { usePlatformParamsContext } from '../../../../common/contexts/PlatformParamsContext';
 import { useContextGetSeverTime } from '../../../../common/contexts/ServerTimeContext';
 import { isAvailable } from '../../../../common/store/api/business/selectors';
-import { distanceBetweenLatLng } from '../../../../common/store/api/helpers';
+import { inDeliveryRange } from '../../../../common/store/api/helpers';
 import { formatTime } from '../../../../common/utils/formatters';
 
 type AcceptingStatus = 'unavailable' | 'closed' | 'out-of-range' | 'unsupported' | 'accepting';
@@ -30,12 +30,8 @@ export const useBusinessIsAcceptingOrders = (
 
   if (business.status !== 'available') return 'unavailable';
 
-  const distance =
-    destination && business?.businessAddress?.latlng
-      ? distanceBetweenLatLng(destination, business.businessAddress.latlng)
-      : 0;
-  if (business.deliveryRange) {
-    if (business.deliveryRange < distance ?? 0) return 'out-of-range';
+  if (destination && !inDeliveryRange(business, destination)) {
+    return 'out-of-range';
   }
 
   if (!isAvailable(business.schedules, now) && !business.preparationModes?.includes('scheduled'))

@@ -57,7 +57,7 @@ export const FulfillmentSwitch = ({ orderId }: Props) => {
   const onGestureEnded = async () => {
     try {
       const takeAway = translateX > center + threshold && translateX < rightmost;
-      const delivery = translateX < center + threshold;
+      const delivery = !takeAway;
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       if (delivery) {
         setOrderFulfillment('delivery');

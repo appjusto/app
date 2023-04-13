@@ -25,9 +25,9 @@ export const useUpdateLocation = () => {
   const { coords } = useLastKnownLocation();
   // effect to update currentPlace and currentLocation
   React.useEffect(() => {
-    // console.log(
-    //   `authState: ${authState}; coords: ${coords}; currentLocation: ${currentLocation}; currentPlace: ${currentPlace}; lastPlace: ${lastPlace}`
-    // );
+    console.log(
+      `authState: ${authState}; coords: ${coords}; currentLocation: ${currentLocation}; currentPlace: ${currentPlace}; lastPlace: ${lastPlace}`
+    );
     // if unlogged
     if (authState === AuthState.Unsigned || authState === AuthState.InvalidCredentials) {
       if (!currentLocation) {

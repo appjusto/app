@@ -3,6 +3,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../app/context';
 import { showToast } from '../../../ui/actions';
+import { getOrderTotal } from '../helpers';
 import { useObserveOrder } from './useObserveOrder';
 
 export const useQuotes = (orderId?: string) => {
@@ -28,15 +29,24 @@ export const useQuotes = (orderId?: string) => {
       dispatch(showToast(error.toString(), 'error'));
     }
   };
+  const itemsValue = getOrderTotal(order ?? undefined);
   // side-effects
   // update quotes
   React.useEffect(() => {
+    console.log('getOrderQuotes', [
+      order?.id,
+      order?.route?.distance,
+      order?.route?.issue,
+      itemsValue,
+      order?.fulfillment,
+      order?.destination?.location?.latitude,
+    ]);
     getOrderQuotes();
   }, [
     order?.id,
     order?.route?.distance,
     order?.route?.issue,
-    order?.items,
+    itemsValue,
     order?.fulfillment,
     order?.destination?.location?.latitude,
   ]);

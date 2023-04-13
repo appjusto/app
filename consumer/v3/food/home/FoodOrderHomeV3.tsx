@@ -6,21 +6,20 @@ import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
-import { useLastRestaurants } from '../../../../common/store/api/order/hooks/useLastRestaurants';
 import { useSearch } from '../../../../common/store/api/search/useSearch';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import {
   updateCurrentLocation,
   updateCurrentPlace,
 } from '../../../../common/store/consumer/actions';
-import { getConsumer, getCurrentLocation } from '../../../../common/store/consumer/selectors';
+import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import { SearchFilter } from '../../../../common/store/consumer/types';
 import { colors, padding } from '../../../../common/styles';
-import { LoggedNavigatorParamList } from '../../types';
-import { sectionsFromResults } from '../restaurant/list';
-import { RestaurantList } from '../restaurant/list/RestaurantList';
-import { FoodOrderNavigatorParamList } from '../types';
-import { FoodOrderHomeHeader } from './FoodOrderHomeHeader';
+import { sectionsFromResults } from '../../../v2/food/restaurant/list';
+import { RestaurantList } from '../../../v2/food/restaurant/list/RestaurantList';
+import { FoodOrderNavigatorParamList } from '../../../v2/food/types';
+import { LoggedNavigatorParamList } from '../../../v2/types';
+import { FoodOrderHomeHeaderV3 } from './header/FoodOrderHomeHeaderV3';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<FoodOrderNavigatorParamList, 'FoodOrderHome'>,
@@ -33,7 +32,7 @@ type Props = {
   navigation: ScreenNavigationProp;
 };
 
-export const FoodOrderHome = ({ route, navigation }: Props) => {
+export const FoodOrderHomeV3 = ({ route, navigation }: Props) => {
   // params
   const { place } = route.params ?? {};
   // context
@@ -41,7 +40,6 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   // redux store
   const currentLocation = useSelector(getCurrentLocation);
-  const consumer = useSelector(getConsumer);
   // state
   const [filters, setFilters] = React.useState<SearchFilter[]>([]);
   const {
@@ -51,7 +49,6 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     fetchNextPage,
   } = useSearch<BusinessAlgolia>(true, 'restaurant', 'distance', filters, currentLocation, '');
   const [refreshing, setRefreshing] = React.useState(false);
-  const mostRecentRestaurants = useLastRestaurants(consumer?.id);
   // side effects
   React.useEffect(() => {
     if (place) {
@@ -61,7 +58,7 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
     }
   }, [dispatch, place]);
   // tracking
-  useSegmentScreen('FoodOrderHome');
+  useSegmentScreen('FoodOrderHomeV3');
   // handlers
   const refresh = async () => {
     setRefreshing(true);
@@ -79,14 +76,11 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
       onEndReachedThreshold={0.7}
       ListHeaderComponent={
         <View style={{ backgroundColor: colors.white, paddingBottom: padding }}>
-          <FoodOrderHomeHeader
-            onSelectRestaurant={(restaurantId) => {
-              navigation.push('RestaurantNavigator', {
-                restaurantId,
-                screen: 'RestaurantDetail',
-              });
-            }}
+          <FoodOrderHomeHeaderV3
             selectedCuisineId={filters.find(() => true)?.value}
+            onLoginClick={() => {
+              navigation.replace('WelcomeScreen');
+            }}
             onChangePlace={() => {
               navigation.navigate('AddressComplete', {
                 returnParam: 'place',
@@ -96,14 +90,15 @@ export const FoodOrderHome = ({ route, navigation }: Props) => {
             onSearchPress={() => {
               navigation.navigate('RestaurantSearch');
             }}
+            onSelectBusiness={(restaurantId) => {
+              navigation.push('RestaurantNavigator', {
+                restaurantId,
+                screen: 'RestaurantDetail',
+              });
+            }}
             onCuisineSelect={(cuisine) => {
               setFilters(cuisine ? [{ type: 'cuisine', value: cuisine.name }] : []);
             }}
-            consumer={consumer}
-            onLogin={() => {
-              navigation.replace('WelcomeScreen');
-            }}
-            recentRestaurants={mostRecentRestaurants}
           />
         </View>
       }
