@@ -101,8 +101,8 @@ export const hasSatisfiedAllGroups = (product: Product, complements: OrderItemCo
 
 // total
 
-export const getOrderTotal = (order: Order) =>
-  (order.items ?? []).reduce((sum, item) => sum + getItemTotal(item), 0);
+export const getOrderTotal = (order?: Order) =>
+  (order?.items ?? []).reduce((sum, item) => sum + getItemTotal(item), 0);
 
 // location
 

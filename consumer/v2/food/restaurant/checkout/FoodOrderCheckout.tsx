@@ -58,6 +58,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   // context
   const api = React.useContext(ApiContext);
   const order = useContextActiveOrder();
+  const orderId = order?.id;
   const dispatch = useDispatch<AppDispatch>();
   const { showModalToast } = useModalToastContext();
   const business = useObserveBusiness(order?.business?.id);
@@ -78,7 +79,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
   const [wantsCpf, setWantsCpf] = React.useState(false);
   const [shareDataWithBusiness, setShareDataWithBusiness] = React.useState(false);
-  const quotes = useQuotes(order?.id);
+  const quotes = useQuotes(orderId);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
   const [complement, setComplement] = React.useState<string>(
     order?.destination?.additionalInfo ?? ''
@@ -108,6 +109,13 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     if (!quotes || isEmpty(quotes)) return;
     setSelectedFare(quotes[0]);
   }, [quotes]);
+  // whenever selectedFare changes
+  React.useEffect(() => {
+    if (!order) return;
+    if (selectedFare) {
+      api.order().updateOrder(order.id, { fare: selectedFare });
+    }
+  }, [api, orderId, selectedFare]);
   // whenever there is a change when interacting with other screens
   React.useEffect(() => {
     if (params?.destination) {
