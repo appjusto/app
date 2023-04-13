@@ -11,8 +11,8 @@ import { getFlavor } from '../../../../common/store/config/selectors';
 import { borders, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
-import IzaIcon from './iza';
 import { OrderCostModal } from './OrderCostModal';
+import IzaIcon from './iza';
 
 type Props = {
   order: WithId<Order>;
@@ -26,6 +26,19 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
   const flavor = useSelector(getFlavor);
   // state
   const [modalVisible, setModalVisible] = React.useState(false);
+  const deliveryNetValue = selectedFare?.courier?.netValue ?? 0;
+  const locationFee = selectedFare?.courier?.locationFee ?? 0;
+  const deliveryValue = deliveryNetValue + locationFee;
+  const insuranceFee = selectedFare?.courier?.insurance ?? 0;
+  const processingFee = selectedFare?.courier?.processing?.value ?? 0;
+  let otherDeliveryFees = 0;
+  if (processingFee && selectedFare?.courier?.payee !== 'business') {
+    otherDeliveryFees += processingFee;
+  }
+  if (insuranceFee) {
+    otherDeliveryFees += insuranceFee;
+  }
+
   // UI
   return (
     <View style={{ flex: 1 }}>
@@ -66,7 +79,7 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
               <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.platform.value)}</Text>
             </View>
           ) : null}
-          {flavor === 'courier' && selectedFare?.courier?.netValue ? (
+          {flavor === 'courier' && deliveryNetValue ? (
             <View
               style={{
                 marginTop: halfPadding,
@@ -76,10 +89,10 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
               }}
             >
               <Text style={{ ...texts.sm }}>{t('Entrega')}</Text>
-              <Text style={{ ...texts.sm }}>{formatCurrency(selectedFare.courier.netValue)}</Text>
+              <Text style={{ ...texts.sm }}>{formatCurrency(deliveryNetValue)}</Text>
             </View>
           ) : null}
-          {flavor === 'courier' && selectedFare?.courier?.locationFee ? (
+          {flavor === 'courier' && locationFee ? (
             <View
               style={{
                 marginTop: halfPadding,
@@ -89,12 +102,10 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
               }}
             >
               <Text style={{ ...texts.sm }}>{t('Taxa de alta demanda')}</Text>
-              <Text style={{ ...texts.sm }}>
-                {formatCurrency(selectedFare.courier.locationFee)}
-              </Text>
+              <Text style={{ ...texts.sm }}>{formatCurrency(locationFee)}</Text>
             </View>
           ) : null}
-          {flavor === 'consumer' && selectedFare?.courier?.netValue ? (
+          {flavor === 'consumer' && deliveryNetValue ? (
             <View
               style={{
                 marginTop: halfPadding,
@@ -105,7 +116,7 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
             >
               <View style={{ flexDirection: 'row' }}>
                 <Text style={{ ...texts.sm }}>{t('Entrega')}</Text>
-                {selectedFare?.courier?.locationFee ? (
+                {locationFee ? (
                   <View
                     style={{
                       marginLeft: padding,
@@ -119,16 +130,10 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
                   </View>
                 ) : null}
               </View>
-              <Text style={{ ...texts.sm }}>
-                {formatCurrency(
-                  selectedFare.courier.netValue + (selectedFare?.courier?.locationFee ?? 0)
-                )}
-              </Text>
+              <Text style={{ ...texts.sm }}>{formatCurrency(deliveryValue)}</Text>
             </View>
           ) : null}
-          {flavor === 'consumer' &&
-          selectedFare?.courier?.processing?.value &&
-          selectedFare.courier.payee !== 'business' ? (
+          {flavor === 'consumer' && otherDeliveryFees ? (
             <View
               style={{
                 marginTop: halfPadding,
@@ -140,20 +145,16 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
               <View style={{ flexDirection: 'row' }}>
                 <Text style={{ ...texts.sm }}>
                   {t('Taxas')}
-                  {selectedFare?.courier?.insurance ? t(' + Seguro') : ''}
+                  {insuranceFee ? t(' + Seguro') : ''}
                 </Text>
 
-                {selectedFare?.courier?.insurance ? (
+                {insuranceFee ? (
                   <View style={{ marginLeft: halfPadding }}>
                     <IzaIcon />
                   </View>
                 ) : null}
               </View>
-              <Text style={{ ...texts.sm }}>
-                {formatCurrency(
-                  selectedFare.courier.processing.value + (selectedFare?.courier?.insurance ?? 0)
-                )}
-              </Text>
+              <Text style={{ ...texts.sm }}>{formatCurrency(otherDeliveryFees)}</Text>
             </View>
           ) : null}
           {order.tip?.value && (flavor === 'consumer' || order.tip?.status === 'paid') ? (
@@ -187,9 +188,7 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
             </View>
           ) : null}
         </View>
-        {flavor === 'consumer' &&
-        selectedFare?.courier?.value &&
-        selectedFare.courier.payee !== 'business' ? (
+        {flavor === 'consumer' && otherDeliveryFees ? (
           <View style={{ marginTop: padding }}>
             <DefaultButton
               style={{ paddingVertical: halfPadding }}
