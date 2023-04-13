@@ -32,5 +32,5 @@ export const useTrack = (name: string, props?: Props) => {
 export const useSegmentScreen = (name: string, props?: Props) => {
   React.useEffect(() => {
     screen(name, props);
-  }, [name, props]);
+  }, []);
 };
