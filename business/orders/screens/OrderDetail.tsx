@@ -104,7 +104,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
       order.status === 'scheduled' ||
       (order.status === 'preparing' && !order.courier) ||
       (order.status === 'ready' && !order.courier) ||
-      (order.dispatchingStatus === 'outsourced' && order.outsourcedBy === 'business'));
+      (order.dispatchingStatus === 'outsourced' && order.fare?.courier?.payee === 'business'));
   //UI
   if (!order) {
     return (
