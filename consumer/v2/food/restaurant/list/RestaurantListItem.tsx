@@ -4,13 +4,13 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useBusinessLogoURI } from '../../../../../common/store/api/business/hooks/useBusinessLogoURI';
 import { getNextAvailableDate } from '../../../../../common/store/api/business/selectors';
-import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
+import { colors, padding, texts } from '../../../../../common/styles';
 import { formatDistance, formatHour } from '../../../../../common/utils/formatters';
 import { useServerTime } from '../../../../../common/utils/platform/useServerTime';
 import { t } from '../../../../../strings';
 import { borderRadius1 } from '../../../../v3/common/styles/borders';
-import { AppJustoOnlyIcon } from '../../../../v3/food/home/header/carousel/icons/AppJustoOnlyIcon';
 import { ListItemImage } from './ListItemImage';
+import { ItemBadge } from './item/ItemBadge';
 import { ItemTag } from './item/ItemTag';
 
 type Props = {
@@ -39,31 +39,29 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance }: Props)
     }
     return null;
   })();
-  let discount = '';
-  if (restaurant.averageDiscount) {
-    const padding = restaurant.averageDiscount < 10 ? '  ' : ' ';
-    discount = `${padding}${restaurant.averageDiscount}%`;
-  }
   return (
     <View
       style={{
         backgroundColor: colors.white,
-        paddingVertical: halfPadding,
-        borderBottomColor: colors.grey500,
+        paddingVertical: 8,
+        borderBottomColor: colors.grey90,
         borderBottomWidth: 1,
       }}
     >
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
           paddingHorizontal: padding,
+          borderWidth: 0,
         }}
       >
-        <View style={{ justifyContent: 'center' }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{ width: '75%' }}>
-              <Text style={{ ...texts.sm }} numberOfLines={2}>{`${restaurant.name}`}</Text>
+        <View style={{ justifyContent: 'center', maxWidth: '65%' }}>
+          <View style={{ borderWidth: 0, justifyContent: 'center' }}>
+            <View style={{ flexDirection: 'row', borderWidth: 0 }}>
+              <Text style={{ ...texts.sm }} numberOfLines={2}>
+                {restaurant.name}
+              </Text>
+              <ItemBadge business={restaurant} />
             </View>
           </View>
           <Text style={{ marginTop: 4, ...texts.xs, color: colors.green700 }}>
@@ -78,47 +76,9 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance }: Props)
             </View>
           ) : null}
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <View>
-            <ListItemImage uri={logo} height={80} width={80} borderRadius={borderRadius1} />
-            {restaurant.averageDiscount ? (
-              <View style={{ position: 'absolute', alignSelf: 'flex-start' }}>
-                <View
-                  style={{
-                    borderRadius: 32,
-                    paddingHorizontal: 10,
-                    paddingVertical: 14,
-                    top: -10,
-                    left: -36,
-                    backgroundColor: colors.green500,
-                  }}
-                >
-                  <Text style={{ ...texts.x2s, ...texts.bold }}>{discount}</Text>
-                </View>
-              </View>
-            ) : null}
-            {restaurant.tags?.includes('appjusto-only') ? (
-              <View style={{ position: 'absolute', alignSelf: 'flex-start' }}>
-                <View
-                  style={{
-                    borderRadius: 32,
-                    top: -10,
-                    left: -36,
-                    backgroundColor: colors.green500,
-                  }}
-                >
-                  <AppJustoOnlyIcon style={{ transform: [{ scale: 0.8 }] }} />
-                </View>
-              </View>
-            ) : null}
-          </View>
-        </View>
+        {/* <ItemBadge business={restaurant} /> */}
+        <View style={{ flex: 1, borderWidth: 0 }} />
+        <ListItemImage uri={logo} height={80} width={80} borderRadius={borderRadius1} />
       </View>
     </View>
   );
