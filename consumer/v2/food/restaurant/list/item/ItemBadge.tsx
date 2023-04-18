@@ -42,7 +42,7 @@ export const ItemBadge = ({ business }: Props) => {
             ...texts.bold,
             // position: 'absolute',
             // alignSelf: 'center',
-            top: 7,
+            top: 5,
             left: averageDiscount < 10 ? 7 : 5,
             // flex: 1,
             borderWidth: 0,
