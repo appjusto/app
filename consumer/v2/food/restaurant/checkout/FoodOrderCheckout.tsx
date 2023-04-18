@@ -149,18 +149,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     if (params?.payMethod) setPayMethod(params.payMethod);
     if (consumer.cpf) setCpf(consumer.cpf);
   }, [api, navigation, order, params, consumer.cpf]);
-  // update consumer's name in his first order
-  React.useEffect(() => {
-    if (!order) return;
-    if (consumer.name && consumer.name !== order.consumer.name) {
-      api.order().updateOrder(order.id, {
-        consumer: {
-          ...order.consumer,
-          name: consumer.name,
-        },
-      });
-    }
-  }, [consumer.name, order, api]);
   // return to Home if order status becomes 'expired' or all items are removed from it
   React.useEffect(() => {
     if (order === undefined) return;

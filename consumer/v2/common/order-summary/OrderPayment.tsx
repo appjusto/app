@@ -143,7 +143,6 @@ export const OrderPayment = ({
             title={t('Quero pagar com Pix')}
             style={{ marginTop: padding }}
             onPress={onPayWithPix}
-            disabled={!isSubmitEnabled}
           >
             <RoundedText backgroundColor={colors.yellow}>{t('Novo!')}</RoundedText>
           </DefaultButton>
