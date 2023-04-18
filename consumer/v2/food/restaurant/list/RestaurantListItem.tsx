@@ -69,14 +69,11 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance }: Props)
           </Text>
           {distance ? (
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
-              <Text style={{ ...texts.xs, color: colors.grey700 }}>{`${formatDistance(
-                distance
-              )} \u00B7`}</Text>
+              <Text style={{ ...texts.xs, color: colors.grey700 }}>{formatDistance(distance)}</Text>
               {RestaurantTag}
             </View>
           ) : null}
         </View>
-        {/* <ItemBadge business={restaurant} /> */}
         <View style={{ flex: 1, borderWidth: 0 }} />
         <ListItemImage uri={logo} height={80} width={80} borderRadius={borderRadius1} />
       </View>

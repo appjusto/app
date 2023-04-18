@@ -1,11 +1,11 @@
-import { BusinessAlgolia } from '@appjusto/types';
+import { Business, BusinessAlgolia } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { colors, texts } from '../../../../../../common/styles';
 import { AppJustoOnlyIcon } from '../../../../../v3/food/home/header/carousel/icons/AppJustoOnlyIcon';
 
 interface Props {
-  business: BusinessAlgolia;
+  business: BusinessAlgolia | Business;
 }
 
 export const ItemBadge = ({ business }: Props) => {
@@ -32,7 +32,7 @@ export const ItemBadge = ({ business }: Props) => {
             backgroundColor: colors.green500,
             borderRadius: 32,
             position: 'absolute',
-            borderWidth: 0,
+            borderWidth: 0.5,
           }}
         />
         <Text

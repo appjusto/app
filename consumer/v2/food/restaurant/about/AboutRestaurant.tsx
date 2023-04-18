@@ -7,7 +7,7 @@ import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { useSegmentScreen } from '../../../../../common/store/api/track';
 import { useContextBusiness } from '../../../../../common/store/context/business';
 import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
-import { formatCurrency, formatHour } from '../../../../../common/utils/formatters';
+import { formatHour } from '../../../../../common/utils/formatters';
 import { t } from '../../../../../strings';
 import { RestaurantHeader } from '../../common/RestaurantHeader';
 import { RestaurantNavigatorParamList } from '../types';
@@ -20,29 +20,32 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-export const AboutRestaurant = ({ route }: Props) => {
+export const AboutRestaurant = ({ navigation, route }: Props) => {
   // context
   const restaurant = useContextBusiness();
   // tracking
   useSegmentScreen('AboutRestaurant');
 
-  if (!restaurant || !restaurant.businessAddress)
+  React.useLayoutEffect(() => {
+    if (!restaurant) return;
+    navigation.setOptions({
+      title: `Sobre ${restaurant.name}`,
+    });
+  }, [navigation, restaurant]);
+
+  if (!restaurant || !restaurant.businessAddress) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
       </View>
     );
+  }
+
   return (
     <ScrollView style={{ ...screens.default }} scrollIndicatorInsets={{ right: 1 }}>
       <RestaurantHeader restaurant={restaurant} />
-      <View style={{ marginTop: padding, padding }}>
+      <View style={{ padding }}>
         <Text style={{ ...texts.sm }}>{restaurant.description}</Text>
-        {restaurant.minimumOrder ? (
-          <Text style={{ marginTop: padding, ...texts.sm, color: colors.grey700 }}>
-            {t('Valor mínimo de pedido ')}
-            {formatCurrency(restaurant.minimumOrder ?? 0)}
-          </Text>
-        ) : null}
       </View>
       <View style={{ width: '100%', height: padding, backgroundColor: colors.grey50 }} />
       <View style={{ marginTop: padding, paddingHorizontal: padding, paddingBottom: padding }}>
