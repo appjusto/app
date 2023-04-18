@@ -7,10 +7,10 @@ import { getNextAvailableDate } from '../../../../../common/store/api/business/s
 import { colors, padding, texts } from '../../../../../common/styles';
 import { formatDistance, formatHour } from '../../../../../common/utils/formatters';
 import { useServerTime } from '../../../../../common/utils/platform/useServerTime';
-import { t } from '../../../../../strings';
 import { borderRadius1 } from '../../../../v3/common/styles/borders';
 import { ListItemImage } from './ListItemImage';
 import { ItemBadge } from './item/ItemBadge';
+import { ItemReviews } from './item/ItemReviews';
 import { ItemTag } from './item/ItemTag';
 
 type Props = {
@@ -32,7 +32,7 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance }: Props)
       return <ItemTag text="Temporariamente fechado" variant="yellow" />;
     }
     if ((restaurant.deliveryRange ?? 0) < (distance ?? 0)) {
-      return <ItemTag text="Fora do raio de entrega" variant="light-red" />;
+      return <ItemTag text="Fora do raio de entrega" variant="grey" />;
     }
     if (!restaurant.opened && day && hour) {
       return <ItemTag text={`Abre ${capitalize(day)} às ${formatHour(hour)}`} />;
@@ -56,6 +56,7 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance }: Props)
         }}
       >
         <View style={{ justifyContent: 'center', maxWidth: '65%' }}>
+          {/* first line: restaurant name and badge */}
           <View style={{ borderWidth: 0, justifyContent: 'center' }}>
             <View style={{ flexDirection: 'row', borderWidth: 0 }}>
               <Text style={{ ...texts.sm }} numberOfLines={2}>
@@ -64,11 +65,16 @@ export const RestaurantListItem = ({ id, restaurant, cuisine, distance }: Props)
               <ItemBadge business={restaurant} />
             </View>
           </View>
-          <Text style={{ marginTop: 4, ...texts.xs, color: colors.green700 }}>
-            {t(cuisine ?? '')}
-          </Text>
+          {/* second line: cuisine and reviews */}
+          <View
+            style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 0, marginTop: 8 }}
+          >
+            <Text style={{ ...texts.ss, color: colors.green700, borderWidth: 0 }}>{cuisine}</Text>
+            <ItemReviews business={restaurant} />
+          </View>
+          {/* third line: distance and tag */}
           {distance ? (
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 6 }}>
               <Text style={{ ...texts.xs, color: colors.grey700 }}>{formatDistance(distance)}</Text>
               {RestaurantTag}
             </View>
