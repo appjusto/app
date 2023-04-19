@@ -28,6 +28,8 @@ const run = async () => {
   const distribution = DISTRIBUTION ?? 'internal';
   const profile = `${FLAVOR}-${releaseChannel}-${distribution}-${ENV}`;
 
+  console.log('profile:', profile);
+
   spawnSync('npm', ['run', 'prepare-env']);
   process.env['EAS_NO_VCS'] = '1';
   spawn('eas', ['build', '--platform', platform, '--profile', profile], { stdio: 'inherit' });
