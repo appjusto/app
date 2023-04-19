@@ -20,6 +20,7 @@ export const OngoingOrderStatus = ({ order }: Props) => {
   const restaurant = useObserveBusiness(order?.business?.id);
   const deskPhone = restaurant?.phones?.find((phone) => phone.type === 'desk');
   const { status, dispatchingState, type, dispatchingStatus, fulfillment, flags } = order;
+  const deliveredByBusiness = order.fare?.courier?.payee === 'business';
   let header: string | null = null;
   let description: string | null = null;
   // helpers
@@ -47,17 +48,18 @@ export const OngoingOrderStatus = ({ order }: Props) => {
           'começou a preparar seu pedido e logo estará prontinho para você.'
         )}`;
       } else if (status === 'ready') {
-        if (dispatchingStatus === 'outsourced') {
-          header = t('Entrega em andamento');
+        header = t('Pronto para entrega');
+        if (deliveredByBusiness) {
+          description = `A entrega do seu pedido será feita pelo próprio restaurante. Qualquer dúvida, entre em contato com o estabelecimento${
+            deskPhone?.number ? ` pelo número ${deskPhone.number}` : ''
+          }.`;
+        } else if (dispatchingStatus === 'outsourced') {
           description = t(
-            'A entrega está sendo feita por um entregador alocado por fora do sistema e não será possível acompanhar seu deslocamento'
+            'A entrega será feita por um entregador alocado por fora do sistema e não será possível acompanhar seu deslocamento'
           );
         } else if (dispatchingStatus === 'matching' || dispatchingStatus === 'scheduled') {
-          header = t('Pronto para entrega');
           description = t('Estamos procurando um/a entregador/a para o seu pedido');
         } else if (dispatchingStatus === 'confirmed') {
-          header = t('Pronto para entrega');
-          description = t('Estamos procurando um/a entregador/a para o seu pedido');
           if (dispatchingState === 'going-pickup') {
             header = `${t('Indo para')} ${order.business!.name}`;
             description = `${order.courier?.name ?? 'O entregador'} ${t(
@@ -71,8 +73,12 @@ export const OngoingOrderStatus = ({ order }: Props) => {
           }
         }
       } else if (status === 'dispatching') {
-        if (dispatchingStatus === 'outsourced') {
-          header = t('Entrega em andamento');
+        header = t('Entrega em andamento');
+        if (deliveredByBusiness) {
+          description = `A entrega do seu pedido será feita pelo próprio restaurante. Qualquer dúvida, entre em contato com o estabelecimento${
+            deskPhone?.number ? ` pelo número ${deskPhone.number}` : ''
+          }.`;
+        } else if (dispatchingStatus === 'outsourced') {
           description = t(
             'A entrega está sendo feita por um entregador alocado por fora do sistema e não será possível acompanhar seu deslocamento'
           );

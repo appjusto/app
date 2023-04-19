@@ -7,7 +7,6 @@ import { BusinessState } from './types';
 const initialState: BusinessState = {};
 
 export default function (state: BusinessState = initialState, action: AnyAction): BusinessState {
-  console.log('BUSINESS REDUCER', action.type);
   const { type, payload } = action;
   switch (type) {
     case MANAGER_PROFILE_UPDATED: {

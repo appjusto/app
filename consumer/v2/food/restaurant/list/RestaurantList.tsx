@@ -1,37 +1,46 @@
-import { Business, BusinessAlgolia, WithId } from '@appjusto/types';
+import { BusinessAlgolia } from '@appjusto/types';
+import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import {
   ActivityIndicator,
   SectionList,
   SectionListProps,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
-import DoubleHeader from '../../../../../common/components/texts/DoubleHeader';
 import FeedbackView from '../../../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../../../common/icons/icon-cone-yellow';
-import { IconShareGreen } from '../../../../../common/icons/icon-share-green';
-import HomeCard from '../../../../../common/screens/home/cards/HomeCard';
 import { distanceBetweenLatLng } from '../../../../../common/store/api/helpers';
 import { getCurrentLocation } from '../../../../../common/store/consumer/selectors';
-import { colors, doublePadding, padding, screens } from '../../../../../common/styles';
+import {
+  biggerPadding,
+  colors,
+  doublePadding,
+  halfPadding,
+  padding,
+  screens,
+  texts,
+} from '../../../../../common/styles';
 import { t } from '../../../../../strings';
+import { DoubleHeaderV3 } from '../../../../v3/common/texts/DoubleHeaderV3';
 import { RestaurantListItem } from './RestaurantListItem';
 import { RestaurantListSection } from './types';
 
-interface Props
-  extends SectionListProps<BusinessAlgolia | WithId<Business>, RestaurantListSection> {
+interface Props extends SectionListProps<BusinessAlgolia, RestaurantListSection> {
   loading?: boolean;
   onSelect: (id: string) => void;
   onRecommend?: () => void;
+  hideEmptyFeedback?: boolean;
 }
 
 export const RestaurantList = ({
   sections,
   loading,
   refreshing = false,
+  hideEmptyFeedback,
   onSelect,
   onRecommend,
   ...props
@@ -39,6 +48,24 @@ export const RestaurantList = ({
   // redux
   const location = useSelector(getCurrentLocation);
   // UI
+  const emptyComponent = (() => {
+    if (refreshing || hideEmptyFeedback) return null;
+    if (loading) {
+      return (
+        <View style={{ ...screens.centered, marginTop: padding }}>
+          <ActivityIndicator size="large" color={colors.green500} />
+        </View>
+      );
+    }
+    return (
+      <FeedbackView
+        description={t(
+          'Não encontramos nenhum resultado para a sua busca. Refaça a pesquisa ou utilize filtros diferentes.'
+        )}
+        icon={<IconConeYellow />}
+      />
+    );
+  })();
   return (
     <SectionList
       keyboardShouldPersistTaps="handled"
@@ -53,100 +80,64 @@ export const RestaurantList = ({
           />
         )
       }
-      ListEmptyComponent={
-        refreshing ? null : loading ? (
-          <View style={{ ...screens.centered, marginTop: padding }}>
-            <ActivityIndicator size="large" color={colors.green500} />
-          </View>
-        ) : (
-          <FeedbackView
-            description={t(
-              'Não encontramos nenhum resultado para a sua busca. Refaça a pesquisa ou utilize filtros diferentes.'
-            )}
-            icon={<IconConeYellow />}
-          />
-        )
-      }
+      ListEmptyComponent={emptyComponent}
       renderSectionHeader={({ section }) => {
-        const closed = section.data.find(() => true)?.status === 'unavailable';
-        const openOutOfRange = section.data.filter(
-          (restaurant) =>
-            restaurant.status === 'available' &&
-            (restaurant.deliveryRange ?? 0) <
-              (location && restaurant.businessAddress?.latlng
-                ? distanceBetweenLatLng(location, restaurant.businessAddress.latlng)
-                : 0)
-        );
-        const recommendationUI = () => {
-          const sectionHeader = () => {
-            return (
-              <View>
-                <View
-                  style={{
-                    borderTopColor: colors.grey50,
-                    borderTopWidth: 1,
-                  }}
-                />
-                <PaddedView style={{ backgroundColor: colors.white }}>
-                  <TouchableOpacity onPress={onRecommend}>
-                    <HomeCard
-                      icon={<IconShareGreen />}
-                      title={t('Indique um restaurante')}
-                      subtitle={t(
-                        'Ainda não encontrou o restaurante que queria por aqui? Manda pra gente!'
-                      )}
-                    />
-                  </TouchableOpacity>
-                </PaddedView>
-              </View>
-            );
-          };
-          if (openOutOfRange.length) {
-            return sectionHeader();
-          }
-        };
         return (
           <View>
-            {recommendationUI()}
+            {!section.available ? (
+              <PaddedView>
+                <PaddedView
+                  style={{ backgroundColor: colors.green100, borderRadius: 24 }}
+                  padding={biggerPadding}
+                >
+                  <Text style={{ ...texts.sm, color: colors.green700 }}>
+                    Indique um restaurante
+                  </Text>
+                  <Text style={{ ...texts.lg, width: '70%' }}>
+                    Gostaria de um restaurante que não viu por aqui?
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginTop: doublePadding,
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Text style={{ ...texts.x2s }}>INDICAR RESTAURANTE</Text>
+                    <Feather style={{ marginLeft: halfPadding }} size={16} name="arrow-right" />
+                  </View>
+                </PaddedView>
+              </PaddedView>
+            ) : null}
             {section.title && section.subtitle ? (
               <View
                 style={{
-                  paddingBottom: padding,
-                  backgroundColor: closed ? colors.grey50 : colors.white,
+                  paddingHorizontal: padding,
+                  marginBottom: padding,
                 }}
               >
-                <DoubleHeader title={section.title} subtitle={section.subtitle} />
+                <DoubleHeaderV3 title={section.title} subtitle={section.subtitle} />
               </View>
             ) : null}
           </View>
         );
       }}
       sections={sections}
-      keyExtractor={(item) => ('id' in item ? item.id : item.objectID)}
-      renderItem={({ item, section }) => {
-        const id = 'id' in item ? item.id : item.objectID;
-        const closed = section.data.find(() => true)?.status === 'unavailable';
+      keyExtractor={(item) => item.objectID}
+      renderItem={({ item }) => {
         return (
-          <View
-            style={{
-              backgroundColor: closed ? colors.grey50 : colors.white,
-              paddingBottom: padding,
-            }}
-          >
-            <TouchableOpacity onPress={() => onSelect(id)}>
-              <RestaurantListItem
-                id={id}
-                restaurant={item}
-                cuisine={item.cuisine}
-                secondary={section.data.find(() => true)?.status === 'unavailable'}
-                distance={
-                  location && item.businessAddress?.latlng
-                    ? distanceBetweenLatLng(location, item.businessAddress.latlng)
-                    : undefined
-                }
-              />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity onPress={() => onSelect(item.objectID)}>
+            <RestaurantListItem
+              id={item.objectID}
+              restaurant={item}
+              cuisine={item.cuisine}
+              distance={
+                location && item.businessAddress?.latlng
+                  ? distanceBetweenLatLng(location, item.businessAddress.latlng)
+                  : undefined
+              }
+            />
+          </TouchableOpacity>
         );
       }}
       stickySectionHeadersEnabled={false}

@@ -1,13 +1,9 @@
 import { Business, WithId } from '@appjusto/types';
-import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Share, Text, TouchableOpacity, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { Text, TouchableOpacity, View } from 'react-native';
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import { useBusinessMenuMessage } from '../../../../../common/store/api/business/hooks/useBusinessMenuMessage';
-import { borders, colors, halfPadding, padding, texts } from '../../../../../common/styles';
-import { getExtra } from '../../../../../common/utils/config';
-import { getBaseDomain } from '../../../../../common/utils/domains';
+import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { RestaurantHeader } from '../../common/RestaurantHeader';
 
@@ -24,60 +20,13 @@ export const RestaurantDetailHeader = ({
 }: Props) => {
   // context
   const message = useBusinessMenuMessage(restaurant.id);
-  // redux
-  const extra = useSelector(getExtra);
   // helpers
-  const businessDeeplink = `https://${getBaseDomain(extra.environment)}/r/${
-    restaurant?.slug ?? restaurant?.code
-  }`;
   const scheduledOrdersOnly =
     restaurant.preparationModes?.length && !restaurant?.preparationModes?.includes('realtime');
-  // handlers
-  const shareRestaurantHandler = async () => {
-    try {
-      Share.share({
-        message: `Pedi em ${
-          restaurant!.name
-        } usando o AppJusto, uma plataforma de delivery mais justa para clientes, entregadores e restaurantes. Peça também e faça parte desse movimento: ${businessDeeplink}`,
-        title: 'AppJusto',
-        url: businessDeeplink,
-      });
-    } catch (error) {}
-  };
   // UI
   return (
     <View>
       <RestaurantHeader restaurant={restaurant} onPress={onAboutPress} canNavigate />
-      <TouchableOpacity
-        style={{ paddingHorizontal: 12, paddingTop: 12 }}
-        onPress={shareRestaurantHandler}
-      >
-        <PaddedView
-          half
-          style={{
-            flexDirection: 'row',
-            backgroundColor: colors.grey50,
-            ...borders.default,
-            borderColor: colors.grey50,
-            alignItems: 'center',
-          }}
-        >
-          <View
-            style={{
-              marginRight: halfPadding,
-              backgroundColor: colors.green500,
-              height: 24,
-              width: 24,
-              borderRadius: 12,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Ionicons name="share-social-outline" size={14} />
-          </View>
-          <Text style={{ ...texts.xs }}>{t('Compartilhe esse restaurante com seus amigos!')}</Text>
-        </PaddedView>
-      </TouchableOpacity>
       {scheduledOrdersOnly ? (
         <View style={{ paddingHorizontal: 12, paddingTop: halfPadding }}>
           <PaddedView

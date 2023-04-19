@@ -1,30 +1,23 @@
-import { OrderConfirmation } from '@appjusto/types';
+import { Order, WithId } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { HorizontalSelectItem } from '../../../common/components/buttons/HorizontalSelect';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../common/components/texts/SingleHeader';
 import { IconFastFood } from '../../../common/icons/icon-fast-food';
+import { useObserveOrderConfirmation } from '../../../common/store/api/order/hooks/useObserveOrderConfirmation';
 import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
 import { t } from '../../../strings';
 
 type Props = {
-  data?: HorizontalSelectItem[];
-  selected?: HorizontalSelectItem;
-  onSelect?: (value: HorizontalSelectItem) => void;
-  switchValue: boolean;
-  onChangeCodeDelivery: (value: boolean) => void;
-  confirmation: OrderConfirmation | undefined;
+  order: WithId<Order> | null | undefined;
 };
 
-export const DeliveryConfirmation = ({
-  data,
-  selected,
-  onSelect,
-  switchValue,
-  onChangeCodeDelivery,
-  confirmation,
-}: Props) => {
+export const DeliveryConfirmation = ({ order }: Props) => {
+  const confirmation = useObserveOrderConfirmation(order?.id);
+  if (!order || !confirmation) return null;
+  if (order.fulfillment !== 'delivery') return null;
+  const deliveredByBusiness = order.fare?.fleet?.createdBy?.flavor === 'business';
+  if (deliveredByBusiness) return null;
   return (
     <View style={{ backgroundColor: colors.white, paddingTop: halfPadding, flex: 1 }}>
       <View style={{ flex: 1 }}>

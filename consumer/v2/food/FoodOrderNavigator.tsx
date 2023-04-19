@@ -3,8 +3,8 @@ import React from 'react';
 import { defaultScreenOptions } from '../../../common/screens/options';
 import { BusinessProvider } from '../../../common/store/context/business';
 import { t } from '../../../strings';
+import { FoodOrderHomeV3 } from '../../v3/food/home/FoodOrderHomeV3';
 import { AddressComplete } from '../common/AddressComplete';
-import { FoodOrderHome } from './home/FoodOrderHome';
 import { RecommendationFeedback } from './restaurant/recommend/RecommendationFeedback';
 import { RecommendRestaurant } from './restaurant/recommend/RecommendRestaurant';
 import RestaurantNavigator from './restaurant/RestaurantNavigator';
@@ -18,7 +18,7 @@ export const FoodOrderNavigator = () => {
     <Stack.Navigator screenOptions={defaultScreenOptions}>
       <Stack.Screen
         name="FoodOrderHome"
-        component={FoodOrderHome}
+        component={FoodOrderHomeV3}
         options={{ title: t('Restaurantes') }}
       />
       <Stack.Screen

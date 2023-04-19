@@ -5,9 +5,10 @@ interface Props {
   uri: string | undefined | null;
   height: number;
   width: number;
+  borderRadius?: number;
 }
 
-export const ListItemImage = ({ uri, height, width }: Props) => {
+export const ListItemImage = ({ uri, height, width, borderRadius = 8 }: Props) => {
   return (
     <View
       style={{
@@ -22,7 +23,7 @@ export const ListItemImage = ({ uri, height, width }: Props) => {
             uri,
           }}
           style={{ width, height }}
-          borderRadius={8}
+          borderRadius={borderRadius}
           resizeMode="cover"
         />
       )}

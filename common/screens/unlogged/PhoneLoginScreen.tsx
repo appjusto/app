@@ -92,7 +92,7 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
           );
           setState('unrecoverable-error');
         } else {
-          message = getFirebaseAuthErrorMessages(error);
+          message = getFirebaseAuthErrorMessages(err);
           setState('error');
         }
         setError(message);

@@ -26,39 +26,43 @@ export const OngoingMapAndInfo = ({
 }: Props) => {
   const { fulfillment, status, dispatchingStatus } = order;
   if (fulfillment === 'delivery' && status !== 'dispatching') return null;
+  if (dispatchingStatus === 'outsourced') {
+    return (
+      <View>
+        <HR height={padding} />
+        <DeliveryInfo order={order} onCourierDetail={onCourierDetail} />
+      </View>
+    );
+  }
+  const deliveredByBusiness = order.fare?.fleet?.createdBy?.flavor === 'business';
+  if (deliveredByBusiness) return null;
   return (
     <View>
-      {dispatchingStatus === 'outsourced' ? (
+      <HR height={padding} />
+      <OrderMap
+        originLocation={order.origin?.location}
+        destinationLocation={order.destination?.location}
+        courierLocation={fulfillment === 'delivery' ? courierLocation : undefined}
+        route={fulfillment === 'delivery' ? order.route : undefined}
+        ratio={240 / 160}
+        orderFulfillment={fulfillment}
+      />
+      {fulfillment === 'delivery' ? (
         <View>
+          <MessagesCard orderId={order.id} onPress={onOpenChat} />
+          <View>
+            <DeliveryInfo order={order} onCourierDetail={onCourierDetail} />
+            {order.courier?.id ? (
+              <DefaultButton
+                title={t('Abrir chat com o entregador')}
+                onPress={() => onChatWithCourier()}
+                style={{ marginHorizontal: padding, marginBottom: padding }}
+              />
+            ) : null}
+          </View>
           <HR height={padding} />
-          <DeliveryInfo order={order} onCourierDetail={onCourierDetail} />
         </View>
-      ) : (
-        <View>
-          <OrderMap
-            originLocation={order.origin?.location}
-            destinationLocation={order.destination?.location}
-            courierLocation={fulfillment === 'delivery' ? courierLocation : undefined}
-            route={fulfillment === 'delivery' ? order.route : undefined}
-            ratio={240 / 160}
-            orderFulfillment={fulfillment}
-          />
-          {fulfillment === 'delivery' ? (
-            <View>
-              <MessagesCard orderId={order.id} onPress={onOpenChat} />
-              <View>
-                <DeliveryInfo order={order} onCourierDetail={onCourierDetail} />
-                <DefaultButton
-                  title={t('Abrir chat com o entregador')}
-                  onPress={() => onChatWithCourier()}
-                  style={{ marginHorizontal: padding, marginBottom: padding }}
-                />
-              </View>
-              <HR height={padding} />
-            </View>
-          ) : null}
-        </View>
-      )}
+      ) : null}
     </View>
   );
 };

@@ -32,7 +32,7 @@ export const OrderCostModal = ({ fare, visible, setModalVisible }: Props) => {
               O AppJusto não fica com nada desses valores
             </Text>
             <HR height={2} style={{ marginTop: halfPadding }} />
-            {fare?.courier?.processing?.value ? (
+            {fare?.courier?.processing?.value && fare.courier.payee !== 'business' ? (
               <View>
                 <View
                   style={{

@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 
 export const colors = {
   white: '#FFFFFF',
+  grey10: '#B8B8B8',
   grey50: '#F6F6F6',
   grey90: '#E5E5E5',
   grey500: '#C8D7CB',
@@ -10,13 +11,15 @@ export const colors = {
   black: '#000000',
   green50: '#F2FFE8',
   green100: '#B8E994',
-  green500: '#78E08F',
+  green500: '#6CE787',
   green600: '#4EA031',
   green700: '#2F422C',
   yellow: '#FFE493',
   darkYellow: '#FFBE00',
+  mellowYellow: '#D78F1E',
   lightRed: '#FFF8F8',
   red: '#DC3545',
+  red50: '#FF8C4B',
 };
 
 export const halfPadding = 8;
@@ -75,6 +78,11 @@ export const texts = StyleSheet.create({
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 11,
+  },
+  ss: {
+    fontFamily: 'BarlowMedium',
+    color: colors.black,
+    fontSize: 12,
   },
   xs: {
     fontFamily: 'BarlowMedium',
