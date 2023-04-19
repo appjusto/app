@@ -96,7 +96,7 @@ export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) =>
                     ...texts.x2s,
                     fontSize: 10,
                     ...texts.bold,
-                    top: 7,
+                    top: 5,
                     left: averageDiscount < 10 ? 7 : 5,
                     borderWidth: 0,
                   }}
@@ -120,7 +120,7 @@ export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) =>
             source={{ uri: coverURI }}
             style={{
               height: 120,
-              left: -1,
+              left: 0,
             }}
             resizeMode="cover"
           />
