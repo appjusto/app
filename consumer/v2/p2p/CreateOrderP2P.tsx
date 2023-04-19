@@ -74,6 +74,10 @@ export default function ({ navigation, route }: Props) {
     if (!quotes || isEmpty(quotes)) return;
     setSelectedFare(quotes[0]);
   }, [quotes]);
+  React.useEffect(() => {
+    if (!consumer.cpf) return;
+    setCpf(consumer.cpf);
+  }, [consumer?.cpf]);
   // getting the selected fare in the AvailableFleets screen;
   React.useEffect(() => {
     if (params?.returningFare) setSelectedFare(params.returningFare);
@@ -201,6 +205,7 @@ export default function ({ navigation, route }: Props) {
       });
       return;
     }
+
     if (wantsCpf) {
       if (!cpf) {
         dispatch(

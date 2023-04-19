@@ -24,13 +24,13 @@ export const ConsumerCarousel = ({ onLoginClick }: Props) => {
           icon={
             <View
               style={{
-                borderRadius: 16,
-                paddingHorizontal: 12,
-                paddingVertical: 10,
+                width: 26,
+                height: 26,
                 backgroundColor: colors.green500,
+                borderRadius: 32,
               }}
             >
-              <Text style={{ ...texts.x2s, ...texts.bold }}>%</Text>
+              <Text style={{ ...texts.x2s, ...texts.bold, top: 6, left: 9 }}>%</Text>
             </View>
           }
         >
@@ -46,12 +46,14 @@ export const ConsumerCarousel = ({ onLoginClick }: Props) => {
           </View>
         </ConsumerCarouselItem>
         {/* selo de só no appjusto */}
-        <ConsumerCarouselItem icon={<AppJustoOnlyIcon />}>
+        <ConsumerCarouselItem icon={<AppJustoOnlyIcon style={{ transform: [{ scale: 0.65 }] }} />}>
           <View>
             <Text style={{ ...texts.md, lineHeight: 22 }}>Selo "Só no AppJusto"</Text>
             <Text style={{ ...texts.md, color: colors.grey700, lineHeight: 22 }}>
               Os restaurantes com esse selo optaram por fazer{' '}
-              <Text style={{ fontFamily: 'BarlowBold' }}>delivery apenas no AppJusto</Text> 💚
+              <Text style={{ fontFamily: 'BarlowBold', lineHeight: 22 }}>
+                delivery apenas no AppJusto.
+              </Text>
             </Text>
           </View>
         </ConsumerCarouselItem>

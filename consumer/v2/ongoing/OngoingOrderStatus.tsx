@@ -20,7 +20,7 @@ export const OngoingOrderStatus = ({ order }: Props) => {
   const restaurant = useObserveBusiness(order?.business?.id);
   const deskPhone = restaurant?.phones?.find((phone) => phone.type === 'desk');
   const { status, dispatchingState, type, dispatchingStatus, fulfillment, flags } = order;
-  const deliveredByBusiness = order.fare?.fleet?.createdBy?.flavor === 'business';
+  const deliveredByBusiness = order.fare?.courier?.payee === 'business';
   let header: string | null = null;
   let description: string | null = null;
   // helpers

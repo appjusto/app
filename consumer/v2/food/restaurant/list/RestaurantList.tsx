@@ -126,24 +126,18 @@ export const RestaurantList = ({
       keyExtractor={(item) => item.objectID}
       renderItem={({ item }) => {
         return (
-          <View
-            style={{
-              marginBottom: halfPadding,
-            }}
-          >
-            <TouchableOpacity onPress={() => onSelect(item.objectID)}>
-              <RestaurantListItem
-                id={item.objectID}
-                restaurant={item}
-                cuisine={item.cuisine}
-                distance={
-                  location && item.businessAddress?.latlng
-                    ? distanceBetweenLatLng(location, item.businessAddress.latlng)
-                    : undefined
-                }
-              />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity onPress={() => onSelect(item.objectID)}>
+            <RestaurantListItem
+              id={item.objectID}
+              restaurant={item}
+              cuisine={item.cuisine}
+              distance={
+                location && item.businessAddress?.latlng
+                  ? distanceBetweenLatLng(location, item.businessAddress.latlng)
+                  : undefined
+              }
+            />
+          </TouchableOpacity>
         );
       }}
       stickySectionHeadersEnabled={false}

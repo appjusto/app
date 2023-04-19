@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 
 export const colors = {
   white: '#FFFFFF',
+  grey10: '#B8B8B8',
   grey50: '#F6F6F6',
   grey90: '#E5E5E5',
   grey500: '#C8D7CB',
@@ -15,6 +16,7 @@ export const colors = {
   green700: '#2F422C',
   yellow: '#FFE493',
   darkYellow: '#FFBE00',
+  mellowYellow: '#D78F1E',
   lightRed: '#FFF8F8',
   red: '#DC3545',
   red50: '#FF8C4B',
@@ -76,6 +78,11 @@ export const texts = StyleSheet.create({
     fontFamily: 'BarlowMedium',
     color: colors.black,
     fontSize: 11,
+  },
+  ss: {
+    fontFamily: 'BarlowMedium',
+    color: colors.black,
+    fontSize: 12,
   },
   xs: {
     fontFamily: 'BarlowMedium',

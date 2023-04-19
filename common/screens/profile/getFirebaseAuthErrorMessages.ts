@@ -22,7 +22,7 @@ export const getFirebaseAuthErrorMessages = (error: unknown) => {
       'O acesso a esta conta, via senha, foi temporariamente desativado devido a muitas tentativas de login. Por favor, entre em contato com o suporte.'
     );
   else if ((error as FirebaseError).code === 'auth/invalid-verification-code')
-    return t('O código não é valido. Clique em "Enviar novamente" e tente de novo.');
+    return t('O código não é valido. Verifique o código e tente de novo.');
   else if ((error as FirebaseError).code === 'auth/invalid-verification-id')
     return t('O código não é valido. Clique em "Enviar novamente" e tente de novo.');
   else if ((error as FirebaseError).code === 'auth/invalid-verification-id')
