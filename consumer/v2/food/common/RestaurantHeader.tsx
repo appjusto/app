@@ -1,7 +1,7 @@
 import { Business, WithId } from '@appjusto/types';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Image, Share, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Platform, Share, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import { useBusinessCoverImageURI } from '../../../../common/store/api/business/hooks/useBusinessCoverImageURI';
@@ -96,7 +96,7 @@ export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) =>
                     ...texts.x2s,
                     fontSize: 10,
                     ...texts.bold,
-                    top: 5,
+                    top: Platform.OS === 'android' ? 5 : 7,
                     left: averageDiscount < 10 ? 7 : 5,
                     borderWidth: 0,
                   }}
@@ -120,7 +120,7 @@ export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) =>
             source={{ uri: coverURI }}
             style={{
               height: 120,
-              left: 0,
+              left: Platform.OS === 'android' ? -1 : 0,
             }}
             resizeMode="cover"
           />

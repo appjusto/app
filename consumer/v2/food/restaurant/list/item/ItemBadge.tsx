@@ -1,6 +1,6 @@
 import { Business, BusinessAlgolia } from '@appjusto/types';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Platform, Text, View } from 'react-native';
 import { colors, texts } from '../../../../../../common/styles';
 import { AppJustoOnlyIcon } from '../../../../../v3/food/home/header/carousel/icons/AppJustoOnlyIcon';
 
@@ -42,7 +42,7 @@ export const ItemBadge = ({ business }: Props) => {
             ...texts.bold,
             // position: 'absolute',
             // alignSelf: 'center',
-            top: 5,
+            top: Platform.OS === 'android' ? 5 : 7,
             left: averageDiscount < 10 ? 7 : 5,
             // flex: 1,
             borderWidth: 0,
