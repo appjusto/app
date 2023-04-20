@@ -43,7 +43,7 @@ const orderByOptions: OrderByItem[] = [
     value: 'distance',
   },
   {
-    title: t('Maior desconto'),
+    title: t('Maior diferença em relação a outros Apps'),
     value: 'average-discount',
   },
   {
