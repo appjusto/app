@@ -9,13 +9,13 @@ import {
 import * as Application from 'expo-application';
 import Constants from 'expo-constants';
 import {
-  doc,
   Firestore,
   GeoPoint,
+  Unsubscribe,
+  doc,
   onSnapshot,
   serverTimestamp,
   setDoc,
-  Unsubscribe,
 } from 'firebase/firestore';
 import { hash } from 'geokit';
 import { Platform } from 'react-native';

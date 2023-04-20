@@ -7,7 +7,6 @@ import RoundedText from '../../../../common/components/texts/RoundedText';
 import { useBusinessCoverImageURI } from '../../../../common/store/api/business/hooks/useBusinessCoverImageURI';
 import { useBusinessLogoURI } from '../../../../common/store/api/business/hooks/useBusinessLogoURI';
 import { distanceBetweenLatLng } from '../../../../common/store/api/helpers';
-import useCuisines from '../../../../common/store/api/platform/hooks/useCuisines';
 import { getCurrentLocation } from '../../../../common/store/consumer/selectors';
 import { biggerPadding, colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { getExtra } from '../../../../common/utils/config';
@@ -32,8 +31,6 @@ export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) =>
   const location = useSelector(getCurrentLocation);
   const extra = useSelector(getExtra);
   // state
-  const cuisines = useCuisines();
-  const cuisine = cuisines?.find((c) => c.name === restaurant.cuisine);
   const averagePreparationTime = restaurant.averageCookingTime ?? 0;
   const { data: coverURI } = useBusinessCoverImageURI(restaurant.id);
   const { data: logo } = useBusinessLogoURI(restaurant.id);
@@ -162,7 +159,7 @@ export const RestaurantHeader = ({ restaurant, onPress, canNavigate }: Props) =>
       <View style={{ flexDirection: 'row', alignItems: 'center', padding }}>
         <View>
           <Text style={{ ...texts.xl }}>{restaurant.name}</Text>
-          <Text style={{ ...texts.xs }}>{cuisine?.name}</Text>
+          <Text style={{ ...texts.xs }}>{restaurant.cuisine}</Text>
           <Text style={{ ...texts.xs, color: colors.grey700 }}>
             {separateWithDot(formatDistance(distance), formatDuration(averagePreparationTime))}
           </Text>
