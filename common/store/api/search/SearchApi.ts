@@ -11,6 +11,7 @@ export default class SearchApi {
   private restaurantsByPreparationTime: SearchIndex;
   private restaurantsByTotalOrders: SearchIndex;
   private restaurantsByAverageDiscount: SearchIndex;
+  private restaurantsByPositiveReviews: SearchIndex;
   private products: SearchIndex;
   private productsByPrice: SearchIndex;
   private productsByTotalSold: SearchIndex;
@@ -26,6 +27,9 @@ export default class SearchApi {
     this.restaurantsByTotalOrders = this.client.initIndex(`${env}_businesses_totalOrders_desc`);
     this.restaurantsByAverageDiscount = this.client.initIndex(
       `${env}_businesses_averageDiscount_desc`
+    );
+    this.restaurantsByPositiveReviews = this.client.initIndex(
+      `${env}_businesses_positiveReviews_desc`
     );
     this.products = this.client.initIndex(`${env}_products`);
     this.productsByPrice = this.client.initIndex(`${env}_products_price_asc`);
@@ -46,6 +50,8 @@ export default class SearchApi {
             return [...result, `cuisine:${filter.value}`];
           } else if (filter.type === 'classification') {
             return [...result, `classifications:${filter.value}`];
+          } else if (filter.type === 'appjusto-only') {
+            return [...result, `tags:${filter.value}`];
           }
           return result;
         }, [])
@@ -61,6 +67,7 @@ export default class SearchApi {
       else if (order === 'preparation-time') return this.restaurantsByPreparationTime;
       else if (order === 'popularity') return this.restaurantsByTotalOrders;
       else if (order === 'average-discount') return this.restaurantsByAverageDiscount;
+      else if (order === 'reviews') return this.restaurantsByPositiveReviews;
     } else if (kind === 'product') {
       if (order === 'distance') return this.products;
       else if (order === 'price') return this.productsByPrice;

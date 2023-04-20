@@ -47,8 +47,8 @@ const orderByOptions: OrderByItem[] = [
     value: 'average-discount',
   },
   {
-    title: t('Popularidade'),
-    value: 'popularity',
+    title: t('Avaliações'),
+    value: 'reviews',
   },
   {
     title: t('Menor preço'),
@@ -57,6 +57,10 @@ const orderByOptions: OrderByItem[] = [
   {
     title: t('Menor tempo de preparo'),
     value: 'preparation-time',
+  },
+  {
+    title: t('Popularidade'),
+    value: 'popularity',
   },
 ];
 
@@ -71,6 +75,21 @@ export const FilterScreen = ({ navigation }: Props) => {
   const classifications = useFoodClassifications();
   const selectedCuisines = filters.filter((f) => f.type === 'cuisine');
   const selectedClassifications = filters.filter((f) => f.type === 'classification');
+  const [onlyAtAppJusto, setOnlyAtAppJusto] = React.useState<boolean | undefined>(
+    filters.find((f) => f.type === 'appjusto-only') === undefined ? undefined : true
+  );
+  console.log('filters', filters);
+  // effects
+  React.useEffect(() => {
+    if (onlyAtAppJusto === undefined) return;
+    if (onlyAtAppJusto) {
+      dispatch(
+        updateSearchFilters([...filters, { type: 'appjusto-only', value: 'appjusto-only' }])
+      );
+    } else {
+      dispatch(updateSearchFilters(filters.filter((item) => item.value !== 'appjusto-only')));
+    }
+  }, [onlyAtAppJusto]);
   // tracking
   useSegmentScreen('FilterScreen');
   // UI
@@ -97,6 +116,27 @@ export const FilterScreen = ({ navigation }: Props) => {
         </PaddedView>
       </View>
       {/* restaurants */}
+      {kind === 'restaurant' ? (
+        <View>
+          <SingleHeader title={t('Tags')} />
+          <HR height={1} />
+          <PaddedView style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                track('updating restaurant search filters');
+                setOnlyAtAppJusto(!onlyAtAppJusto);
+              }}
+            >
+              <RoundedText
+                backgroundColor={onlyAtAppJusto ? colors.green500 : colors.white}
+                style={{ marginRight: padding, marginBottom: 12 }}
+              >
+                Só no AppJusto
+              </RoundedText>
+            </TouchableWithoutFeedback>
+          </PaddedView>
+        </View>
+      ) : null}
       {kind === 'restaurant' && cuisines ? (
         <View>
           <SingleHeader title={t('Categorias')} />

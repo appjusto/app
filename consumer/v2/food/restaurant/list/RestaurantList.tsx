@@ -75,7 +75,7 @@ export const RestaurantList = ({
           <View
             style={{
               height: doublePadding,
-              backgroundColor: colors.grey50,
+              backgroundColor: colors.white,
             }}
           />
         )

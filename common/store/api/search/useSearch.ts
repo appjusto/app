@@ -2,6 +2,7 @@ import { SearchResponse } from '@algolia/client-search';
 import { LatLng } from '@appjusto/types';
 import { debounce } from 'lodash';
 import React from 'react';
+import * as Sentry from 'sentry-expo';
 import { ApiContext } from '../../../app/context';
 import { SearchFilter, SearchKind, SearchOrder } from '../../consumer/types';
 
@@ -25,7 +26,12 @@ export const useSearch = <T extends object>(
   const search = React.useCallback(
     async (location: LatLng, input: string, filters: SearchFilter[], page?: number) => {
       setLoading(true);
-      setLastResponse(await api.search().search<T>(kind, order, filters, location, input, page));
+      try {
+        setLastResponse(await api.search().search<T>(kind, order, filters, location, input, page));
+      } catch (error) {
+        console.log(error);
+        Sentry.Native.captureException(error);
+      }
       setLoading(false);
     },
     [api, kind, order]
@@ -80,7 +86,7 @@ export const useSearch = <T extends object>(
     if (!lastResponse) return;
     const hasNextPage = lastResponse.page + 1 < lastResponse.nbPages;
     // console.log('hasNextPage', hasNextPage);
-    if (hasNextPage) search(coords, name, filters, lastResponse.page + 1);
+    if (hasNextPage) search(coords, name, filters, lastResponse.page + 1).then(null);
   }, [name, coords, responseByPage, search, filters]);
   // }, [name, coords, filters, lastResponse, responseByPage, search]);
 

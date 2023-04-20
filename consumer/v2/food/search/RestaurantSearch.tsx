@@ -25,7 +25,7 @@ import {
   getSearchKind,
   getSearchOrder,
 } from '../../../../common/store/consumer/selectors';
-import { colors, padding, screens } from '../../../../common/styles';
+import { biggerPadding, colors, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { sectionsFromResults } from '../restaurant/list';
 import { RestaurantList } from '../restaurant/list/RestaurantList';
@@ -53,12 +53,13 @@ export default function ({ navigation }: Props) {
   // state
   const [search, setSearch] = React.useState<string>('');
   const [refreshing, setRefreshing] = React.useState(false);
+  console.log(kind, filters);
   const {
     results: restaurants,
     refetch: refetchRestaurants,
     isLoading: loadingRestaurants,
   } = useSearch<BusinessAlgolia>(
-    kind === 'restaurant' && search.length > 0,
+    kind === 'restaurant' && (search.length > 0 || filters.length > 0 || order !== 'distance'),
     kind,
     order,
     filters,
@@ -147,25 +148,29 @@ export default function ({ navigation }: Props) {
         />
       </PaddedView>
       {kind === 'restaurant' ? (
-        <RestaurantList
-          hideEmptyFeedback={isEmpty(search)}
-          sections={sectionsFromResults(restaurants, currentLocation)}
-          onSelect={(restaurantId) => {
-            track('selected a restaurant from search results');
-            navigation.navigate('RestaurantNavigator', {
-              restaurantId,
-              screen: 'RestaurantDetail',
-            });
-          }}
-          loading={loadingRestaurants}
-          refreshing={refreshing}
-          onEndReachedThreshold={0.7}
-          onRefresh={() => refreshRestaurants()}
-          onEndReached={() => {
-            fetchNextPage();
-          }}
-          // onRecommend={() => null}
-        />
+        <View style={{ flex: 1, marginTop: biggerPadding }}>
+          <RestaurantList
+            hideEmptyFeedback={isEmpty(search)}
+            sections={sectionsFromResults(restaurants, currentLocation)}
+            onSelect={(restaurantId) => {
+              track('selected a restaurant from search results');
+              navigation.navigate('RestaurantNavigator', {
+                restaurantId,
+                screen: 'RestaurantDetail',
+              });
+            }}
+            loading={loadingRestaurants}
+            refreshing={refreshing}
+            onEndReachedThreshold={0.7}
+            onRefresh={() => refreshRestaurants()}
+            onEndReached={() => {
+              fetchNextPage();
+            }}
+            onRecommend={() => {
+              navigation.navigate('RecommendRestaurant');
+            }}
+          />
+        </View>
       ) : null}
       {kind === 'product' ? (
         <FlatList

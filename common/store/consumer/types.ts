@@ -15,8 +15,9 @@ export type SearchOrder =
   | 'price'
   | 'preparation-time'
   | 'popularity'
-  | 'average-discount';
+  | 'average-discount'
+  | 'reviews';
 export type SearchFilter = {
-  type: 'cuisine' | 'classification';
+  type: 'cuisine' | 'classification' | 'appjusto-only';
   value: string;
 };
