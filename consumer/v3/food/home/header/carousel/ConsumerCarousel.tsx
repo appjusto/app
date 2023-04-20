@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { colors } from '../../../../common/styles/colors';
 import { texts } from '../../../../common/styles/fonts';
 import { ConsumerCarouselItem } from './ConsumerCarouselItem';
@@ -30,7 +30,16 @@ export const ConsumerCarousel = ({ onLoginClick }: Props) => {
                 borderRadius: 32,
               }}
             >
-              <Text style={{ ...texts.x2s, ...texts.bold, top: 6, left: 9 }}>%</Text>
+              <Text
+                style={{
+                  ...texts.x2s,
+                  ...texts.bold,
+                  top: Platform.OS === 'android' ? 5 : 6,
+                  left: 9,
+                }}
+              >
+                %
+              </Text>
             </View>
           }
         >

@@ -1,13 +1,13 @@
-import Constants from 'expo-constants';
 import React from 'react';
 import { LogBox, Platform, ToastAndroid } from 'react-native';
 import { useSelector } from 'react-redux';
 import { BusinessApp } from './business/BusinessApp';
-import { AppContext } from './common/app/context';
 import PreloadAssets from './common/app/PreloadAssets';
+import { AppContext } from './common/app/context';
 import ShowIf from './common/components/views/ShowIf';
 import { getFlavor } from './common/store/config/selectors';
 import { getExtra } from './common/utils/config';
+import { getAppVersion } from './common/utils/version';
 import ConsumerApp from './consumer/ConsumerApp';
 import CourierApp from './courier/CourierApp';
 
@@ -30,7 +30,7 @@ const App = () => {
   React.useEffect(() => {
     // debug only
     if (Platform.OS === 'android' && getExtra().environment !== 'live') {
-      ToastAndroid.show('Testing mode ' + Constants.manifest?.revisionId ?? '', ToastAndroid.LONG);
+      ToastAndroid.show('Testing mode ' + getAppVersion(), ToastAndroid.LONG);
     }
   }, []);
   return (
