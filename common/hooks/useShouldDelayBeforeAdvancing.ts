@@ -5,11 +5,11 @@ import { useContextGetSeverTime } from '../contexts/ServerTimeContext';
 
 export const useShouldDelayBeforeAdvancing = (order?: WithId<Order> | null) => {
   const getServerTime = useContextGetSeverTime();
+  const delayBeforeAdvancing =
+    (usePlatformParamsContext()?.courier?.delayBeforeAdvancing ?? 60) * 1000;
   if (!order) return false;
   if (!getServerTime) return false;
-  const delayBeforeAdvancing =
-    (usePlatformParamsContext()?.courier.delayBeforeAdvancing ?? 60) * 1000;
-  const dispatchingStartedOn = order.timestamps.dispatching ?? order.dispatchingStartedOn;
+  const dispatchingStartedOn = order.timestamps.dispatching;
   return (
     getServerTime().getTime() - (dispatchingStartedOn as Timestamp).toDate().getTime() <
     delayBeforeAdvancing
