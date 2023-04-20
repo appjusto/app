@@ -85,29 +85,31 @@ export const RestaurantList = ({
         return (
           <View>
             {!section.available ? (
-              <PaddedView>
-                <PaddedView
-                  style={{ backgroundColor: colors.green100, borderRadius: 24 }}
-                  padding={biggerPadding}
-                >
-                  <Text style={{ ...texts.sm, color: colors.green700 }}>
-                    Indique um restaurante
-                  </Text>
-                  <Text style={{ ...texts.lg, width: '70%' }}>
-                    Gostaria de um restaurante que não viu por aqui?
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      marginTop: doublePadding,
-                      alignItems: 'center',
-                    }}
+              <TouchableOpacity onPress={onRecommend}>
+                <PaddedView>
+                  <PaddedView
+                    style={{ backgroundColor: colors.green100, borderRadius: 24 }}
+                    padding={biggerPadding}
                   >
-                    <Text style={{ ...texts.x2s }}>INDICAR RESTAURANTE</Text>
-                    <Feather style={{ marginLeft: halfPadding }} size={16} name="arrow-right" />
-                  </View>
+                    <Text style={{ ...texts.sm, color: colors.green700 }}>
+                      Indique um restaurante
+                    </Text>
+                    <Text style={{ ...texts.lg, width: '70%' }}>
+                      Gostaria de um restaurante que não viu por aqui?
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        marginTop: doublePadding,
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Text style={{ ...texts.x2s }}>INDICAR RESTAURANTE</Text>
+                      <Feather style={{ marginLeft: halfPadding }} size={16} name="arrow-right" />
+                    </View>
+                  </PaddedView>
                 </PaddedView>
-              </PaddedView>
+              </TouchableOpacity>
             ) : null}
             {section.title && section.subtitle ? (
               <View
