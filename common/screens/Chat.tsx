@@ -4,6 +4,7 @@ import React from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Text, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
+import * as Sentry from 'sentry-expo';
 import { BusinessAppContext } from '../../business/BusinessAppContext';
 import { t } from '../../strings';
 import { ApiContext } from '../app/context';
@@ -110,7 +111,13 @@ export default function ({ route }: Props) {
       orderStatus: order.status,
       orderCode: order.code,
     };
-    api.order().sendMessage(message);
+    api
+      .order()
+      .sendMessage(message)
+      .then(null)
+      .catch((error) => {
+        Sentry.Native.captureException(error);
+      });
     setInputText('');
   };
   const getName = (from: string) => {

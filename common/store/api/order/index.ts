@@ -244,11 +244,16 @@ export default class OrderApi {
     );
   }
   async sendMessage(message: Partial<ChatMessage>) {
-    return addDoc(this.firestoreRefs.getChatsRef(), {
-      ...message,
-      read: false,
-      timestamp: serverTimestamp(),
-    } as ChatMessage);
+    try {
+      await addDoc(this.firestoreRefs.getChatsRef(), {
+        ...message,
+        read: false,
+        timestamp: serverTimestamp(),
+      } as ChatMessage);
+    } catch (error) {
+      console.log(JSON.stringify(error));
+      Sentry.Native.captureException(error);
+    }
   }
 
   async updateReadMessages(messageIds: string[]) {
