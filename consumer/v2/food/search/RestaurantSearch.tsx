@@ -72,7 +72,7 @@ export default function ({ navigation }: Props) {
     isLoading: loadingProducts,
     fetchNextPage,
   } = useSearch<ProductAlgolia>(
-    kind === 'product' && search.length > 0,
+    kind === 'product' && (search.length > 0 || filters.length > 0),
     'product',
     order,
     filters,
