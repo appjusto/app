@@ -60,11 +60,6 @@ export default function ({ onFleetDetail }: Props) {
   const fleet = useObserveFleet(courier.fleetsIds?.find(() => true));
   const { shouldVerifyPhone } = useProfileSummary();
   const [modalVisible, setModalVisible] = React.useState(false);
-  const [updatedOn, setUpdatedOn] = React.useState(courier.updatedOn);
-  // side effects
-  React.useEffect(() => {
-    if (courier.updatedOn) setUpdatedOn(courier.updatedOn);
-  }, [courier.updatedOn]);
   // handlers
   const toggleWorking = () => {
     if (status === 'inactive') return;
@@ -128,8 +123,10 @@ export default function ({ onFleetDetail }: Props) {
                 {working ? t('Disponível para corridas') : t('Indisponível para corridas')}
               </Text>
               <Text style={[texts.xs, { paddingTop: halfPadding }]}>
-                {working && updatedOn
-                  ? `${t('Última atualização:')} ${formatDate(updatedOn)} ${formatTime(updatedOn)}`
+                {working && courier.updatedOn
+                  ? `${t('Última atualização:')} ${formatDate(courier.updatedOn)} ${formatTime(
+                      courier.updatedOn
+                    )}`
                   : t('Mantenha ativado para aceitar corridas.')}
               </Text>
               <View

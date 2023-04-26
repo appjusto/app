@@ -35,6 +35,7 @@ const {
   IUGU_ACCOUNT_ID,
   ALGOLIA_APPID,
   ALGOLIA_APIKEY,
+  SENTRY_AUTH_TOKEN,
 } = process.env;
 
 const flavor: Flavor = FLAVOR as Flavor;
@@ -75,6 +76,8 @@ const plugins = (): Plugins => {
           compileSdkVersion: 33,
           targetSdkVersion: 33,
           buildToolsVersion: '33.0.1',
+          // enableProguardInReleaseBuilds: false,
+          // extraProguardRules: '-keep public class com.horcrux.svg.** {*;}',
         },
         ios: {
           useFrameworks: 'static',
@@ -346,6 +349,7 @@ const hooks = () => ({
       config: {
         organization: 'app-justo',
         project: 'app',
+        authToken: SENTRY_AUTH_TOKEN,
       },
     },
   ],
