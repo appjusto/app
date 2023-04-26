@@ -1,5 +1,5 @@
 import { Dayjs } from '@appjusto/dates';
-import { UserProfile } from '@appjusto/types';
+import { ProfileChange } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import * as cpfutils from '@fnando/cpf';
 import { RouteProp } from '@react-navigation/core';
@@ -14,6 +14,7 @@ import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
+import PatternInput from '../../../../common/components/inputs/PatternInput';
 import {
   birthdayFormatter,
   birthdayMask,
@@ -23,7 +24,6 @@ import {
   phoneMask,
 } from '../../../../common/components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
-import PatternInput from '../../../../common/components/inputs/PatternInput';
 import FeedbackView from '../../../../common/components/views/FeedbackView';
 import { useRequestedProfileChanges } from '../../../../common/hooks/useRequestedProfileChanges';
 import { IconMotocycle } from '../../../../common/icons/icon-motocycle';
@@ -83,7 +83,7 @@ export const RequestProfileEdit = ({ navigation, route }: Props) => {
       );
   })();
   const userData = profile.name && profile.surname && profile.cpf && profile.phone;
-  const userChanges: Partial<UserProfile> = {};
+  const userChanges: Partial<ProfileChange> = {};
   // side effects
   React.useEffect(() => {
     if (!requestedChanges) return;

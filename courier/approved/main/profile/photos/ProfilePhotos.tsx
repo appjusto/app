@@ -30,8 +30,8 @@ import { getConsumer } from '../../../../../common/store/consumer/selectors';
 import { getCourier } from '../../../../../common/store/courier/selectors';
 import { getUIBusy } from '../../../../../common/store/ui/selectors';
 import { colors, halfPadding, padding, screens } from '../../../../../common/styles';
-import { LoggedNavigatorParamList } from '../../../../../consumer/v2/types';
 import { UnapprovedConsumerParamsList } from '../../../../../consumer/v2/UnapprovedConsumerNavigator';
+import { LoggedNavigatorParamList } from '../../../../../consumer/v2/types';
 import { t } from '../../../../../strings';
 import { ApprovedParamList } from '../../../types';
 import { CourierProfileParamList } from '../types';
@@ -147,6 +147,14 @@ export default function ({ navigation }: Props) {
       uploadDocumentImage.mutate(newDocumentImage.uri);
     }
   }, [newDocumentImage]);
+  //
+  React.useEffect(() => {
+    if (newSelfie?.uri && newDocumentImage?.uri) {
+      if (flavor === 'consumer') {
+        api.user().requestProfileChange(profile.id, { images: true }).then(null);
+      }
+    }
+  }, [flavor, api, profile.id, newSelfie, newDocumentImage]);
 
   // handlers
   const pickFromCamera = async (changeImage: ChangeImageType, aspect: [number, number]) => {

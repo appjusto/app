@@ -1,4 +1,4 @@
-import { Flavor, ProfileChange, UserProfile } from '@appjusto/types';
+import { Flavor, ProfileChange } from '@appjusto/types';
 import { addDoc, getDocs, limit, query, serverTimestamp, where } from 'firebase/firestore';
 import { FirestoreRefs } from '../../refs/FirestoreRefs';
 import { documentsAs } from '../types';
@@ -20,7 +20,7 @@ export default class UserApi {
     return documentsAs<ProfileChange>(querySnapshot.docs);
   }
 
-  async requestProfileChange(accountId: string, changes: Partial<UserProfile>) {
+  async requestProfileChange(accountId: string, changes: Partial<ProfileChange>) {
     await addDoc(this.firestoreRefs.getUsersChangesRef(), {
       accountId,
       userType: this.flavor === 'courier' ? 'courier' : 'consumer',
