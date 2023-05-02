@@ -110,6 +110,7 @@ export default function ({ navigation, route }: Props) {
   const actionButtonTitle = t('Entrar');
   const actionButtonDisabled =
     busy ||
+    (authMode === 'phone' && phone.length < 11) ||
     (authMode !== 'phone' && validateEmail(email).status !== 'ok') ||
     (flavor !== 'business' && !acceptedTerms);
   // UI
@@ -255,7 +256,7 @@ export default function ({ navigation, route }: Props) {
                       text={t('Aceito os termos de uso do app')}
                     />
                   </View>
-                  <View style={{ marginTop: !tallerDevice ? halfPadding : 0 }}>
+                  <View style={{ marginTop: halfPadding }}>
                     <TouchableOpacity
                       onPress={() => {
                         navigation.navigate('Terms');
