@@ -355,6 +355,93 @@
       "android": {
         "buildType": "app-bundle"
       }
+    },
+    "business-v12": {
+      "extends": "v12",
+      "env": {
+        "FLAVOR": "business"
+      }
+    },
+    "business-v12-dev": {
+      "extends": "business-v12",
+      "env": {
+        "ENV": "dev"
+      }
+    },
+    "business-v12-internal-dev": {
+      "extends": "business-v12-dev",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "business-v12-devclient-dev": {
+      "extends": "business-v12-dev",
+      "developmentClient": true,
+      "ios": {
+        "simulator": true
+      }
+    },
+    "business-v12-store-dev": {
+      "extends": "business-v12-dev",
+      "distribution": "store",
+      "android": {
+        "buildType": "app-bundle"
+      }
+    },
+    "business-v12-staging": {
+      "extends": "business-v12",
+      "env": {
+        "ENV": "staging"
+      }
+    },
+    "business-v12-internal-staging": {
+      "extends": "business-v12-staging",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "business-v12-devclient-staging": {
+      "extends": "business-v12-staging",
+      "developmentClient": true,
+      "ios": {
+        "simulator": true
+      }
+    },
+    "business-v12-store-staging": {
+      "extends": "business-v12-staging",
+      "distribution": "store",
+      "android": {
+        "buildType": "app-bundle"
+      }
+    },
+    "business-v12-live": {
+      "extends": "business-v12",
+      "env": {
+        "ENV": "live"
+      }
+    },
+    "business-v12-internal-live": {
+      "extends": "business-v12-live",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "business-v12-devclient-live": {
+      "extends": "business-v12-live",
+      "developmentClient": true,
+      "ios": {
+        "simulator": true
+      }
+    },
+    "business-v12-store-live": {
+      "extends": "business-v12-live",
+      "distribution": "store",
+      "android": {
+        "buildType": "app-bundle"
+      }
     }
   },
   "cli": {
