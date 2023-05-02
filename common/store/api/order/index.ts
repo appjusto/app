@@ -19,6 +19,7 @@ import {
 import {
   Firestore,
   FirestoreError,
+  QueryConstraint,
   Timestamp,
   Unsubscribe,
   addDoc,
@@ -161,7 +162,7 @@ export default class OrderApi {
     resultHandler: (orders: WithId<Order>[]) => void
   ): Unsubscribe {
     const { consumerId, courierId, statuses, businessId, orderField, from, to } = options;
-    const constraints = [orderBy(orderField ?? 'createdOn', 'desc')];
+    const constraints: QueryConstraint[] = [orderBy(orderField ?? 'createdOn', 'desc')];
     if (!isEmpty(statuses)) constraints.push(where('status', 'in', statuses));
     if (consumerId) constraints.push(where('consumer.id', '==', consumerId));
     if (courierId) constraints.push(where('courier.id', '==', courierId));

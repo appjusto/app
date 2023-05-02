@@ -20,9 +20,9 @@ import { ApiContext, AppDispatch } from '../../app/context';
 import CheckField from '../../components/buttons/CheckField';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import DefaultInput from '../../components/inputs/DefaultInput';
+import PatternInput from '../../components/inputs/PatternInput';
 import { phoneFormatter, phoneMask } from '../../components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../components/inputs/pattern-input/parsers';
-import PatternInput from '../../components/inputs/PatternInput';
 import { useFacebookAds } from '../../hooks/useFacebookAds';
 import { IconIllustrationIntro } from '../../icons/icon-illustrationIntro';
 import { IconIntroBusiness } from '../../icons/icon-intro-business';
@@ -33,7 +33,7 @@ import { track, useSegmentScreen } from '../../store/api/track';
 import { getFlavor } from '../../store/config/selectors';
 import { showToast } from '../../store/ui/actions';
 import { getUIBusy } from '../../store/ui/selectors';
-import { signInWithEmail, signInWithEmailAndPassword } from '../../store/user/actions';
+import { signInWithEmailAndPassword } from '../../store/user/actions';
 import { colors, doublePadding, halfPadding, padding, screens, texts } from '../../styles';
 import { validateEmail } from '../../utils/validators';
 import { UnloggedParamList } from './types';
@@ -89,10 +89,7 @@ export default function ({ navigation, route }: Props) {
           dispatch(showToast(t('Digite um e-mail válido.'), 'error'));
           return;
         }
-        if (authMode === 'passwordless') {
-          await dispatch(signInWithEmail(api)(email.trim()));
-          navigation.navigate('SignInFeedback', { email });
-        } else if (authMode === 'password') {
+        if (authMode === 'password') {
           await dispatch(signInWithEmailAndPassword(api)(email.trim(), password.trim()));
         }
       }
@@ -105,27 +102,16 @@ export default function ({ navigation, route }: Props) {
     }
   };
   // helpers
-  const toggleBusinessAuth = () => {
-    if (authMode === 'passwordless') setAuthMode('password');
-    if (authMode === 'password') setAuthMode('passwordless');
-  };
   let welcomeMessage;
   if (flavor === 'courier') welcomeMessage = t('Ganhe mais, com autonomia e transparência.');
   if (flavor === 'business')
     welcomeMessage = t('Gerencie seu restaurante de forma fácil e automatizada.');
   else welcomeMessage = t('Delivery e entregas com modelo sustentável.');
-  const actionButtonTitle =
-    flavor === 'courier'
-      ? authMode === 'phone'
-        ? t('Entrar')
-        : t('Enviar senha por e-mail')
-      : flavor === 'business'
-      ? t('Entrar no restaurante')
-      : t('Faça login para pedir');
+  const actionButtonTitle = t('Entrar');
   const actionButtonDisabled =
-    flavor === 'business'
-      ? busy || (authMode !== 'phone' && validateEmail(email).status !== 'ok')
-      : !acceptedTerms || busy || (authMode !== 'phone' && validateEmail(email).status !== 'ok');
+    busy ||
+    (authMode !== 'phone' && validateEmail(email).status !== 'ok') ||
+    (flavor !== 'business' && !acceptedTerms);
   // UI
   const illustrationUI = () => {
     if (flavor === 'consumer') {
@@ -175,13 +161,7 @@ export default function ({ navigation, route }: Props) {
             onPressIn={() => Keyboard.dismiss()}
             delayLongPress={2000}
             onLongPress={() =>
-              setAuthMode((current) =>
-                current === 'phone'
-                  ? 'passwordless'
-                  : current === 'passwordless'
-                  ? 'password'
-                  : 'phone'
-              )
+              setAuthMode((current) => (current === 'phone' ? 'password' : 'phone'))
             }
           >
             <>
@@ -196,13 +176,7 @@ export default function ({ navigation, route }: Props) {
                 >
                   {authMode === 'phone'
                     ? t('Digite o número do seu celular')
-                    : authMode === 'passwordless'
-                    ? flavor === 'business'
-                      ? t(
-                          'Ao entrar sem senha, enviaremos um link de acesso para o e-mail cadastrado'
-                        )
-                      : t('Digite seu e-mail para entrar ou criar sua conta.')
-                    : t('Digite a senha que enviamos para o seu e-mail.')}
+                    : t('Digite seu e-mail cadastrado')}
                 </Text>
               </View>
             </>
@@ -272,15 +246,7 @@ export default function ({ navigation, route }: Props) {
                 marginTop: padding,
               }}
             >
-              {flavor === 'business' ? (
-                <View>
-                  <CheckField
-                    checked={authMode === 'password'}
-                    onPress={() => toggleBusinessAuth()}
-                    text={t('Usar senha de acesso')}
-                  />
-                </View>
-              ) : (
+              {flavor !== 'business' ? (
                 <View>
                   <View>
                     <CheckField
@@ -301,7 +267,7 @@ export default function ({ navigation, route }: Props) {
                     </TouchableOpacity>
                   </View>
                 </View>
-              )}
+              ) : null}
             </View>
           </View>
           <View style={{ flex: 1 }} />

@@ -47,12 +47,11 @@ export const CustomButton = ({
         textColor = colors.black;
         background = colors.darkYellow;
       } else {
+        buttonTitle = t('Despachar pedido');
         if (dispatchingState === 'arrived-pickup') {
-          buttonTitle = t('Entregar pedido');
           textColor = colors.black;
           background = colors.darkYellow;
         } else {
-          buttonTitle = t('Entregar pedido');
           textColor = colors.white;
           background = colors.grey700;
         }

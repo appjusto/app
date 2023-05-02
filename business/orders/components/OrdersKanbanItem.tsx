@@ -59,38 +59,27 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
   const actionHandler = async () => {
     if (!order) return;
     Keyboard.dismiss();
-    const { status, dispatchingState, dispatchingStatus, fulfillment } = order;
+    const { status, dispatchingState, dispatchingStatus, fulfillment, fare } = order;
     setLoading(true);
     try {
       if (status === 'confirmed') {
-        setLoading(false);
         setModalVisible(true); // can change status to preparing from within the modal
       }
       if (status === 'preparing') {
         await api.order().updateOrder(order.id, { status: 'ready' });
-        setLoading(false);
       }
       if (status === 'ready') {
         if (fulfillment === 'take-away') {
           await api.order().updateOrder(order.id, { status: 'delivered' });
-          setLoading(false);
+        } else if (
+          fare?.courier?.payee === 'business' ||
+          dispatchingStatus === 'outsourced' ||
+          dispatchingState === 'arrived-pickup'
+        ) {
+          await api.order().updateOrder(order.id, { status: 'dispatching' });
         } else {
-          if (dispatchingState === 'arrived-pickup') {
-            await api.order().updateOrder(order.id, { status: 'dispatching' });
-            setLoading(false);
-          }
-          if (dispatchingState !== 'arrived-pickup') {
-            setLoading(false);
-            dispatch(showToast('Aguarde a chegada do entregador com o código do pedido', 'error'));
-          }
-          if (dispatchingStatus === 'outsourced') {
-            await api.order().updateOrder(order.id, { status: 'dispatching' });
-            setLoading(false);
-          }
+          dispatch(showToast('Aguarde a chegada do entregador com o código do pedido', 'error'));
         }
-      } else {
-        setLoading(false);
-        return;
       }
       setLoading(false);
     } catch (error: any) {

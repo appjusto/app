@@ -84,17 +84,23 @@ export default class BusinessApi {
 
   // manager
   async fetchBusinessesManagedBy(email: string) {
-    const snapshot = await getDocs(
-      query(
-        this.firestoreRefs.getBusinessesRef(),
-        where('situation', '==', 'approved'),
-        where('managers', 'array-contains', email),
-        orderBy('createdOn', 'desc')
-        // limit(1)
-      )
-    );
-    if (snapshot.empty) return [];
-    return documentsAs<Business>(snapshot.docs);
+    try {
+      const snapshot = await getDocs(
+        query(
+          this.firestoreRefs.getBusinessesRef(),
+          where('situation', '==', 'approved'),
+          where('managers', 'array-contains', email)
+          // orderBy('createdOn', 'desc')
+          // limit(1)
+        )
+      );
+      if (snapshot.empty) return [];
+      return documentsAs<Business>(snapshot.docs);
+    } catch (error: unknown) {
+      console.log('ERROR');
+      console.log(JSON.stringify(error));
+      Sentry.Native.captureException(error);
+    }
   }
 
   async updateBusiness(businessId: string, changes: Partial<Business>) {

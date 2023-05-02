@@ -24,7 +24,7 @@ export const DestinationAndPay = ({ order, style }: Props) => {
           {t('Valor do frete: ')}
           <Text style={texts.bold}>
             {order?.fare?.courier?.value ? formatCurrency(order.fare.courier.value) : 'N/E'}
-            {order?.fare?.courier?.payee === 'business' && ` (${t('Assumido pelo restaurante')})`}
+            {order?.fare?.courier?.payee === 'business' && ` (${t('recebido pelo restaurante')})`}
           </Text>
         </Text>
         <Text style={{ ...texts.md, marginTop: 4 }}>
