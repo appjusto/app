@@ -69,6 +69,10 @@ const plugins = (): Plugins => {
     'expo-splash-screen',
     'sentry-expo',
     './scripts/react-maps-plugin',
+    'expo-image-picker',
+    {
+      photosPermission: 'Para o envio de documentos, caso necessário.',
+    },
     [
       withBuildProperties,
       {
