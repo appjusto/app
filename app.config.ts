@@ -72,6 +72,7 @@ const plugins = (): Plugins => {
     'expo-image-picker',
     {
       photosPermission: 'Para o envio de documentos, caso necessário.',
+      cameraPermission: 'Para o envio de documentos, caso necessário.',
     },
     [
       withBuildProperties,
