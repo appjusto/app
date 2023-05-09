@@ -73,8 +73,27 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   // after 1 hour, the status turns into 'canceled'
   React.useEffect(() => {
     if (!order) return;
-    if (order.status === 'canceled' || order.status === 'rejected')
+    if (order.status === 'quote') {
+      if (order.type === 'p2p') {
+        navigation.replace('P2POrderNavigator', {
+          screen: 'CreateOrderP2P',
+          params: {
+            orderId: order.id,
+          },
+        });
+      } else {
+        navigation.replace('FoodOrderNavigator', {
+          screen: 'RestaurantNavigator',
+          params: {
+            restaurantId: order.business!.id,
+            orderId: order.id,
+            screen: 'FoodOrderCheckout',
+          },
+        });
+      }
+    } else if (order.status === 'canceled' || order.status === 'rejected') {
       navigation.navigate('OrderCanceled', { orderId });
+    }
   }, [navigation, order, orderId]);
   // tracking
   useSegmentScreen('OngoingOrderDeclined');
@@ -89,23 +108,7 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   // handlers
   const reviewOrderHandler = () => {
     if (!order) return;
-    if (order.type === 'p2p') {
-      navigation.replace('P2POrderNavigator', {
-        screen: 'CreateOrderP2P',
-        params: {
-          orderId: order.id,
-        },
-      });
-    } else {
-      navigation.replace('FoodOrderNavigator', {
-        screen: 'RestaurantNavigator',
-        params: {
-          restaurantId: order.business!.id,
-          orderId: order.id,
-          screen: 'FoodOrderCheckout',
-        },
-      });
-    }
+    api.order().updateOrder(order.id, { status: 'quote' }).then(null);
   };
   const header = (() => {
     if (order.status === 'canceled') return t('Esse pedido foi cancelado');
