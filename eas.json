@@ -1,178 +1,178 @@
 {
   "build": {
-    "v11": {
-      "releaseChannel": "v11",
+    "v13": {
+      "releaseChannel": "v13",
       "expoCli": "6.3.2"
     },
-    "courier-v11": {
-      "extends": "v11",
+    "courier-v13": {
+      "extends": "v13",
       "env": {
         "FLAVOR": "courier"
       }
     },
-    "courier-v11-dev": {
-      "extends": "courier-v11",
+    "courier-v13-dev": {
+      "extends": "courier-v13",
       "env": {
         "ENV": "dev"
       }
     },
-    "courier-v11-internal-dev": {
-      "extends": "courier-v11-dev",
+    "courier-v13-internal-dev": {
+      "extends": "courier-v13-dev",
       "distribution": "internal",
       "android": {
         "buildType": "apk"
       }
     },
-    "courier-v11-devclient-dev": {
-      "extends": "courier-v11-dev",
+    "courier-v13-devclient-dev": {
+      "extends": "courier-v13-dev",
       "developmentClient": true,
       "ios": {
         "simulator": true
       }
     },
-    "courier-v11-store-dev": {
-      "extends": "courier-v11-dev",
+    "courier-v13-store-dev": {
+      "extends": "courier-v13-dev",
       "distribution": "store",
       "android": {
         "buildType": "app-bundle"
       }
     },
-    "courier-v11-staging": {
-      "extends": "courier-v11",
+    "courier-v13-staging": {
+      "extends": "courier-v13",
       "env": {
         "ENV": "staging"
       }
     },
-    "courier-v11-internal-staging": {
-      "extends": "courier-v11-staging",
+    "courier-v13-internal-staging": {
+      "extends": "courier-v13-staging",
       "distribution": "internal",
       "android": {
         "buildType": "apk"
       }
     },
-    "courier-v11-devclient-staging": {
-      "extends": "courier-v11-staging",
+    "courier-v13-devclient-staging": {
+      "extends": "courier-v13-staging",
       "developmentClient": true,
       "ios": {
         "simulator": true
       }
     },
-    "courier-v11-store-staging": {
-      "extends": "courier-v11-staging",
+    "courier-v13-store-staging": {
+      "extends": "courier-v13-staging",
       "distribution": "store",
       "android": {
         "buildType": "app-bundle"
       }
     },
-    "courier-v11-live": {
-      "extends": "courier-v11",
+    "courier-v13-live": {
+      "extends": "courier-v13",
       "env": {
         "ENV": "live"
       }
     },
-    "courier-v11-internal-live": {
-      "extends": "courier-v11-live",
+    "courier-v13-internal-live": {
+      "extends": "courier-v13-live",
       "distribution": "internal",
       "android": {
         "buildType": "apk"
       }
     },
-    "courier-v11-devclient-live": {
-      "extends": "courier-v11-live",
+    "courier-v13-devclient-live": {
+      "extends": "courier-v13-live",
       "developmentClient": true,
       "ios": {
         "simulator": true
       }
     },
-    "courier-v11-store-live": {
-      "extends": "courier-v11-live",
+    "courier-v13-store-live": {
+      "extends": "courier-v13-live",
       "distribution": "store",
       "android": {
         "buildType": "app-bundle"
       }
     },
-    "consumer-v11": {
-      "extends": "v11",
+    "consumer-v13": {
+      "extends": "v13",
       "env": {
         "FLAVOR": "consumer"
       }
     },
-    "consumer-v11-dev": {
-      "extends": "consumer-v11",
+    "consumer-v13-dev": {
+      "extends": "consumer-v13",
       "env": {
         "ENV": "dev"
       }
     },
-    "consumer-v11-internal-dev": {
-      "extends": "consumer-v11-dev",
+    "consumer-v13-internal-dev": {
+      "extends": "consumer-v13-dev",
       "distribution": "internal",
       "android": {
         "buildType": "apk"
       }
     },
-    "consumer-v11-devclient-dev": {
-      "extends": "consumer-v11-dev",
+    "consumer-v13-devclient-dev": {
+      "extends": "consumer-v13-dev",
       "developmentClient": true,
       "ios": {
         "simulator": true
       }
     },
-    "consumer-v11-store-dev": {
-      "extends": "consumer-v11-dev",
+    "consumer-v13-store-dev": {
+      "extends": "consumer-v13-dev",
       "distribution": "store",
       "android": {
         "buildType": "app-bundle"
       }
     },
-    "consumer-v11-staging": {
-      "extends": "consumer-v11",
+    "consumer-v13-staging": {
+      "extends": "consumer-v13",
       "env": {
         "ENV": "staging"
       }
     },
-    "consumer-v11-internal-staging": {
-      "extends": "consumer-v11-staging",
+    "consumer-v13-internal-staging": {
+      "extends": "consumer-v13-staging",
       "distribution": "internal",
       "android": {
         "buildType": "apk"
       }
     },
-    "consumer-v11-devclient-staging": {
-      "extends": "consumer-v11-staging",
+    "consumer-v13-devclient-staging": {
+      "extends": "consumer-v13-staging",
       "developmentClient": true,
       "ios": {
         "simulator": true
       }
     },
-    "consumer-v11-store-staging": {
-      "extends": "consumer-v11-staging",
+    "consumer-v13-store-staging": {
+      "extends": "consumer-v13-staging",
       "distribution": "store",
       "android": {
         "buildType": "app-bundle"
       }
     },
-    "consumer-v11-live": {
-      "extends": "consumer-v11",
+    "consumer-v13-live": {
+      "extends": "consumer-v13",
       "env": {
         "ENV": "live"
       }
     },
-    "consumer-v11-internal-live": {
-      "extends": "consumer-v11-live",
+    "consumer-v13-internal-live": {
+      "extends": "consumer-v13-live",
       "distribution": "internal",
       "android": {
         "buildType": "apk"
       }
     },
-    "consumer-v11-devclient-live": {
-      "extends": "consumer-v11-live",
+    "consumer-v13-devclient-live": {
+      "extends": "consumer-v13-live",
       "developmentClient": true,
       "ios": {
         "simulator": true
       }
     },
-    "consumer-v11-store-live": {
-      "extends": "consumer-v11-live",
+    "consumer-v13-store-live": {
+      "extends": "consumer-v13-live",
       "distribution": "store",
       "android": {
         "buildType": "app-bundle"
