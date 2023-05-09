@@ -76,7 +76,7 @@ const plugins = (): Plugins => {
           compileSdkVersion: 33,
           targetSdkVersion: 33,
           buildToolsVersion: '33.0.1',
-          // enableProguardInReleaseBuilds: false,
+          enableProguardInReleaseBuilds: false,
           // extraProguardRules: '-keep public class com.horcrux.svg.** {*;}',
         },
         ios: {
