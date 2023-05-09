@@ -11,6 +11,7 @@ import Constants from 'expo-constants';
 import {
   Firestore,
   GeoPoint,
+  Timestamp,
   Unsubscribe,
   doc,
   onSnapshot,
@@ -19,6 +20,7 @@ import {
 } from 'firebase/firestore';
 import { hash } from 'geokit';
 import { Platform } from 'react-native';
+import * as Sentry from 'sentry-expo';
 import { getInstallationId } from '../../../utils/getInstallationId';
 import AuthApi from '../auth';
 import { fetchPublicIP } from '../externals/ipify';
@@ -99,7 +101,7 @@ export default class ProfileApi {
         appInstallationId: installationId,
         appIp: ip,
         platform: Platform.OS,
-        updatedOn: serverTimestamp(),
+        updatedOn: serverTimestamp() as Timestamp,
       };
       try {
         await setDoc(this.getProfileRef(id), update, { merge: true });
@@ -127,7 +129,7 @@ export default class ProfileApi {
           lng: location.longitude,
         }),
       },
-      updatedOn: serverTimestamp(),
+      updatedOn: serverTimestamp() as Timestamp,
     };
     console.log(id, update);
     await this.updateProfile(id, update);

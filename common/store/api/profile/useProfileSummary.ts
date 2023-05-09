@@ -19,7 +19,6 @@ export const useProfileSummary = () => {
   const profile = flavor === 'consumer' ? consumer! : courier!;
   const { situation } = profile;
   // state
-  const [hasOrdered, setHasOrdered] = React.useState<boolean | undefined>();
   const [isProfilePhoneVerified, setProfilePhoneVerified] = React.useState<boolean | undefined>();
   // helpers
   const update = () => {
@@ -29,20 +28,16 @@ export const useProfileSummary = () => {
   };
   // side effects
   // check if has ordered before
-  React.useEffect(() => {
-    setHasOrdered(
-      flavor === 'consumer'
-        ? consumer!.statistics.totalOrders > 0
-        : courier!.statistics.deliveries > 0
-    );
-  }, [flavor, consumer?.statistics?.totalOrders, courier?.statistics?.deliveries]);
+  const totalOrders = consumer?.statistics?.totalOrders ?? courier?.statistics?.deliveries ?? 0;
+  const hasOrdered = totalOrders > 0;
   // updating when phone or countryCode changes
   React.useEffect(update, [api, profile.countryCode, profile.phone]);
-  // updating whenever screen is focused
+  // updating whenever profile changes
   React.useEffect(() => {
     navigation.addListener('focus', update);
     return () => navigation.removeListener('focus', update);
   }, [profile]);
+  // updating whenever screen is focused
   React.useEffect(() => {
     navigation.addListener('focus', update);
     return () => navigation.removeListener('focus', update);
