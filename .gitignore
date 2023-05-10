@@ -17,4 +17,5 @@ web-report/
 *.env
 .tmp/*
 google-services*.json
+GoogleService-Info*.plist
 *.apk

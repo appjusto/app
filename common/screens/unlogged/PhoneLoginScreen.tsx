@@ -1,7 +1,6 @@
+import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
-import { ConfirmationResult } from 'firebase/auth';
 import React from 'react';
 import { ActivityIndicator, Keyboard, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -43,12 +42,10 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
   const api = React.useContext(ApiContext);
   // state
   const [state, setState] = React.useState<State>('initial');
-  const [confirmationResult, setConfirmationResult] = React.useState<ConfirmationResult>();
+  const [confirmationResult, setConfirmationResult] =
+    React.useState<FirebaseAuthTypes.ConfirmationResult>();
   const [verificationCode, setVerificationCode] = React.useState('');
   const [error, setError] = React.useState<string>();
-  // refs
-  const recaptchaRef = React.useRef(null);
-  // effects
   // tracking
   useSegmentScreen('Phone Login');
   React.useEffect(() => {
@@ -67,7 +64,7 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
     setState('verifying-phone-number');
     api
       .auth()
-      .signInWithPhoneNumber(recaptchaRef.current!, phone, countryCode)
+      .signInWithPhoneNumber(phone, countryCode)
       .then((result) => {
         setConfirmationResult(result);
         setState('phone-number-verified');
@@ -83,7 +80,7 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
     (async () => {
       try {
         setState('verifying-code');
-        await api.auth().confirmPhoneSignIn(confirmationResult!.verificationId, verificationCode);
+        await confirmationResult!.confirm(verificationCode);
       } catch (err: any) {
         let message: string = err.message;
         if (message.indexOf('linked to one identity') > 0) {
@@ -107,14 +104,6 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
         backgroundColor: colors.grey50,
       }}
     >
-      <FirebaseRecaptchaVerifierModal
-        ref={recaptchaRef}
-        firebaseConfig={api.getFirebaseOptions()}
-        attemptInvisibleVerification={false}
-        title={t('Verificação')}
-        cancelLabel={t('Cancelar')}
-        languageCode="pt"
-      />
       {state === 'verifying-phone-number' || state === 'verifying-code' ? (
         <ActivityIndicator size="large" color={colors.green500} />
       ) : null}

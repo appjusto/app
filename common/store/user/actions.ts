@@ -45,16 +45,6 @@ export const getSignInEmail = () => {
   }
 };
 
-export const isSignInWithEmailLink =
-  (api: Api) =>
-  (link: string | null): boolean => {
-    return api.auth().isSignInWithEmailLink(link);
-  };
-
-export const signInWithEmailLink = (api: Api) => (email: string, link: string) => {
-  return api.auth().signInWithEmailLink(email, link);
-};
-
 export const deleteAccount =
   (api: Api) => (payload: Partial<DeleteAccountPayload>) => async (dispatch: AppDispatch) => {
     await dispatch(awaitWithFeedback(api.deleteAccount(payload)));

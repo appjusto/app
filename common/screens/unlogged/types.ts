@@ -5,9 +5,6 @@ export type UnloggedParamList = {
   Home: undefined;
   FoodOrderNavigator: NestedNavigatorParams<FoodOrderNavigatorParamList>;
   WelcomeScreen: undefined;
-  SignInFeedback: {
-    email: string;
-  };
   PhoneLoginScreen: {
     phone: string;
     countryCode: string;

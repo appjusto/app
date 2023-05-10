@@ -4,7 +4,6 @@ import { Keyboard } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { t } from '../../strings';
 import { ApiContext, AppDispatch } from '../app/context';
-import { AuthState, useAuth } from '../hooks/useAuth';
 import { updateCurrentLocation, updateCurrentPlace } from '../store/consumer/actions';
 import { getConsumer, getCurrentLocation, getCurrentPlace } from '../store/consumer/selectors';
 import { showToast } from '../store/ui/actions';
@@ -16,20 +15,20 @@ export const useUpdateLocation = () => {
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
   // redux store
-  const [authState] = useAuth();
   const consumer = useSelector(getConsumer);
   const lastPlace = useLastPlace();
   const currentPlace = useSelector(getCurrentPlace);
   const currentLocation = useSelector(getCurrentLocation);
   // state
   const { coords } = useLastKnownLocation();
+  const [logged, setLogged] = React.useState<boolean>();
   // effect to update currentPlace and currentLocation
   React.useEffect(() => {
     console.log(
-      `authState: ${authState}; coords: ${coords}; currentLocation: ${currentLocation}; currentPlace: ${currentPlace}; lastPlace: ${lastPlace}`
+      `logged: ${logged}; coords: ${coords}; currentLocation: ${currentLocation}; currentPlace: ${currentPlace}; lastPlace: ${lastPlace}`
     );
     // if unlogged
-    if (authState === AuthState.Unsigned || authState === AuthState.InvalidCredentials) {
+    if (logged === false) {
       if (!currentLocation) {
         if (coords) {
           // console.log('currentLocation falsy: atualizando para coords:', coords);
@@ -57,7 +56,7 @@ export const useUpdateLocation = () => {
         }
       }
       return;
-    } else if (authState !== AuthState.SignedIn) return; // avoid updating during initialization
+    } else if (logged === undefined) return; // avoid updating during initialization
     // when currentPlace is set we may need only to update currentLocation
     if (currentPlace) {
       // this will happen when we use AddressComplete to set the place
@@ -110,7 +109,13 @@ export const useUpdateLocation = () => {
           })
         );
     })();
-  }, [api, dispatch, authState, coords, currentPlace, currentLocation, lastPlace]);
+  }, [api, dispatch, logged, coords, currentPlace, currentLocation, lastPlace]);
+  // update logged
+  React.useEffect(() => {
+    if (consumer === undefined) return;
+    if (consumer === null) setLogged(false);
+    else setLogged(true);
+  }, [consumer]);
   // update consumer's location
   React.useEffect(() => {
     if (!consumer?.id) return;

@@ -36,6 +36,8 @@ const {
   ALGOLIA_APPID,
   ALGOLIA_APIKEY,
   SENTRY_AUTH_TOKEN,
+  GOOGLE_SERVICES_JSON,
+  GOOGLE_SERVICES_PLIST,
 } = process.env;
 
 const flavor: Flavor = FLAVOR as Flavor;
@@ -69,6 +71,8 @@ const plugins = (): Plugins => {
     'expo-splash-screen',
     'sentry-expo',
     './scripts/react-maps-plugin',
+    '@react-native-firebase/app',
+    '@react-native-firebase/auth',
     [
       'expo-image-picker',
       {
@@ -80,9 +84,6 @@ const plugins = (): Plugins => {
       withBuildProperties,
       {
         android: {
-          compileSdkVersion: 33,
-          targetSdkVersion: 33,
-          buildToolsVersion: '33.0.1',
           enableProguardInReleaseBuilds: false,
           // extraProguardRules: '-keep public class com.horcrux.svg.** {*;}',
         },
@@ -210,6 +211,7 @@ const ios = () => ({
   buildNumber: `${versionCode}`,
   icon: icon('ios'),
   supportsTablet: false,
+  googleServicesFile: GOOGLE_SERVICES_PLIST,
   infoPlist:
     flavor === 'business'
       ? { UIBackgroundModes: ['fetch'] }
@@ -273,7 +275,7 @@ const android = () =>
           backgroundColor:
             flavor === 'business' ? '#2F422C' : flavor === 'consumer' ? '#78E08F' : '#FFE493',
         },
-        googleServicesFile: `./google-services-${environment}.json`,
+        googleServicesFile: GOOGLE_SERVICES_JSON,
         softwareKeyboardLayoutMode: 'pan',
         permissions: permissions(),
         intentFilters: intentFilters(),

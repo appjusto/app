@@ -1,9 +1,6 @@
 import React from 'react';
-import { Keyboard } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { t } from '../../strings';
-import { AuthState, useAuth } from '../hooks/useAuth';
-import { showToast } from '../store/ui/actions';
+import { useSelector } from 'react-redux';
+import { getUser } from '../store/user/selectors';
 
 interface Props {
   Unlogged: React.FunctionComponent;
@@ -11,29 +8,15 @@ interface Props {
 }
 
 export default ({ Unlogged, Logged }: Props) => {
-  // context
-  const dispatch = useDispatch();
-
-  // side effects
-  const [authState] = useAuth();
-  React.useEffect(() => {
-    if (authState === AuthState.InvalidCredentials) {
-      Keyboard.dismiss();
-      dispatch(showToast(t('Sua sessão expirou. Faça login novamente.'), 'error'));
-    }
-  }, [authState, dispatch]);
+  // redux state
+  const user = useSelector(getUser);
 
   // UI
-  // show nothing while checking for credentials
-  if (
-    authState === AuthState.CheckingPreviousSession ||
-    authState === AuthState.CheckingDeeplink ||
-    authState === AuthState.SigningIn
-  )
-    return null;
+  // checking
+  if (user === undefined) return null;
 
   // unlogged stack
-  if (authState !== AuthState.SignedIn) {
+  if (user === null) {
     return <Unlogged />;
   }
 

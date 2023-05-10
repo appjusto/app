@@ -2,10 +2,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { defaultScreenOptions } from '../../common/screens/options';
 import { PhoneLoginScreen } from '../../common/screens/unlogged/PhoneLoginScreen';
-import SignInFeedback from '../../common/screens/unlogged/SignInFeedback';
 import Terms from '../../common/screens/unlogged/Terms';
-import { UnloggedParamList } from '../../common/screens/unlogged/types';
 import WelcomeScreen from '../../common/screens/unlogged/WelcomeScreen';
+import { UnloggedParamList } from '../../common/screens/unlogged/types';
 import { t } from '../../strings';
 import { FoodOrderNavigator } from './food/FoodOrderNavigator';
 import Home from './main/home/Home';
@@ -24,11 +23,6 @@ export default function () {
         name="WelcomeScreen"
         component={WelcomeScreen}
         options={{ title: t('Entrar no AppJusto') }}
-      />
-      <Stack.Screen
-        name="SignInFeedback"
-        component={SignInFeedback}
-        options={{ title: t('Verifique seu e-mail') }}
       />
       <Stack.Screen
         name="PhoneLoginScreen"

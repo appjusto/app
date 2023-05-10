@@ -1,6 +1,5 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import React from 'react';
 import { ActivityIndicator, Keyboard, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -85,9 +84,9 @@ export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
     setState('verifying-phone-number');
     api
       .auth()
-      .verifyPhoneNumber(recaptchaRef.current!, phone, countryCode)
+      .verifyPhoneNumber(phone, countryCode)
       .then((id) => {
-        setVerificationId(id);
+        setVerificationId(id.verificationId);
         setState('phone-number-verified');
       })
       .catch((error) => {
@@ -129,14 +128,6 @@ export const PhoneVerificationScreen = ({ navigation, route }: Props) => {
         backgroundColor: colors.grey50,
       }}
     >
-      <FirebaseRecaptchaVerifierModal
-        ref={recaptchaRef}
-        firebaseConfig={api.getFirebaseOptions()}
-        attemptInvisibleVerification={false}
-        title={t('Verificação')}
-        cancelLabel={t('Cancelar')}
-        languageCode="pt"
-      />
       {state === 'initial' ? (
         <View>
           <Text style={{ ...texts.x2l }}>{t('Confirme seu celular')}</Text>
