@@ -46,12 +46,14 @@ export default function ({ navigation, route }: Props) {
   const busy = useSelector(getUIBusy);
   const courier = useSelector(getCourier)!;
   const { situation } = courier;
-  const currentSelfieQuery = useCourierSelfie(courier.id);
-  const currentDocumentImageQuery = useCourierDocumentImage(courier.id);
 
   // screen state
-  const { coords } = useLastKnownLocation();
   const situationsAllowed: ProfileSituation[] = ['pending'];
+  const { coords } = useLastKnownLocation();
+  const currentSelfieQuery = useCourierSelfie(courier.id);
+  const currentDocumentImageQuery = useCourierDocumentImage(courier.id);
+  const [checkImages, setCheckImages] = React.useState(false);
+  const hasImages = Boolean(currentSelfieQuery.data) && Boolean(currentDocumentImageQuery.data);
   const hasPersonalInfo = courierInfoSet(courier);
   const hasCompanyInfo = courier.company && companyInfoSet(courier.company);
   const hasBankAccount = courier.bankAccount && bankAccountSet(courier.bankAccount);
@@ -76,22 +78,20 @@ export default function ({ navigation, route }: Props) {
     let totalSteps = 0;
     if (hasPersonalInfo) totalSteps++;
     if (hasCompanyInfo) totalSteps++;
-    if (Boolean(currentSelfieQuery.data) && Boolean(currentDocumentImageQuery.data)) totalSteps++;
+    if (hasImages) totalSteps++;
     if (hasBankAccount) totalSteps++;
     setStepsDone(totalSteps);
-  }, [
-    hasPersonalInfo,
-    hasCompanyInfo,
-    currentSelfieQuery,
-    hasBankAccount,
-    setStepsDone,
-    currentDocumentImageQuery,
-  ]);
-  // whenever screen is focused
+  }, [hasPersonalInfo, hasCompanyInfo, hasImages, hasBankAccount, setStepsDone]);
+  // check image loading
   React.useEffect(() => {
-    navigation.addListener('focus', focusHandler);
-    return () => navigation.removeListener('focus', focusHandler);
-  });
+    if (!hasImages && checkImages) {
+      const interval = setInterval(() => {
+        console.log('verificando imagens');
+        queryClient.refetchQueries();
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [hasImages, checkImages, queryClient]);
 
   // handlers
   const updateProfileHandler = () => {
@@ -107,10 +107,6 @@ export default function ({ navigation, route }: Props) {
       }
     })();
   };
-  // when focused, refetch queries to recalculate of steps done
-  const focusHandler = React.useCallback(() => {
-    queryClient.refetchQueries();
-  }, [queryClient]);
 
   const logOut = () => {
     Alert.alert(
@@ -183,7 +179,9 @@ export default function ({ navigation, route }: Props) {
         <ConfigItem
           title={t('Fotos e documentos')}
           subtitle={t('Envie uma selfie e seus documentos')}
-          onPress={() => navigation.navigate('ProfilePhotos')}
+          onPress={() => {
+            navigation.navigate('ProfilePhotos'), setCheckImages(true);
+          }}
           checked={Boolean(currentSelfieQuery.data) && Boolean(currentDocumentImageQuery.data)}
         />
         <ConfigItem
