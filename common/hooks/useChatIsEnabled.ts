@@ -1,5 +1,5 @@
 import { Order, OrderStatus, WithId } from '@appjusto/types';
-import { Timestamp } from 'firebase/firestore';
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import { useContextGetSeverTime } from '../contexts/ServerTimeContext';
 
 export const useChatIsEnabled = (order?: WithId<Order> | null) => {
@@ -10,8 +10,9 @@ export const useChatIsEnabled = (order?: WithId<Order> | null) => {
   if ((['preparing', 'ready', 'dispatching'] as OrderStatus[]).includes(status)) return true;
   if (!(['delivered', 'canceled'] as OrderStatus[]).includes(status)) return false;
   const time =
-    status === 'delivered'
-      ? timestamps.delivered ?? order.deliveredOn ?? updatedOn
-      : timestamps.canceled ?? order.canceledOn ?? updatedOn;
-  return getServerTime().getTime() - (time as Timestamp).toDate().getTime() < 60 * 60 * 1000;
+    status === 'delivered' ? timestamps.delivered ?? updatedOn : timestamps.canceled ?? updatedOn;
+  return (
+    getServerTime().getTime() - (time as FirebaseFirestoreTypes.Timestamp).toDate().getTime() <
+    60 * 60 * 1000
+  );
 };

@@ -5,26 +5,15 @@ import {
   Category,
   Complement,
   ComplementGroup,
+  Flavor,
   Ordering,
   OrderStatus,
   Place,
   Product,
   WithId,
 } from '@appjusto/types';
-import {
-  addDoc,
-  getDoc,
-  getDocs,
-  limit,
-  onSnapshot,
-  orderBy,
-  query,
-  serverTimestamp,
-  updateDoc,
-  where,
-} from 'firebase/firestore';
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import * as Sentry from 'sentry-expo';
-import { Flavor } from '../../../../../types';
 import { FirestoreRefs } from '../../refs/FirestoreRefs';
 import { StoragePaths } from '../../refs/StoragePaths';
 import FilesApi from '../files';
@@ -39,17 +28,19 @@ export default class BusinessApi {
 
   // firestore
   async fetchBusinessById(businessId: string) {
-    const snapshot = await getDoc(this.firestoreRefs.getBusinessRef(businessId));
-    if (!snapshot.exists()) return null;
+    const snapshot = await this.firestoreRefs.getBusinessRef(businessId).get();
+    if (!snapshot.exists) return null;
     return documentAs<Business>(snapshot);
   }
 
   async fetchBusiness(value: string) {
     const r = /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{7}$/.exec(value);
     const fieldPath = !r ? 'slug' : 'code';
-    const snapshot = await getDocs(
-      query(this.firestoreRefs.getBusinessesRef(), where(fieldPath, '==', value), limit(1))
-    );
+    const snapshot = await this.firestoreRefs
+      .getBusinessesRef()
+      .where(fieldPath, '==', value)
+      .limit(1)
+      .get();
     if (snapshot.empty) return null;
     return documentAs<Business>(snapshot.docs[0]);
   }
@@ -59,21 +50,18 @@ export default class BusinessApi {
     consumerId: string,
     statuses: OrderStatus[]
   ) {
-    const snapshot = await getDocs(
-      query(
-        this.firestoreRefs.getOrdersRef(),
-        orderBy('createdOn', 'desc'),
-        where('business.id', '==', businessId),
-        where('consumer.id', '==', consumerId),
-        where('status', 'in', statuses)
-      )
-    );
+    const snapshot = await this.firestoreRefs
+      .getOrdersRef()
+      .orderBy('createdOn', 'desc')
+      .where('business.id', '==', businessId)
+      .where('consumer.id', '==', consumerId)
+      .where('status', 'in', statuses)
+      .get();
     return snapshot.size;
   }
 
   observeBusiness(businessId: string, resultHandler: (business: WithId<Business>) => void) {
-    return onSnapshot(
-      this.firestoreRefs.getBusinessRef(businessId),
+    return this.firestoreRefs.getBusinessRef(businessId).onSnapshot(
       (snapshot) => resultHandler(documentAs<Business>(snapshot)),
       (error) => {
         console.log(error);
@@ -81,19 +69,14 @@ export default class BusinessApi {
       }
     );
   }
-
   // manager
   async fetchBusinessesManagedBy(email: string) {
     try {
-      const snapshot = await getDocs(
-        query(
-          this.firestoreRefs.getBusinessesRef(),
-          where('situation', '==', 'approved'),
-          where('managers', 'array-contains', email)
-          // orderBy('createdOn', 'desc')
-          // limit(1)
-        )
-      );
+      const snapshot = await this.firestoreRefs
+        .getBusinessesRef()
+        .where('situation', '==', 'approved')
+        .where('managers', 'array-contains', email)
+        .get();
       if (snapshot.empty) return [];
       return documentsAs<Business>(snapshot.docs);
     } catch (error: unknown) {
@@ -104,11 +87,14 @@ export default class BusinessApi {
   }
 
   async updateBusiness(businessId: string, changes: Partial<Business>) {
-    await updateDoc(this.firestoreRefs.getBusinessRef(businessId), changes);
+    await this.firestoreRefs.getBusinessRef(businessId).update(changes);
   }
 
   async sendKeepAlive(businessId: string) {
-    await this.updateBusiness(businessId, { keepAlive: serverTimestamp() });
+    await this.updateBusiness(businessId, {
+      keepAlive:
+        FirebaseFirestoreTypes.FieldValue.serverTimestamp() as FirebaseFirestoreTypes.Timestamp,
+    });
   }
 
   // recommendations
@@ -120,38 +106,43 @@ export default class BusinessApi {
     phone?: string,
     owner?: string
   ) {
-    await addDoc(this.firestoreRefs.getRecommendationsRef(), {
+    await this.firestoreRefs.getRecommendationsRef().add({
       recommendedBusiness,
       flavor,
       userId: userId ?? null,
       instagram: instagram ?? null,
       phone: phone ?? null,
       owner: owner ?? null,
-      createdOn: serverTimestamp(),
+      createdOn:
+        FirebaseFirestoreTypes.FieldValue.serverTimestamp() as FirebaseFirestoreTypes.Timestamp,
     } as BusinessRecommendation);
   }
 
   // menu
   observeCategories(businessId: string, resultHandler: (categories: WithId<Category>[]) => void) {
-    return onSnapshot(
-      query(this.firestoreRefs.getBusinessCategoriesRef(businessId), where('enabled', '==', true)),
-      (snapshot) => resultHandler(documentsAs<Category>(snapshot.docs)),
-      (error) => {
-        console.log(error);
-        Sentry.Native.captureException(error);
-      }
-    );
+    return this.firestoreRefs
+      .getBusinessCategoriesRef(businessId)
+      .where('enabled', '==', true)
+      .onSnapshot(
+        (snapshot) => resultHandler(documentsAs<Category>(snapshot.docs)),
+        (error) => {
+          console.log(error);
+          Sentry.Native.captureException(error);
+        }
+      );
   }
 
   observeProducts(businessId: string, resultHandler: (products: WithId<Product>[]) => void) {
-    return onSnapshot(
-      query(this.firestoreRefs.getBusinessProductsRef(businessId), where('enabled', '==', true)),
-      (snapshot) => resultHandler(documentsAs<Product>(snapshot.docs)),
-      (error) => {
-        console.log(error);
-        Sentry.Native.captureException(error);
-      }
-    );
+    return this.firestoreRefs
+      .getBusinessProductsRef(businessId)
+      .where('enabled', '==', true)
+      .onSnapshot(
+        (snapshot) => resultHandler(documentsAs<Product>(snapshot.docs)),
+        (error) => {
+          console.log(error);
+          Sentry.Native.captureException(error);
+        }
+      );
   }
 
   observeProduct(
@@ -159,8 +150,7 @@ export default class BusinessApi {
     productId: string,
     resultHandler: (products: WithId<Product>) => void
   ) {
-    return onSnapshot(
-      this.firestoreRefs.getBusinessProductRef(businessId, productId),
+    return this.firestoreRefs.getBusinessProductRef(businessId, productId).onSnapshot(
       (snapshot) => resultHandler(documentAs<Product>(snapshot)),
       (error) => {
         console.log(error);
@@ -173,28 +163,29 @@ export default class BusinessApi {
     businessId: string,
     resultHandler: (products: WithId<ComplementGroup>[]) => void
   ) {
-    return onSnapshot(
-      query(
-        this.firestoreRefs.getBusinessComplementsGroupsRef(businessId),
-        where('enabled', '==', true)
-      ),
-      (snapshot) => resultHandler(documentsAs<ComplementGroup>(snapshot.docs)),
-      (error) => {
-        console.log(error);
-        Sentry.Native.captureException(error);
-      }
-    );
+    return this.firestoreRefs
+      .getBusinessComplementsGroupsRef(businessId)
+      .where('enabled', '==', true)
+      .onSnapshot(
+        (snapshot) => resultHandler(documentsAs<ComplementGroup>(snapshot.docs)),
+        (error) => {
+          console.log(error);
+          Sentry.Native.captureException(error);
+        }
+      );
   }
 
   observeComplements(businessId: string, resultHandler: (products: WithId<Complement>[]) => void) {
-    return onSnapshot(
-      query(this.firestoreRefs.getBusinessComplementsRef(businessId), where('enabled', '==', true)),
-      (snapshot) => resultHandler(documentsAs<Complement>(snapshot.docs)),
-      (error) => {
-        console.log(error);
-        Sentry.Native.captureException(error);
-      }
-    );
+    return this.firestoreRefs
+      .getBusinessComplementsRef(businessId)
+      .where('enabled', '==', true)
+      .onSnapshot(
+        (snapshot) => resultHandler(documentsAs<Complement>(snapshot.docs)),
+        (error) => {
+          console.log(error);
+          Sentry.Native.captureException(error);
+        }
+      );
   }
 
   observeMenuOrdering(
@@ -202,8 +193,7 @@ export default class BusinessApi {
     resultHandler: (products: WithId<Ordering>) => void,
     menuId?: string
   ) {
-    return onSnapshot(
-      this.firestoreRefs.getBusinessMenuOrderingRef(businessId, menuId),
+    return this.firestoreRefs.getBusinessMenuOrderingRef(businessId, menuId).onSnapshot(
       (snapshot) => resultHandler(documentAs<Ordering>(snapshot)),
       (error) => {
         console.log(error);
@@ -213,8 +203,8 @@ export default class BusinessApi {
   }
 
   async fetchBusinessMenuMessage(businessId: string) {
-    const snapshot = await getDoc(this.firestoreRefs.getBusinessMenuMessageRef(businessId));
-    if (!snapshot.exists()) return null;
+    const snapshot = await this.firestoreRefs.getBusinessMenuMessageRef(businessId).get();
+    if (!snapshot.exists) return null;
     return snapshot.data() as BusinessMenuMessage;
   }
   // storage

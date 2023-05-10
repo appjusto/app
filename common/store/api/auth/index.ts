@@ -1,6 +1,6 @@
 import { DeleteAccountPayload } from '@appjusto/types';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { addDoc, serverTimestamp } from 'firebase/firestore';
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import { Extra } from '../../../../config/types';
 import { getDeeplinkDomain, getFallbackDomain } from '../../../utils/domains';
 import { getAppVersion } from '../../../utils/version';
@@ -28,10 +28,11 @@ export default class AuthApi {
   // email sign in
   async sendSignInLinkToEmail(email: string): Promise<void> {
     try {
-      await addDoc(this.firestoreRefs.getPlatformLoginLogsRef(), {
+      await this.firestoreRefs.getPlatformLoginLogsRef().add({
         email,
         flavor: this.extra.flavor,
-        signInAt: serverTimestamp(),
+        signInAt:
+          FirebaseFirestoreTypes.FieldValue.serverTimestamp() as FirebaseFirestoreTypes.Timestamp,
       });
     } catch (error) {
       // Sentry.Native.captureException(error);
@@ -54,10 +55,11 @@ export default class AuthApi {
 
   async signInWithEmailAndPassword(email: string, password: string) {
     try {
-      await addDoc(this.firestoreRefs.getPlatformLoginLogsRef(), {
+      await this.firestoreRefs.getPlatformLoginLogsRef().add({
         email,
         flavor: this.extra.flavor,
-        signInAt: serverTimestamp(),
+        signInAt:
+          FirebaseFirestoreTypes.FieldValue.serverTimestamp() as FirebaseFirestoreTypes.Timestamp,
       });
     } catch (error) {
       // Sentry.Native.captureException(error);

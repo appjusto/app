@@ -6,18 +6,7 @@ import {
   LedgerEntry,
 } from '@appjusto/types';
 import { IuguMarketplaceAccountAdvanceSimulation } from '@appjusto/types/payment/iugu';
-import {
-  doc,
-  getDocs,
-  limit,
-  onSnapshot,
-  orderBy,
-  query,
-  Timestamp,
-  Unsubscribe,
-  updateDoc,
-  where,
-} from 'firebase/firestore';
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import * as Sentry from 'sentry-expo';
 import { WithId } from '../../../../../types';
 import { getAppVersion } from '../../../utils/version';
@@ -40,67 +29,66 @@ export default class CourierApi {
   observeActiveRequests(
     courierId: string,
     resultHandler: (orders: WithId<CourierOrderRequest>[]) => void
-  ): Unsubscribe {
-    const constraints = [
-      where('courierId', '==', courierId),
-      where('situation', 'in', ['pending', 'viewed']),
-      orderBy('createdOn', 'desc'),
-    ];
-    return onSnapshot(
-      query(this.firestoreRefs.getCourierRequestsRef(), ...constraints),
-      (snapshot) => {
-        if (snapshot.empty) resultHandler([]);
-        else resultHandler(documentsAs<CourierOrderRequest>(snapshot.docs));
-      },
-      (error) => {
-        console.log(error);
-        Sentry.Native.captureException(error);
-      }
-    );
+  ) {
+    return this.firestoreRefs
+      .getCourierRequestsRef()
+      .where('courierId', '==', courierId)
+      .where('situation', 'in', ['pending', 'viewed'])
+      .orderBy('createdOn', 'desc')
+      .onSnapshot(
+        (snapshot) => {
+          if (snapshot.empty) resultHandler([]);
+          else resultHandler(documentsAs<CourierOrderRequest>(snapshot.docs));
+        },
+        (error) => {
+          console.log(error);
+          Sentry.Native.captureException(error);
+        }
+      );
   }
 
   observeOrderRequests(
     courierId: string,
     resultHandler: (orders: WithId<CourierOrderRequest>[]) => void,
     orderId: string
-  ): Unsubscribe {
-    const constraints = [
-      where('courierId', '==', courierId),
-      where('orderId', '==', orderId),
-      orderBy('createdOn', 'desc'),
-    ];
-    return onSnapshot(
-      query(this.firestoreRefs.getCourierRequestsRef(), ...constraints),
-      (snapshot) => {
-        if (snapshot.empty) resultHandler([]);
-        else resultHandler(documentsAs<CourierOrderRequest>(snapshot.docs));
-      },
-      (error) => {
-        console.log(error);
-        Sentry.Native.captureException(error);
-      }
-    );
+  ) {
+    return this.firestoreRefs
+      .getCourierRequestsRef()
+      .where('courierId', '==', courierId)
+      .where('orderId', '==', orderId)
+      .orderBy('createdOn', 'desc')
+      .onSnapshot(
+        (snapshot) => {
+          if (snapshot.empty) resultHandler([]);
+          else resultHandler(documentsAs<CourierOrderRequest>(snapshot.docs));
+        },
+        (error) => {
+          console.log(error);
+          Sentry.Native.captureException(error);
+        }
+      );
   }
 
   viewOrderRequest(requestId: string) {
-    return updateDoc(doc(this.firestoreRefs.getCourierRequestsRef(), requestId), {
-      situation: 'viewed',
-      viewed: true,
-    } as Partial<CourierOrderRequest>);
+    return this.firestoreRefs
+      .getCourierRequestsRef()
+      .doc(requestId)
+      .update({
+        situation: 'viewed',
+        viewed: true,
+      } as Partial<CourierOrderRequest>);
   }
 
   // ledger
   async fetchOtherLedgerEntries(courierId: string, orderId: string) {
-    const snapshot = await getDocs(
-      query(
-        this.firestoreRefs.getLedgerRef(),
-        where('to.accountId', '==', courierId),
-        where('orderId', '==', orderId),
-        where('status', '==', 'paid'),
-        where('operation', '==', 'others'),
-        limit(1)
-      )
-    );
+    const snapshot = await this.firestoreRefs
+      .getLedgerRef()
+      .where('to.accountId', '==', courierId)
+      .where('orderId', '==', orderId)
+      .where('status', '==', 'paid')
+      .where('operation', '==', 'others')
+      .limit(1)
+      .get();
     if (snapshot.empty) return null;
     return documentAs<LedgerEntry>(snapshot.docs[0]);
   }
@@ -136,18 +124,14 @@ export default class CourierApi {
   }
   async fetchTotalWithdrawsThisMonth(accountId: string) {
     const now = new Date();
-    const firstDayOfMonth = Timestamp.fromDate(
+    const firstDayOfMonth = FirebaseFirestoreTypes.Timestamp.fromDate(
       new Date(now.getUTCFullYear(), now.getUTCMonth(), 1)
     );
-    const withdrawsRef = this.firestoreRefs.getWithdrawsRef();
-
-    const withdrawsSnapshot = await getDocs(
-      query(
-        this.firestoreRefs.getWithdrawsRef(),
-        where('accountId', '==', accountId),
-        where('createdOn', '>=', firstDayOfMonth)
-      )
-    );
+    const withdrawsSnapshot = await this.firestoreRefs
+      .getWithdrawsRef()
+      .where('accountId', '==', accountId)
+      .where('createdOn', '>=', firstDayOfMonth)
+      .get();
     return withdrawsSnapshot.size;
   }
   async fetchAdvanceSimulation(

@@ -1,5 +1,5 @@
 import { Order, WithId } from '@appjusto/types';
-import { Timestamp } from 'firebase/firestore';
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import { round } from 'lodash';
 import React from 'react';
 import { useContextGetSeverTime } from '../../common/contexts/ServerTimeContext';
@@ -18,7 +18,9 @@ export const useCookingTimer = (order?: WithId<Order> | null) => {
     if (!order?.cookingTime) return;
     const { cookingTime, timestamps } = order;
     const now = getServerTime().getTime();
-    const confirmedAt = (timestamps.confirmed as Timestamp).toDate().getTime();
+    const confirmedAt = (timestamps.confirmed as FirebaseFirestoreTypes.Timestamp)
+      .toDate()
+      .getTime();
     const delta = Dayjs(now).diff(confirmedAt, 'minute');
     setElapsed(Dayjs.duration(delta, 'minutes').humanize());
     const cookingProgress = round(

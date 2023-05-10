@@ -1,8 +1,7 @@
 import { Flavor, OrderConsumerReview, Review, ReviewTag, WithId } from '@appjusto/types';
-import { doc, getDocs, limit, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import { FirestoreRefs } from '../../refs/FirestoreRefs';
 import { documentAs, documentsAs } from '../types';
-
 export default class ReviewsApi {
   constructor(private firestoreRefs: FirestoreRefs) {}
 
@@ -10,34 +9,43 @@ export default class ReviewsApi {
   async setOrderConsumerReview(review: Partial<OrderConsumerReview> | WithId<OrderConsumerReview>) {
     const reviewRef =
       'id' in review
-        ? doc(this.firestoreRefs.getReviewsRef(), review.id)
-        : doc(this.firestoreRefs.getReviewsRef());
-    await setDoc(reviewRef, { ...review, reviewedOn: serverTimestamp() }, { merge: true });
+        ? this.firestoreRefs.getReviewsRef().doc(review.id)
+        : this.firestoreRefs.getReviewsRef().doc();
+    await reviewRef.set(
+      {
+        ...review,
+        reviewedOn:
+          FirebaseFirestoreTypes.FieldValue.serverTimestamp() as FirebaseFirestoreTypes.Timestamp,
+      },
+      { merge: true }
+    );
     return reviewRef;
   }
   async fetchOrderReview(orderId: string) {
-    const snapshot = await getDocs(
-      query(this.firestoreRefs.getReviewsRef(), where('orderId', '==', orderId), limit(1))
-    );
+    const snapshot = await this.firestoreRefs
+      .getReviewsRef()
+      .where('orderId', '==', orderId)
+      .limit(1)
+      .get();
     if (snapshot.empty) return null;
     return documentAs<OrderConsumerReview>(snapshot.docs.find(() => true)!);
   }
 
   async fetchReviewTags(agent: Flavor, type: string) {
-    const querySnapshot = await getDocs(
-      query(
-        this.firestoreRefs.getReviewTagsRef(),
-        where('agent', '==', agent),
-        where('type', '==', type)
-      )
-    );
+    const querySnapshot = await this.firestoreRefs
+      .getReviewTagsRef()
+      .where('agent', '==', agent)
+      .where('type', '==', type)
+      .get();
+
     return documentsAs<ReviewTag>(querySnapshot.docs);
   }
 
   async fetchCourierReviews(courierId: string) {
-    const snapshot = await getDocs(
-      query(this.firestoreRefs.getReviewsRef(), where('courier.id', '==', courierId))
-    );
+    const snapshot = await this.firestoreRefs
+      .getReviewsRef()
+      .where('courier.id', '==', courierId)
+      .get();
     if (snapshot.empty) return [];
     return documentsAs<Review>(snapshot.docs);
   }

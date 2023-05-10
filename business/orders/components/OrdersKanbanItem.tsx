@@ -1,4 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import React from 'react';
 import { Keyboard, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -41,7 +41,9 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
       if (!order.cookingTime) return;
       if (!order.timestamps.preparing) return;
       const cookingTime = order.cookingTime * 1000;
-      const startedPreparing = (order.timestamps.preparing as Timestamp).toDate().getTime();
+      const startedPreparing = (order.timestamps.preparing as FirebaseFirestoreTypes.Timestamp)
+        .toDate()
+        .getTime();
       if (now - startedPreparing >= cookingTime) {
         api.order().updateOrder(order.id, { status: 'ready' });
       }

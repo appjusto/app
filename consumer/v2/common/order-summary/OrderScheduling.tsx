@@ -1,5 +1,5 @@
 import { Dayjs } from '@appjusto/dates';
-import { Timestamp } from 'firebase/firestore';
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import { capitalize } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
@@ -40,7 +40,9 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
           return (
             <RectangularListItemText
               text={`${capitalize(
-                Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now)
+                Dayjs((order.scheduledTo as FirebaseFirestoreTypes.Timestamp).toDate()).calendar(
+                  now
+                )
               )}, ${getETAWithMargin(scheduledTo, margin)}`}
               selected
               onSelect={() => null}
@@ -83,7 +85,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
           return (
             <RectangularListItemText
               text={`${capitalize(
-                Dayjs((scheduledTo as Timestamp).toDate()).calendar(now)
+                Dayjs((scheduledTo as FirebaseFirestoreTypes.Timestamp).toDate()).calendar(now)
               )}, ${getETAWithMargin(scheduledTo, margin)}`}
               selected
               onSelect={() => null}
@@ -104,7 +106,7 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
         return (
           <RectangularListItemText
             text={`${capitalize(
-              Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now)
+              Dayjs((order.scheduledTo as FirebaseFirestoreTypes.Timestamp).toDate()).calendar(now)
             )}, ${getETAWithMargin(scheduledTo, margin)}`}
             selected
             onSelect={() => null}

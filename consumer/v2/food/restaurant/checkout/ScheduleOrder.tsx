@@ -1,8 +1,8 @@
 import { getNextDateSlots } from '@appjusto/dates';
 import { PreparationMode } from '@appjusto/types';
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Timestamp } from 'firebase/firestore';
 import { capitalize, isEqual } from 'lodash';
 import React from 'react';
 import {
@@ -64,7 +64,9 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
 
   // state
   const [selectedDay, setSelectedDay] = React.useState<Date[]>();
-  const [selectedSlot, setSelectedSlot] = React.useState<Timestamp | null>(null);
+  const [selectedSlot, setSelectedSlot] = React.useState<FirebaseFirestoreTypes.Timestamp | null>(
+    null
+  );
   const [loading, setLoading] = React.useState(false);
   const [prepMode, setPrepMode] = React.useState<PreparationMode | undefined>();
 
@@ -93,11 +95,14 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
         const dayScheduled = nextDateSlots.find((slot) => {
           // console.log(slot);
           if (slot && slot[0])
-            return slot[0].getDate() === (order.scheduledTo as Timestamp).toDate().getDate();
+            return (
+              slot[0].getDate() ===
+              (order.scheduledTo as FirebaseFirestoreTypes.Timestamp).toDate().getDate()
+            );
           return false;
         });
         setPrepMode('scheduled');
-        setSelectedSlot(order.scheduledTo as Timestamp);
+        setSelectedSlot(order.scheduledTo as FirebaseFirestoreTypes.Timestamp);
         if (dayScheduled?.length) setSelectedDay(dayScheduled);
         else setSelectedDay([]);
       } else setPrepMode(realTimeDelivery ? 'realtime' : undefined);
@@ -208,7 +213,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
             <TouchableWithoutFeedback
               onPress={() => {
                 setPrepMode('scheduled');
-                setSelectedSlot(Timestamp.fromDate(item));
+                setSelectedSlot(FirebaseFirestoreTypes.Timestamp.fromDate(item));
               }}
               style={{ paddingVertical: 2, ...borders.default }}
             >
@@ -224,11 +229,14 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
                   {getETAWithMargin(item, margin)}
                 </Text>
                 <CheckField
-                  checked={Boolean(selectedSlot) && Timestamp.fromDate(item).isEqual(selectedSlot!)}
+                  checked={
+                    Boolean(selectedSlot) &&
+                    FirebaseFirestoreTypes.Timestamp.fromDate(item).isEqual(selectedSlot!)
+                  }
                   variant="circle"
                   onPress={() => {
                     setPrepMode('scheduled');
-                    setSelectedSlot(Timestamp.fromDate(item));
+                    setSelectedSlot(FirebaseFirestoreTypes.Timestamp.fromDate(item));
                   }}
                 />
               </View>

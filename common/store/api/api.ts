@@ -1,12 +1,9 @@
-// eslint-disable-next-line import/order
-// import FirebaseRefs from './FirebaseRefs';
+import auth, { firebase } from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import { FirebaseFunctionsTypes } from '@react-native-firebase/functions';
+import storage from '@react-native-firebase/storage';
+
 import { CourierProfile, DeleteAccountPayload } from '@appjusto/types';
-import { getApp, initializeApp } from 'firebase/app';
-import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth';
-import { connectFirestoreEmulator, Firestore, getFirestore } from 'firebase/firestore';
-import { connectFunctionsEmulator, Functions, getFunctions } from 'firebase/functions';
-import { connectStorageEmulator, FirebaseStorage, getStorage } from 'firebase/storage';
-import { Platform } from 'react-native';
 import * as Sentry from 'sentry-expo';
 import { Extra } from '../../../config/types';
 import { FirestoreRefs } from '../refs/FirestoreRefs';
@@ -14,12 +11,10 @@ import { FunctionsRef } from '../refs/FunctionsRef';
 import { StoragePaths } from '../refs/StoragePaths';
 import AuthApi from './auth';
 import BusinessApi from './business';
-import BusinessesGeosearchApi from './business/geosearch/BusinessesGeosearchApi';
 import ConsumerApi from './consumer';
 import CourierApi from './courier';
 import FilesApi from './files';
 import FleetApi from './fleet';
-import GeoFirestoreApi from './GeoFirestoreApi';
 import MapsApi from './maps';
 import OrderApi from './order';
 import IuguApi from './payment/iugu';
@@ -30,11 +25,7 @@ import SearchApi from './search/SearchApi';
 import UserApi from './users';
 
 export default class Api {
-  private authentication: Auth;
-  private firestore: Firestore;
-  private functions: Functions;
-  private storage: FirebaseStorage;
-
+  private functions: FirebaseFunctionsTypes.Module;
   private _firestoreRefs: FirestoreRefs;
   private _functionsRefs: FunctionsRef;
   private _storagePaths: StoragePaths;
@@ -50,35 +41,29 @@ export default class Api {
   private _files: FilesApi;
   private _iugu: IuguApi;
   private _business: BusinessApi;
-  private _businessesGeosearch: BusinessesGeosearchApi;
   private _search: SearchApi;
   private _user: UserApi;
 
   constructor(extra: Extra) {
     const emulated = extra.firebase.emulator.enabled && extra.firebase.emulator.host;
-    const apiKey =
-      Platform.OS === 'android' ? extra.firebase.apiKeyAndroid : extra.firebase.apiKeyiOS;
-    const app = initializeApp({ ...extra.firebase, apiKey });
-    this.authentication = getAuth(app);
-    this.firestore = getFirestore(app);
-    this.functions = getFunctions(app, extra.firebase.region);
-    this.storage = getStorage(app);
-
-    if (emulated) {
-      const host = extra.firebase.emulator.host!;
-      connectAuthEmulator(this.authentication, `http://${host}:9099`);
-      connectFirestoreEmulator(this.firestore, host, 8080);
-      connectFunctionsEmulator(this.functions, host, 5001);
-      connectStorageEmulator(this.storage, host, 9199);
+    auth().languageCode = 'pt';
+    this.functions = firebase.app().functions(extra.firebase.region);
+    if (emulated && extra.firebase.emulator.host) {
+      const host = extra.firebase.emulator.host;
+      auth().useEmulator(`http://${host}:9099`);
+      firestore().useEmulator(host, 8080);
+      this.functions.useEmulator(host, 5001);
+      storage().useEmulator(host, 9199);
+      // TODO: firebase.app().storage('gs://default-bucket')
     }
     this._firestoreRefs = new FirestoreRefs();
     this._functionsRefs = new FunctionsRef(this.functions);
     this._storagePaths = new StoragePaths();
     this._iugu = new IuguApi(extra.iugu.accountId, extra.environment !== 'live');
-    this._files = new FilesApi(this.storage);
-    this._auth = new AuthApi(this.authentication, this._firestoreRefs, this._functionsRefs, extra);
+    this._files = new FilesApi();
+    this._auth = new AuthApi(this._firestoreRefs, this._functionsRefs, extra);
     this._platform = new PlatformApi(this._firestoreRefs, this._files);
-    this._profile = new ProfileApi(this.firestore, this._auth, extra.flavor);
+    this._profile = new ProfileApi(this._firestoreRefs, this._auth, extra.flavor);
     this._courier = new CourierApi(
       this._firestoreRefs,
       this._functionsRefs,
@@ -94,17 +79,12 @@ export default class Api {
       this._files,
       !!emulated
     );
-    this._order = new OrderApi(this._firestoreRefs, this._functionsRefs, this.firestore);
+    this._order = new OrderApi(this._firestoreRefs, this._functionsRefs);
     this._reviews = new ReviewsApi(this._firestoreRefs);
     this._maps = new MapsApi(this._functionsRefs);
     this._business = new BusinessApi(this._firestoreRefs, this._storagePaths, this._files);
-    this._businessesGeosearch = new BusinessesGeosearchApi(new GeoFirestoreApi(extra));
     this._search = new SearchApi(extra.algolia, extra.environment);
     this._user = new UserApi(this._firestoreRefs, extra.flavor);
-  }
-
-  getFirebaseOptions() {
-    return getApp().options;
   }
 
   auth() {
@@ -149,10 +129,6 @@ export default class Api {
 
   business() {
     return this._business;
-  }
-
-  businessesGeosearch() {
-    return this._businessesGeosearch;
   }
 
   search() {

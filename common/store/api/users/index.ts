@@ -1,5 +1,5 @@
 import { Flavor, ProfileChange } from '@appjusto/types';
-import { addDoc, getDocs, limit, query, serverTimestamp, where } from 'firebase/firestore';
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import { FirestoreRefs } from '../../refs/FirestoreRefs';
 import { documentsAs } from '../types';
 
@@ -8,24 +8,23 @@ export default class UserApi {
 
   // firestore
   async fetchPendingChanges(accountId: string) {
-    const querySnapshot = await getDocs(
-      query(
-        this.firestoreRefs.getUsersChangesRef(),
-        where('accountId', '==', accountId),
-        where('situation', '==', 'pending'),
-        limit(1)
-      )
-    );
+    const querySnapshot = await this.firestoreRefs
+      .getUsersChangesRef()
+      .where('accountId', '==', accountId)
+      .where('situation', '==', 'pending')
+      .limit(1)
+      .get();
     if (querySnapshot.empty) return [];
     return documentsAs<ProfileChange>(querySnapshot.docs);
   }
 
   async requestProfileChange(accountId: string, changes: Partial<ProfileChange>) {
-    await addDoc(this.firestoreRefs.getUsersChangesRef(), {
+    await this.firestoreRefs.getUsersChangesRef().add({
       accountId,
       userType: this.flavor === 'courier' ? 'courier' : 'consumer',
       situation: 'pending',
-      createdOn: serverTimestamp(),
+      createdOn:
+        FirebaseFirestoreTypes.FieldValue.serverTimestamp() as FirebaseFirestoreTypes.Timestamp,
       ...changes,
     } as ProfileChange);
   }

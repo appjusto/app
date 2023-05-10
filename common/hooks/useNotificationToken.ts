@@ -1,10 +1,10 @@
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import * as Device from 'expo-device';
 import {
   getExpoPushTokenAsync,
   getPermissionsAsync,
   requestPermissionsAsync,
 } from 'expo-notifications';
-import { serverTimestamp } from 'firebase/firestore';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
@@ -90,7 +90,8 @@ export const useNotificationToken = () => {
       .profile()
       .updateProfile(user.uid, {
         notificationToken: token,
-        updatedOn: serverTimestamp(),
+        updatedOn:
+          FirebaseFirestoreTypes.FieldValue.serverTimestamp() as FirebaseFirestoreTypes.Timestamp,
       })
       .then(null);
   }, [token, currentNotificationToken, user?.uid, api]);

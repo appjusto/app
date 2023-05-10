@@ -1,3 +1,4 @@
+import { Dayjs } from '@appjusto/dates';
 import {
   Business,
   CancelOrderPayload,
@@ -16,27 +17,8 @@ import {
   PlaceOrderPayloadPayment,
   WithId,
 } from '@appjusto/types';
-import {
-  Firestore,
-  FirestoreError,
-  QueryConstraint,
-  Timestamp,
-  Unsubscribe,
-  addDoc,
-  deleteDoc,
-  documentId,
-  getDoc,
-  getDocs,
-  limit,
-  onSnapshot,
-  orderBy,
-  query,
-  serverTimestamp,
-  updateDoc,
-  where,
-  writeBatch,
-} from 'firebase/firestore';
-import { isEmpty, uniq } from 'lodash';
+import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+import { chunk, isEmpty, uniq } from 'lodash';
 import * as Sentry from 'sentry-expo';
 import { OrderCourierLocationLog } from '../../../../../types';
 import { getAppVersion } from '../../../utils/version';
@@ -63,11 +45,7 @@ interface PlaceOrderOptions {
 export default class OrderApi {
   private _invoices: InvoiceApi;
 
-  constructor(
-    private firestoreRefs: FirestoreRefs,
-    private functionsRef: FunctionsRef,
-    private firestore: Firestore
-  ) {
+  constructor(private firestoreRefs: FirestoreRefs, private functionsRef: FunctionsRef) {
     this._invoices = new InvoiceApi(this.firestoreRefs);
   }
 
@@ -114,11 +92,12 @@ export default class OrderApi {
       },
       origin,
       destination,
-      createdOn: serverTimestamp() as Timestamp,
+      createdOn:
+        FirebaseFirestoreTypes.FieldValue.serverTimestamp() as FirebaseFirestoreTypes.Timestamp,
       items,
     };
-    const order = await addDoc(this.firestoreRefs.getOrdersRef(), payload);
-    return documentAs<Order>(await getDoc(order));
+    const order = await this.firestoreRefs.getOrdersRef().add(payload);
+    return documentAs<Order>(await order.get());
   }
   async createOrderP2P(consumer: WithId<ConsumerProfile>, origin: Place) {
     const payload: Partial<Order> = {
@@ -133,45 +112,47 @@ export default class OrderApi {
         name: consumer.name ?? '',
       },
       origin,
-      createdOn: serverTimestamp() as Timestamp,
+      createdOn:
+        FirebaseFirestoreTypes.FieldValue.serverTimestamp() as FirebaseFirestoreTypes.Timestamp,
     };
-    const order = await addDoc(this.firestoreRefs.getOrdersRef(), payload);
-    return documentAs<Order>(await getDoc(order));
+    const order = await this.firestoreRefs.getOrdersRef().add(payload);
+    return documentAs<Order>(await order.get());
   }
   async updateOrder(orderId: string, changes: Partial<Order>) {
     console.log('updating order', orderId, JSON.stringify(changes));
-    await updateDoc(this.firestoreRefs.getOrderRef(orderId), changes);
+    await this.firestoreRefs.getOrderRef(orderId).update(changes);
   }
   async deleteOrder(orderId: string) {
-    await deleteDoc(this.firestoreRefs.getOrderRef(orderId));
+    await this.firestoreRefs.getOrderRef(orderId).delete();
   }
 
   async hasOrderedBefore(options: ObserveOrdersOptions) {
     const { consumerId, courierId } = options;
-    const constraints = [where('status', '==', 'delivered' as OrderStatus), limit(1)];
-    if (consumerId) constraints.push(where('consumer.id', '==', consumerId));
-    if (courierId) constraints.push(where('courier.id', '==', courierId));
-    const snapshot = await getDocs(query(this.firestoreRefs.getOrdersRef(), ...constraints));
+    let query = this.firestoreRefs
+      .getOrdersRef()
+      .where('status', '==', 'delivered' as OrderStatus)
+      .limit(1);
+    if (consumerId) query = query.where('consumer.id', '==', consumerId);
+    if (courierId) query = query.where('courier.id', '==', courierId);
+    const snapshot = await query.get();
     return snapshot.size > 0;
   }
 
   // courier, customers and businesses
   //
-  observeOrders(
-    options: ObserveOrdersOptions,
-    resultHandler: (orders: WithId<Order>[]) => void
-  ): Unsubscribe {
+  observeOrders(options: ObserveOrdersOptions, resultHandler: (orders: WithId<Order>[]) => void) {
     const { consumerId, courierId, statuses, businessId, orderField, from, to } = options;
-    const constraints: QueryConstraint[] = [orderBy(orderField ?? 'createdOn', 'desc')];
-    if (!isEmpty(statuses)) constraints.push(where('status', 'in', statuses));
-    if (consumerId) constraints.push(where('consumer.id', '==', consumerId));
-    if (courierId) constraints.push(where('courier.id', '==', courierId));
-    if (businessId) constraints.push(where('business.id', '==', businessId));
-    if (from) constraints.push(where('createdOn', '>', Timestamp.fromDate(from)));
-    if (to) constraints.push(where('createdOn', '<', Timestamp.fromDate(to)));
-    if (options.limit) constraints.push(limit(options.limit));
-    return onSnapshot(
-      query(this.firestoreRefs.getOrdersRef(), ...constraints),
+    let query = this.firestoreRefs.getOrdersRef().orderBy(orderField ?? 'createdOn', 'desc');
+
+    if (!isEmpty(statuses)) query = query.where('status', 'in', statuses);
+    if (consumerId) query = query.where('consumer.id', '==', consumerId);
+    if (courierId) query = query.where('courier.id', '==', courierId);
+    if (businessId) query = query.where('business.id', '==', businessId);
+    if (from)
+      query = query.where('createdOn', '>', FirebaseFirestoreTypes.Timestamp.fromDate(from));
+    if (to) query = query.where('createdOn', '<', FirebaseFirestoreTypes.Timestamp.fromDate(to));
+    if (options.limit) query = query.limit(options.limit);
+    return query.onSnapshot(
       (querySnapshot) =>
         resultHandler(
           documentsAs<Order>(querySnapshot.docs).filter((order) => order.status !== 'expired')
@@ -185,20 +166,20 @@ export default class OrderApi {
   observeOrder(
     orderId: string,
     resultHandler: (order: WithId<Order>) => void,
-    errorHandler: (error: FirestoreError) => void
-  ): Unsubscribe {
-    return onSnapshot(
-      this.firestoreRefs.getOrderRef(orderId),
+    errorHandler?: (error: Error) => void
+  ) {
+    return this.firestoreRefs.getOrderRef(orderId).onSnapshot(
       (snapshot) => resultHandler(documentAs<Order>(snapshot)),
-      (error) => errorHandler(error)
+      (error) => {
+        if (errorHandler) errorHandler(error);
+      }
     );
   }
   observeOrderConfirmation(
     orderId: string,
     resultHandler: (confirmation: OrderConfirmation) => void
-  ): Unsubscribe {
-    return onSnapshot(
-      this.firestoreRefs.getOrderConfirmationRef(orderId),
+  ) {
+    return this.firestoreRefs.getOrderConfirmationRef(orderId).onSnapshot(
       (snapshot) => resultHandler(snapshot.data() as OrderConfirmation),
       (error) => {
         console.log(error);
@@ -210,46 +191,47 @@ export default class OrderApi {
     orderId: string,
     userId: string,
     resultHandler: (orders: WithId<ChatMessage>[]) => void
-  ): Unsubscribe {
-    const constraints = [where('orderId', '==', orderId), orderBy('timestamp', 'asc')];
-    constraints.push(where('participantsIds', 'array-contains', userId));
-    return onSnapshot(
-      query(this.firestoreRefs.getChatsRef(), ...constraints),
-      (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
-      (error) => console.log(error)
-    );
+  ) {
+    return this.firestoreRefs
+      .getChatsRef()
+      .where('orderId', '==', orderId)
+      .orderBy('timestamp', 'asc')
+      .where('participantsIds', 'array-contains', userId)
+      .onSnapshot(
+        (querySnapshot) => resultHandler(documentsAs<ChatMessage>(querySnapshot.docs)),
+        (error) => console.log(error)
+      );
   }
   observeOrderCourierLocation(
     orderId: string,
     courierId: string,
     resultHandler: (order: LatLng | null) => void
-  ): Unsubscribe {
-    console.log('### observeOrderCourierLocation ###');
-    return onSnapshot(
-      query(
-        this.firestoreRefs.getOrderLogsRef(orderId),
-        where('type', '==', 'courier-location'),
-        where('courierId', '==', courierId),
-        orderBy('timestamp', 'desc'),
-        limit(1)
-      ),
-      (snapshot) => {
-        if (snapshot.empty) {
-          resultHandler(null);
-          return;
-        }
-        const doc = snapshot.docs[0].data() as OrderCourierLocationLog;
-        resultHandler(doc.location);
-      },
-      (error) => console.error(error)
-    );
+  ) {
+    return this.firestoreRefs
+      .getOrderLogsRef(orderId)
+      .where('type', '==', 'courier-location')
+      .where('courierId', '==', courierId)
+      .orderBy('timestamp', 'desc')
+      .limit(1)
+      .onSnapshot(
+        (snapshot) => {
+          if (snapshot.empty) {
+            resultHandler(null);
+            return;
+          }
+          const doc = snapshot.docs[0].data() as OrderCourierLocationLog;
+          resultHandler(doc.location);
+        },
+        (error) => console.error(error)
+      );
   }
   async sendMessage(message: Partial<ChatMessage>) {
     try {
-      await addDoc(this.firestoreRefs.getChatsRef(), {
+      await this.firestoreRefs.getChatsRef().add({
         ...message,
         read: false,
-        timestamp: serverTimestamp(),
+        timestamp:
+          FirebaseFirestoreTypes.FieldValue.serverTimestamp() as FirebaseFirestoreTypes.Timestamp,
       } as ChatMessage);
     } catch (error) {
       console.log(JSON.stringify(error));
@@ -258,7 +240,7 @@ export default class OrderApi {
   }
 
   async updateReadMessages(messageIds: string[]) {
-    const batch = writeBatch(this.firestore);
+    const batch = firestore().batch();
     messageIds.forEach((id) => {
       batch.update(this.firestoreRefs.getChatMessageRef(id), {
         read: true,
@@ -268,15 +250,16 @@ export default class OrderApi {
   }
 
   async createIssue(orderId: string, issue: OrderIssue) {
-    await addDoc(this.firestoreRefs.getOrderIssuesRef(orderId), {
+    await this.firestoreRefs.getOrderIssuesRef(orderId).add({
       ...issue,
-      createdOn: serverTimestamp(),
+      createdOn:
+        FirebaseFirestoreTypes.FieldValue.serverTimestamp() as FirebaseFirestoreTypes.Timestamp,
     } as OrderIssue);
   }
 
   async fetchOrderCancellation(id: string) {
     return documentAs<OrderCancellation>(
-      await getDoc(this.firestoreRefs.getOrderCancellationRef(id))
+      await this.firestoreRefs.getOrderCancellationRef(id).get()
     );
   }
 
@@ -284,14 +267,13 @@ export default class OrderApi {
   observeBusinessOrders(
     options: ObserveOrdersOptions,
     resultHandler: (orders: WithId<Order>[]) => void
-  ): Unsubscribe {
+  ) {
     const { businessId, statuses } = options;
-    const constraints = [orderBy('timestamps.charged', 'desc')];
-    if (!isEmpty(statuses)) constraints.push(where('status', 'in', statuses));
-    if (businessId) constraints.push(where('business.id', '==', businessId));
-    if (options.limit) constraints.push(limit(options.limit));
-    return onSnapshot(
-      query(this.firestoreRefs.getOrdersRef(), ...constraints),
+    let query = this.firestoreRefs.getOrdersRef().orderBy('timestamps.charged', 'desc');
+    if (!isEmpty(statuses)) query = query.where('status', 'in', statuses);
+    if (businessId) query = query.where('business.id', '==', businessId);
+    if (options.limit) query = query.limit(options.limit);
+    return query.onSnapshot(
       (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
       (error) => {
         console.log(error);
@@ -304,23 +286,24 @@ export default class OrderApi {
     resultHandler: (orders: WithId<Order>[]) => void,
     businessId?: string,
     ordering: QueryOrdering = 'desc'
-  ): Unsubscribe {
+  ) {
     const statuses = ['delivered', 'canceled'] as OrderStatus[];
-    const baseTim = new Date();
-    baseTim.setHours(baseTim.getHours() - 1);
-    return onSnapshot(
-      query(
-        this.firestoreRefs.getOrdersRef(),
-        orderBy('updatedOn', ordering),
-        where('business.id', '==', businessId),
-        where('status', 'in', statuses),
-        where('updatedOn', '>', baseTim)
-      ),
-      (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
-      (error) => {
-        console.log(error);
-      }
-    );
+    return this.firestoreRefs
+      .getOrdersRef()
+      .orderBy('updatedOn', ordering)
+      .where('business.id', '==', businessId)
+      .where('status', 'in', statuses)
+      .where(
+        'updatedOn',
+        '>',
+        FirebaseFirestoreTypes.Timestamp.fromDate(Dayjs().subtract(1, 'hour').toDate())
+      )
+      .onSnapshot(
+        (querySnapshot) => resultHandler(documentsAs<Order>(querySnapshot.docs)),
+        (error) => {
+          console.log(error);
+        }
+      );
   }
 
   async observeBusinessActiveChatMessages(
@@ -328,19 +311,15 @@ export default class OrderApi {
     ordersIds: string[],
     resultHandler: (messages: WithId<ChatMessage>[]) => void
   ) {
-    const IdsLimit = 10;
-    const unsubscribes: Unsubscribe[] = [];
-    for (var i = 0; i < ordersIds.length; i = i + IdsLimit) {
-      const ids = ordersIds.slice(i, i + IdsLimit);
-      const q = query(
-        this.firestoreRefs.getChatsRef(),
-        where('orderId', 'in', ids),
-        where('participantsIds', 'array-contains', businessId),
-        orderBy('timestamp', 'asc')
-      );
+    const unsubscribes: (() => void)[] = [];
+    chunk(ordersIds, 10).forEach((ids) => {
+      const query = this.firestoreRefs
+        .getChatsRef()
+        .where('orderId', 'in', ids)
+        // .where('participantsIds', 'array-contains', businessId)
+        .orderBy('timestamp', 'asc');
       unsubscribes.push(
-        onSnapshot(
-          q,
+        query.onSnapshot(
           (snapshot) => {
             if (!snapshot.empty) {
               resultHandler(documentsAs<ChatMessage>(snapshot.docs));
@@ -351,8 +330,8 @@ export default class OrderApi {
           }
         )
       );
-    }
-    return Promise.all(unsubscribes).then((content) => content.flat());
+    });
+    return Promise.all(unsubscribes);
   }
 
   // callables
@@ -433,27 +412,25 @@ export default class OrderApi {
   }
 
   async getMostRecentRestaurants(consumerId: string, max: number = 3) {
-    const ordersSnapshot = await getDocs(
-      query(
-        this.firestoreRefs.getOrdersRef(),
-        orderBy('createdOn', 'desc'),
-        where('type', '==', 'food' as OrderType),
-        where('status', '==', 'delivered' as OrderStatus),
-        where('consumer.id', '==', consumerId),
-        limit(max * 3) // we fetch more than we need to have some latitude to deal with repeated restaurants
-      )
-    );
+    const ordersSnapshot = await this.firestoreRefs
+      .getOrdersRef()
+      .orderBy('createdOn', 'desc')
+      .where('type', '==', 'food' as OrderType)
+      .where('status', '==', 'delivered' as OrderStatus)
+      .where('consumer.id', '==', consumerId)
+      .limit(max * 3) // we fetch more than we need to have some latitude to deal with repeated restaurants
+      .get();
+
     if (ordersSnapshot.empty) return [];
     const businessIds = uniq(
       documentsAs<Order>(ordersSnapshot.docs).map((order) => order.business!.id)
     );
-    const lastRestsQuerySnapshot = await getDocs(
-      query(
-        this.firestoreRefs.getBusinessesRef(),
-        where(documentId(), 'in', businessIds),
-        limit(max)
-      )
-    );
+    const lastRestsQuerySnapshot = await this.firestoreRefs
+      .getBusinessesRef()
+      .where(FirebaseFirestoreTypes.FieldPath.documentId(), 'in', businessIds)
+      .limit(max)
+      .get();
+
     if (lastRestsQuerySnapshot.empty) return [];
     const businesses = documentsAs<Business>(lastRestsQuerySnapshot.docs).filter(
       (business) =>

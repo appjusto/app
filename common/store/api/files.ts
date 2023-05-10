@@ -1,7 +1,8 @@
-import { FirebaseStorage, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+// import { FirebaseStorage, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import storage from '@react-native-firebase/storage';
 
 export default class FilesApi {
-  constructor(private storage: FirebaseStorage) {}
+  // constructor(private storage: FirebaseStorage) {}
 
   // https://github.com/expo/examples/blob/master/with-firebase-storage-upload/App.js
   // https://github.com/expo/expo/issues/2402#issuecomment-443726662
@@ -26,8 +27,8 @@ export default class FilesApi {
   async upload(path: string, uri: string, progressHandler?: (progress: number) => void) {
     return new Promise<boolean>(async (resolve, reject) => {
       const blob = await this.blobFromUri(uri);
-      const fileRef = ref(this.storage, path);
-      const task = uploadBytesResumable(fileRef, blob);
+      const fileRef = storage().ref(path);
+      const task = fileRef.put(blob);
       task.on(
         'state_changed',
         (snapshot) => {
@@ -47,9 +48,9 @@ export default class FilesApi {
   }
 
   async getDownloadURL(path: string): Promise<string | null> {
-    const fileRef = ref(this.storage, path);
+    const fileRef = storage().ref(path);
     try {
-      const uri = await getDownloadURL(fileRef);
+      const uri = await fileRef.getDownloadURL();
       return uri;
     } catch (error) {
       return null;

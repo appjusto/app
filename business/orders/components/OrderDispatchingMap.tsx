@@ -1,5 +1,5 @@
 import { Order, OrderStatus, WithId } from '@appjusto/types';
-import { Timestamp } from 'firebase/firestore';
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import React from 'react';
 import { Text, View, ViewProps } from 'react-native';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
@@ -42,7 +42,10 @@ export const OrderDispatchingMap = ({ order, style, onChatWithCourier }: Props) 
                 {order.courier?.joined ? (
                   <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 2 }}>
                     {t('No appJusto desde')}{' '}
-                    {formatDate((order.courier?.joined as Timestamp).toDate(), 'monthYear')}
+                    {formatDate(
+                      (order.courier?.joined as FirebaseFirestoreTypes.Timestamp).toDate(),
+                      'monthYear'
+                    )}
                   </Text>
                 ) : null}
               </View>

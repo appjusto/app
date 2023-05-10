@@ -6,64 +6,45 @@ import {
   UserProfile,
   WithId,
 } from '@appjusto/types';
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import * as Application from 'expo-application';
 import Constants from 'expo-constants';
-import {
-  Firestore,
-  GeoPoint,
-  Timestamp,
-  Unsubscribe,
-  doc,
-  onSnapshot,
-  serverTimestamp,
-  setDoc,
-} from 'firebase/firestore';
 import { hash } from 'geokit';
 import { Platform } from 'react-native';
-import * as Sentry from 'sentry-expo';
 import { getInstallationId } from '../../../utils/getInstallationId';
+import { FirestoreRefs } from '../../refs/FirestoreRefs';
 import AuthApi from '../auth';
 import { fetchPublicIP } from '../externals/ipify';
 import { documentAs } from '../types';
 
 export default class ProfileApi {
-  private collectionName: string;
-  constructor(private firestore: Firestore, private auth: AuthApi, public flavor: Flavor) {
-    this.collectionName =
-      this.flavor === 'consumer'
-        ? 'consumers'
-        : this.flavor === 'courier'
-        ? 'couriers'
-        : 'managers';
-  }
+  constructor(private firestoreRefs: FirestoreRefs, private auth: AuthApi, public flavor: Flavor) {}
 
   // private helpers
   private getProfileRef(id: string) {
-    return doc(this.firestore, this.collectionName, id);
+    return this.firestoreRefs.getProfileCollection(this.flavor).doc(id);
   }
   private async createProfile(id: string) {
     console.log(`Creating ${this.flavor} profile...`);
-    await setDoc(
-      this.getProfileRef(id),
+    await this.getProfileRef(id).set(
       {
         situation: 'pending',
         email: this.auth.getEmail() ?? null,
         phone: this.auth.getPhoneNumber(true) ?? null,
-        createdOn: serverTimestamp(),
-      } as UserProfile,
+        createdOn:
+          FirebaseFirestoreTypes.FieldValue.serverTimestamp() as FirebaseFirestoreTypes.Timestamp,
+      } as Partial<UserProfile>,
       { merge: true }
     );
   }
 
   // firestore
   // observe profile changes
-  observeProfile(id: string, resultHandler: (profile: WithId<UserProfile>) => void): Unsubscribe {
-    return onSnapshot(
-      this.getProfileRef(id),
+  observeProfile(id: string, resultHandler: (profile: WithId<UserProfile>) => void) {
+    return this.getProfileRef(id).onSnapshot(
       async (snapshot) => {
-        if (!snapshot.exists()) {
-          const unsub = onSnapshot(
-            this.getProfileRef(id),
+        if (!snapshot.exists) {
+          const unsub = this.getProfileRef(id).onSnapshot(
             { includeMetadataChanges: true },
             (snapshotWithMetadata) => {
               if (!snapshotWithMetadata.metadata.hasPendingWrites) {
@@ -101,10 +82,11 @@ export default class ProfileApi {
         appInstallationId: installationId,
         appIp: ip,
         platform: Platform.OS,
-        updatedOn: serverTimestamp() as Timestamp,
+        updatedOn:
+          FirebaseFirestoreTypes.FieldValue.serverTimestamp() as FirebaseFirestoreTypes.Timestamp,
       };
       try {
-        await setDoc(this.getProfileRef(id), update, { merge: true });
+        await this.getProfileRef(id).set(update, { merge: true });
         resolve();
       } catch (error: any) {
         if (retry > 0) {
@@ -119,7 +101,7 @@ export default class ProfileApi {
     });
   }
 
-  async updateLocation(id: string, location: GeoPoint, retry: number = 5) {
+  async updateLocation(id: string, location: FirebaseFirestoreTypes.GeoPoint, retry: number = 5) {
     const update: Partial<UserProfile> = {
       coordinates: location,
       g: {
@@ -129,7 +111,8 @@ export default class ProfileApi {
           lng: location.longitude,
         }),
       },
-      updatedOn: serverTimestamp() as Timestamp,
+      updatedOn:
+        FirebaseFirestoreTypes.FieldValue.serverTimestamp() as FirebaseFirestoreTypes.Timestamp,
     };
     console.log(id, update);
     await this.updateProfile(id, update);

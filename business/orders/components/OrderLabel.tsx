@@ -1,6 +1,6 @@
 import { Dayjs } from '@appjusto/dates';
 import { Order } from '@appjusto/types';
-import { Timestamp } from 'firebase/firestore';
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import { capitalize } from 'lodash';
 import React from 'react';
 import RoundedText from '../../../common/components/texts/RoundedText';
@@ -25,7 +25,7 @@ export const OrderLabel = ({ order }: Props) => {
   if (status === 'scheduled') {
     if (scheduledTo) {
       statusLabel = `${t('Agendado para ')} ${capitalize(
-        Dayjs((order.scheduledTo as Timestamp).toDate()).calendar(now)
+        Dayjs((order.scheduledTo as FirebaseFirestoreTypes.Timestamp).toDate()).calendar(now)
       )}`;
       statusBGColor = colors.green100;
     } else {

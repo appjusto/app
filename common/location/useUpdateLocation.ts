@@ -1,4 +1,4 @@
-import { GeoPoint } from 'firebase/firestore';
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import React from 'react';
 import { Keyboard } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -121,7 +121,7 @@ export const useUpdateLocation = () => {
     if (!consumer?.id) return;
     if (!coords) return;
     const { latitude, longitude } = coords;
-    const coordinates = new GeoPoint(latitude, longitude);
+    const coordinates = new FirebaseFirestoreTypes.GeoPoint(latitude, longitude);
     api.profile().updateLocation(consumer.id, coordinates).then(null);
   }, [consumer?.id, coords, api]);
 };

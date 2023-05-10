@@ -1,5 +1,5 @@
 import { Dayjs } from '@appjusto/dates';
-import { Timestamp } from 'firebase/firestore';
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useContextGetSeverTime } from '../../../../contexts/ServerTimeContext';
@@ -35,7 +35,12 @@ export const useCourierRecentOrdersRevenue = () => {
       if (!order.fare?.courier?.value) return;
       const value = getOrderRevenue(order);
       week += value;
-      if (Dayjs((order.createdOn as Timestamp).toDate()).diff(getServerTime(), 'day') === 0) {
+      if (
+        Dayjs((order.createdOn as FirebaseFirestoreTypes.Timestamp).toDate()).diff(
+          getServerTime(),
+          'day'
+        ) === 0
+      ) {
         today += value;
       }
     });

@@ -8,7 +8,6 @@ import {
   PlatformFees,
   PlatformParams,
 } from '@appjusto/types';
-import { getDoc, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { FirestoreRefs } from '../../refs/FirestoreRefs';
 import FilesApi from '../files';
 import { documentsAs } from '../types';
@@ -18,47 +17,41 @@ export default class PlatformApi {
 
   // firestore
   async fetchPlatformParams() {
-    const snapshot = await getDoc(this.firestoreRefs.getPlatformParamsRef());
+    const snapshot = await this.firestoreRefs.getPlatformParamsRef().get();
     return snapshot.data() as PlatformParams;
   }
 
   async fetchPlatformFees() {
-    const snapshot = await getDoc(this.firestoreRefs.getPlatformFeesRef());
+    const snapshot = await this.firestoreRefs.getPlatformFeesRef().get();
     return snapshot.data() as PlatformFees;
   }
 
   async fetchPlatformAccess() {
-    const snapshot = await getDoc(this.firestoreRefs.getPlatformAccessRef());
+    const snapshot = await this.firestoreRefs.getPlatformAccessRef().get();
     return snapshot.data() as PlatformAccess;
   }
 
   async fetchBanks() {
-    const querySnapshot = await getDocs(
-      query(this.firestoreRefs.getBanksRef(), orderBy('order', 'asc'))
-    );
+    const querySnapshot = await this.firestoreRefs.getBanksRef().orderBy('order', 'asc').get();
     return documentsAs<Bank>(querySnapshot.docs);
   }
 
   async fetchIssues(type: IssueType) {
-    const querySnapshot = await getDocs(
-      query(this.firestoreRefs.getIssuesRef(), where('type', '==', type))
-    );
+    const querySnapshot = await this.firestoreRefs.getIssuesRef().where('type', '==', type).get();
     return querySnapshot.docs.map((doc) => doc.data() as Issue);
   }
 
   async fetchCuisines() {
-    const querySnapshot = await getDocs(
-      query(
-        this.firestoreRefs.getCuisinesRef(),
-        where('enabled', '==', true),
-        orderBy('order', 'asc')
-      )
-    );
+    const querySnapshot = await this.firestoreRefs
+      .getCuisinesRef()
+      .where('enabled', '==', true)
+      .orderBy('order', 'asc')
+      .get();
     return documentsAs<Cuisine>(querySnapshot.docs);
   }
 
   async fetchFoodClassifications() {
-    const querySnapshot = await getDocs(this.firestoreRefs.getClassificationsRef());
+    const querySnapshot = await this.firestoreRefs.getClassificationsRef().get();
     return documentsAs<Classification>(querySnapshot.docs);
   }
 

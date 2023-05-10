@@ -1,105 +1,38 @@
-import {
-  CancelOrderPayload,
-  CompleteDeliveryPayload,
-  DeletePaymentMethodPayload,
-  DropOrderPayload,
-  Fare,
-  FetchAccountInformationPayload,
-  FetchAccountInformationResponse,
-  FetchAdvanceByAmountSimulationPayload,
-  FetchAdvanceSimulationPayload,
-  FetchReceivablesPayload,
-  GetCancellationInfoPayload,
-  GetCancellationInfoResult,
-  GetOrderQuotesPayload,
-  MatchOrderPayload,
-  NextDispatchingStatePayload,
-  PlaceOrderPayload,
-  QueryGoogleMapsPayload,
-  RejectOrderPayload,
-  RequestWithdrawPayload,
-  SavePaymentTokenPayload,
-  SavePaymentTokenResponse,
-  TipCourierPayload,
-  UpdateOrderPayload,
-} from '@appjusto/types';
-import {
-  IuguMarketplaceAccountAdvanceByAmountSimulation,
-  IuguMarketplaceAccountAdvanceSimulation,
-  IuguMarketplaceAccountReceivables,
-  IuguMarketplaceAccountWithdrawResponse,
-} from '@appjusto/types/payment/iugu';
-import { Functions, httpsCallable } from 'firebase/functions';
+import { FirebaseFunctionsTypes } from '@react-native-firebase/functions';
 
 export class FunctionsRef {
-  constructor(private functions: Functions) {}
-  getVerifyProfileCallable = () => httpsCallable(this.functions, 'verifyProfile');
+  constructor(private functions: FirebaseFunctionsTypes.Module) {}
+
+  getVerifyProfileCallable = () => this.functions.httpsCallable('verifyProfile');
   getFetchAccountInformationCallable = () =>
-    httpsCallable<FetchAccountInformationPayload, FetchAccountInformationResponse>(
-      this.functions,
-      'fetchAccountInformation'
-    );
-  getFetchReceivablesCallable = () =>
-    httpsCallable<FetchReceivablesPayload, IuguMarketplaceAccountReceivables>(
-      this.functions,
-      'fetchReceivables'
-    );
-  getFetchAdvanceSimulationCallable = () =>
-    httpsCallable<FetchAdvanceSimulationPayload, IuguMarketplaceAccountAdvanceSimulation>(
-      this.functions,
-      'fetchAdvanceSimulation'
-    );
+    this.functions.httpsCallable('fetchAccountInformation');
+  getFetchReceivablesCallable = () => this.functions.httpsCallable('fetchReceivables');
+  getFetchAdvanceSimulationCallable = () => this.functions.httpsCallable('fetchAdvanceSimulation');
   getFetchAdvanceByAmountSimulationCallable = () =>
-    httpsCallable<
-      FetchAdvanceByAmountSimulationPayload,
-      IuguMarketplaceAccountAdvanceByAmountSimulation
-    >(this.functions, 'fetchAdvanceByAmountSimulation');
-  getRequestWithdrawCallable = () =>
-    httpsCallable<RequestWithdrawPayload, IuguMarketplaceAccountWithdrawResponse>(
-      this.functions,
-      'requestWithdraw'
-    );
-  getAdvanceReceivablesCallable = () => httpsCallable(this.functions, 'advanceReceivables');
+    this.functions.httpsCallable('fetchAdvanceByAmountSimulation');
+  getRequestWithdrawCallable = () => this.functions.httpsCallable('requestWithdraw');
+  getAdvanceReceivablesCallable = () => this.functions.httpsCallable('advanceReceivables');
   getAdvanceReceivablesByAmountCallable = () =>
-    httpsCallable(this.functions, 'advanceReceivablesByAmount');
-  getDeleteAccountCallable = () => httpsCallable(this.functions, 'deleteAccount');
-  getServerTimeCallable = () => httpsCallable(this.functions, 'getServerTime');
+    this.functions.httpsCallable('advanceReceivablesByAmount');
+  getDeleteAccountCallable = () => this.functions.httpsCallable('deleteAccount');
+  getServerTimeCallable = () => this.functions.httpsCallable('getServerTime');
+
   // consumer
-  getSavePaymentTokenCallable = () =>
-    httpsCallable<SavePaymentTokenPayload, SavePaymentTokenResponse>(
-      this.functions,
-      'savePaymentToken'
-    );
-  getDeletePaymentMethodCallable = () =>
-    httpsCallable<DeletePaymentMethodPayload, void>(this.functions, 'deletePaymentMethod');
-  getCreateOrderCallable = () => httpsCallable(this.functions, 'createOrder');
-  getGetOrderQuotesCallable = () =>
-    httpsCallable<GetOrderQuotesPayload, Fare[]>(this.functions, 'getOrderQuotes');
-  getPlaceOrderCallable = () =>
-    httpsCallable<PlaceOrderPayload, void>(this.functions, 'placeOrder');
-  getCancelOrderCallable = () =>
-    httpsCallable<CancelOrderPayload, void>(this.functions, 'cancelOrder');
-  getTipCourierCallable = () =>
-    httpsCallable<TipCourierPayload, void>(this.functions, 'tipCourier');
-  getCancellationInfoCallable = () =>
-    httpsCallable<GetCancellationInfoPayload, GetCancellationInfoResult>(
-      this.functions,
-      'getCancellationInfo'
-    );
-  getUpdateOrderCallable = () =>
-    httpsCallable<UpdateOrderPayload, void>(this.functions, 'updateOrder');
-  getQueryGoogleMapsCallable = () =>
-    httpsCallable<QueryGoogleMapsPayload, any>(this.functions, 'queryGoogleMaps');
+  getSavePaymentTokenCallable = () => this.functions.httpsCallable('savePaymentToken');
+  getDeletePaymentMethodCallable = () => this.functions.httpsCallable('deletePaymentMethod');
+  getGetOrderQuotesCallable = () => this.functions.httpsCallable('getOrderQuotes');
+  getPlaceOrderCallable = () => this.functions.httpsCallable('placeOrder');
+  getCancelOrderCallable = () => this.functions.httpsCallable('cancelOrder');
+  getCancellationInfoCallable = () => this.functions.httpsCallable('getCancellationInfo');
+  getUpdateOrderCallable = () => this.functions.httpsCallable('updateOrder');
+  getQueryGoogleMapsCallable = () => this.functions.httpsCallable('queryGoogleMaps');
+
   // courier
-  getMatchOrderCallable = () =>
-    httpsCallable<MatchOrderPayload, void>(this.functions, 'matchOrder');
-  getRejectOrderCallable = () =>
-    httpsCallable<RejectOrderPayload, void>(this.functions, 'rejectOrder');
-  getDropOrderCallable = () => httpsCallable<DropOrderPayload, void>(this.functions, 'dropOrder');
-  getNextDispatchingStateCallable = () =>
-    httpsCallable<NextDispatchingStatePayload, void>(this.functions, 'nextDispatchingState');
-  getCompleteDeliveryCallable = () =>
-    httpsCallable<CompleteDeliveryPayload, void>(this.functions, 'completeDelivery');
+  getMatchOrderCallable = () => this.functions.httpsCallable('matchOrder');
+  getRejectOrderCallable = () => this.functions.httpsCallable('rejectOrder');
+  getDropOrderCallable = () => this.functions.httpsCallable('dropOrder');
+  getNextDispatchingStateCallable = () => this.functions.httpsCallable('nextDispatchingState');
+  getCompleteDeliveryCallable = () => this.functions.httpsCallable('completeDelivery');
 
   // storage
   // courier
