@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
+import * as Sentry from 'sentry-expo';
 import * as icons from '../../../../../assets/icons';
 import { ApiContext } from '../../../../../common/app/context';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
@@ -158,29 +159,44 @@ export default function ({ navigation }: Props) {
 
   // handlers
   const pickFromCamera = async (changeImage: ChangeImageType, aspect: [number, number]) => {
-    const { granted } = await ImagePicker.requestCameraPermissionsAsync();
-    if (granted) {
-      const result = await ImagePicker.launchCameraAsync({ ...defaultImageOptions, aspect });
-      if (result.cancelled) return;
-      changeImage(result);
-    } else {
-      navigation.navigate('PermissionDenied', {
-        title: t('Precisamos acessar sua câmera'),
-        subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
-      });
+    console.log('pickFromCamera');
+    try {
+      const { granted } = await ImagePicker.requestCameraPermissionsAsync();
+      console.log('granted', granted);
+      if (granted) {
+        const result = await ImagePicker.launchCameraAsync({ ...defaultImageOptions, aspect });
+        if (result.cancelled) return;
+        changeImage(result);
+      } else {
+        navigation.navigate('PermissionDenied', {
+          title: t('Precisamos acessar sua câmera'),
+          subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
+        });
+      }
+    } catch (error) {
+      Sentry.Native.captureException(error);
     }
   };
   const pickFromGallery = async (changeImage: ChangeImageType, aspect: [number, number]) => {
-    const { granted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (granted) {
-      const result = await ImagePicker.launchImageLibraryAsync({ ...defaultImageOptions, aspect });
-      if (result.cancelled) return;
-      changeImage(result);
-    } else {
-      navigation.navigate('PermissionDenied', {
-        title: t('Precisamos acessar sua galeria'),
-        subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
-      });
+    console.log('pickFromGallery');
+    try {
+      const { granted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      console.log('granted', granted);
+      if (granted) {
+        const result = await ImagePicker.launchImageLibraryAsync({
+          ...defaultImageOptions,
+          aspect,
+        });
+        if (result.cancelled) return;
+        changeImage(result);
+      } else {
+        navigation.navigate('PermissionDenied', {
+          title: t('Precisamos acessar sua galeria'),
+          subtitle: t('Clique no botão abaixo para acessar as configurações do seu dispositivo.'),
+        });
+      }
+    } catch (error) {
+      Sentry.Native.captureException(error);
     }
   };
 

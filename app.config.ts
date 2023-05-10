@@ -290,13 +290,15 @@ const permissions = () =>
   flavor === 'business'
     ? ['RECEIVE_BOOT_COMPLETED', 'WAKE_LOCK']
     : flavor === 'consumer'
-    ? ['ACCESS_FINE_LOCATION', 'ACCESS_COARSE_LOCATION']
+    ? ['ACCESS_FINE_LOCATION', 'ACCESS_COARSE_LOCATION', 'CAMERA', 'CAMERA_ROLL', 'MEDIA_LIBRARY']
     : [
         'RECEIVE_BOOT_COMPLETED',
         'ACCESS_FINE_LOCATION',
         'ACCESS_COARSE_LOCATION',
         'ACCESS_BACKGROUND_LOCATION',
         'CAMERA',
+        'CAMERA_ROLL',
+        'MEDIA_LIBRARY',
         'READ_EXTERNAL_STORAGE',
         'WRITE_EXTERNAL_STORAGE',
         'VIBRATE',
