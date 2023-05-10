@@ -1,5 +1,4 @@
 import { ChatMessage, WithId } from '@appjusto/types';
-import { FieldValue, Timestamp } from 'firebase/firestore';
 import { first } from 'lodash';
 import React from 'react';
 import { ApiContext } from '../../../../app/context';
@@ -31,11 +30,9 @@ export const useObserveOrderChat = (orderId: string, userId: string, counterpart
   return chat;
 };
 
-const timestampToDate = (value: FieldValue) => (value as Timestamp).toDate();
-
 const sortMessages = (a: ChatMessage, b: ChatMessage) => {
   if (a.timestamp && b.timestamp)
-    return timestampToDate(a.timestamp).getTime() - timestampToDate(b.timestamp).getTime();
+    return a.timestamp.toDate().getTime() - b.timestamp.toDate().getTime();
   if (!a.timestamp) return 1;
   else if (!b.timestamp) return -1;
   return 0;

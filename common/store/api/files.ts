@@ -1,4 +1,3 @@
-// import { FirebaseStorage, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import storage from '@react-native-firebase/storage';
 
 export default class FilesApi {

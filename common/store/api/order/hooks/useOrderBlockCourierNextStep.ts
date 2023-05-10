@@ -1,4 +1,5 @@
-import { FieldValue, Timestamp } from 'firebase/firestore';
+import { Timestamp } from '@appjusto/types/external/firebase';
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import React from 'react';
 import { usePlatformParamsContext } from '../../../../contexts/PlatformParamsContext';
 import { useContextGetSeverTime } from '../../../../contexts/ServerTimeContext';
@@ -7,10 +8,10 @@ import { useObserveOrder } from './useObserveOrder';
 const canAdvanceDispatchingState = (
   now: Date,
   delayBeforeAdvancing: number,
-  currentStateTimestamp: FieldValue | undefined
+  currentStateTimestamp: Timestamp | undefined
 ) => {
   if (!currentStateTimestamp) return false;
-  const timestamp = (currentStateTimestamp as Timestamp).toDate();
+  const timestamp = (currentStateTimestamp as FirebaseFirestoreTypes.Timestamp).toDate();
   const diff = now.getTime() - timestamp.getTime();
   if (diff === 0) return false;
   return diff >= delayBeforeAdvancing * 1000;

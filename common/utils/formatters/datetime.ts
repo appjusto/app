@@ -1,5 +1,5 @@
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import dayjs from 'dayjs';
-import { FieldValue } from 'firebase/firestore';
 import i18n from 'i18n-js';
 import { round } from 'lodash';
 import { dateInput } from './utils';
@@ -10,18 +10,24 @@ const weekDays = new Array(7)
 export const getMonthName = (month: number) => i18n.strftime(new Date(2020, month, 1), '%B');
 export const getWeekName = (index: number) => weekDays[index];
 
-export const formatDate = (date: Date | FieldValue, pattern: 'default' | 'monthYear' = 'default') =>
-  i18n.l(`date.formats.${pattern}`, dateInput(date));
+export const formatDate = (
+  date: Date | FirebaseFirestoreTypes.FieldValue,
+  pattern: 'default' | 'monthYear' = 'default'
+) => i18n.l(`date.formats.${pattern}`, dateInput(date));
 
-export const formatTime = (date: Date | FieldValue, pattern: 'default' | 'raw' = 'default') =>
-  i18n.l(`time.formats.${pattern}`, dateInput(date));
+export const formatTime = (
+  date: Date | FirebaseFirestoreTypes.FieldValue,
+  pattern: 'default' | 'raw' = 'default'
+) => i18n.l(`time.formats.${pattern}`, dateInput(date));
 
 export const formatDuration = (duration: number) => {
   return `${round(duration / 60, 0)} min`;
 };
 
-export const getETAWithMargin = (date: Date | FieldValue, margin: number = 30) =>
-  `${formatTime(date)} - ${formatTime(dayjs(dateInput(date)).add(margin, 'minute').toDate())}`;
+export const getETAWithMargin = (
+  date: Date | FirebaseFirestoreTypes.FieldValue,
+  margin: number = 30
+) => `${formatTime(date)} - ${formatTime(dayjs(dateInput(date)).add(margin, 'minute').toDate())}`;
 
 export const formatHour = (value: string | undefined) => {
   let formatedNumber = '';

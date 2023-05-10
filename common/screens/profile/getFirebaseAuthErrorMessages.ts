@@ -1,5 +1,9 @@
-import { FirebaseError } from 'firebase/app';
 import { t } from '../../../strings';
+
+type FirebaseError = {
+  code: string;
+  message: string;
+};
 
 export const getFirebaseAuthErrorMessages = (error: unknown) => {
   if (!error) return t('Não foi possível acessar o servidor. Por favor, tente novamente.');
