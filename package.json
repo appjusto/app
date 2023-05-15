@@ -1,18 +1,17 @@
 {
   "version": "13.0.0",
   "license": "Apache-2.0",
+  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "prepare-env": "cp .$ENV.env .env",
-    "start": "prepare-env && expo start --dev-client",
+    "start": "npm run prepare-env && npx expo start -c --dev-client",
     "publish-js": "node ./scripts/publish",
     "build-js": "node ./scripts/build",
     "lint": "eslint **/*.ts **/*.tsx",
     "clear-cache": "watchman watch-del-all && rm -rf node_modules/ && rm -f package-lock.json && npm install",
     "inc-version": "node ./version-inc",
     "version": "node ./scripts/version-inc && git add version.json",
-    "postversion": "git push && git push --tags && git fetch",
-    "android": "expo run:android",
-    "ios": "expo run:ios"
+    "postversion": "git push && git push --tags && git fetch"
   },
   "dependencies": {
     "@appjusto/dates": "^1.0.1",
@@ -47,7 +46,7 @@
     "credit-card-type": "^9.1.0",
     "dayjs": "^1.8.36",
     "dotenv": "^8.2.0",
-    "expo": "~48.0.15",
+    "expo": "^48.0.16",
     "expo-application": "~5.1.1",
     "expo-asset": "~8.9.1",
     "expo-background-fetch": "~11.1.1",
@@ -120,6 +119,5 @@
     "prettier": "^2.0.5",
     "typescript": "^4.6.3"
   },
-  "private": true,
-  "name": "app"
+  "private": true
 }

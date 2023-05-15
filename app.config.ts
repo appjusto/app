@@ -68,6 +68,8 @@ const scheme = () => {
 type Plugins = (string | [] | [string] | [string, unknown] | any)[];
 const plugins = (): Plugins => {
   let list: Plugins = [
+    'expo-build-properties',
+    'expo-localization',
     'expo-splash-screen',
     'sentry-expo',
     './scripts/react-maps-plugin',
