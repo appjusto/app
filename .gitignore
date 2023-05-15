@@ -18,4 +18,6 @@ web-report/
 .tmp/*
 google-services*.json
 GoogleService-Info*.plist
+android/
+ios/
 *.apk
