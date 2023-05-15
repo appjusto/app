@@ -294,7 +294,14 @@ const permissions = () =>
   flavor === 'business'
     ? ['RECEIVE_BOOT_COMPLETED', 'WAKE_LOCK']
     : flavor === 'consumer'
-    ? ['ACCESS_FINE_LOCATION', 'ACCESS_COARSE_LOCATION', 'CAMERA', 'CAMERA_ROLL', 'MEDIA_LIBRARY']
+    ? [
+        'ACCESS_FINE_LOCATION',
+        'ACCESS_COARSE_LOCATION',
+        'CAMERA',
+        'CAMERA_ROLL',
+        'MEDIA_LIBRARY',
+        'com.google.android.gms.permission.AD_ID',
+      ]
     : [
         'RECEIVE_BOOT_COMPLETED',
         'ACCESS_FINE_LOCATION',
@@ -306,6 +313,7 @@ const permissions = () =>
         'READ_EXTERNAL_STORAGE',
         'WRITE_EXTERNAL_STORAGE',
         'VIBRATE',
+        'com.google.android.gms.permission.AD_ID',
         // 'RECORD_AUDIO',
       ];
 
