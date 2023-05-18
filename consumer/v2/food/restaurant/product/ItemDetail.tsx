@@ -35,10 +35,7 @@ import {
   useContextBusiness,
   useContextBusinessId,
 } from '../../../../../common/store/context/business';
-import {
-  useContextGetComplementGroup,
-  useContextGetProductCategory,
-} from '../../../../../common/store/context/menu';
+import { useContextGetProductCategory } from '../../../../../common/store/context/menu';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import {
   borders,
@@ -81,7 +78,6 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const activeOrder = useContextActiveOrder();
   const platformParams = usePlatformParamsContext();
   const getProductCategory = useContextGetProductCategory();
-  const getComplementGroup = useContextGetComplementGroup();
   // redux store
   const consumer = useSelector(getConsumer);
   const currentPlace = useSelector(getCurrentPlace);
@@ -104,6 +100,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         name: product.name,
         price: product.price,
         categoryName: getProductCategory(product.id)?.name ?? '',
+        externalId: product.externalId ?? '',
       },
       quantity,
       notes,
@@ -156,10 +153,11 @@ export const ItemDetail = ({ navigation, route }: Props) => {
         name: complement.name,
         complementId: complement.id,
         price: complement.price,
-        groupName: getComplementGroup(complement.id)?.name ?? '',
+        externalId: complement.externalId ?? '',
         group: {
           id: group.id,
           name: group.name,
+          externalId: group.externalId ?? '',
         },
         quantity: 1,
       },

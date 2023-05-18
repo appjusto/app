@@ -62,18 +62,16 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
       setLoading(true);
       // if business has not confirmed order yet, set cooking time and set status to 'preparing'
       if (order.status === 'confirmed') {
-        if (order.preparationMode === 'scheduled') {
-          await api.order().updateOrder(order.id, { cookingTime, status: 'scheduled' });
-        } else {
-          await api.order().updateOrder(order.id, { cookingTime, status: 'preparing' });
-          track('restaurant confirmed order');
-          printOrder();
-          setLoading(false);
-          navigation.navigate('BusinessNavigator', { screen: 'BusinessOrders' });
-        }
-      }
-      // if status === 'preparing' only set cooking time
-      else {
+        await api.order().updateOrder(order.id, {
+          cookingTime,
+          status: 'preparing',
+          acceptedFrom: 'admin-mobile',
+        });
+        track('restaurant confirmed order');
+        printOrder();
+        setLoading(false);
+        navigation.navigate('BusinessNavigator', { screen: 'BusinessOrders' });
+      } else if (order.status === 'preparing') {
         await api.order().updateOrder(order.id, { cookingTime });
       }
       setLoading(false);
