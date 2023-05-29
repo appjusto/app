@@ -106,6 +106,13 @@ export class FirestoreRefs {
   getLedgerRef = () => collection(getFirestore(), 'ledger');
   getLedgerDocRef = (id: string) => doc(this.getLedgerRef(), id);
 
+  // iugu
+  getIntegrationsRef = () => collection(getFirestore(), 'integrations');
+  getIuguIntegrationRef = () => doc(this.getIntegrationsRef(), 'iugu');
+  getIuguCustomersRef = () => collection(this.getIuguIntegrationRef(), 'customers');
+  getIuguCustomerRef = (accountId: string) => doc(this.getIuguCustomersRef(), accountId);
+  getCardsRef = () => collection(getFirestore(), 'cards');
+
   // fleets
   getFleetsRef = () => collection(getFirestore(), 'fleets');
   getFleetRef = (id: string) => doc(this.getFleetsRef(), id);

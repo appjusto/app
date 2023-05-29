@@ -40,7 +40,7 @@ export default function ({ route, navigation }: Props) {
     if (ongoingOrders.length === 0) {
       try {
         setLoading(true);
-        await api.consumer().deletePaymentMethod(paymentData.id);
+        await api.consumer().deleteIuguCard(paymentData.id);
         track('consumer deleted a payment method');
         setLoading(false);
       } catch (error: any) {

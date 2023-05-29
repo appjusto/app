@@ -1,14 +1,20 @@
+import { IuguCard, IuguCustomer } from '@appjusto/types';
 import { IuguCreatePaymentTokenData } from '@appjusto/types/payment/iugu';
 import { CancelToken } from 'axios';
+import * as Crypto from 'expo-crypto';
+import { getDoc, getDocs, query, where } from 'firebase/firestore';
 import { t } from '../../../../strings';
 import { getAppVersion } from '../../../utils/version';
+import { FirestoreRefs } from '../../refs/FirestoreRefs';
 import { FunctionsRef } from '../../refs/FunctionsRef';
 import { StoragePaths } from '../../refs/StoragePaths';
 import FilesApi from '../files';
 import IuguApi from '../payment/iugu';
+import { documentAs, documentsAs } from '../types';
 
 export default class ConsumerApi {
   constructor(
+    private firestoreRefs: FirestoreRefs,
     private functionsRef: FunctionsRef,
     private iugu: IuguApi,
     private storagePaths: StoragePaths,
@@ -16,20 +22,40 @@ export default class ConsumerApi {
     private emulated: boolean
   ) {}
 
-  async saveCard(data: IuguCreatePaymentTokenData, cancelToken?: CancelToken) {
+  async fetchIuguCustomer(consumerId: string) {
+    const snapshot = await getDoc(this.firestoreRefs.getIuguCustomerRef(consumerId));
+    if (!snapshot.exists()) return null;
+    return documentAs<IuguCustomer>(snapshot);
+  }
+
+  async fetchCards(consumerId: string) {
+    const snapshot = await getDocs(
+      query(
+        this.firestoreRefs.getCardsRef(),
+        where('accountId', '==', consumerId),
+        where('cardTokenId', '!=', null)
+      )
+    );
+    if (snapshot.empty) return [];
+    return documentsAs<IuguCard>(snapshot.docs);
+  }
+
+  async saveIuguCard(data: IuguCreatePaymentTokenData, cancelToken?: CancelToken) {
     const paymentToken = await this.iugu.createPaymentToken(data, cancelToken);
     if (!paymentToken) throw new Error(t('Não foi possível salvar o cartão de crédito.'));
-    const result = await this.functionsRef.getSavePaymentTokenCallable()({
-      paymentToken,
+    const hash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, data.number);
+    const result = await this.functionsRef.getSaveIuguCardCallable()({
+      cardTokenId: paymentToken.id,
+      cardHash: hash,
       meta: { version: getAppVersion() },
     });
     return result.data;
   }
 
-  async deletePaymentMethod(paymentMethodId: string) {
+  async deleteIuguCard(id: string) {
     return (
-      await this.functionsRef.getDeletePaymentMethodCallable()({
-        paymentMethodId,
+      await this.functionsRef.getDeleteIuguCardCallable()({
+        id,
         meta: { version: getAppVersion() },
       })
     ).data;

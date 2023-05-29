@@ -10,12 +10,12 @@ import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../../common/components/inputs/DefaultInput';
+import PatternInput from '../../../../common/components/inputs/PatternInput';
 import {
   cardFormatter,
   cardMask,
 } from '../../../../common/components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
-import PatternInput from '../../../../common/components/inputs/PatternInput';
 import useAxiosCancelToken from '../../../../common/hooks/useAxiosCancelToken';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { showToast } from '../../../../common/store/ui/actions';
@@ -94,7 +94,7 @@ export default function ({ navigation, route }: Props) {
       setLoading(true);
       const firstName = trim(name.split(' ', 1).toString());
       const lastName = trim(name.split(' ').splice(1).join(' '));
-      const result = await api.consumer().saveCard(
+      const result = await api.consumer().saveIuguCard(
         {
           number,
           month,
@@ -109,12 +109,12 @@ export default function ({ navigation, route }: Props) {
       if (returnScreen) {
         if (returnScreen === 'FoodOrderCheckout') {
           navigation.navigate(returnScreen, {
-            paymentMethodId: result.paymentMethodId,
+            paymentMethodId: result.id,
             payMethod: 'credit_card',
           });
         } else
           navigation.navigate(returnScreen, {
-            paymentMethodId: result.paymentMethodId,
+            paymentMethodId: result.id,
           });
       } else navigation.pop();
     } catch (error: any) {

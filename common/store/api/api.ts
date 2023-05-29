@@ -3,15 +3,16 @@
 import { CourierProfile, DeleteAccountPayload } from '@appjusto/types';
 import { getApp, initializeApp } from 'firebase/app';
 import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth';
-import { connectFirestoreEmulator, Firestore, getFirestore } from 'firebase/firestore';
-import { connectFunctionsEmulator, Functions, getFunctions } from 'firebase/functions';
-import { connectStorageEmulator, FirebaseStorage, getStorage } from 'firebase/storage';
+import { Firestore, connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
+import { Functions, connectFunctionsEmulator, getFunctions } from 'firebase/functions';
+import { FirebaseStorage, connectStorageEmulator, getStorage } from 'firebase/storage';
 import { Platform } from 'react-native';
 import * as Sentry from 'sentry-expo';
 import { Extra } from '../../../config/types';
 import { FirestoreRefs } from '../refs/FirestoreRefs';
 import { FunctionsRef } from '../refs/FunctionsRef';
 import { StoragePaths } from '../refs/StoragePaths';
+import GeoFirestoreApi from './GeoFirestoreApi';
 import AuthApi from './auth';
 import BusinessApi from './business';
 import BusinessesGeosearchApi from './business/geosearch/BusinessesGeosearchApi';
@@ -19,7 +20,6 @@ import ConsumerApi from './consumer';
 import CourierApi from './courier';
 import FilesApi from './files';
 import FleetApi from './fleet';
-import GeoFirestoreApi from './GeoFirestoreApi';
 import MapsApi from './maps';
 import OrderApi from './order';
 import IuguApi from './payment/iugu';
@@ -88,6 +88,7 @@ export default class Api {
     );
     this._fleet = new FleetApi(this._firestoreRefs);
     this._consumer = new ConsumerApi(
+      this._firestoreRefs,
       this._functionsRefs,
       this._iugu,
       this._storagePaths,

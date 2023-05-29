@@ -1,17 +1,14 @@
 import { PayableWith } from '@appjusto/types';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
-import { getPaymentMethodById } from '../../../../common/store/api/consumer/selectors';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
 import { useP2PPix } from '../../../../common/store/api/order/ui/useP2PPix';
 import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
-import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { colors, doublePadding, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
@@ -44,18 +41,15 @@ export const OrderPayment = ({
 }: Props) => {
   // context
   const order = useObserveOrder(orderId);
-  // redux
-  const consumer = useSelector(getConsumer)!;
   // helpers
   const foodPayableWithPix = useIsPixEnabled();
   const p2pPayableWithPix = useP2PPix();
   const { isProfileComplete, shouldVerifyPhone } = useProfileSummary();
-  const selectedPaymentMethod = getPaymentMethodById(consumer, selectedPaymentMethodId); // only for credit cards
   const canPlaceOrder = isProfileComplete && !shouldVerifyPhone;
   if (!order) return null;
   return (
     <View style={{ backgroundColor: colors.white, paddingBottom: doublePadding }}>
-      {Boolean(selectedPaymentMethod) && payMethod === 'credit_card' ? (
+      {Boolean(selectedPaymentMethodId) && payMethod === 'credit_card' ? (
         <View>
           <SingleHeader title={t('Forma de pagamento')} />
           <View
