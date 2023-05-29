@@ -1,8 +1,9 @@
-import { IuguCustomerPaymentMethod } from '@appjusto/types/payment/iugu';
+import { Card } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import RoundedText from '../../../../common/components/texts/RoundedText';
+import { getCardDisplayNumber } from '../../../../common/store/api/consumer/cards/getCardDisplayNumber';
 import { borders, colors, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
@@ -10,7 +11,7 @@ type Props = {
   variant: 'pix' | 'card';
   selected: boolean;
   onSelectPayment: () => void;
-  creditCard?: IuguCustomerPaymentMethod;
+  creditCard?: Card;
 };
 
 export const PaymentBoxSelector = ({ variant, selected, onSelectPayment, creditCard }: Props) => {
@@ -37,7 +38,7 @@ export const PaymentBoxSelector = ({ variant, selected, onSelectPayment, creditC
               <Text style={{ ...texts.sm }}>{t('Cartão de crédito')}</Text>
               {creditCard ? (
                 <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 4 }}>
-                  {t('...')} {creditCard.data.display_number}
+                  {t('...')} {getCardDisplayNumber(creditCard)}
                 </Text>
               ) : (
                 <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 4 }}>

@@ -18,7 +18,6 @@ import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTim
 import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
 import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
 import { isAvailable } from '../../../../../common/store/api/business/selectors';
-import { useIuguCustomer } from '../../../../../common/store/api/consumer/useIuguCustomer';
 import { useQuotes } from '../../../../../common/store/api/order/hooks/useQuotes';
 import { useProfileSummary } from '../../../../../common/store/api/profile/useProfileSummary';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
@@ -71,8 +70,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const { shouldVerifyPhone } = useProfileSummary();
   const { coords } = useLastKnownLocation();
   // for credit cards only
-  const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState<string>();
-  const customer = useIuguCustomer();
+  const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
+    consumer.defaultPaymentMethodId
+  );
   const [isLoading, setLoading] = React.useState(false);
   const [destinationModalVisible, setDestinationModalVisible] = React.useState(false);
   const [orderAdditionalInfo, setOrderAdditionalInfo] = React.useState('');
@@ -85,7 +85,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     order?.destination?.additionalInfo ?? ''
   );
   const [addressComplement, setAddressComplement] = React.useState<boolean>(complement.length > 0);
-  const [payMethod, setPayMethod] = React.useState<PayableWith>('credit_card');
+  const [payMethod, setPayMethod] = React.useState<PayableWith>(
+    consumer.defaultPaymentMethod ?? 'credit_card'
+  );
   const available = isAvailable(business?.schedules, now);
   const canScheduleOrder =
     !!business &&
@@ -101,16 +103,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     !isLoading &&
     isEmpty(order?.route?.issue);
   // side effects
-  // setting default payment method
-  React.useEffect(() => {
-    if (!customer) return;
-    if (!selectedPaymentMethodId && customer.defaultPaymentMethodId) {
-      setSelectedPaymentMethodId(customer.defaultPaymentMethodId);
-    }
-    if (!payMethod && customer.defaultPaymentMethod) {
-      setPayMethod(customer.defaultPaymentMethod);
-    }
-  }, [customer, selectedPaymentMethodId, payMethod]);
   // whenever quotes are updated
   // select first fare
   React.useEffect(() => {

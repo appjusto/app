@@ -1,8 +1,8 @@
-import { IuguCard, IuguCustomer } from '@appjusto/types';
+import { Card } from '@appjusto/types';
 import { IuguCreatePaymentTokenData } from '@appjusto/types/payment/iugu';
 import { CancelToken } from 'axios';
 import * as Crypto from 'expo-crypto';
-import { getDoc, getDocs, query, where } from 'firebase/firestore';
+import { getDocs, query, where } from 'firebase/firestore';
 import { t } from '../../../../strings';
 import { getAppVersion } from '../../../utils/version';
 import { FirestoreRefs } from '../../refs/FirestoreRefs';
@@ -10,7 +10,7 @@ import { FunctionsRef } from '../../refs/FunctionsRef';
 import { StoragePaths } from '../../refs/StoragePaths';
 import FilesApi from '../files';
 import IuguApi from '../payment/iugu';
-import { documentAs, documentsAs } from '../types';
+import { documentsAs } from '../types';
 
 export default class ConsumerApi {
   constructor(
@@ -22,22 +22,16 @@ export default class ConsumerApi {
     private emulated: boolean
   ) {}
 
-  async fetchIuguCustomer(consumerId: string) {
-    const snapshot = await getDoc(this.firestoreRefs.getIuguCustomerRef(consumerId));
-    if (!snapshot.exists()) return null;
-    return documentAs<IuguCustomer>(snapshot);
-  }
-
   async fetchCards(consumerId: string) {
     const snapshot = await getDocs(
       query(
         this.firestoreRefs.getCardsRef(),
         where('accountId', '==', consumerId),
-        where('cardTokenId', '!=', null)
+        where('status', '==', 'enabled')
       )
     );
     if (snapshot.empty) return [];
-    return documentsAs<IuguCard>(snapshot.docs);
+    return documentsAs<Card>(snapshot.docs);
   }
 
   async saveIuguCard(data: IuguCreatePaymentTokenData, cancelToken?: CancelToken) {

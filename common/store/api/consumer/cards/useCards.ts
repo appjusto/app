@@ -1,8 +1,8 @@
+import { Card, WithId } from '@appjusto/types';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { IuguCard } from '../../../../../types';
-import { ApiContext } from '../../../app/context';
-import { getConsumer } from '../../consumer/selectors';
+import { ApiContext } from '../../../../app/context';
+import { getConsumer } from '../../../consumer/selectors';
 
 export const useCards = () => {
   // context
@@ -10,7 +10,7 @@ export const useCards = () => {
   // redux store
   const consumerId = useSelector(getConsumer)!.id;
   // state
-  const [cards, setCards] = React.useState<IuguCard[]>();
+  const [cards, setCards] = React.useState<WithId<Card>[]>();
   // side-effects
   React.useEffect(() => {
     (async () => {

@@ -5,6 +5,8 @@ import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
+import { getCardDisplayNumber } from '../../../../common/store/api/consumer/cards/getCardDisplayNumber';
+import { useCards } from '../../../../common/store/api/consumer/cards/useCards';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
 import { useP2PPix } from '../../../../common/store/api/order/ui/useP2PPix';
@@ -41,6 +43,8 @@ export const OrderPayment = ({
 }: Props) => {
   // context
   const order = useObserveOrder(orderId);
+  const cards = useCards();
+  const selectedPaymentMethod = cards?.find((card) => card.id === selectedPaymentMethodId);
   // helpers
   const foodPayableWithPix = useIsPixEnabled();
   const p2pPayableWithPix = useP2PPix();
@@ -49,7 +53,7 @@ export const OrderPayment = ({
   if (!order) return null;
   return (
     <View style={{ backgroundColor: colors.white, paddingBottom: doublePadding }}>
-      {Boolean(selectedPaymentMethodId) && payMethod === 'credit_card' ? (
+      {selectedPaymentMethod && payMethod === 'credit_card' ? (
         <View>
           <SingleHeader title={t('Forma de pagamento')} />
           <View
@@ -61,7 +65,7 @@ export const OrderPayment = ({
             }}
           >
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {`${t('Cartão de crédito')}: ${selectedPaymentMethod!.data.display_number}`}
+              {`${t('Cartão de crédito')}: ${getCardDisplayNumber(selectedPaymentMethod)}`}
             </Text>
             <TouchableOpacity onPress={navigateToSelectPayment}>
               <Text style={{ ...texts.md, color: colors.green600 }}>{t('Trocar')}</Text>

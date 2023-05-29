@@ -54,7 +54,7 @@ export default function ({ navigation, route }: Props) {
   const [orderId, setOrderId] = React.useState<string>();
   const order = useObserveOrder(orderId)!;
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
-    consumer.paymentChannel?.mostRecentPaymentMethodId
+    consumer.defaultPaymentMethodId
   );
   const [isLoading, setLoading] = React.useState(false);
   const [cpf, setCpf] = React.useState(consumer.cpf ?? '');

@@ -7,6 +7,10 @@ import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import LabeledText from '../../../../common/components/texts/LabeledText';
+import { getCardDisplayNumber } from '../../../../common/store/api/consumer/cards/getCardDisplayNumber';
+import { getCardHolderName } from '../../../../common/store/api/consumer/cards/getCardHolderName';
+import { getCardMonth } from '../../../../common/store/api/consumer/cards/getCardMonth';
+import { getCardYear } from '../../../../common/store/api/consumer/cards/getCardYear';
 import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { getOrders } from '../../../../common/store/order/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
@@ -58,18 +62,18 @@ export default function ({ route, navigation }: Props) {
   return (
     <PaddedView style={{ ...screens.config, flex: 1 }}>
       <LabeledText title={t('Número do cartão')} disabled>
-        {paymentData.data.display_number}
+        {getCardDisplayNumber(paymentData)}
       </LabeledText>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: padding }}>
         <LabeledText title={t('Validade/Mês')} disabled style={{ flex: 1 }}>
-          {paymentData.data.month}
+          {getCardMonth(paymentData)}
         </LabeledText>
         <LabeledText title={t('Validade/Ano')} disabled style={{ flex: 1, marginLeft: padding }}>
-          {paymentData.data.year}
+          {getCardYear(paymentData)}
         </LabeledText>
       </View>
       <LabeledText title={t('Nome do titular')} style={{ marginTop: padding }} disabled>
-        {paymentData.data.holder_name}
+        {getCardHolderName(paymentData)}
       </LabeledText>
       <View style={{ flex: 1 }} />
       <DefaultButton

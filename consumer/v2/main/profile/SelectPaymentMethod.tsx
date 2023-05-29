@@ -1,16 +1,13 @@
-import { IuguCustomerPaymentMethod } from '@appjusto/types/payment/iugu';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
-import { useSelector } from 'react-redux';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
-import { getPaymentMethodById } from '../../../../common/store/api/consumer/selectors';
+import { useCards } from '../../../../common/store/api/consumer/cards/useCards';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
 import { useP2PPix } from '../../../../common/store/api/order/ui/useP2PPix';
-import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { colors, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { PaymentBoxSelector } from '../../common/order-summary/PaymentBoxSelector';
@@ -39,14 +36,8 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
   const { selectedPaymentMethodId, payMethod, orderId, returnScreen } = route.params ?? {};
   // context
   const order = useObserveOrder(orderId);
-  // redux
-  const consumer = useSelector(getConsumer);
-  const cards = consumer?.paymentChannel?.methods ?? [];
   // state
-  const [selectedPayment, setSelectedPayment] = React.useState<
-    IuguCustomerPaymentMethod | undefined
-  >(getPaymentMethodById(consumer, selectedPaymentMethodId) ?? undefined);
-  // helpers
+  const cards = useCards();
   const payableWithPix = useIsPixEnabled();
   const p2pPayableWithPix = useP2PPix();
   // UI
@@ -64,14 +55,13 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
       scrollIndicatorInsets={{ right: 1 }}
     >
       <PaddedView>
-        {cards.length ? (
+        {cards?.length ? (
           cards.map((card) => (
             <View style={{ marginBottom: padding }} key={card.id}>
               <PaymentBoxSelector
                 variant="card"
-                selected={card.id === selectedPayment?.id && payMethod === 'credit_card'}
+                selected={card.id === selectedPaymentMethodId && payMethod === 'credit_card'}
                 onSelectPayment={() => {
-                  setSelectedPayment(card);
                   navigation.navigate(returnScreen, {
                     paymentMethodId: card.id,
                     payMethod: 'credit_card',

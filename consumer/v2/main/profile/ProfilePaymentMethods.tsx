@@ -1,13 +1,14 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { FlatList, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import { AcceptedCreditCards } from '../../../../assets/icons/credit-card/AcceptedCreditCards';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
+import { getCardBrand } from '../../../../common/store/api/consumer/cards/getCardBrand';
+import { getCardDisplayNumber } from '../../../../common/store/api/consumer/cards/getCardDisplayNumber';
+import { useCards } from '../../../../common/store/api/consumer/cards/useCards';
 import { useSegmentScreen } from '../../../../common/store/api/track';
-import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { colors, padding, screens, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
@@ -41,12 +42,17 @@ type Props = {
 export default function ({ navigation, route }: Props) {
   // context
   const { returnScreen, courierFee, fleetName } = route.params ?? {};
-  // redux
-  const consumer = useSelector(getConsumer);
-  const cards = consumer?.paymentChannel?.methods ?? [];
+  const cards = useCards();
   // tracking
   useSegmentScreen('ProfilePaymentMethods');
   // UI
+  if (!cards) {
+    return (
+      <View style={screens.centered}>
+        <ActivityIndicator size="large" color={colors.green500} />
+      </View>
+    );
+  }
   return (
     <View style={{ ...screens.config }}>
       <FlatList
@@ -54,8 +60,8 @@ export default function ({ navigation, route }: Props) {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ConfigItem
-            title={item.data.display_number}
-            subtitle={`Cartão de crédito\n${item.data.brand}`}
+            title={getCardDisplayNumber(item)}
+            subtitle={`Cartão de crédito\n${getCardBrand(item)}`}
             onPress={() => {
               if (returnScreen) {
                 navigation.navigate(returnScreen, { paymentMethodId: item.id });
