@@ -1,15 +1,13 @@
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ActivityIndicator, Keyboard, ScrollView, View } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import FeedbackView from '../../../common/components/views/FeedbackView';
 import { IconConeYellow } from '../../../common/icons/icon-cone-yellow';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { showToast } from '../../../common/store/ui/actions';
 import { colors, padding, screens } from '../../../common/styles';
 import { t } from '../../../strings';
 import { OngoingOrderNavigatorParamList } from '../ongoing/types';
@@ -28,48 +26,11 @@ type Props = {
 
 export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   // params
-  const { orderId, paymentMethodId } = route.params;
+  const { orderId } = route.params;
   // context
   const api = React.useContext(ApiContext);
-  const dispatch = useDispatch();
   // screen state
   const order = useObserveOrder(orderId);
-  const [isLoading, setLoading] = React.useState(false);
-  // effects
-  const dispatchingStatus = order?.dispatchingStatus;
-  React.useEffect(() => {
-    if (paymentMethodId) {
-      navigation.setParams({
-        paymentMethodId: undefined,
-      });
-      // when the items' charge is ok but the courier's charge is declined
-      (async () => {
-        setLoading(true);
-        try {
-          await api
-            .order()
-            .updateOrderCallable(orderId, { payableWith: 'credit_card', paymentMethodId });
-        } catch (error) {
-          setLoading(false);
-          Keyboard.dismiss();
-          dispatch(
-            showToast(t('Não foi possível alterar a forma de pagamento. Tente novamente.'), 'error')
-          );
-        }
-      })();
-    }
-  }, [paymentMethodId, orderId, navigation, api, dispatch]);
-  // navigating to OngoingOrder after the user changes his payment method
-  // and the matching is restarted
-  React.useEffect(() => {
-    if (
-      dispatchingStatus === 'matching' ||
-      dispatchingStatus === 'scheduled' ||
-      dispatchingStatus === 'outsourced'
-    )
-      navigation.navigate('OngoingOrder', { orderId });
-  }, [dispatchingStatus, orderId, navigation]);
-  // status === 'declined' and the user does not add a new card
   // after 1 hour, the status turns into 'canceled'
   React.useEffect(() => {
     if (!order) return;
@@ -98,7 +59,7 @@ export const OngoingOrderDeclined = ({ navigation, route }: Props) => {
   // tracking
   useSegmentScreen('OngoingOrderDeclined');
   // UI
-  if (!order || isLoading) {
+  if (!order) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
