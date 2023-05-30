@@ -1,8 +1,9 @@
-import { Card } from '@appjusto/types';
+import { Card, WithId } from '@appjusto/types';
 import { IuguCreatePaymentTokenData } from '@appjusto/types/payment/iugu';
 import { CancelToken } from 'axios';
 import * as Crypto from 'expo-crypto';
-import { getDocs, query, where } from 'firebase/firestore';
+import { onSnapshot, query, where } from 'firebase/firestore';
+import * as Sentry from 'sentry-expo';
 import { t } from '../../../../strings';
 import { getAppVersion } from '../../../utils/version';
 import { FirestoreRefs } from '../../refs/FirestoreRefs';
@@ -11,7 +12,6 @@ import { StoragePaths } from '../../refs/StoragePaths';
 import FilesApi from '../files';
 import IuguApi from '../payment/iugu';
 import { documentsAs } from '../types';
-
 export default class ConsumerApi {
   constructor(
     private firestoreRefs: FirestoreRefs,
@@ -22,16 +22,22 @@ export default class ConsumerApi {
     private emulated: boolean
   ) {}
 
-  async fetchCards(consumerId: string) {
-    const snapshot = await getDocs(
+  async observeCards(consumerId: string, resultHandler: (orders: WithId<Card>[]) => void) {
+    return onSnapshot(
       query(
         this.firestoreRefs.getCardsRef(),
         where('accountId', '==', consumerId),
         where('status', '==', 'enabled')
-      )
+      ),
+      (querySnapshot) => {
+        if (querySnapshot.empty) resultHandler([]);
+        else resultHandler(documentsAs<Card>(querySnapshot.docs));
+      },
+      (error) => {
+        console.error(error);
+        Sentry.Native.captureException(error);
+      }
     );
-    if (snapshot.empty) return [];
-    return documentsAs<Card>(snapshot.docs);
   }
 
   async saveIuguCard(data: IuguCreatePaymentTokenData, cancelToken?: CancelToken) {

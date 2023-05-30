@@ -83,7 +83,7 @@ export default function ({ route, navigation }: Props) {
         title={t('Excluir cartão')}
         onPress={deletePaymentMethodHandler}
         activityIndicator={isLoading}
-        grey
+        variant="danger"
       />
     </PaddedView>
   );

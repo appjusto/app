@@ -14,7 +14,7 @@ export const useCards = () => {
   // side-effects
   React.useEffect(() => {
     (async () => {
-      setCards(await api.consumer().fetchCards(consumerId));
+      await api.consumer().observeCards(consumerId, setCards);
     })();
   }, [api, consumerId]);
 
