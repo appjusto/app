@@ -96,11 +96,6 @@ export default function ({ navigation, route }: Props) {
     if (order.status === 'delivered') {
       navigation.replace('OngoingOrderFeedback', { orderId });
     }
-    // whenever a consumer payment method has been approved for the itens
-    // but has no funds to pay for the courier in a food order
-    else if (order.status === 'declined') {
-      navigation.replace('OngoingOrderDeclined', { orderId });
-    }
     // when a restaurant cancels an order
     else if (order.status === 'canceled') {
       if (order.type === 'food') {

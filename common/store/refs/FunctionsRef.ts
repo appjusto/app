@@ -20,7 +20,6 @@ import {
   SaveIuguCard,
   SaveIuguCardResponse,
   TipCourierPayload,
-  UpdateOrderPayload,
 } from '@appjusto/types';
 import {
   IuguMarketplaceAccountAdvanceByAmountSimulation,
@@ -83,8 +82,6 @@ export class FunctionsRef {
       this.functions,
       'getCancellationInfo'
     );
-  getUpdateOrderCallable = () =>
-    httpsCallable<UpdateOrderPayload, void>(this.functions, 'updateOrder');
   getQueryGoogleMapsCallable = () =>
     httpsCallable<QueryGoogleMapsPayload, any>(this.functions, 'queryGoogleMaps');
   // courier

@@ -401,17 +401,6 @@ export default class OrderApi {
     });
   }
 
-  async updateOrderCallable(orderId: string, payment: PlaceOrderPayloadPayment) {
-    return (
-      await this.functionsRef.getUpdateOrderCallable()({
-        orderId,
-        // TODO:
-        payment,
-        meta: { version: getAppVersion() },
-      })
-    ).data;
-  }
-
   async getCancellationInfo(orderId: string) {
     return (
       await this.functionsRef.getCancellationInfoCallable()({
