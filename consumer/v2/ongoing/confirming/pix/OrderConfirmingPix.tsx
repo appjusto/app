@@ -1,4 +1,4 @@
-import { Order, WithId } from '@appjusto/types';
+import { IuguPayment, Order, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import React from 'react';
@@ -9,7 +9,7 @@ import DefaultButton from '../../../../../common/components/buttons/DefaultButto
 import PaddedView from '../../../../../common/components/containers/PaddedView';
 import Pill from '../../../../../common/components/views/Pill';
 import { IconPixLogo } from '../../../../../common/icons/icon-pix-logo';
-import { useObservePendingOrderInvoice } from '../../../../../common/store/api/order/invoices/useObservePendingOrderInvoice';
+import { useObservePendingOrderPayment } from '../../../../../common/store/api/order/payments/useObservePendingOrderPayment';
 import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../../../common/styles';
 import { formatCurrency } from '../../../../../common/utils/formatters';
@@ -24,12 +24,20 @@ export const OrderConfirmingPix = ({ order, onCancel }: Props) => {
   // context
   const dispatch = useDispatch<AppDispatch>();
   // state
-  const pendingInvoice = useObservePendingOrderInvoice(order.id);
+  // const pendingInvoice = useObservePendingOrderInvoice(order.id);
+  const pendingPayment = useObservePendingOrderPayment(order.id);
+  const pix = (() => {
+    if (pendingPayment) {
+      if (pendingPayment.processor === 'iugu') return (pendingPayment as IuguPayment).pix;
+      // } else if (pendingInvoice) return pendingInvoice.pix;
+    }
+    return null;
+  })();
   // handlers
   const copyToClipboard = () => {
     (async () => {
-      if (!pendingInvoice?.pix?.qrcodeText) return;
-      await Clipboard.setStringAsync(pendingInvoice.pix.qrcodeText);
+      if (!pix?.qrcodeText) return;
+      await Clipboard.setStringAsync(pix.qrcodeText);
       dispatch(showToast(t('Copiado!')));
     })();
   };
@@ -58,11 +66,8 @@ export const OrderConfirmingPix = ({ order, onCancel }: Props) => {
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <View style={{ width: '49%' }}>
-            {pendingInvoice ? (
-              <Image
-                source={{ uri: pendingInvoice.pix!.qrcode }}
-                style={{ height: 156, width: 156 }}
-              />
+            {pendingPayment ? (
+              <Image source={{ uri: pix?.qrcode }} style={{ height: 156, width: 156 }} />
             ) : (
               <ActivityIndicator size="small" color={colors.black} />
             )}
@@ -101,14 +106,10 @@ export const OrderConfirmingPix = ({ order, onCancel }: Props) => {
         </View>
         <View>
           <DefaultButton
-            title={
-              pendingInvoice?.pix?.qrcodeText
-                ? t('Copiar chave de pagamento')
-                : t('Criando pedido...')
-            }
+            title={pix?.qrcodeText ? t('Copiar chave de pagamento') : t('Criando pedido...')}
             style={{ marginTop: padding, marginHorizontal: padding }}
             onPress={copyToClipboard}
-            disabled={!pendingInvoice?.pix?.qrcodeText}
+            disabled={!pix?.qrcodeText}
           />
           <DefaultButton
             title={t('Cancelar pedido')}

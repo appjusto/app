@@ -3,18 +3,16 @@ import {
   AdvanceReceivablesPayload,
   CourierOrderRequest,
   FetchAdvanceByAmountSimulationPayload,
-  LedgerEntry,
 } from '@appjusto/types';
 import { IuguMarketplaceAccountAdvanceSimulation } from '@appjusto/types/payment/iugu';
 import {
+  Timestamp,
+  Unsubscribe,
   doc,
   getDocs,
-  limit,
   onSnapshot,
   orderBy,
   query,
-  Timestamp,
-  Unsubscribe,
   updateDoc,
   where,
 } from 'firebase/firestore';
@@ -25,7 +23,7 @@ import { FirestoreRefs } from '../../refs/FirestoreRefs';
 import { FunctionsRef } from '../../refs/FunctionsRef';
 import { StoragePaths } from '../../refs/StoragePaths';
 import FilesApi from '../files';
-import { documentAs, documentsAs } from '../types';
+import { documentsAs } from '../types';
 
 export default class CourierApi {
   constructor(
@@ -87,22 +85,6 @@ export default class CourierApi {
       situation: 'viewed',
       viewed: true,
     } as Partial<CourierOrderRequest>);
-  }
-
-  // ledger
-  async fetchOtherLedgerEntries(courierId: string, orderId: string) {
-    const snapshot = await getDocs(
-      query(
-        this.firestoreRefs.getLedgerRef(),
-        where('to.accountId', '==', courierId),
-        where('orderId', '==', orderId),
-        where('status', '==', 'paid'),
-        where('operation', '==', 'others'),
-        limit(1)
-      )
-    );
-    if (snapshot.empty) return null;
-    return documentAs<LedgerEntry>(snapshot.docs[0]);
   }
 
   // callables

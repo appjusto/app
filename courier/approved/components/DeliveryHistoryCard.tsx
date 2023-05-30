@@ -2,7 +2,6 @@ import React from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import ArrowBox from '../../../common/components/views/ArrowBox';
 import StatusBadge from '../../../common/components/views/StatusBadge';
-import { useDeliveryLedgerEntry } from '../../../common/store/api/courier/account/useDeliveryLedgerEntry';
 import { getOrderRevenue } from '../../../common/store/api/order/courier/getOrderRevenue';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { getOrderTime } from '../../../common/store/order/selectors';
@@ -22,9 +21,8 @@ type Props = {
 export const DeliveryHistoryCard = ({ orderId, onPress }: Props) => {
   // screen state
   const order = useObserveOrder(orderId);
-  const ledgerEntry = useDeliveryLedgerEntry(orderId);
   // loading indicator
-  if (!order || ledgerEntry === undefined) {
+  if (!order) {
     return (
       <View style={{ ...screens.centered, backgroundColor: colors.grey50 }}>
         <ActivityIndicator size="small" color={colors.green500} />
@@ -33,7 +31,7 @@ export const DeliveryHistoryCard = ({ orderId, onPress }: Props) => {
   }
   // helpers
   const time = getOrderTime(order);
-  const revenue = getOrderRevenue(order) + (ledgerEntry?.value ?? 0);
+  const revenue = getOrderRevenue(order);
   const title = formatCurrency(revenue);
   const subtitle = `Pedido ${order.code}\n${separateWithDot(formatDate(time), formatTime(time))}`;
   // UI

@@ -66,7 +66,7 @@ export class FunctionsRef {
   getServerTimeCallable = () => httpsCallable(this.functions, 'getServerTime');
   // consumer
   getSaveIuguCardCallable = () =>
-    httpsCallable<SaveIuguCard, SaveIuguCardResponse>(this.functions, 'savePaymentToken');
+    httpsCallable<SaveIuguCard, SaveIuguCardResponse>(this.functions, 'saveIuguCard');
   getDeleteIuguCardCallable = () =>
     httpsCallable<DeleteIuguCard, void>(this.functions, 'deleteIuguCard');
   getCreateOrderCallable = () => httpsCallable(this.functions, 'createOrder');

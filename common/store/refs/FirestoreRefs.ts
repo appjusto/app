@@ -77,9 +77,17 @@ export class FirestoreRefs {
   getOrderLogsRef = (id: string) => collection(this.getOrderRef(id), 'logs');
 
   // invoices
+  /** @deprecated */
   getInvoicesRef = () => collection(getFirestore(), 'invoices');
+  /** @deprecated */
   getInvoiceRef = (id: string) => doc(this.getInvoicesRef(), id);
-  getInvoiceLogsRef = (id: string) => collection(this.getInvoiceRef(id), 'changes');
+
+  // payments
+  getPaymentsRef = () => collection(getFirestore(), 'payments');
+  getPaymentRef = (id: string) => doc(this.getPaymentsRef(), id);
+
+  // cards
+  getCardsRef = () => collection(getFirestore(), 'cards');
 
   // chats
   getChatsRef = () => collection(getFirestore(), 'chats');
@@ -101,17 +109,6 @@ export class FirestoreRefs {
 
   // courier requests
   getCourierRequestsRef = () => collection(getFirestore(), 'courier-requests');
-
-  // ledger
-  getLedgerRef = () => collection(getFirestore(), 'ledger');
-  getLedgerDocRef = (id: string) => doc(this.getLedgerRef(), id);
-
-  // iugu
-  getIntegrationsRef = () => collection(getFirestore(), 'integrations');
-  getIuguIntegrationRef = () => doc(this.getIntegrationsRef(), 'iugu');
-  getIuguCustomersRef = () => collection(this.getIuguIntegrationRef(), 'customers');
-  getIuguCustomerRef = (accountId: string) => doc(this.getIuguCustomersRef(), accountId);
-  getCardsRef = () => collection(getFirestore(), 'cards');
 
   // fleets
   getFleetsRef = () => collection(getFirestore(), 'fleets');

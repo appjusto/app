@@ -45,7 +45,8 @@ import { FunctionsRef } from '../../refs/FunctionsRef';
 import { isAvailable } from '../business/selectors';
 import { fetchPublicIP } from '../externals/ipify';
 import { documentAs, documentsAs } from '../types';
-import InvoiceApi from './invoices/InvoiceApi';
+import InvoicesApi from './invoices/InvoiceApi';
+import PaymentsApi from './payments/PaymentsApi';
 import { ObserveOrdersOptions } from './types';
 
 export type QueryOrdering = 'asc' | 'desc';
@@ -61,18 +62,24 @@ interface PlaceOrderOptions {
 }
 
 export default class OrderApi {
-  private _invoices: InvoiceApi;
+  private _invoices: InvoicesApi;
+  private _payments: PaymentsApi;
 
   constructor(
     private firestoreRefs: FirestoreRefs,
     private functionsRef: FunctionsRef,
     private firestore: Firestore
   ) {
-    this._invoices = new InvoiceApi(this.firestoreRefs);
+    this._invoices = new InvoicesApi(this.firestoreRefs);
+    this._payments = new PaymentsApi(this.firestoreRefs);
   }
 
   invoice() {
     return this._invoices;
+  }
+
+  payments() {
+    return this._payments;
   }
 
   // firestore
@@ -286,7 +293,7 @@ export default class OrderApi {
     resultHandler: (orders: WithId<Order>[]) => void
   ): Unsubscribe {
     const { businessId, statuses } = options;
-    const constraints = [orderBy('timestamps.charged', 'desc')];
+    const constraints: QueryConstraint[] = [orderBy('timestamps.charged', 'desc')];
     if (!isEmpty(statuses)) constraints.push(where('status', 'in', statuses));
     if (businessId) constraints.push(where('business.id', '==', businessId));
     if (options.limit) constraints.push(limit(options.limit));
@@ -398,6 +405,7 @@ export default class OrderApi {
     return (
       await this.functionsRef.getUpdateOrderCallable()({
         orderId,
+        // TODO:
         payment,
         meta: { version: getAppVersion() },
       })

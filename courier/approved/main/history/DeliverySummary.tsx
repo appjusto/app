@@ -7,7 +7,6 @@ import RoundedText from '../../../../common/components/texts/RoundedText';
 import HR from '../../../../common/components/views/HR';
 import OrderMap from '../../../../common/screens/orders/OrderMap';
 import PlaceSummary from '../../../../common/screens/orders/summary/PlaceSummary';
-import { useDeliveryLedgerEntry } from '../../../../common/store/api/courier/account/useDeliveryLedgerEntry';
 import { getOrderRevenue } from '../../../../common/store/api/order/courier/getOrderRevenue';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../../common/store/api/track';
@@ -35,7 +34,6 @@ export default function ({ navigation, route }: Props) {
   const { orderId } = route.params;
   // screen state
   const order = useObserveOrder(orderId);
-  const ledgerEntry = useDeliveryLedgerEntry(orderId);
   // side effects
   // sending order code to header
   React.useLayoutEffect(() => {
@@ -45,7 +43,7 @@ export default function ({ navigation, route }: Props) {
   }, [navigation, order?.code]);
   // tracking
   useSegmentScreen('DeliverySummary');
-  if (!order?.fare?.courier || ledgerEntry === undefined) {
+  if (!order?.fare?.courier) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -53,7 +51,6 @@ export default function ({ navigation, route }: Props) {
     );
   }
   let value = getOrderRevenue(order);
-  if (ledgerEntry?.value) value += ledgerEntry.value;
   // UI
   return (
     <View style={{ ...screens.default }}>
@@ -91,12 +88,7 @@ export default function ({ navigation, route }: Props) {
         </PaddedView>
         <HR height={padding} />
         <PaddedView>
-          <OrderCostBreakdown
-            order={order}
-            selectedFare={order.fare}
-            hideItems
-            ledgerEntry={ledgerEntry}
-          />
+          <OrderCostBreakdown order={order} selectedFare={order.fare} hideItems />
         </PaddedView>
       </ScrollView>
     </View>

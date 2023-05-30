@@ -23,7 +23,7 @@ export type P2POrderNavigatorParamList = {
     returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
   };
   SelectPaymentMethod: {
-    selectedPaymentMethodId?: string;
+    selectedPaymentMethodId?: string | null;
     payMethod?: PayableWith;
     returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
     orderId?: string;

@@ -14,7 +14,7 @@ export type ProfileParamList = {
   AboutApp: undefined;
   RequestProfileEdit: undefined;
   SelectPaymentMethod: {
-    selectedPaymentMethodId?: string;
+    selectedPaymentMethodId?: string | null;
     payMethod?: PayableWith;
     returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
     orderId?: string;

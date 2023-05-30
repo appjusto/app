@@ -1,4 +1,4 @@
-import { Fare, LedgerEntry, Order, WithId } from '@appjusto/types';
+import { Fare, Order, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import { isEmpty } from 'lodash';
 import React from 'react';
@@ -18,10 +18,9 @@ type Props = {
   order: WithId<Order>;
   selectedFare: Fare | undefined;
   hideItems?: boolean;
-  ledgerEntry?: LedgerEntry | null;
 };
 
-export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry }: Props) => {
+export const OrderCostBreakdown = ({ order, selectedFare, hideItems }: Props) => {
   // redux
   const flavor = useSelector(getFlavor);
   // state
@@ -174,19 +173,16 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems, ledgerEntry
               </Text>
             </View>
           ) : null}
-          {ledgerEntry && flavor === 'courier' ? (
-            <View style={{ marginTop: halfPadding }}>
-              <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={{ ...texts.sm }}>{t('Extra *')}</Text>
-                <Text style={{ ...texts.sm }}>{formatCurrency(ledgerEntry.value)}</Text>
-              </View>
-              {ledgerEntry.description ? (
-                <Text style={{ ...texts.xs, color: colors.black, marginTop: padding }}>
-                  * {ledgerEntry.description}
-                </Text>
-              ) : null}
-            </View>
-          ) : null}
+          {flavor === 'courier' && selectedFare?.courier?.extras?.length
+            ? selectedFare.courier.extras.map((extra) => (
+                <View key={extra.id} style={{ marginTop: halfPadding }}>
+                  <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={{ ...texts.sm }}>{t('Extra *')}</Text>
+                    <Text style={{ ...texts.sm }}>{formatCurrency(extra.value)}</Text>
+                  </View>
+                </View>
+              ))
+            : null}
         </View>
         {flavor === 'consumer' && otherDeliveryFees ? (
           <View style={{ marginTop: padding }}>

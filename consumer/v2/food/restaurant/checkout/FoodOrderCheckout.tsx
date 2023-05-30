@@ -247,7 +247,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         payMethod === 'credit_card'
           ? ({
               payableWith: 'credit_card',
-              paymentMethodId: selectedPaymentMethodId,
+              cardId: selectedPaymentMethodId,
             } as PlaceOrderPayloadPaymentCreditCard)
           : ({
               payableWith: 'pix',

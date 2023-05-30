@@ -31,7 +31,7 @@ export type RestaurantNavigatorParamList = {
   };
   ScheduleOrder: undefined;
   SelectPaymentMethod: {
-    selectedPaymentMethodId?: string;
+    selectedPaymentMethodId?: string | null;
     payMethod?: PayableWith;
     returnScreen: 'FoodOrderCheckout' | 'CreateOrderP2P';
     orderId?: string;

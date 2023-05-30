@@ -32,7 +32,7 @@ import { Step } from './types';
 
 type Props = {
   order: WithId<Order> | undefined;
-  selectedPaymentMethodId?: string;
+  selectedPaymentMethodId?: string | null;
   isLoading: boolean;
   navigateToAddressComplete: (returnParam: string, value?: Place) => void;
   navigateToFillPaymentInfo: () => void;

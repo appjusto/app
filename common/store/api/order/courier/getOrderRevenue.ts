@@ -10,5 +10,9 @@ export const getOrderRevenue = (order: Order) => {
   if (order.tip?.value && order.tip.status === 'paid') {
     value += order.tip.value - (order.tip?.processing?.value ?? 0);
   }
+  (order.fare?.courier?.extras ?? []).forEach((extra) => {
+    value += extra.value;
+  });
+
   return value;
 };

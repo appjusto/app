@@ -15,7 +15,7 @@ import { colors, doublePadding, halfPadding, padding, texts } from '../../../../
 import { t } from '../../../../strings';
 
 interface Props {
-  selectedPaymentMethodId?: string;
+  selectedPaymentMethodId?: string | null;
   isSubmitEnabled: boolean;
   activityIndicator: boolean;
   onEditPaymentMethod: () => void;
