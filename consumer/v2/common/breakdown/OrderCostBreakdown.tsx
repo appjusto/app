@@ -177,7 +177,7 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems }: Props) =>
             ? selectedFare.courier.extras.map((extra) => (
                 <View key={extra.id} style={{ marginTop: halfPadding }}>
                   <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ ...texts.sm }}>{t('Extra *')}</Text>
+                    <Text style={{ ...texts.sm }}>{t('Extra')}</Text>
                     <Text style={{ ...texts.sm }}>{formatCurrency(extra.value)}</Text>
                   </View>
                 </View>
