@@ -44,7 +44,8 @@ export default class ConsumerApi {
     const paymentToken = await this.iugu.createPaymentToken(data, cancelToken);
     if (!paymentToken) throw new Error(t('Não foi possível salvar o cartão de crédito.'));
     const hash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, data.number);
-    const result = await this.functionsRef.getSaveIuguCardCallable()({
+    const result = await this.functionsRef.getSaveCardCallable()({
+      processor: 'iugu',
       cardTokenId: paymentToken.id,
       cardHash: hash,
       meta: { version: getAppVersion() },
@@ -54,7 +55,7 @@ export default class ConsumerApi {
 
   async deleteIuguCard(id: string) {
     return (
-      await this.functionsRef.getDeleteIuguCardCallable()({
+      await this.functionsRef.getDeleteCardCallable()({
         id,
         meta: { version: getAppVersion() },
       })

@@ -251,7 +251,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             } as PlaceOrderPayloadPaymentCreditCard)
           : ({
               payableWith: 'pix',
-              key: cpf,
             } as PlaceOrderPayloadPaymentPix);
       const fleetId = order.fulfillment === 'delivery' ? selectedFare?.fleet?.id : undefined;
       await api.order().placeOrder({

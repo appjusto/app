@@ -1,6 +1,7 @@
 import {
   CancelOrderPayload,
   CompleteDeliveryPayload,
+  DeleteCardPayload,
   DropOrderPayload,
   Fare,
   FetchAccountInformationPayload,
@@ -17,8 +18,8 @@ import {
   QueryGoogleMapsPayload,
   RejectOrderPayload,
   RequestWithdrawPayload,
-  SaveIuguCard,
-  SaveIuguCardResponse,
+  SaveCardResponse,
+  SaveIuguCardPayload,
   TipCourierPayload,
 } from '@appjusto/types';
 import {
@@ -28,7 +29,6 @@ import {
   IuguMarketplaceAccountWithdrawResponse,
 } from '@appjusto/types/payment/iugu';
 import { Functions, httpsCallable } from 'firebase/functions';
-import { DeleteIuguCard } from '../../../../types';
 
 export class FunctionsRef {
   constructor(private functions: Functions) {}
@@ -64,10 +64,10 @@ export class FunctionsRef {
   getDeleteAccountCallable = () => httpsCallable(this.functions, 'deleteAccount');
   getServerTimeCallable = () => httpsCallable(this.functions, 'getServerTime');
   // consumer
-  getSaveIuguCardCallable = () =>
-    httpsCallable<SaveIuguCard, SaveIuguCardResponse>(this.functions, 'saveIuguCard');
-  getDeleteIuguCardCallable = () =>
-    httpsCallable<DeleteIuguCard, void>(this.functions, 'deleteIuguCard');
+  getSaveCardCallable = () =>
+    httpsCallable<SaveIuguCardPayload, SaveCardResponse>(this.functions, 'saveCard');
+  getDeleteCardCallable = () =>
+    httpsCallable<DeleteCardPayload, void>(this.functions, 'deleteCard');
   getCreateOrderCallable = () => httpsCallable(this.functions, 'createOrder');
   getGetOrderQuotesCallable = () =>
     httpsCallable<GetOrderQuotesPayload, Fare[]>(this.functions, 'getOrderQuotes');
