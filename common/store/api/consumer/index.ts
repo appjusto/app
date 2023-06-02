@@ -1,7 +1,6 @@
 import { Card } from '@appjusto/types';
 import { IuguCreatePaymentTokenData } from '@appjusto/types/payment/iugu';
 import { CancelToken } from 'axios';
-import * as Crypto from 'expo-crypto';
 import { getDocs, query, where } from 'firebase/firestore';
 import { t } from '../../../../strings';
 import { getAppVersion } from '../../../utils/version';
@@ -37,7 +36,7 @@ export default class ConsumerApi {
   async saveIuguCard(data: IuguCreatePaymentTokenData, cancelToken?: CancelToken) {
     const paymentToken = await this.iugu.createPaymentToken(data, cancelToken);
     if (!paymentToken) throw new Error(t('Não foi possível salvar o cartão de crédito.'));
-    const hash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, data.number);
+    const hash = '';
     const result = await this.functionsRef.getSaveIuguCardCallable()({
       cardTokenId: paymentToken.id,
       cardHash: hash,
