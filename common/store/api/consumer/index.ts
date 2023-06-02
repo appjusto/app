@@ -1,7 +1,6 @@
 import { Card, WithId } from '@appjusto/types';
 import { IuguCreatePaymentTokenData } from '@appjusto/types/payment/iugu';
 import { CancelToken } from 'axios';
-import * as Crypto from 'expo-crypto';
 import { onSnapshot, query, where } from 'firebase/firestore';
 import * as Sentry from 'sentry-expo';
 import { t } from '../../../../strings';
@@ -12,6 +11,7 @@ import { StoragePaths } from '../../refs/StoragePaths';
 import FilesApi from '../files';
 import IuguApi from '../payment/iugu';
 import { documentsAs } from '../types';
+
 export default class ConsumerApi {
   constructor(
     private firestoreRefs: FirestoreRefs,
@@ -43,9 +43,8 @@ export default class ConsumerApi {
   async saveIuguCard(data: IuguCreatePaymentTokenData, cancelToken?: CancelToken) {
     const paymentToken = await this.iugu.createPaymentToken(data, cancelToken);
     if (!paymentToken) throw new Error(t('Não foi possível salvar o cartão de crédito.'));
-    const hash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, data.number);
+    const hash = '';
     const result = await this.functionsRef.getSaveCardCallable()({
-      processor: 'iugu',
       cardTokenId: paymentToken.id,
       cardHash: hash,
       meta: { version: getAppVersion() },
