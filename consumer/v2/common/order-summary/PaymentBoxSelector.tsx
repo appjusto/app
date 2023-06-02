@@ -35,10 +35,12 @@ export const PaymentBoxSelector = ({ variant, selected, onSelectPayment, creditC
             <Text style={{ ...texts.sm }}>{t('Pix')}</Text>
           ) : (
             <View>
-              <Text style={{ ...texts.sm }}>{t('Cartão de crédito')}</Text>
+              <Text style={{ ...texts.sm }}>
+                {creditCard?.processor === 'iugu' ? t('Cartão de crédito') : t('VR')}
+              </Text>
               {creditCard ? (
                 <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 4 }}>
-                  {t('...')} {getCardDisplayNumber(creditCard)}
+                  {getCardDisplayNumber(creditCard)}
                 </Text>
               ) : (
                 <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 4 }}>

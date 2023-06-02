@@ -53,7 +53,7 @@ export const OrderPayment = ({
   if (!order) return null;
   return (
     <View style={{ backgroundColor: colors.white, paddingBottom: doublePadding }}>
-      {selectedPaymentMethod && payMethod === 'credit_card' ? (
+      {selectedPaymentMethod && payMethod !== 'pix' ? (
         <View>
           <SingleHeader title={t('Forma de pagamento')} />
           <View
@@ -121,8 +121,7 @@ export const OrderPayment = ({
             onPress={navigateToSelectPayment}
           />
         ) : null}
-        {canPlaceOrder &&
-        (payMethod === 'pix' || (payMethod === 'credit_card' && selectedPaymentMethod)) ? (
+        {canPlaceOrder && (payMethod === 'pix' || selectedPaymentMethod) ? (
           <DefaultButton
             variant="primary"
             title={t('Confirmar pedido')}

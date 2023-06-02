@@ -20,6 +20,7 @@ import {
   RequestWithdrawPayload,
   SaveCardResponse,
   SaveIuguCardPayload,
+  SaveVRCardPayload,
   TipCourierPayload,
 } from '@appjusto/types';
 import {
@@ -65,7 +66,10 @@ export class FunctionsRef {
   getServerTimeCallable = () => httpsCallable(this.functions, 'getServerTime');
   // consumer
   getSaveCardCallable = () =>
-    httpsCallable<SaveIuguCardPayload, SaveCardResponse>(this.functions, 'saveCard');
+    httpsCallable<SaveIuguCardPayload | SaveVRCardPayload, SaveCardResponse>(
+      this.functions,
+      'saveCard'
+    );
   getDeleteCardCallable = () =>
     httpsCallable<DeleteCardPayload, void>(this.functions, 'deleteCard');
   getCreateOrderCallable = () => httpsCallable(this.functions, 'createOrder');

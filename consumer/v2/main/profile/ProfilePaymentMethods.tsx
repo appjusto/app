@@ -61,7 +61,11 @@ export default function ({ navigation, route }: Props) {
         renderItem={({ item }) => (
           <ConfigItem
             title={getCardDisplayNumber(item)}
-            subtitle={`Cartão de crédito\n${getCardBrand(item)}`}
+            subtitle={
+              item.processor === 'iugu'
+                ? `Cartão de crédito\n${getCardBrand(item)}`
+                : `Vale Refeição\nVR`
+            }
             onPress={() => {
               if (returnScreen) {
                 navigation.navigate(returnScreen, { paymentMethodId: item.id });
@@ -111,8 +115,10 @@ export default function ({ navigation, route }: Props) {
         }
         ListFooterComponent={() => (
           <ConfigItem
-            title={t('Adicionar novo cartão de crédito')}
-            subtitle={t('Aceitamos as bandeiras Visa, Mastercard, Elo e Diners')}
+            title={t('Adicionar novo cartão de crédito ou VR')}
+            subtitle={t(
+              'Aceitamos as bandeiras Visa, Mastercard, Elo, Diners, VR Refeição e VR Alimentação'
+            )}
             onPress={() => {
               if (returnScreen) navigation.navigate('ProfileAddCard', { returnScreen });
               else navigation.navigate('ProfileAddCard');

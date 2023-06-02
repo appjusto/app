@@ -50,7 +50,7 @@ export default function ({ order, tip, isLoading = false, onChange, onConfirm, t
   // UI
   return (
     <View>
-      {order.paymentMethod === 'credit_card' ? (
+      {order.paymentMethod !== 'pix' ? (
         <View style={{ paddingHorizontal: padding, paddingTop: padding }}>
           <View>
             <View>

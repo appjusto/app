@@ -1,8 +1,9 @@
 import { Card, WithId } from '@appjusto/types';
-import { IuguCreatePaymentTokenData } from '@appjusto/types/payment/iugu';
 import { CancelToken } from 'axios';
 import { onSnapshot, query, where } from 'firebase/firestore';
+import { trim } from 'lodash';
 import * as Sentry from 'sentry-expo';
+import { CardInfo } from '../../../../consumer/v2/main/profile/cards/types';
 import { t } from '../../../../strings';
 import { getAppVersion } from '../../../utils/version';
 import { FirestoreRefs } from '../../refs/FirestoreRefs';
@@ -40,19 +41,45 @@ export default class ConsumerApi {
     );
   }
 
-  async saveIuguCard(data: IuguCreatePaymentTokenData, cancelToken?: CancelToken) {
-    const paymentToken = await this.iugu.createPaymentToken(data, cancelToken);
-    if (!paymentToken) throw new Error(t('Não foi possível salvar o cartão de crédito.'));
-    const hash = '';
-    const result = await this.functionsRef.getSaveCardCallable()({
-      cardTokenId: paymentToken.id,
-      cardHash: hash,
-      meta: { version: getAppVersion() },
-    });
-    return result.data;
+  async saveCard(data: CardInfo, cancelToken?: CancelToken) {
+    const { processor, name, number, month, year, cvv } = data;
+    if (processor === 'iugu') {
+      const firstName = trim(name.split(' ', 1).toString());
+      const lastName = trim(name.split(' ').splice(1).join(' '));
+      const paymentToken = await this.iugu.createPaymentToken(
+        {
+          first_name: firstName,
+          last_name: lastName,
+          number,
+          month,
+          year,
+          verification_value: cvv,
+        },
+        cancelToken
+      );
+      if (!paymentToken) throw new Error(t('Não foi possível salvar o cartão de crédito.'));
+      const result = await this.functionsRef.getSaveCardCallable()({
+        processor: 'iugu',
+        cardTokenId: paymentToken.id,
+        meta: { version: getAppVersion() },
+      });
+      return result.data;
+    } else if (processor === 'vr') {
+      const result = await this.functionsRef.getSaveCardCallable()({
+        processor: 'vr',
+        name,
+        number,
+        month: parseInt(month, 10),
+        year: parseInt(year, 10),
+        cvv,
+        meta: { version: getAppVersion() },
+      });
+      return result.data;
+    }
+    throw new Error('Não foi possível identificar a bandeira.');
   }
 
-  async deleteIuguCard(id: string) {
+  async deleteCard(id: string) {
     return (
       await this.functionsRef.getDeleteCardCallable()({
         id,

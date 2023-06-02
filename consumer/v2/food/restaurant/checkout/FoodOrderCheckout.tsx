@@ -3,6 +3,7 @@ import {
   PayableWith,
   PlaceOrderPayloadPaymentCreditCard,
   PlaceOrderPayloadPaymentPix,
+  PlaceOrderPayloadPaymentVR,
 } from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
@@ -18,6 +19,7 @@ import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTim
 import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
 import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
 import { isAvailable } from '../../../../../common/store/api/business/selectors';
+import { useCards } from '../../../../../common/store/api/consumer/cards/useCards';
 import { useQuotes } from '../../../../../common/store/api/order/hooks/useQuotes';
 import { useProfileSummary } from '../../../../../common/store/api/profile/useProfileSummary';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
@@ -69,6 +71,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   // state
   const { shouldVerifyPhone } = useProfileSummary();
   const { coords } = useLastKnownLocation();
+  const cards = useCards();
   // for credit cards only
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
     consumer.defaultPaymentMethodId
@@ -97,8 +100,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     !isEmpty(order?.scheduledTo);
   const canSubmit =
     (available || canScheduleOrder) &&
-    (payMethod === 'pix' ||
-      (payMethod === 'credit_card' && selectedPaymentMethodId !== undefined)) &&
+    (payMethod === 'pix' || selectedPaymentMethodId !== undefined) &&
     selectedFare !== undefined &&
     !isLoading &&
     isEmpty(order?.route?.issue);
@@ -133,7 +135,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
     if (params?.paymentMethodId) {
       setSelectedPaymentMethodId(params.paymentMethodId);
-      setPayMethod('credit_card');
+      setPayMethod(params.payMethod ?? 'credit_card');
       navigation.setParams({
         paymentMethodId: undefined,
       });
@@ -243,15 +245,29 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           }),
         });
       }
-      const paymentPayload =
-        payMethod === 'credit_card'
-          ? ({
-              payableWith: 'credit_card',
-              cardId: selectedPaymentMethodId,
-            } as PlaceOrderPayloadPaymentCreditCard)
-          : ({
-              payableWith: 'pix',
-            } as PlaceOrderPayloadPaymentPix);
+      const paymentPayload = (() => {
+        if (payMethod === 'pix') {
+          return {
+            payableWith: 'pix',
+          } as PlaceOrderPayloadPaymentPix;
+        }
+        const selectedCard = cards?.find((card) => card.id === selectedPaymentMethodId);
+        if (selectedCard?.processor === 'iugu') {
+          return {
+            payableWith: 'credit_card',
+            cardId: selectedPaymentMethodId,
+          } as PlaceOrderPayloadPaymentCreditCard;
+        } else if (selectedCard?.processor === 'vr') {
+          return {
+            payableWith: 'vr',
+            cardId: selectedPaymentMethodId,
+          } as PlaceOrderPayloadPaymentVR;
+        }
+        return null;
+      })();
+      if (paymentPayload === null) {
+        return;
+      }
       const fleetId = order.fulfillment === 'delivery' ? selectedFare?.fleet?.id : undefined;
       await api.order().placeOrder({
         orderId: order.id,

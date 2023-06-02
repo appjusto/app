@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { toNumber, trim } from 'lodash';
+import { toNumber } from 'lodash';
 import React, { ReactNode } from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -29,7 +29,7 @@ import {
   getCardTypeSVG,
   isCardTypeSupported,
   validateCard,
-} from './payment/credit-card';
+} from './cards/credit-card';
 import { ProfileParamList } from './types';
 
 export type ProfileAddCardParamList = {
@@ -92,16 +92,16 @@ export default function ({ navigation, route }: Props) {
     Keyboard.dismiss();
     try {
       setLoading(true);
-      const firstName = trim(name.split(' ', 1).toString());
-      const lastName = trim(name.split(' ').splice(1).join(' '));
-      const result = await api.consumer().saveIuguCard(
+      const type = getCardType(number)?.type;
+      const processor = type === 'vr' ? 'vr' : 'iugu';
+      const result = await api.consumer().saveCard(
         {
+          processor,
           number,
           month,
           year: `20${year}`,
-          verification_value: cvv,
-          first_name: firstName.toLocaleUpperCase(),
-          last_name: lastName.toLocaleUpperCase(),
+          cvv,
+          name: name.trim(),
         },
         createCancelToken()
       );
@@ -110,7 +110,7 @@ export default function ({ navigation, route }: Props) {
         if (returnScreen === 'FoodOrderCheckout') {
           navigation.navigate(returnScreen, {
             paymentMethodId: result.id,
-            payMethod: 'credit_card',
+            payMethod: processor === 'iugu' ? 'credit_card' : 'vr',
           });
         } else
           navigation.navigate(returnScreen, {

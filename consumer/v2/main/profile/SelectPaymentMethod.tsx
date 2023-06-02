@@ -60,11 +60,11 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
             <View style={{ marginBottom: padding }} key={card.id}>
               <PaymentBoxSelector
                 variant="card"
-                selected={card.id === selectedPaymentMethodId && payMethod === 'credit_card'}
+                selected={card.id === selectedPaymentMethodId}
                 onSelectPayment={() => {
                   navigation.navigate(returnScreen, {
                     paymentMethodId: card.id,
-                    payMethod: 'credit_card',
+                    payMethod: card.processor === 'iugu' ? 'credit_card' : 'vr',
                   });
                 }}
                 creditCard={card}

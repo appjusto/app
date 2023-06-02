@@ -36,6 +36,7 @@ export default function ({ route, navigation }: Props) {
   const ongoingOrders = useSelector(getOrders);
   // state
   const [isLoading, setLoading] = React.useState(false);
+  console.log(paymentData.id);
   // tracking
   useSegmentScreen('PayementMethodDetail');
   // UI handlers
@@ -44,7 +45,7 @@ export default function ({ route, navigation }: Props) {
     if (ongoingOrders.length === 0) {
       try {
         setLoading(true);
-        await api.consumer().deleteIuguCard(paymentData.id);
+        await api.consumer().deleteCard(paymentData.id);
         track('consumer deleted a payment method');
         setLoading(false);
       } catch (error: any) {
