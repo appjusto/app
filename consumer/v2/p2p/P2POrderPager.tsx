@@ -61,11 +61,9 @@ export default function ({
   selectedPaymentMethodId,
   isLoading,
   navigateToAddressComplete,
-  navigateToFillPaymentInfo,
   navigateFleetDetail,
   navigateToTransportableItems,
   onSubmit,
-  navigateToPixPayment,
   cpf,
   setCpf,
   wantsCpf,
@@ -363,7 +361,6 @@ export default function ({
               payment={
                 <OrderPayment
                   selectedPaymentMethodId={selectedPaymentMethodId}
-                  onEditPaymentMethod={navigateToFillPaymentInfo}
                   isSubmitEnabled={canSubmit}
                   onSubmit={onSubmit}
                   activityIndicator={isLoading}

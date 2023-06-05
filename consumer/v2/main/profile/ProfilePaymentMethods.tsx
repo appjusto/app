@@ -1,5 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { isEmpty } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import { AcceptedCreditCards } from '../../../../assets/icons/credit-card/AcceptedCreditCards';
@@ -8,6 +9,7 @@ import ConfigItem from '../../../../common/components/views/ConfigItem';
 import { getCardBrand } from '../../../../common/store/api/consumer/cards/getCardBrand';
 import { getCardDisplayNumber } from '../../../../common/store/api/consumer/cards/getCardDisplayNumber';
 import { useCards } from '../../../../common/store/api/consumer/cards/useCards';
+import { useAcceptedPaymentMethods } from '../../../../common/store/api/platform/hooks/useAcceptedPaymentMethods';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { colors, padding, screens, texts } from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
@@ -43,10 +45,11 @@ export default function ({ navigation, route }: Props) {
   // context
   const { returnScreen, courierFee, fleetName } = route.params ?? {};
   const cards = useCards();
+  const acceptedPaymentMethods = useAcceptedPaymentMethods();
   // tracking
   useSegmentScreen('ProfilePaymentMethods');
   // UI
-  if (!cards) {
+  if (!cards || isEmpty(acceptedPaymentMethods)) {
     return (
       <View style={screens.centered}>
         <ActivityIndicator size="large" color={colors.green500} />
@@ -56,7 +59,11 @@ export default function ({ navigation, route }: Props) {
   return (
     <View style={{ ...screens.config }}>
       <FlatList
-        data={cards}
+        data={cards.filter((card) =>
+          card.processor === 'iugu'
+            ? acceptedPaymentMethods.includes('credit_card')
+            : acceptedPaymentMethods.includes('vr')
+        )}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ConfigItem
@@ -68,7 +75,10 @@ export default function ({ navigation, route }: Props) {
             }
             onPress={() => {
               if (returnScreen) {
-                navigation.navigate(returnScreen, { paymentMethodId: item.id });
+                navigation.navigate(returnScreen, {
+                  paymentMethodId: item.id,
+                  payMethod: item.processor === 'iugu' ? 'credit_card' : 'vr',
+                });
               } else {
                 navigation.navigate('PaymentMethodDetail', {
                   paymentData: item,

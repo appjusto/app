@@ -15,16 +15,13 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useDispatch, useSelector } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../../../common/app/context';
 import { useModalToastContext } from '../../../../../common/contexts/ModalToastContext';
-import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTimeContext';
 import useLastKnownLocation from '../../../../../common/location/useLastKnownLocation';
 import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
-import { isAvailable } from '../../../../../common/store/api/business/selectors';
 import { useCards } from '../../../../../common/store/api/consumer/cards/useCards';
 import { useQuotes } from '../../../../../common/store/api/order/hooks/useQuotes';
 import { useProfileSummary } from '../../../../../common/store/api/profile/useProfileSummary';
 import { track, useSegmentScreen } from '../../../../../common/store/api/track';
 import { getConsumer } from '../../../../../common/store/consumer/selectors';
-import { isConsumerProfileComplete } from '../../../../../common/store/consumer/validators';
 import { useContextActiveOrder } from '../../../../../common/store/context/order';
 import { showToast } from '../../../../../common/store/ui/actions';
 import { colors, screens } from '../../../../../common/styles';
@@ -39,6 +36,7 @@ import { FoodOrderNavigatorParamList } from '../../types';
 import { RestaurantNavigatorParamList } from '../types';
 import { DestinationModal } from './DestinationModal';
 import { FulfillmentSwitch } from './FulfilmentSwitch';
+import { useCheckoutIssues } from './useCheckoutIssues';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<RestaurantNavigatorParamList, 'FoodOrderCheckout'>,
@@ -64,8 +62,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const { showModalToast } = useModalToastContext();
   const business = useObserveBusiness(order?.business?.id);
-  const getServerTime = useContextGetSeverTime();
-  const now = getServerTime();
   // redux store
   const consumer = useSelector(getConsumer)!;
   // state
@@ -73,9 +69,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const { coords } = useLastKnownLocation();
   const cards = useCards();
   // for credit cards only
-  const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
-    consumer.defaultPaymentMethodId
-  );
+
   const [isLoading, setLoading] = React.useState(false);
   const [destinationModalVisible, setDestinationModalVisible] = React.useState(false);
   const [orderAdditionalInfo, setOrderAdditionalInfo] = React.useState('');
@@ -91,19 +85,11 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [payMethod, setPayMethod] = React.useState<PayableWith>(
     consumer.defaultPaymentMethod ?? 'credit_card'
   );
-  const available = isAvailable(business?.schedules, now);
-  const canScheduleOrder =
-    !!business &&
-    !available &&
-    !isEmpty(business.preparationModes) &&
-    !!business.preparationModes!.includes('scheduled') &&
-    !isEmpty(order?.scheduledTo);
-  const canSubmit =
-    (available || canScheduleOrder) &&
-    (payMethod === 'pix' || selectedPaymentMethodId !== undefined) &&
-    selectedFare !== undefined &&
-    !isLoading &&
-    isEmpty(order?.route?.issue);
+  const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
+    consumer.defaultPaymentMethodId
+  );
+  const issues = useCheckoutIssues(payMethod, selectedPaymentMethodId);
+  const canSubmit = issues.length === 0 && Boolean(selectedFare) && !isLoading;
   // side effects
   // whenever quotes are updated
   // select first fare
@@ -113,9 +99,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   }, [quotes]);
   // whenever selectedFare changes
   React.useEffect(() => {
-    if (!order) return;
+    if (!orderId) return;
     if (selectedFare) {
-      api.order().updateOrder(order.id, { fare: selectedFare });
+      api.order().updateOrder(orderId, { fare: selectedFare });
     }
   }, [api, orderId, selectedFare]);
   // whenever there is a change when interacting with other screens
@@ -296,21 +282,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
   };
   // navigate to ProfileAddCard or ProfilePaymentMethods to add or select payment method
-  const navigateToFillPaymentInfo = React.useCallback(() => {
-    // if user has no payment method, go direct to 'AddCard' screen
-    if (!isConsumerProfileComplete(consumer)) {
-      const returnScreen = !selectedPaymentMethodId ? 'ProfileAddCard' : 'FoodOrderCheckout';
-      navigation.navigate('CommonProfileEdit', {
-        returnScreen,
-        returnNextScreen: 'FoodOrderCheckout',
-      });
-    } else if (!selectedPaymentMethodId) {
-      navigation.navigate('ProfileAddCard', { returnScreen: 'FoodOrderCheckout' });
-    } else {
-      navigation.navigate('ProfilePaymentMethods', { returnScreen: 'FoodOrderCheckout' });
-    }
-  }, [consumer, navigation, selectedPaymentMethodId]);
-
   const navigateToCompleteProfile = () => {
     navigation.navigate('CommonProfileEdit', { returnScreen: 'FoodOrderCheckout' });
   };
@@ -410,7 +381,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             selectedPaymentMethodId={selectedPaymentMethodId}
             isSubmitEnabled={canSubmit}
             activityIndicator={isLoading}
-            onEditPaymentMethod={navigateToFillPaymentInfo}
             onSubmit={() => {
               if (!shouldVerifyPhone && order.fulfillment === 'delivery')
                 setDestinationModalVisible(true);
@@ -429,7 +399,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             onPayWithPix={() => {
               setPayMethod('pix');
             }}
-            showWarning={!canScheduleOrder && !available}
           />
         }
       />

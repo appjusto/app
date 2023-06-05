@@ -7,53 +7,48 @@ import RoundedText from '../../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { getCardDisplayNumber } from '../../../../common/store/api/consumer/cards/getCardDisplayNumber';
 import { useCards } from '../../../../common/store/api/consumer/cards/useCards';
-import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
-import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
-import { useP2PPix } from '../../../../common/store/api/order/ui/useP2PPix';
-import { useProfileSummary } from '../../../../common/store/api/profile/useProfileSummary';
+import { useAcceptedPaymentMethods } from '../../../../common/store/api/platform/hooks/useAcceptedPaymentMethods';
+import { useContextActiveOrder } from '../../../../common/store/context/order';
 import { colors, doublePadding, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { useCheckoutIssues } from '../../food/restaurant/checkout/useCheckoutIssues';
 
 interface Props {
   selectedPaymentMethodId?: string | null;
   isSubmitEnabled: boolean;
   activityIndicator: boolean;
-  onEditPaymentMethod: () => void;
   onSubmit: () => void;
   navigateToCompleteProfile: () => void;
   navigateToSelectPayment: () => void;
   onPayWithPix: () => void;
   payMethod: PayableWith;
   orderId: string;
-  showWarning?: boolean;
 }
 
 export const OrderPayment = ({
   selectedPaymentMethodId,
   isSubmitEnabled,
   activityIndicator,
-  onEditPaymentMethod,
   onSubmit,
   onPayWithPix,
   navigateToCompleteProfile,
   navigateToSelectPayment,
   payMethod,
-  orderId,
-  showWarning,
 }: Props) => {
   // context
-  const order = useObserveOrder(orderId);
+  const order = useContextActiveOrder();
+  const issues = useCheckoutIssues(payMethod, selectedPaymentMethodId);
   const cards = useCards();
   const selectedPaymentMethod = cards?.find((card) => card.id === selectedPaymentMethodId);
-  // helpers
-  const foodPayableWithPix = useIsPixEnabled();
-  const p2pPayableWithPix = useP2PPix();
-  const { isProfileComplete, shouldVerifyPhone } = useProfileSummary();
-  const canPlaceOrder = isProfileComplete && !shouldVerifyPhone;
+  const pixEnabled = useAcceptedPaymentMethods().includes('pix');
+  const canPlaceOrder = issues.length === 0 && !activityIndicator;
+  console.log(issues);
   if (!order) return null;
   return (
     <View style={{ backgroundColor: colors.white, paddingBottom: doublePadding }}>
-      {selectedPaymentMethod && payMethod !== 'pix' ? (
+      {payMethod !== 'pix' &&
+      selectedPaymentMethod &&
+      !issues.includes('unsupported-payment-method') ? (
         <View>
           <SingleHeader title={t('Forma de pagamento')} />
           <View
@@ -65,7 +60,9 @@ export const OrderPayment = ({
             }}
           >
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {`${t('Cartão de crédito')}: ${getCardDisplayNumber(selectedPaymentMethod)}`}
+              {`${
+                selectedPaymentMethod.processor === 'iugu' ? t('Cartão de crédito') : t('VR')
+              }: ${getCardDisplayNumber(selectedPaymentMethod)}`}
             </Text>
             <TouchableOpacity onPress={navigateToSelectPayment}>
               <Text style={{ ...texts.md, color: colors.green600 }}>{t('Trocar')}</Text>
@@ -93,7 +90,22 @@ export const OrderPayment = ({
         </View>
       ) : null}
       <View style={{ paddingHorizontal: padding, backgroundColor: colors.white }}>
-        {showWarning && canPlaceOrder ? (
+        {issues.includes('profile-incomplete') || issues.includes('should-verify-phone') ? (
+          <DefaultButton
+            variant="secondary"
+            title={t('Completar cadastro')}
+            onPress={navigateToCompleteProfile}
+          />
+        ) : null}
+        {issues.includes('invalid-payment-method') ||
+        issues.includes('unsupported-payment-method') ? (
+          <DefaultButton
+            variant="secondary"
+            title={t('Escolher forma de pagamento')}
+            onPress={navigateToSelectPayment}
+          />
+        ) : null}
+        {issues.includes('schedule-required') || issues.includes('invalid-route') ? (
           <PaddedView
             half
             style={{
@@ -103,25 +115,17 @@ export const OrderPayment = ({
             }}
           >
             <Text style={{ ...texts.sm }}>
-              {t('Você precisa agendar um horário antes de fazer o pedido.')}
+              {issues.includes('schedule-required')
+                ? t('Você precisa agendar um horário antes de fazer o pedido.')
+                : order.route?.issue ??
+                  t(
+                    'Problema para calcular a rota de entrega. Altere o endereço e tente novamente.'
+                  )}
             </Text>
           </PaddedView>
         ) : null}
-        {!canPlaceOrder && !activityIndicator ? (
-          <DefaultButton
-            variant="secondary"
-            title={t('Completar cadastro')}
-            onPress={navigateToCompleteProfile}
-          />
-        ) : null}
-        {canPlaceOrder && !selectedPaymentMethod && payMethod !== 'pix' ? (
-          <DefaultButton
-            variant="secondary"
-            title={t('Escolher forma de pagamento')}
-            onPress={navigateToSelectPayment}
-          />
-        ) : null}
-        {canPlaceOrder && (payMethod === 'pix' || selectedPaymentMethod) ? (
+
+        {canPlaceOrder ? (
           <DefaultButton
             variant="primary"
             title={t('Confirmar pedido')}
@@ -131,10 +135,7 @@ export const OrderPayment = ({
             disabled={!isSubmitEnabled}
           />
         ) : null}
-        {canPlaceOrder &&
-        !activityIndicator &&
-        (foodPayableWithPix || p2pPayableWithPix) &&
-        payMethod !== 'pix' ? (
+        {canPlaceOrder && pixEnabled && payMethod !== 'pix' ? (
           <DefaultButton
             variant="secondary"
             title={t('Quero pagar com Pix')}

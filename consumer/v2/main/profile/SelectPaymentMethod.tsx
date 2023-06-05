@@ -6,8 +6,7 @@ import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { useCards } from '../../../../common/store/api/consumer/cards/useCards';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
-import { useIsPixEnabled } from '../../../../common/store/api/order/ui/useIsPixEnabled';
-import { useP2PPix } from '../../../../common/store/api/order/ui/useP2PPix';
+import { useAcceptedPaymentMethods } from '../../../../common/store/api/platform/hooks/useAcceptedPaymentMethods';
 import { colors, padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { PaymentBoxSelector } from '../../common/order-summary/PaymentBoxSelector';
@@ -38,8 +37,7 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
   const order = useObserveOrder(orderId);
   // state
   const cards = useCards();
-  const payableWithPix = useIsPixEnabled();
-  const p2pPayableWithPix = useP2PPix();
+  const pixEnabled = useAcceptedPaymentMethods().includes('pix');
   // UI
   if (!order) {
     return (
@@ -60,7 +58,10 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
             <View style={{ marginBottom: padding }} key={card.id}>
               <PaymentBoxSelector
                 variant="card"
-                selected={card.id === selectedPaymentMethodId}
+                selected={
+                  card.id === selectedPaymentMethodId &&
+                  (payMethod === 'credit_card' || payMethod === 'vr')
+                }
                 onSelectPayment={() => {
                   navigation.navigate(returnScreen, {
                     paymentMethodId: card.id,
@@ -80,7 +81,7 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
             />
           </View>
         )}
-        {payableWithPix || p2pPayableWithPix ? (
+        {pixEnabled ? (
           <PaymentBoxSelector
             variant="pix"
             selected={payMethod === 'pix'}

@@ -20,7 +20,6 @@ export const LoggedBusinessNavigator = () => {
   const dispatch = useDispatch<AppDispatch>();
   const flavor = useSelector(getFlavor);
   const user = useSelector(getUser);
-  // const business = useActiveBusiness();
   const uid = user?.uid;
   // side effects
   // subscribe for profile changes
