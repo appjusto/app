@@ -2,17 +2,15 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, View } from 'react-native';
 import { AcceptedCreditCards } from '../../../../assets/icons/credit-card/AcceptedCreditCards';
-import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import { getCardBrand } from '../../../../common/store/api/consumer/cards/getCardBrand';
 import { getCardDisplayNumber } from '../../../../common/store/api/consumer/cards/getCardDisplayNumber';
 import { useCards } from '../../../../common/store/api/consumer/cards/useCards';
 import { useAcceptedPaymentMethods } from '../../../../common/store/api/platform/hooks/useAcceptedPaymentMethods';
 import { useSegmentScreen } from '../../../../common/store/api/track';
-import { colors, padding, screens, texts } from '../../../../common/styles';
-import { formatCurrency } from '../../../../common/utils/formatters';
+import { colors, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { RestaurantNavigatorParamList } from '../../food/restaurant/types';
 import { OngoingOrderNavigatorParamList } from '../../ongoing/types';
@@ -22,8 +20,6 @@ import { ProfileParamList } from './types';
 export type ProfilePaymentMethodsParamList = {
   ProfilePaymentMethods?: {
     returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P' | 'OngoingOrderDeclined';
-    courierFee?: number;
-    fleetName?: string;
   };
 };
 
@@ -43,7 +39,7 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // context
-  const { returnScreen, courierFee, fleetName } = route.params ?? {};
+  const { returnScreen } = route.params ?? {};
   const cards = useCards();
   const acceptedPaymentMethods = useAcceptedPaymentMethods();
   // tracking
@@ -87,42 +83,6 @@ export default function ({ navigation, route }: Props) {
             }}
           />
         )}
-        ListHeaderComponent={
-          courierFee && fleetName ? (
-            <View style={{ backgroundColor: colors.white }}>
-              <SingleHeader title={t('Valor pendente')} />
-              <View style={{ paddingHorizontal: padding, paddingBottom: padding }}>
-                <Text style={{ ...texts.xs, color: colors.grey700 }}>
-                  {t(
-                    'Já foi efetuado o pagamento do produto, e ocorreu um problema para cobrar o valor  da entrega.'
-                  )}
-                </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    paddingTop: 12,
-                    paddingBottom: 2,
-                  }}
-                >
-                  <Text style={{ ...texts.sm }}>{t('Entregador')}</Text>
-                  <Text style={{ ...texts.sm }}>{formatCurrency(courierFee!)}</Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <Text style={{ ...texts.sm }}>{t('Frota escolhida')}</Text>
-                  <Text style={{ ...texts.sm }}>{fleetName}</Text>
-                </View>
-              </View>
-            </View>
-          ) : null
-        }
         ListFooterComponent={() => (
           <ConfigItem
             title={t('Adicionar novo cartão de crédito ou VR')}
