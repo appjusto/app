@@ -56,6 +56,12 @@ export const CustomButton = ({
           background = colors.grey700;
         }
       }
+    } else if (status === 'dispatching') {
+      if (order.fare?.courier?.payee === 'business') {
+        buttonTitle = t('Entregar pedido');
+        textColor = colors.black;
+        background = colors.darkYellow;
+      }
     }
   }
   if (variant === 'cancel') {
@@ -63,13 +69,13 @@ export const CustomButton = ({
     textColor = colors.white;
     background = colors.red;
   }
+  if (!buttonTitle) return null;
 
   return (
     <TouchableOpacity disabled={disabled} {...props}>
       <View
         style={[
           {
-            flexDirection: 'row',
             ...borders.default,
             paddingHorizontal: padding,
             paddingVertical: 14,

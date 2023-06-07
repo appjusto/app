@@ -80,6 +80,8 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
         } else {
           dispatch(showToast('Aguarde a chegada do entregador com o código do pedido', 'error'));
         }
+      } else if (status === 'dispatching' && fare?.courier?.payee === 'business') {
+        await api.order().updateOrder(order.id, { status: 'delivered' });
       }
       setLoading(false);
     } catch (error: any) {
@@ -112,16 +114,21 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
         <OrderLabel order={order} />
       </View>
       <View style={{ marginTop: padding }}>
-        {order.status === 'confirmed' ||
-        order.status === 'preparing' ||
-        order.status === 'ready' ? (
-          <View
-            style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
-          >
-            <View style={{ width: '49%' }}>
-              <DefaultButton variant="secondary" title={t('Ver pedido')} onPress={onCheckOrder} />
-            </View>
-            <View style={{ width: '49%', position: 'absolute', right: -2 }}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'center',
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <DefaultButton variant="secondary" title={t('Ver pedido')} onPress={onCheckOrder} />
+          </View>
+          {order.status === 'confirmed' ||
+          order.status === 'preparing' ||
+          order.status === 'ready' ||
+          (order.status === 'dispatching' && order.fare?.courier?.payee === 'business') ? (
+            <View style={{ flex: 1, marginLeft: padding }}>
               <CustomButton
                 order={order}
                 onPress={actionHandler}
@@ -129,12 +136,26 @@ export const OrdersKanbanItem = ({ onCheckOrder, orderId }: Props) => {
                 disabled={isLoading}
               />
             </View>
+          ) : null}
+        </View>
+        {/* {order.status === 'confirmed' ||
+        order.status === 'preparing' ||
+        order.status === 'ready' ? (
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+          >
+            <View style={{ width: '49%' }}>
+              
+            </View>
+            <View style={{ width: '49%', position: 'absolute', right: -2 }}>
+             
+            </View>
           </View>
         ) : (
           <View style={{ width: '100%' }}>
             <DefaultButton variant="secondary" title={t('Ver pedido')} onPress={onCheckOrder} />
           </View>
-        )}
+        )} */}
       </View>
       <CookingTimeModal
         order={order}
