@@ -8,13 +8,13 @@ import { borders, colors, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
 type Props = {
-  variant: 'pix' | 'card';
+  variant: 'card' | 'pix' | 'vr';
   selected: boolean;
   onSelectPayment: () => void;
-  creditCard?: Card;
+  card?: Card;
 };
 
-export const PaymentBoxSelector = ({ variant, selected, onSelectPayment, creditCard }: Props) => {
+export const PaymentBoxSelector = ({ variant, selected, onSelectPayment, card }: Props) => {
   return (
     <TouchableOpacity onPress={onSelectPayment}>
       <View
@@ -31,27 +31,24 @@ export const PaymentBoxSelector = ({ variant, selected, onSelectPayment, creditC
         }}
       >
         <View>
-          {variant === 'pix' ? (
-            <Text style={{ ...texts.sm }}>{t('Pix')}</Text>
-          ) : (
+          {card ? (
             <View>
               <Text style={{ ...texts.sm }}>
-                {creditCard?.processor === 'iugu' ? t('Cartão de crédito') : t('VR')}
+                {card.processor === 'iugu' ? t('Cartão de crédito') : t('VR')}
               </Text>
-              {creditCard ? (
-                <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 4 }}>
-                  {getCardDisplayNumber(creditCard)}
-                </Text>
-              ) : (
-                <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 4 }}>
-                  {t('Adicionar cartão')}
-                </Text>
-              )}
+              <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 4 }}>
+                {getCardDisplayNumber(card)}
+              </Text>
             </View>
+          ) : (
+            <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 4 }}>
+              {variant === 'card' ? t('Adicionar cartão') : t('Adicionar VR')}
+            </Text>
           )}
+          {variant === 'pix' ? <Text style={{ ...texts.sm }}>{t('Pix')}</Text> : null}
         </View>
         <View>
-          {variant === 'pix' ? (
+          {variant === 'vr' ? (
             <RoundedText backgroundColor={colors.darkYellow}>{t('Novo!')}</RoundedText>
           ) : (
             <View>

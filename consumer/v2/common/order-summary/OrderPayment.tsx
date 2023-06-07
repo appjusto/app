@@ -7,8 +7,8 @@ import RoundedText from '../../../../common/components/texts/RoundedText';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { getCardDisplayNumber } from '../../../../common/store/api/consumer/cards/getCardDisplayNumber';
 import { useCards } from '../../../../common/store/api/consumer/cards/useCards';
+import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useAcceptedPaymentMethods } from '../../../../common/store/api/platform/hooks/useAcceptedPaymentMethods';
-import { useContextActiveOrder } from '../../../../common/store/context/order';
 import { colors, doublePadding, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 import { useCheckoutIssues } from '../../food/restaurant/checkout/useCheckoutIssues';
@@ -34,15 +34,16 @@ export const OrderPayment = ({
   navigateToCompleteProfile,
   navigateToSelectPayment,
   payMethod,
+  orderId,
 }: Props) => {
   // context
-  const order = useContextActiveOrder();
+  const order = useObserveOrder(orderId);
   const issues = useCheckoutIssues(payMethod, selectedPaymentMethodId);
   const cards = useCards();
   const selectedPaymentMethod = cards?.find((card) => card.id === selectedPaymentMethodId);
   const pixEnabled = useAcceptedPaymentMethods().includes('pix');
   const canPlaceOrder = issues.length === 0 && !activityIndicator;
-  console.log(issues);
+  console.log(issues, selectedPaymentMethod, payMethod, pixEnabled, canPlaceOrder, order);
   if (!order) return null;
   return (
     <View style={{ backgroundColor: colors.white, paddingBottom: doublePadding }}>
@@ -125,7 +126,7 @@ export const OrderPayment = ({
           </PaddedView>
         ) : null}
 
-        {canPlaceOrder ? (
+        {canPlaceOrder || activityIndicator ? (
           <DefaultButton
             variant="primary"
             title={t('Confirmar pedido')}
@@ -135,7 +136,7 @@ export const OrderPayment = ({
             disabled={!isSubmitEnabled}
           />
         ) : null}
-        {canPlaceOrder && pixEnabled && payMethod !== 'pix' ? (
+        {pixEnabled && payMethod !== 'pix' ? (
           <DefaultButton
             variant="secondary"
             title={t('Quero pagar com Pix')}

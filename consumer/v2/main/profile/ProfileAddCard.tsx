@@ -6,6 +6,7 @@ import { Keyboard, Text, TextInput, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 import { AcceptedCreditCards } from '../../../../assets/icons/credit-card/AcceptedCreditCards';
+import { AcceptedVRCards } from '../../../../assets/icons/credit-card/AcceptedVRCards';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
@@ -17,6 +18,7 @@ import {
 } from '../../../../common/components/inputs/pattern-input/formatters';
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import useAxiosCancelToken from '../../../../common/hooks/useAxiosCancelToken';
+import { useAcceptedPaymentMethods } from '../../../../common/store/api/platform/hooks/useAcceptedPaymentMethods';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { showToast } from '../../../../common/store/ui/actions';
 import { halfPadding, padding, screens } from '../../../../common/styles';
@@ -35,6 +37,7 @@ import { ProfileParamList } from './types';
 export type ProfileAddCardParamList = {
   ProfileAddCard?: {
     returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P' | 'OngoingOrderDeclined';
+    filter?: 'vr' | 'iugu';
   };
 };
 
@@ -54,7 +57,7 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // params
-  const { returnScreen } = route.params ?? {};
+  const { returnScreen, filter } = route.params ?? {};
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -68,7 +71,8 @@ export default function ({ navigation, route }: Props) {
   const [name, setName] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
   const cardValidation = validateCard({ number, month, year, cvv, name });
-
+  const acceptedPaymentMethods = useAcceptedPaymentMethods();
+  const vrEnabled = acceptedPaymentMethods.includes('vr');
   // tracking
   useSegmentScreen('ProfileAddCard');
   // effects
@@ -139,7 +143,13 @@ export default function ({ navigation, route }: Props) {
       <View style={{ flex: 1 }}>
         <PaddedView style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={{ paddingRight: halfPadding }}>{t('Bandeiras aceitas')}</Text>
-          <AcceptedCreditCards />
+          {!filter ? (
+            <AcceptedCreditCards vr={vrEnabled} />
+          ) : filter === 'iugu' ? (
+            <AcceptedCreditCards />
+          ) : (
+            <AcceptedVRCards />
+          )}
         </PaddedView>
 
         <View style={{ flex: 1, padding }}>

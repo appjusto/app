@@ -4,6 +4,7 @@ import { isEmpty } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { AcceptedCreditCards } from '../../../../assets/icons/credit-card/AcceptedCreditCards';
+import { AcceptedVRCards } from '../../../../assets/icons/credit-card/AcceptedVRCards';
 import ConfigItem from '../../../../common/components/views/ConfigItem';
 import { getCardBrand } from '../../../../common/store/api/consumer/cards/getCardBrand';
 import { getCardDisplayNumber } from '../../../../common/store/api/consumer/cards/getCardDisplayNumber';
@@ -42,6 +43,7 @@ export default function ({ navigation, route }: Props) {
   const { returnScreen } = route.params ?? {};
   const cards = useCards();
   const acceptedPaymentMethods = useAcceptedPaymentMethods();
+  const vrEnabled = acceptedPaymentMethods.includes('vr');
   // tracking
   useSegmentScreen('ProfilePaymentMethods');
   // UI
@@ -84,18 +86,34 @@ export default function ({ navigation, route }: Props) {
           />
         )}
         ListFooterComponent={() => (
-          <ConfigItem
-            title={t('Adicionar novo cartão de crédito ou VR')}
-            subtitle={t(
-              'Aceitamos as bandeiras Visa, Mastercard, Elo, Diners, VR Refeição e VR Alimentação'
-            )}
-            onPress={() => {
-              if (returnScreen) navigation.navigate('ProfileAddCard', { returnScreen });
-              else navigation.navigate('ProfileAddCard');
-            }}
-          >
-            <AcceptedCreditCards />
-          </ConfigItem>
+          <View>
+            <ConfigItem
+              title={t('Adicionar cartão de crédito')}
+              subtitle={t('Aceitamos as bandeiras Visa, Mastercard, Elo e Diners')}
+              onPress={() => {
+                if (returnScreen) {
+                  navigation.navigate('ProfileAddCard', { returnScreen, filter: 'iugu' });
+                } else {
+                  navigation.navigate('ProfileAddCard', { filter: 'iugu' });
+                }
+              }}
+            >
+              <AcceptedCreditCards />
+            </ConfigItem>
+            {vrEnabled ? (
+              <ConfigItem
+                title={t('Adicionar cartão VR')}
+                subtitle={t('Aceitamos os cartões VR Refeição e VR Alimentação')}
+                onPress={() => {
+                  if (returnScreen)
+                    navigation.navigate('ProfileAddCard', { returnScreen, filter: 'vr' });
+                  else navigation.navigate('ProfileAddCard', { filter: 'vr' });
+                }}
+              >
+                <AcceptedVRCards />
+              </ConfigItem>
+            ) : null}
+          </View>
         )}
       />
     </View>

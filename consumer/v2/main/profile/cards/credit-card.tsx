@@ -6,6 +6,7 @@ import { DinersIcon } from '../../../../../assets/icons/credit-card/diners-icon'
 import { EloIcon } from '../../../../../assets/icons/credit-card/elo-icon';
 import { MasterCardIcon } from '../../../../../assets/icons/credit-card/mastercard-icon';
 import { VisaIcon } from '../../../../../assets/icons/credit-card/visa-icon';
+import { VRAlimentacao } from '../../../../../assets/icons/credit-card/vr-alimentacao';
 
 creditCardType.addCard({
   niceType: 'VR Refeição',
@@ -42,7 +43,7 @@ export const getCardTypeSVG = (type: CreditCardType) => {
   if (type.type === 'visa') return <VisaIcon />;
   if (type.type === 'elo') return <EloIcon />;
   if (type.type === 'diners-club') return <DinersIcon />;
-  if (type.type === 'vr') return <DinersIcon />; // TODO: substituir
+  if (type.type === 'vr') return <VRAlimentacao />; // TODO: substituir
   return null;
 };
 
