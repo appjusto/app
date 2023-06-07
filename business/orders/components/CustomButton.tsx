@@ -25,11 +25,12 @@ export const CustomButton = ({
   variant = 'changing',
   ...props
 }: Props) => {
-  const { status, dispatchingState } = order;
+  const { status, dispatchingState, dispatchingStatus } = order;
 
   let textColor;
   let background;
   let buttonTitle;
+  let buttonDisabled = disabled;
   if (variant === 'changing') {
     if (status === 'confirmed') {
       textColor = colors.black;
@@ -42,19 +43,20 @@ export const CustomButton = ({
       buttonTitle = t('Pedido pronto');
     }
     if (status === 'ready') {
-      if (order.fulfillment === 'take-away') {
-        buttonTitle = t('Entregar pedido');
+      if (
+        order.fulfillment !== 'delivery' ||
+        order.fare?.courier?.payee === 'business' ||
+        dispatchingStatus === 'outsourced' ||
+        dispatchingState === 'arrived-pickup'
+      ) {
+        buttonTitle =
+          order.fulfillment === 'take-away' ? t('Entregar pedido') : t('Despachar pedido');
         textColor = colors.black;
         background = colors.darkYellow;
       } else {
-        buttonTitle = t('Despachar pedido');
-        if (dispatchingState === 'arrived-pickup') {
-          textColor = colors.black;
-          background = colors.darkYellow;
-        } else {
-          textColor = colors.white;
-          background = colors.grey700;
-        }
+        buttonDisabled = true;
+        textColor = colors.white;
+        background = colors.grey700;
       }
     } else if (status === 'dispatching') {
       if (order.fare?.courier?.payee === 'business') {
@@ -63,8 +65,7 @@ export const CustomButton = ({
         background = colors.darkYellow;
       }
     }
-  }
-  if (variant === 'cancel') {
+  } else if (variant === 'cancel') {
     buttonTitle = t('Cancelar pedido');
     textColor = colors.white;
     background = colors.red;
@@ -72,7 +73,7 @@ export const CustomButton = ({
   if (!buttonTitle) return null;
 
   return (
-    <TouchableOpacity disabled={disabled} {...props}>
+    <TouchableOpacity disabled={buttonDisabled} {...props}>
       <View
         style={[
           {

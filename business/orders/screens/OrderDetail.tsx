@@ -68,9 +68,17 @@ export const OrderDetail = ({ navigation, route }: Props) => {
       if (order.status === 'ready') {
         if (order.fulfillment === 'take-away') {
           await api.order().updateOrder(order.id, { status: 'delivered' });
+        } else if (
+          order.fare?.courier?.payee === 'business' ||
+          order.dispatchingStatus === 'outsourced' ||
+          order.dispatchingState === 'arrived-pickup'
+        ) {
+          await api.order().updateOrder(order.id, { status: 'dispatching' });
+        } else {
+          dispatch(showToast('Aguarde a chegada do entregador com o código do pedido', 'error'));
         }
-        if (order.dispatchingState !== 'arrived-pickup') return;
-        else await api.order().updateOrder(order.id, { status: 'dispatching' });
+      } else if (order.status === 'dispatching' && order.fare?.courier?.payee === 'business') {
+        await api.order().updateOrder(order.id, { status: 'delivered' });
       }
       setLoading(false);
     } catch (error: any) {
@@ -96,7 +104,10 @@ export const OrderDetail = ({ navigation, route }: Props) => {
   // helpers
   const showCustomButton =
     order &&
-    (order.status === 'confirmed' || order.status === 'preparing' || order.status === 'ready');
+    (order.status === 'confirmed' ||
+      order.status === 'preparing' ||
+      order.status === 'ready' ||
+      (order.status === 'dispatching' && order.fare?.courier?.payee === 'business'));
 
   const cancellableStatuses =
     order &&
@@ -184,11 +195,7 @@ export const OrderDetail = ({ navigation, route }: Props) => {
               order={order}
               onPress={actionHandler}
               activityIndicator={isLoading}
-              disabled={
-                order.status === 'ready' &&
-                order.fulfillment === 'delivery' &&
-                order.dispatchingState !== 'arrived-pickup'
-              }
+              disabled={isLoading}
             />
           </View>
         </View>

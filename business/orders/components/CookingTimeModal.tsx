@@ -10,7 +10,14 @@ import { ApiContext } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
 import { track } from '../../../common/store/api/track';
-import { borders, colors, halfPadding, padding, texts } from '../../../common/styles';
+import {
+  biggerPadding,
+  borders,
+  colors,
+  halfPadding,
+  padding,
+  texts,
+} from '../../../common/styles';
 import { t } from '../../../strings';
 import { BusinessAppContext } from '../../BusinessAppContext';
 import { LoggedBusinessNavParamsList } from '../../types';
@@ -173,7 +180,8 @@ export const CookingTimeModal = ({ order, onModalClose, modalVisible, buttonTitl
               paddingTop: halfPadding,
               borderTopColor: colors.grey500,
               borderTopWidth: 1,
-              marginTop: 24,
+              marginTop: biggerPadding,
+              marginBottom: biggerPadding,
             }}
           >
             <View style={{ paddingHorizontal: padding }}>

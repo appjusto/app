@@ -6,7 +6,6 @@ import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { ApiContext } from '../../../common/app/context';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DoubleHeader from '../../../common/components/texts/DoubleHeader';
-import { useContextGetSeverTime } from '../../../common/contexts/ServerTimeContext';
 import { IconOnboardingDelivery } from '../../../common/icons/icon-onboarding-delivery';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { filterOrdersByStatus, summarizeOrders2 } from '../../../common/store/order/selectors';
@@ -30,7 +29,6 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   // route params
   const { businessId } = route.params ?? {};
   // context
-  const getServerTime = useContextGetSeverTime();
   const api = React.useContext(ApiContext);
   const { business, orders, activeOrders, scheduledOrders } = React.useContext(BusinessAppContext);
   // screen state
@@ -44,8 +42,8 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
   React.useEffect(() => {
     if (!orders?.length) setKanbanOrders([]);
     if (!selectedFilter) setKanbanOrders(activeOrders);
-    if (selectedFilter === 'scheduled') setKanbanOrders(scheduledOrders);
-    else setKanbanOrders(filterOrdersByStatus(orders, selectedFilter!));
+    else if (selectedFilter === 'scheduled') setKanbanOrders(scheduledOrders);
+    else setKanbanOrders(filterOrdersByStatus(orders, selectedFilter));
   }, [orders, selectedFilter, scheduledOrders, activeOrders]);
   // getting business from SelectBusiness screen
   React.useEffect(() => {
@@ -149,7 +147,7 @@ export const BusinessOrders = ({ navigation, route }: Props) => {
             style={{ marginRight: 32 }}
           />
         </ScrollView>
-        <ScrollView style={{ marginBottom: 32 }}>
+        <ScrollView style={{ marginBottom: 240 }}>
           <PaddedView style={{ flex: 1 }}>
             {kanbanOrders.length === 0 ? (
               <View
