@@ -28,6 +28,7 @@ export const PaymentBoxSelector = ({ variant, selected, onSelectPayment, card }:
           ...borders.default,
           backgroundColor: selected ? colors.white : colors.grey50,
           borderColor: selected ? colors.black : colors.grey500,
+          marginBottom: padding,
         }}
       >
         <View>
@@ -41,16 +42,18 @@ export const PaymentBoxSelector = ({ variant, selected, onSelectPayment, card }:
               </Text>
             </View>
           ) : (
-            <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 4 }}>
-              {variant === 'card' ? t('Adicionar cartão') : t('Adicionar VR')}
+            <Text style={{ ...texts.sm, marginTop: 4 }}>
+              {variant === 'card' ? t('Adicionar cartão') : ''}
+              {variant === 'vr' ? t('Adicionar VR') : ''}
+              {variant === 'pix' ? t('Pix') : ''}
             </Text>
           )}
-          {variant === 'pix' ? <Text style={{ ...texts.sm }}>{t('Pix')}</Text> : null}
         </View>
         <View>
           {variant === 'vr' ? (
             <RoundedText backgroundColor={colors.darkYellow}>{t('Novo!')}</RoundedText>
-          ) : (
+          ) : null}
+          {variant === 'card' ? (
             <View>
               <Feather
                 name="edit-3"
@@ -58,7 +61,7 @@ export const PaymentBoxSelector = ({ variant, selected, onSelectPayment, card }:
                 style={{ ...borders.default, borderColor: colors.grey50, padding: 8 }}
               />
             </View>
-          )}
+          ) : null}
         </View>
       </View>
     </TouchableOpacity>

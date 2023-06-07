@@ -6,7 +6,7 @@ import PaddedView from '../../../../common/components/containers/PaddedView';
 import { useCards } from '../../../../common/store/api/consumer/cards/useCards';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useAcceptedPaymentMethods } from '../../../../common/store/api/platform/hooks/useAcceptedPaymentMethods';
-import { colors, padding, screens } from '../../../../common/styles';
+import { colors, screens } from '../../../../common/styles';
 import { PaymentBoxSelector } from '../../common/order-summary/PaymentBoxSelector';
 import { RestaurantNavigatorParamList } from '../../food/restaurant/types';
 import { P2POrderNavigatorParamList } from '../../p2p/types';
@@ -46,6 +46,23 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
       </View>
     );
   }
+  const cardList = (cards ?? []).map((card) => (
+    <View key={card.id}>
+      <PaymentBoxSelector
+        variant={card.processor === 'iugu' ? 'card' : 'vr'}
+        selected={
+          card.id === selectedPaymentMethodId && (payMethod === 'credit_card' || payMethod === 'vr')
+        }
+        onSelectPayment={() => {
+          navigation.navigate(returnScreen, {
+            paymentMethodId: card.id,
+            payMethod: card.processor === 'iugu' ? 'credit_card' : 'vr',
+          });
+        }}
+        card={card}
+      />
+    </View>
+  ));
   return (
     <ScrollView
       style={{ ...screens.config }}
@@ -53,34 +70,8 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
       scrollIndicatorInsets={{ right: 1 }}
     >
       <PaddedView>
-        {cards?.length
-          ? cards.map((card) => (
-              <View style={{ marginBottom: padding }} key={card.id}>
-                <PaymentBoxSelector
-                  variant={card.processor === 'iugu' ? 'card' : 'vr'}
-                  selected={card.id === selectedPaymentMethodId}
-                  onSelectPayment={() => {
-                    navigation.navigate(returnScreen, {
-                      paymentMethodId: card.id,
-                      payMethod: card.processor === 'iugu' ? 'credit_card' : 'vr',
-                    });
-                  }}
-                  card={card}
-                />
-              </View>
-            ))
-          : null}
-        (
-        <View style={{ marginBottom: padding }}>
-          <PaymentBoxSelector
-            variant="card"
-            selected={false}
-            onSelectPayment={() =>
-              navigation.navigate('ProfileAddCard', { returnScreen, filter: 'iugu' })
-            }
-          />
-        </View>
-        )
+        {cardList}
+
         {pixEnabled ? (
           <PaymentBoxSelector
             variant="pix"
@@ -88,6 +79,14 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
             onSelectPayment={() => navigation.navigate(returnScreen, { payMethod: 'pix' })}
           />
         ) : null}
+
+        <PaymentBoxSelector
+          variant="card"
+          selected={false}
+          onSelectPayment={() =>
+            navigation.navigate('ProfileAddCard', { returnScreen, filter: 'iugu' })
+          }
+        />
         {vrEnabled ? (
           <PaymentBoxSelector
             variant="vr"
@@ -98,13 +97,6 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
           />
         ) : null}
       </PaddedView>
-      <View style={{ flex: 1 }} />
-      {/* <PaddedView>
-        <DefaultButton
-          title={t('Adicionar cartão')}
-          onPress={() => navigation.navigate('ProfileAddCard', { returnScreen })}
-        />
-      </PaddedView> */}
     </ScrollView>
   );
 };

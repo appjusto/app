@@ -24,6 +24,7 @@ import { isConsumerProfileComplete } from '../../../common/store/consumer/valida
 import { showToast } from '../../../common/store/ui/actions';
 import { screens } from '../../../common/styles';
 import { t } from '../../../strings';
+import { useCheckoutIssues } from '../food/restaurant/checkout/useCheckoutIssues';
 import { LoggedNavigatorParamList } from '../types';
 import { P2POrderHeader } from './P2POrderHeader';
 import P2POrderPager from './P2POrderPager';
@@ -61,12 +62,11 @@ export default function ({ navigation, route }: Props) {
   const [wantsCpf, setWantsCpf] = React.useState(false);
   const quotes = useQuotes(order?.id);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
-  const [payMethod, setPayMethod] = React.useState<PayableWith>('credit_card');
-  const canSubmit =
-    (payMethod !== 'credit_card' || selectedPaymentMethodId !== undefined) &&
-    selectedFare !== undefined &&
-    !isLoading &&
-    isEmpty(order?.route?.issue);
+  const [payMethod, setPayMethod] = React.useState<PayableWith>(
+    consumer.defaultPaymentMethod ?? 'credit_card'
+  );
+  const issues = useCheckoutIssues(payMethod, selectedPaymentMethodId);
+  const canSubmit = issues.length === 0 && Boolean(selectedFare) && !isLoading;
   // side effects
   // whenever quotes are updated
   // select first fare and subscribe to involved fleets updates
