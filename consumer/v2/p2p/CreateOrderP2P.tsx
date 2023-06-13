@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
+import { useCards } from '../../../common/store/api/consumer/cards/useCards';
 import { useObserveOrder } from '../../../common/store/api/order/hooks/useObserveOrder';
 import { useQuotes } from '../../../common/store/api/order/hooks/useQuotes';
 import { useProfileSummary } from '../../../common/store/api/profile/useProfileSummary';
@@ -50,6 +51,7 @@ export default function ({ navigation, route }: Props) {
   // redux store
   const consumer = useSelector(getConsumer)!;
   // state
+  const cards = useCards();
   const { shouldVerifyPhone } = useProfileSummary();
   const { coords } = useLastKnownLocation();
   const [orderId, setOrderId] = React.useState<string>();
@@ -65,7 +67,8 @@ export default function ({ navigation, route }: Props) {
   const [payMethod, setPayMethod] = React.useState<PayableWith>(
     consumer.defaultPaymentMethod ?? 'credit_card'
   );
-  const issues = useCheckoutIssues(payMethod, selectedPaymentMethodId);
+  const card = cards?.find((card) => card.id === selectedPaymentMethodId);
+  const issues = useCheckoutIssues(payMethod, card);
   const canSubmit = issues.length === 0 && Boolean(selectedFare) && !isLoading;
   // side effects
   // whenever quotes are updated

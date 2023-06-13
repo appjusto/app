@@ -65,11 +65,9 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   // redux store
   const consumer = useSelector(getConsumer)!;
   // state
+  const cards = useCards();
   const { shouldVerifyPhone } = useProfileSummary();
   const { coords } = useLastKnownLocation();
-  const cards = useCards();
-  // for credit cards only
-
   const [isLoading, setLoading] = React.useState(false);
   const [destinationModalVisible, setDestinationModalVisible] = React.useState(false);
   const [orderAdditionalInfo, setOrderAdditionalInfo] = React.useState('');
@@ -88,7 +86,8 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
     consumer.defaultPaymentMethodId
   );
-  const issues = useCheckoutIssues(payMethod, selectedPaymentMethodId);
+  const card = cards?.find((card) => card.id === selectedPaymentMethodId);
+  const issues = useCheckoutIssues(payMethod, card);
   const canSubmit = issues.length === 0 && Boolean(selectedFare) && !isLoading;
   // side effects
   // whenever quotes are updated
@@ -378,7 +377,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         payment={
           <OrderPayment
             orderId={order.id}
-            selectedPaymentMethodId={selectedPaymentMethodId}
+            card={card}
             isSubmitEnabled={canSubmit}
             activityIndicator={isLoading}
             onSubmit={() => {

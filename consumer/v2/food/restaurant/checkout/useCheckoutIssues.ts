@@ -1,4 +1,5 @@
-import { PayableWith } from '@appjusto/types';
+import { Card, PayableWith } from '@appjusto/types';
+import { WithId } from '../../../../../../types';
 import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTimeContext';
 import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
 import { isAvailable } from '../../../../../common/store/api/business/selectors';
@@ -16,7 +17,10 @@ type CheckoutIssue =
   | 'schedule-unsupported'
   | 'schedule-required';
 
-export const useCheckoutIssues = (selectedPaymentMethod: PayableWith, cardId?: string | null) => {
+export const useCheckoutIssues = (
+  selectedPaymentMethod: PayableWith,
+  card?: WithId<Card> | null
+) => {
   // context
   const getServerTime = useContextGetSeverTime();
   const now = getServerTime();
@@ -33,13 +37,17 @@ export const useCheckoutIssues = (selectedPaymentMethod: PayableWith, cardId?: s
   if (shouldVerifyPhone) {
     issues.push('should-verify-phone');
   }
-  if (selectedPaymentMethod !== 'pix' && !cardId) {
-    issues.push('invalid-payment-method');
-  }
   if (!acceptedPaymentMethods.includes(selectedPaymentMethod)) {
-    console.log('acceptedPaymentMethods', acceptedPaymentMethods, selectedPaymentMethod);
     issues.push('unsupported-payment-method');
+  } else if (selectedPaymentMethod !== 'pix') {
+    if (!card) issues.push('invalid-payment-method');
+    else if (card.processor === 'vr' && !acceptedPaymentMethods.includes('vr')) {
+      issues.push('unsupported-payment-method');
+    } else if (card.processor === 'iugu' && !acceptedPaymentMethods.includes('credit_card')) {
+      issues.push('unsupported-payment-method');
+    }
   }
+
   if (order?.route?.issue) {
     issues.push('invalid-route');
   }

@@ -10,7 +10,6 @@ export const useAcceptedPaymentMethods = (): PayableWith[] => {
   const order = useContextActiveOrder();
   const business = useObserveBusiness(order?.business?.id);
   const consumer = useSelector(getConsumer)!;
-  console.log('business', business);
   if (!order) return acceptedPaymentMethods;
   if (!business) return acceptedPaymentMethods.filter((value) => value !== 'vr');
   if (consumer.tags?.includes('staff')) return ['credit_card', 'pix', 'vr', 'credits'];

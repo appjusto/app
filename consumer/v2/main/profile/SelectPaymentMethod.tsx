@@ -38,6 +38,7 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
   const acceptedPaymentMethods = useAcceptedPaymentMethods();
   const pixEnabled = acceptedPaymentMethods.includes('pix');
   const vrEnabled = acceptedPaymentMethods.includes('vr');
+  const creditEnabled = acceptedPaymentMethods.includes('credit_card');
   // UI
   if (!order) {
     return (
@@ -46,7 +47,10 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
       </View>
     );
   }
-  const cardList = (cards ?? []).map((card) => (
+  const acceptedCards = (cards ?? []).filter(
+    (card) => (card.processor === 'iugu' && creditEnabled) || (card.processor === 'vr' && vrEnabled)
+  );
+  const cardList = acceptedCards.map((card) => (
     <View key={card.id}>
       <PaymentBoxSelector
         variant={card.processor === 'iugu' ? 'card' : 'vr'}
