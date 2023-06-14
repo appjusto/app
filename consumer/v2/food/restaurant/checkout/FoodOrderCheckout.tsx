@@ -74,7 +74,6 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
   const [wantsCpf, setWantsCpf] = React.useState(false);
   const [shareDataWithBusiness, setShareDataWithBusiness] = React.useState(false);
-  const quotes = useQuotes(orderId);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
   const [complement, setComplement] = React.useState<string>(
     order?.destination?.additionalInfo ?? ''
@@ -89,6 +88,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
   const card = cards?.find((card) => card.id === selectedPaymentMethodId);
   const issues = useCheckoutIssues(payMethod, card);
   const canSubmit = issues.length === 0 && Boolean(selectedFare) && !isLoading;
+  const quotes = useQuotes(orderId, payMethod);
   // side effects
   // whenever quotes are updated
   // select first fare

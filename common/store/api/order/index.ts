@@ -12,6 +12,7 @@ import {
   OrderItem,
   OrderStatus,
   OrderType,
+  PayableWith,
   Place,
   PlaceOrderPayloadPayment,
   WithId,
@@ -59,6 +60,13 @@ interface PlaceOrderOptions {
   coordinates?: LatLng;
   additionalInfo?: string;
   wantToShareData?: boolean;
+}
+
+interface GetOrderQuotesOptions {
+  orderId: string;
+  paymentMethod?: PayableWith;
+  /** @deprecated */
+  fleetsIds?: string[];
 }
 
 export default class OrderApi {
@@ -363,11 +371,11 @@ export default class OrderApi {
 
   // callables
   // consumer
-  async getOrderQuotes(orderId: string, fleetsIds?: string[]) {
+  async getOrderQuotes({ orderId, paymentMethod }: GetOrderQuotesOptions) {
     return (
       await this.functionsRef.getGetOrderQuotesCallable()({
         orderId,
-        fleetsIds,
+        paymentMethod,
         meta: { version: getAppVersion() },
       })
     ).data;

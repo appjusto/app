@@ -62,7 +62,6 @@ export default function ({ navigation, route }: Props) {
   const [isLoading, setLoading] = React.useState(false);
   const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
   const [wantsCpf, setWantsCpf] = React.useState(false);
-  const quotes = useQuotes(order?.id);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
   const [payMethod, setPayMethod] = React.useState<PayableWith>(
     consumer.defaultPaymentMethod ?? 'credit_card'
@@ -70,6 +69,7 @@ export default function ({ navigation, route }: Props) {
   const card = cards?.find((card) => card.id === selectedPaymentMethodId);
   const issues = useCheckoutIssues(payMethod, card);
   const canSubmit = issues.length === 0 && Boolean(selectedFare) && !isLoading;
+  const quotes = useQuotes(order?.id, payMethod);
   // side effects
   // whenever quotes are updated
   // select first fare and subscribe to involved fleets updates

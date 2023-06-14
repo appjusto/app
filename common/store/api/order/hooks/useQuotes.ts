@@ -1,12 +1,13 @@
 import { Fare } from '@appjusto/types';
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { PayableWith } from '../../../../../../types';
 import { ApiContext, AppDispatch } from '../../../../app/context';
 import { showToast } from '../../../ui/actions';
 import { getOrderTotal } from '../helpers';
 import { useObserveOrder } from './useObserveOrder';
 
-export const useQuotes = (orderId?: string) => {
+export const useQuotes = (orderId?: string, paymentMethod?: PayableWith) => {
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -22,9 +23,7 @@ export const useQuotes = (orderId?: string) => {
     }
     setQuotes(undefined);
     try {
-      setQuotes(
-        await api.order().getOrderQuotes(order.id, order.scheduledTo ? ['appjusto'] : undefined)
-      );
+      setQuotes(await api.order().getOrderQuotes({ orderId: order.id, paymentMethod }));
     } catch (error: any) {
       dispatch(showToast(error.toString(), 'error'));
     }
@@ -40,6 +39,7 @@ export const useQuotes = (orderId?: string) => {
       itemsValue,
       order?.fulfillment,
       order?.destination?.location?.latitude,
+      paymentMethod,
     ]);
     getOrderQuotes();
   }, [
@@ -49,6 +49,8 @@ export const useQuotes = (orderId?: string) => {
     itemsValue,
     order?.fulfillment,
     order?.destination?.location?.latitude,
+    order?.paymentMethod,
+    paymentMethod,
   ]);
   return quotes;
 };
