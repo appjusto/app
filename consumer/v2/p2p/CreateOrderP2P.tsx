@@ -63,13 +63,13 @@ export default function ({ navigation, route }: Props) {
   const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
   const [wantsCpf, setWantsCpf] = React.useState(false);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
-  const [payMethod, setPayMethod] = React.useState<PayableWith>(
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState<PayableWith>(
     consumer.defaultPaymentMethod ?? 'credit_card'
   );
   const card = cards?.find((card) => card.id === selectedPaymentMethodId);
-  const issues = useCheckoutIssues(payMethod, card);
+  const issues = useCheckoutIssues(selectedPaymentMethod, card);
   const canSubmit = issues.length === 0 && Boolean(selectedFare) && !isLoading;
-  const quotes = useQuotes(order?.id, payMethod);
+  const quotes = useQuotes(order?.id, selectedPaymentMethod);
   // side effects
   // whenever quotes are updated
   // select first fare and subscribe to involved fleets updates
@@ -127,14 +127,18 @@ export default function ({ navigation, route }: Props) {
         destination: undefined,
       });
     }
-    if (params?.paymentMethodId) {
-      setSelectedPaymentMethodId(params?.paymentMethodId);
-      setPayMethod('credit_card');
+    if (params?.payMethod) {
+      setSelectedPaymentMethod(params.payMethod);
       navigation.setParams({
-        paymentMethodId: undefined,
+        payMethod: undefined,
       });
-    } // from SelectPaymentMethod
-    if (params?.payMethod) setPayMethod(params.payMethod);
+      if (params?.paymentMethodId) {
+        setSelectedPaymentMethodId(params.paymentMethodId);
+        navigation.setParams({
+          paymentMethodId: undefined,
+        });
+      }
+    }
   }, [api, consumer, dispatch, navigation, order, orderId, params]);
   // if the order status becomes 'expired'
   React.useEffect(() => {
@@ -180,7 +184,7 @@ export default function ({ navigation, route }: Props) {
     track('placing order');
     if (!orderId) return;
     const paymentPayload =
-      payMethod === 'credit_card'
+      selectedPaymentMethod === 'credit_card'
         ? ({
             payableWith: 'credit_card',
             cardId: selectedPaymentMethodId,
@@ -293,14 +297,14 @@ export default function ({ navigation, route }: Props) {
         navigateToSelectPayment={() =>
           navigation.navigate('SelectPaymentMethod', {
             selectedPaymentMethodId,
-            payMethod,
+            payMethod: selectedPaymentMethod,
             returnScreen: 'CreateOrderP2P',
             orderId: order.id,
           })
         }
-        payMethod={payMethod}
+        payMethod={selectedPaymentMethod}
         onPayWithPix={() => {
-          setPayMethod('pix');
+          setSelectedPaymentMethod('pix');
         }}
       />
     </View>

@@ -79,16 +79,16 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     order?.destination?.additionalInfo ?? ''
   );
   const [addressComplement, setAddressComplement] = React.useState<boolean>(complement.length > 0);
-  const [payMethod, setPayMethod] = React.useState<PayableWith>(
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState<PayableWith>(
     consumer.defaultPaymentMethod ?? 'credit_card'
   );
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
     consumer.defaultPaymentMethodId
   );
   const card = cards?.find((card) => card.id === selectedPaymentMethodId);
-  const issues = useCheckoutIssues(payMethod, card);
+  const issues = useCheckoutIssues(selectedPaymentMethod, card);
   const canSubmit = issues.length === 0 && Boolean(selectedFare) && !isLoading;
-  const quotes = useQuotes(orderId, payMethod);
+  const quotes = useQuotes(orderId, selectedPaymentMethod);
   // side effects
   // whenever quotes are updated
   // select first fare
@@ -118,12 +118,18 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         destination: undefined,
       });
     }
-    if (params?.paymentMethodId) {
-      setSelectedPaymentMethodId(params.paymentMethodId);
-      setPayMethod(params.payMethod ?? 'credit_card');
+    // from SelectPaymentMethod
+    if (params?.payMethod) {
+      setSelectedPaymentMethod(params.payMethod);
       navigation.setParams({
-        paymentMethodId: undefined,
+        payMethod: undefined,
       });
+      if (params?.paymentMethodId) {
+        setSelectedPaymentMethodId(params.paymentMethodId);
+        navigation.setParams({
+          paymentMethodId: undefined,
+        });
+      }
     }
     // from AvailableFleets screen
     if (params?.returningFare) {
@@ -132,8 +138,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         returningFare: undefined,
       });
     }
-    // from SelectPaymentMethod
-    if (params?.payMethod) setPayMethod(params.payMethod);
+
     if (consumer.cpf) setCpf(consumer.cpf);
   }, [api, navigation, order, params, consumer.cpf]);
   // return to Home if order status becomes 'expired' or all items are removed from it
@@ -231,7 +236,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         });
       }
       const paymentPayload = (() => {
-        if (payMethod === 'pix') {
+        if (selectedPaymentMethod === 'pix') {
           return {
             payableWith: 'pix',
           } as PlaceOrderPayloadPaymentPix;
@@ -389,14 +394,14 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
             navigateToSelectPayment={() =>
               navigation.navigate('SelectPaymentMethod', {
                 selectedPaymentMethodId,
-                payMethod,
+                payMethod: selectedPaymentMethod,
                 returnScreen: 'FoodOrderCheckout',
                 orderId: order.id,
               })
             }
-            payMethod={payMethod}
+            payMethod={selectedPaymentMethod}
             onPayWithPix={() => {
-              setPayMethod('pix');
+              setSelectedPaymentMethod('pix');
             }}
           />
         }

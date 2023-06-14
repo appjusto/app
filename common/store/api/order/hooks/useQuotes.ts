@@ -28,6 +28,7 @@ export const useQuotes = (orderId?: string, paymentMethod?: PayableWith) => {
       dispatch(showToast(error.toString(), 'error'));
     }
   };
+  const scheduledTo = order?.scheduledTo?.toString();
   const itemsValue = getOrderTotal(order ?? undefined);
   // side-effects
   // update quotes
@@ -49,8 +50,8 @@ export const useQuotes = (orderId?: string, paymentMethod?: PayableWith) => {
     itemsValue,
     order?.fulfillment,
     order?.destination?.location?.latitude,
-    order?.paymentMethod,
     paymentMethod,
+    scheduledTo,
   ]);
   return quotes;
 };
