@@ -36,7 +36,11 @@ const iconOrdersFocused = require('./icons/icon-orders-focused.png');
 const iconUserFocused = require('./icons/icon-user-focused.png');
 const iconCrowdFunding = require('./icons/crowd-funding.png');
 const iconHeaderMenu = require('./icons/icon-menu-horizontal.png');
+const iconVRAlimentacao = require('./icons/svg-vr-alimentacao.png');
+const iconVRRefeicao = require('./icons/svg-vr-refeicao.png');
 
+export const VRAlimentacaoIcon = iconVRAlimentacao;
+export const VRRefeicaoIcon = iconVRRefeicao;
 export const checklistTick = iconChecklistTick;
 export const home = iconHome;
 export const calendar = iconCalendar;

@@ -1,3 +1,4 @@
+import { PayableWith } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { toNumber } from 'lodash';
@@ -5,8 +6,8 @@ import React, { ReactNode } from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
+import { VRPayableWith } from '../../../../../types';
 import { AcceptedCreditCards } from '../../../../assets/icons/credit-card/AcceptedCreditCards';
-import { AcceptedVRCards } from '../../../../assets/icons/credit-card/AcceptedVRCards';
 import { ApiContext, AppDispatch } from '../../../../common/app/context';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
@@ -37,7 +38,7 @@ import { ProfileParamList } from './types';
 export type ProfileAddCardParamList = {
   ProfileAddCard?: {
     returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P' | 'OngoingOrderDeclined';
-    filter?: 'vr' | 'iugu';
+    types?: ('credit_card' | VRPayableWith)[];
   };
 };
 
@@ -57,7 +58,7 @@ type Props = {
 
 export default function ({ navigation, route }: Props) {
   // params
-  const { returnScreen, filter } = route.params ?? {};
+  const { returnScreen, types } = route.params ?? {};
   // context
   const api = React.useContext(ApiContext);
   const dispatch = useDispatch<AppDispatch>();
@@ -72,7 +73,6 @@ export default function ({ navigation, route }: Props) {
   const [isLoading, setLoading] = React.useState(false);
   const cardValidation = validateCard({ number, month, year, cvv, name });
   const acceptedPaymentMethods = useAcceptedPaymentMethods();
-  const vrEnabled = acceptedPaymentMethods.includes('vr');
   // tracking
   useSegmentScreen('ProfileAddCard');
   // effects
@@ -96,8 +96,8 @@ export default function ({ navigation, route }: Props) {
     Keyboard.dismiss();
     try {
       setLoading(true);
-      const type = getCardType(number)?.type;
-      const processor = type === 'vr' ? 'vr' : 'iugu';
+      const type = getCardType(number)?.type as PayableWith;
+      const processor = type === 'vr-alimentação' || type === 'vr-refeição' ? 'vr' : 'iugu';
       const result = await api.consumer().saveCard(
         {
           processor,
@@ -114,7 +114,7 @@ export default function ({ navigation, route }: Props) {
         if (returnScreen === 'FoodOrderCheckout') {
           navigation.navigate(returnScreen, {
             paymentMethodId: result.id,
-            payMethod: processor === 'iugu' ? 'credit_card' : 'vr',
+            payMethod: type,
           });
         } else
           navigation.navigate(returnScreen, {
@@ -143,13 +143,7 @@ export default function ({ navigation, route }: Props) {
       <View style={{ flex: 1 }}>
         <PaddedView style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={{ paddingRight: halfPadding }}>{t('Bandeiras aceitas')}</Text>
-          {!filter ? (
-            <AcceptedCreditCards vr={vrEnabled} />
-          ) : filter === 'iugu' ? (
-            <AcceptedCreditCards />
-          ) : (
-            <AcceptedVRCards />
-          )}
+          <AcceptedCreditCards types={types ?? acceptedPaymentMethods} />
         </PaddedView>
 
         <View style={{ flex: 1, padding }}>

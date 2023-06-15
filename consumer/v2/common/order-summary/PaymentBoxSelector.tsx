@@ -2,13 +2,15 @@ import { Card } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { PayableWith } from '../../../../../types';
 import RoundedText from '../../../../common/components/texts/RoundedText';
 import { getCardDisplayNumber } from '../../../../common/store/api/consumer/cards/getCardDisplayNumber';
+import { getCardType } from '../../../../common/store/api/consumer/cards/getCardType';
 import { borders, colors, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
 
 type Props = {
-  variant: 'card' | 'pix' | 'vr';
+  variant: PayableWith;
   selected: boolean;
   onSelectPayment: () => void;
   card?: Card;
@@ -34,26 +36,25 @@ export const PaymentBoxSelector = ({ variant, selected, onSelectPayment, card }:
         <View>
           {card ? (
             <View>
-              <Text style={{ ...texts.sm }}>
-                {card.processor === 'iugu' ? t('Cartão de crédito') : t('VR')}
-              </Text>
+              <Text style={{ ...texts.sm }}>{getCardType(card)}</Text>
               <Text style={{ ...texts.sm, color: colors.grey700, marginTop: 4 }}>
                 {getCardDisplayNumber(card)}
               </Text>
             </View>
           ) : (
             <Text style={{ ...texts.sm, marginTop: 4 }}>
-              {variant === 'card' ? t('Adicionar cartão') : ''}
-              {variant === 'vr' ? t('Adicionar VR') : ''}
+              {variant === 'credit_card' ? t('Adicionar cartão') : ''}
+              {variant === 'vr-alimentação' ? t('Adicionar VR Alimentação') : ''}
+              {variant === 'vr-refeição' ? t('Adicionar VR Refeição') : ''}
               {variant === 'pix' ? t('Pix') : ''}
             </Text>
           )}
         </View>
         <View>
-          {variant === 'vr' ? (
+          {!card && (variant === 'vr-alimentação' || variant === 'vr-refeição') ? (
             <RoundedText backgroundColor={colors.darkYellow}>{t('Novo!')}</RoundedText>
           ) : null}
-          {variant === 'card' ? (
+          {variant === 'credit_card' ? (
             <View>
               <Feather
                 name="edit-3"

@@ -4,6 +4,7 @@ import {
   PlaceOrderPayloadPaymentCreditCard,
   PlaceOrderPayloadPaymentPix,
   PlaceOrderPayloadPaymentVR,
+  VRPayableWith,
 } from '@appjusto/types';
 import * as cpfutils from '@fnando/cpf';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
@@ -120,6 +121,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
     }
     // from SelectPaymentMethod
     if (params?.payMethod) {
+      console.log('FoodOrderCheckout', params.payMethod, params.paymentMethodId);
       setSelectedPaymentMethod(params.payMethod);
       navigation.setParams({
         payMethod: undefined,
@@ -249,7 +251,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           } as PlaceOrderPayloadPaymentCreditCard;
         } else if (selectedCard?.processor === 'vr') {
           return {
-            payableWith: 'vr',
+            payableWith: selectedCard.type as VRPayableWith,
             cardId: selectedPaymentMethodId,
           } as PlaceOrderPayloadPaymentVR;
         }

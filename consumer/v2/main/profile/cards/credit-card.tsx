@@ -1,3 +1,4 @@
+import { VRPayableWith } from '@appjusto/types';
 import creditCardType from 'credit-card-type';
 import { CreditCardType, CreditCardTypeCardBrandId } from 'credit-card-type/dist/types';
 import { isEmpty } from 'lodash';
@@ -7,11 +8,12 @@ import { EloIcon } from '../../../../../assets/icons/credit-card/elo-icon';
 import { MasterCardIcon } from '../../../../../assets/icons/credit-card/mastercard-icon';
 import { VisaIcon } from '../../../../../assets/icons/credit-card/visa-icon';
 import { VRAlimentacao } from '../../../../../assets/icons/credit-card/vr-alimentacao';
+import { VRRefeicao } from '../../../../../assets/icons/credit-card/vr-refeicao';
 
 creditCardType.addCard({
   niceType: 'VR Refeição',
-  type: 'vr',
-  patterns: [627416, 637202, 637036],
+  type: 'vr-refeição' as VRPayableWith,
+  patterns: [627416, 637202],
   gaps: [4, 8, 12],
   lengths: [16],
   code: {
@@ -20,12 +22,25 @@ creditCardType.addCard({
   },
 });
 
-const SupportedTypes: (CreditCardTypeCardBrandId | 'vr')[] = [
+creditCardType.addCard({
+  niceType: 'VR Alimentação',
+  type: 'vr-alimentação' as VRPayableWith,
+  patterns: [637036],
+  gaps: [4, 8, 12],
+  lengths: [16],
+  code: {
+    name: 'CVV',
+    size: 3,
+  },
+});
+
+const SupportedTypes: (CreditCardTypeCardBrandId | VRPayableWith)[] = [
   'mastercard',
   'visa',
   'elo',
   'diners-club',
-  'vr',
+  'vr-alimentação',
+  'vr-refeição',
 ];
 
 export const getCardType = (number: string) => {
@@ -43,7 +58,8 @@ export const getCardTypeSVG = (type: CreditCardType) => {
   if (type.type === 'visa') return <VisaIcon />;
   if (type.type === 'elo') return <EloIcon />;
   if (type.type === 'diners-club') return <DinersIcon />;
-  if (type.type === 'vr') return <VRAlimentacao />; // TODO: substituir
+  if (type.type === ('vr-alimentação' as VRPayableWith)) return <VRAlimentacao />;
+  if (type.type === ('vr-refeição' as VRPayableWith)) return <VRRefeicao />;
   return null;
 };
 

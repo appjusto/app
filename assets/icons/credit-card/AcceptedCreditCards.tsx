@@ -1,3 +1,4 @@
+import { PayableWith } from '@appjusto/types';
 import React from 'react';
 import { View } from 'react-native';
 import { halfPadding } from '../../../common/styles';
@@ -9,31 +10,37 @@ import { VRAlimentacao } from './vr-alimentacao';
 import { VRRefeicao } from './vr-refeicao';
 
 interface Props {
-  vr?: boolean;
+  types?: PayableWith[];
 }
 
-export const AcceptedCreditCards = ({ vr }: Props) => {
+export const AcceptedCreditCards = ({ types }: Props) => {
   return (
     <View style={{ flexDirection: 'row' }}>
-      <VisaIcon />
-      <View style={{ paddingLeft: halfPadding / 2 }}>
-        <MasterCardIcon />
-      </View>
-      <View style={{ paddingLeft: halfPadding / 2 }}>
-        <EloIcon />
-      </View>
-      <View style={{ paddingLeft: halfPadding / 2 }}>
-        <DinersIcon />
-      </View>
-      {vr ? (
+      {types?.includes('credit_card') ? (
         <>
-          <View style={{ paddingLeft: halfPadding / 2 }}>
-            <VRAlimentacao />
+          <View style={{ marginRight: halfPadding / 2 }}>
+            <VisaIcon />
           </View>
-          <View style={{ paddingLeft: halfPadding / 2 }}>
-            <VRRefeicao />
+          <View style={{ marginRight: halfPadding / 2 }}>
+            <MasterCardIcon />
+          </View>
+          <View style={{ marginRight: halfPadding / 2 }}>
+            <EloIcon />
+          </View>
+          <View style={{ marginRight: halfPadding / 2 }}>
+            <DinersIcon />
           </View>
         </>
+      ) : null}
+      {types?.includes('vr-alimentação') ? (
+        <View style={{ marginRight: halfPadding / 2 }}>
+          <VRAlimentacao />
+        </View>
+      ) : null}
+      {types?.includes('vr-refeição') ? (
+        <View style={{ marginRight: halfPadding / 2 }}>
+          <VRRefeicao />
+        </View>
       ) : null}
     </View>
   );

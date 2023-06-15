@@ -1,4 +1,4 @@
-import { Card, PayableWith } from '@appjusto/types';
+import { Card, PayableWith, VRPayableWith } from '@appjusto/types';
 import { WithId } from '../../../../../../types';
 import { useContextGetSeverTime } from '../../../../../common/contexts/ServerTimeContext';
 import { useObserveBusiness } from '../../../../../common/store/api/business/hooks/useObserveBusiness';
@@ -40,11 +40,16 @@ export const useCheckoutIssues = (
   if (!acceptedPaymentMethods.includes(selectedPaymentMethod)) {
     issues.push('unsupported-payment-method');
   } else if (selectedPaymentMethod !== 'pix') {
-    if (!card) issues.push('invalid-payment-method');
-    else if (card.processor === 'vr' && !acceptedPaymentMethods.includes('vr')) {
-      issues.push('unsupported-payment-method');
-    } else if (card.processor === 'iugu' && !acceptedPaymentMethods.includes('credit_card')) {
-      issues.push('unsupported-payment-method');
+    if (!card) {
+      issues.push('invalid-payment-method');
+    } else if (card.processor === 'iugu') {
+      if (!acceptedPaymentMethods.includes('credit_card')) {
+        issues.push('unsupported-payment-method');
+      }
+    } else if (card.processor === 'vr') {
+      if (!acceptedPaymentMethods.includes(card.type as VRPayableWith)) {
+        issues.push('unsupported-payment-method');
+      }
     }
   }
 

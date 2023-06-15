@@ -1,7 +1,9 @@
+import { VRPayableWith } from '@appjusto/types';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { PayableWith } from '../../../../../types';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { useCards } from '../../../../common/store/api/consumer/cards/useCards';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
@@ -37,7 +39,6 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
   const cards = useCards();
   const acceptedPaymentMethods = useAcceptedPaymentMethods();
   const pixEnabled = acceptedPaymentMethods.includes('pix');
-  const vrEnabled = acceptedPaymentMethods.includes('vr');
   const creditEnabled = acceptedPaymentMethods.includes('credit_card');
   // UI
   if (!order) {
@@ -48,19 +49,24 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
     );
   }
   const acceptedCards = (cards ?? []).filter(
-    (card) => (card.processor === 'iugu' && creditEnabled) || (card.processor === 'vr' && vrEnabled)
+    (card) =>
+      (card.processor === 'iugu' && creditEnabled) ||
+      (card.processor === 'vr' && acceptedPaymentMethods.includes(card.type as VRPayableWith))
   );
   const cardList = acceptedCards.map((card) => (
     <View key={card.id}>
       <PaymentBoxSelector
-        variant={card.processor === 'iugu' ? 'card' : 'vr'}
+        variant={card.type as PayableWith}
         selected={
-          card.id === selectedPaymentMethodId && (payMethod === 'credit_card' || payMethod === 'vr')
+          card.id === selectedPaymentMethodId &&
+          (payMethod === 'credit_card' ||
+            payMethod === 'vr-alimentação' ||
+            payMethod === 'vr-refeição')
         }
         onSelectPayment={() => {
           navigation.navigate(returnScreen, {
             paymentMethodId: card.id,
-            payMethod: card.processor === 'iugu' ? 'credit_card' : 'vr',
+            payMethod: card.type ? (card.type as PayableWith) : 'credit_card',
           });
         }}
         card={card}
@@ -85,18 +91,27 @@ export const SelectPaymentMethod = ({ navigation, route }: Props) => {
         ) : null}
 
         <PaymentBoxSelector
-          variant="card"
+          variant="credit_card"
           selected={false}
           onSelectPayment={() =>
-            navigation.navigate('ProfileAddCard', { returnScreen, filter: 'iugu' })
+            navigation.navigate('ProfileAddCard', { returnScreen, types: ['credit_card'] })
           }
         />
-        {vrEnabled ? (
+        {acceptedPaymentMethods.includes('vr-alimentação') ? (
           <PaymentBoxSelector
-            variant="vr"
+            variant="vr-alimentação"
             selected={false}
             onSelectPayment={() =>
-              navigation.navigate('ProfileAddCard', { returnScreen, filter: 'vr' })
+              navigation.navigate('ProfileAddCard', { returnScreen, types: ['vr-alimentação'] })
+            }
+          />
+        ) : null}
+        {acceptedPaymentMethods.includes('vr-refeição') ? (
+          <PaymentBoxSelector
+            variant="vr-refeição"
+            selected={false}
+            onSelectPayment={() =>
+              navigation.navigate('ProfileAddCard', { returnScreen, types: ['vr-refeição'] })
             }
           />
         ) : null}

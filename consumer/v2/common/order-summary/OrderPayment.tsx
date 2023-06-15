@@ -5,6 +5,7 @@ import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import { getCardDisplayNumber } from '../../../../common/store/api/consumer/cards/getCardDisplayNumber';
+import { getCardType } from '../../../../common/store/api/consumer/cards/getCardType';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useAcceptedPaymentMethods } from '../../../../common/store/api/platform/hooks/useAcceptedPaymentMethods';
 import { colors, doublePadding, halfPadding, padding, texts } from '../../../../common/styles';
@@ -56,9 +57,7 @@ export const OrderPayment = ({
             }}
           >
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
-              {`${
-                card.processor === 'iugu' ? t('Cartão de crédito') : t('VR')
-              }: ${getCardDisplayNumber(card)}`}
+              {`${getCardType(card)}: ${getCardDisplayNumber(card)}`}
             </Text>
             <TouchableOpacity onPress={navigateToSelectPayment}>
               <Text style={{ ...texts.md, color: colors.green600 }}>{t('Trocar')}</Text>
