@@ -241,6 +241,7 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
         if (selectedPaymentMethod === 'pix') {
           return {
             payableWith: 'pix',
+            useCredits: true,
           } as PlaceOrderPayloadPaymentPix;
         }
         const selectedCard = cards?.find((card) => card.id === selectedPaymentMethodId);
@@ -248,11 +249,13 @@ export const FoodOrderCheckout = ({ navigation, route }: Props) => {
           return {
             payableWith: 'credit_card',
             cardId: selectedPaymentMethodId,
+            useCredits: true,
           } as PlaceOrderPayloadPaymentCreditCard;
         } else if (selectedCard?.processor === 'vr') {
           return {
             payableWith: selectedCard.type as VRPayableWith,
             cardId: selectedPaymentMethodId,
+            useCredits: true,
           } as PlaceOrderPayloadPaymentVR;
         }
         return null;

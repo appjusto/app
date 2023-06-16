@@ -188,10 +188,12 @@ export default function ({ navigation, route }: Props) {
         ? ({
             payableWith: 'credit_card',
             cardId: selectedPaymentMethodId,
+            useCredits: true,
           } as PlaceOrderPayloadPaymentCreditCard)
         : ({
             payableWith: 'pix',
             key: cpf,
+            useCredits: true,
           } as PlaceOrderPayloadPaymentPix);
     Keyboard.dismiss();
     if (!order.destination?.address) {

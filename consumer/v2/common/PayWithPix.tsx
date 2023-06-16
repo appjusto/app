@@ -71,7 +71,7 @@ export const PayWithPix = ({ navigation, route }: Props) => {
         orderId,
         payment: {
           payableWith: 'pix',
-          key: pixKey,
+          useCredits: true,
         },
         fleetId,
       });

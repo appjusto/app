@@ -376,6 +376,7 @@ export default class OrderApi {
       await this.functionsRef.getGetOrderQuotesCallable()({
         orderId,
         paymentMethod,
+        useCredits: true,
         meta: { version: getAppVersion() },
       })
     ).data;
