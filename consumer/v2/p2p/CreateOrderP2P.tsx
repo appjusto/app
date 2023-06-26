@@ -56,15 +56,15 @@ export default function ({ navigation, route }: Props) {
   const { coords } = useLastKnownLocation();
   const [orderId, setOrderId] = React.useState<string>();
   const order = useObserveOrder(orderId)!;
-  const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
-    consumer.defaultPaymentMethodId
-  );
   const [isLoading, setLoading] = React.useState(false);
   const [cpf, setCpf] = React.useState(consumer.cpf ?? '');
   const [wantsCpf, setWantsCpf] = React.useState(false);
   const [selectedFare, setSelectedFare] = React.useState<Fare>();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState<PayableWith>(
     consumer.defaultPaymentMethod ?? 'credit_card'
+  );
+  const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState(
+    consumer.defaultPaymentMethodId
   );
   const card = cards?.find((card) => card.id === selectedPaymentMethodId);
   const issues = useCheckoutIssues(selectedPaymentMethod, card);
@@ -262,7 +262,6 @@ export default function ({ navigation, route }: Props) {
       <P2POrderPager
         order={order}
         isLoading={isLoading}
-        selectedPaymentMethodId={selectedPaymentMethodId}
         navigateToAddressComplete={navigateToAddressComplete}
         navigateToFillPaymentInfo={navigateToFillPaymentInfo}
         navigateFleetDetail={(fleetId: string) => {
@@ -305,6 +304,7 @@ export default function ({ navigation, route }: Props) {
           })
         }
         payMethod={selectedPaymentMethod}
+        card={card}
         onPayWithPix={() => {
           setSelectedPaymentMethod('pix');
         }}

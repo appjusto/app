@@ -1,4 +1,4 @@
-import { Fare, Order, PayableWith, Place, WithId } from '@appjusto/types';
+import { Card, Fare, Order, PayableWith, Place, WithId } from '@appjusto/types';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import {
@@ -32,7 +32,6 @@ import { Step } from './types';
 
 type Props = {
   order: WithId<Order> | undefined;
-  selectedPaymentMethodId?: string | null;
   isLoading: boolean;
   navigateToAddressComplete: (returnParam: string, value?: Place) => void;
   navigateToFillPaymentInfo: () => void;
@@ -53,12 +52,12 @@ type Props = {
   navigateToCompleteProfile: () => void;
   navigateToSelectPayment: () => void;
   payMethod: PayableWith;
+  card?: WithId<Card>;
   onPayWithPix: () => void;
 };
 
 export default function ({
   order,
-  selectedPaymentMethodId,
   isLoading,
   navigateToAddressComplete,
   navigateFleetDetail,
@@ -77,6 +76,7 @@ export default function ({
   navigateToCompleteProfile,
   navigateToSelectPayment,
   payMethod,
+  card,
   onPayWithPix,
 }: Props) {
   // params
@@ -136,7 +136,7 @@ export default function ({
     if (value === Step.Origin) return true; // always enabled
     if (value === Step.Destination) return Boolean(origin?.address.description); // only if origin is known and user has entered instructions
     if (value === Step.Confirmation) return Boolean(destination?.address.description) && !!order; // only if order has been created and user has entered instructions
-    if (value === Step.ConfirmingOrder) return Boolean(selectedPaymentMethodId);
+    if (value === Step.ConfirmingOrder) return canSubmit;
     return false; // should never happen
   };
   const setPage = (index: number): void => {
@@ -360,7 +360,6 @@ export default function ({
               onEditStep={setPage}
               payment={
                 <OrderPayment
-                  selectedPaymentMethodId={selectedPaymentMethodId}
                   isSubmitEnabled={canSubmit}
                   onSubmit={onSubmit}
                   activityIndicator={isLoading}
@@ -368,6 +367,7 @@ export default function ({
                   navigateToCompleteProfile={navigateToCompleteProfile}
                   navigateToSelectPayment={navigateToSelectPayment}
                   payMethod={payMethod}
+                  card={card}
                   onPayWithPix={onPayWithPix}
                 />
               }
