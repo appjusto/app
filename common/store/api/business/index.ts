@@ -20,6 +20,7 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  Timestamp,
   updateDoc,
   where,
 } from 'firebase/firestore';
@@ -108,7 +109,7 @@ export default class BusinessApi {
   }
 
   async sendKeepAlive(businessId: string) {
-    await this.updateBusiness(businessId, { keepAlive: serverTimestamp() });
+    await this.updateBusiness(businessId, { keepAlive: serverTimestamp() as Timestamp });
   }
 
   // recommendations
@@ -224,12 +225,12 @@ export default class BusinessApi {
   fetchBusinessCoverImageURI(businessId: string) {
     return this.files.getDownloadURL(this.storagePaths.getBusinessCoverStoragePath(businessId));
   }
-  fetchProductImageURI(businessId: string, productId: string, size: string = '288x288') {
+  getProductImageStoragePath(businessId: string, productId: string, size: string = '288x288') {
     return this.files.getDownloadURL(
       this.storagePaths.getProductImageStoragePath(businessId, productId, size)
     );
   }
-  fetchProductComplementImageURI(businessId: string, complementId: string) {
+  getComplementImageStoragePath(businessId: string, complementId: string) {
     return this.files.getDownloadURL(
       this.storagePaths.getComplementImageStoragePath(businessId, complementId)
     );

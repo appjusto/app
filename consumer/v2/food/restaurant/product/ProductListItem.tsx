@@ -1,6 +1,7 @@
-import { BusinessSchedule } from '@appjusto/types';
+import { Product, ProductAlgolia } from '@appjusto/types';
 import React from 'react';
 import { Text, View } from 'react-native';
+import { WithId } from '../../../../../../types';
 import { useProductImageURI } from '../../../../../common/store/api/business/hooks/useProductImageURI';
 import { isAvailable } from '../../../../../common/store/api/business/selectors';
 import { colors, halfPadding, padding, texts } from '../../../../../common/styles';
@@ -9,13 +10,7 @@ import { t } from '../../../../../strings';
 import { ListItemImage } from '../list/ListItemImage';
 
 interface Props {
-  product: {
-    id: string;
-    name: string;
-    price: number;
-    description?: string;
-    availability?: BusinessSchedule;
-  };
+  product: WithId<Product> | ProductAlgolia;
   business: {
     id: string;
     name?: string;
@@ -30,8 +25,12 @@ export const ProductListItem = ({
   hasComplements,
   showRestaurantName,
 }: Props) => {
-  const { data: imageURI } = useProductImageURI(business.id, product.id);
-  const available = isAvailable(product.availability, new Date());
+  const imageURI = useProductImageURI(business.id, product);
+  const available = isAvailable(
+    'availability' in product ? product.availability : undefined,
+    new Date()
+  );
+  console.log(imageURI);
   // UI
   if (!available) return null;
   return (

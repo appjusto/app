@@ -31,7 +31,7 @@ export const ProductComplementListItem = ({
   // context
   const businessId = useContextBusinessId();
   // state
-  const { data: imageURI } = useProductComplementImageURI(businessId, complement.id);
+  const imageURI = useProductComplementImageURI(businessId, complement);
   // UI
   const maximum = complement.maximum ?? 1;
   const quantity = getComplementQuantity(complement.id);

@@ -86,7 +86,7 @@ export const ItemDetail = ({ navigation, route }: Props) => {
   const destination = activeOrder?.destination?.location ?? currentPlace?.location ?? location;
   const acceptingStatus = useBusinessIsAcceptingOrders(business, destination);
   const product = useProduct(businessId, productId);
-  const { data: imageURI } = useProductImageURI(businessId, productId, '1008x720');
+  const imageURI = useProductImageURI(businessId, product);
   // screen state
   const [quantity, setQuantity] = React.useState(1);
   const [complements, setComplements] = React.useState<OrderItemComplement[]>([]);
