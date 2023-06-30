@@ -42,6 +42,10 @@ export const OrderPayment = ({
   const acceptedPaymentMethods = useAcceptedPaymentMethods();
   const pixEnabled = acceptedPaymentMethods.includes('pix');
   const canPlaceOrder = issues.length === 0 && !activityIndicator;
+  const profileIncomplete =
+    issues.includes('profile-incomplete') || issues.includes('should-verify-phone');
+  const invalidPayment =
+    issues.includes('invalid-payment-method') || issues.includes('unsupported-payment-method');
   if (!order) return null;
   return (
     <View style={{ backgroundColor: colors.white, paddingBottom: doublePadding }}>
@@ -85,15 +89,14 @@ export const OrderPayment = ({
         </View>
       ) : null}
       <View style={{ paddingHorizontal: padding, backgroundColor: colors.white }}>
-        {issues.includes('profile-incomplete') || issues.includes('should-verify-phone') ? (
+        {profileIncomplete ? (
           <DefaultButton
             variant="secondary"
             title={t('Completar cadastro')}
             onPress={navigateToCompleteProfile}
           />
         ) : null}
-        {issues.includes('invalid-payment-method') ||
-        issues.includes('unsupported-payment-method') ? (
+        {invalidPayment && !profileIncomplete ? (
           <DefaultButton
             variant="secondary"
             title={t('Escolher forma de pagamento')}
