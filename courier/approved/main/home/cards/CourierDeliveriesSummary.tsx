@@ -23,7 +23,7 @@ export const CourierDeliveriesSummary = ({ onPress }: Props) => {
           ...borders.default,
           borderColor: colors.grey50,
           backgroundColor: colors.white,
-          marginBottom: padding,
+          marginBottom: halfPadding,
         }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>

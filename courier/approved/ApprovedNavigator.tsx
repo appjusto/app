@@ -2,21 +2,22 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { PlatformParamsContextProvider } from '../../common/contexts/PlatformParamsContext';
 import { GetServerTimeContextProvider } from '../../common/contexts/ServerTimeContext';
-import { defaultScreenOptions } from '../../common/screens/options';
 import { PermissionDenied } from '../../common/screens/PermissionDenied';
+import { defaultScreenOptions } from '../../common/screens/options';
 import { AddressComplete } from '../../consumer/v2/common/AddressComplete';
-import { RecommendationFeedback } from '../../consumer/v2/food/restaurant/recommend/RecommendationFeedback';
 import { RecommendRestaurant } from '../../consumer/v2/food/restaurant/recommend/RecommendRestaurant';
+import { RecommendationFeedback } from '../../consumer/v2/food/restaurant/recommend/RecommendationFeedback';
 import { t } from '../../strings';
-import DeliveriesNavigator from './main/history/DeliveriesNavigator';
 import MainNavigator from './main/MainNavigator';
+import DeliveriesNavigator from './main/history/DeliveriesNavigator';
+import { HowAppJustoWorksNavigator } from './main/howitworks/HowAppJustoWorksNavigator';
 import PaymentNavigator from './main/payment/PaymentNavigator';
 import ProfileNavigator from './main/profile/ProfileNavigator';
 import MatchingNavigator from './matching/MatchingNavigator';
 import { RejectedMatchingFeedback } from './matching/RejectedMatchingFeedback';
-import { DropOrderFeedback } from './ongoing/delivery-problem/DropOrderFeedback';
 import { DeliveryProblemFeedback } from './ongoing/DeliveryProblemFeedback';
 import OngoingDeliveryNavigator from './ongoing/OngoingDeliveryNavigator';
+import { DropOrderFeedback } from './ongoing/delivery-problem/DropOrderFeedback';
 import { ApprovedParamList } from './types';
 
 const Stack = createStackNavigator<ApprovedParamList>();
@@ -74,6 +75,11 @@ export default function () {
             name="RejectedMatchingFeedback"
             component={RejectedMatchingFeedback}
             options={{ title: t('Informações enviadas') }}
+          />
+          <Stack.Screen
+            name="HowAppJustoWorksNavigator"
+            component={HowAppJustoWorksNavigator}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="RecommendRestaurant"

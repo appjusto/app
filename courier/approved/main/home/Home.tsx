@@ -70,12 +70,9 @@ export default function ({ navigation }: Props) {
     <View style={[screens.config, screens.headless]}>
       <ScrollView scrollIndicatorInsets={{ right: 1 }}>
         <HomeControls
-          onFleetDetail={(fleetId) => {
+          onFleetDetail={() => {
             navigation.navigate('ProfileNavigator', {
               screen: 'ChooseFleet',
-              params: {
-                fleetId,
-              },
             });
           }}
         />
@@ -95,7 +92,9 @@ export default function ({ navigation }: Props) {
             onDeliveriesSummaryPress={() => {
               navigation.navigate('MainNavigator', { screen: 'DeliveryHistory' });
             }}
-            onHowItworksPress={() => {}}
+            onHowItworksPress={() => {
+              navigation.navigate('HowAppJustoWorksNavigator', { screen: 'HowAppJustoWorks' });
+            }}
             onNeedSupportPress={() => {}}
             onRecommendBusinessPress={() => navigation.navigate('RecommendRestaurant')}
           />

@@ -8,7 +8,7 @@ import { IconSupport } from '../../../../../common/icons/icon-support';
 import HomeCard from '../../../../../common/screens/home/cards/HomeCard';
 import { HomeOngoingOrders } from '../../../../../common/screens/home/cards/HomeOngoingOrders';
 import HomeShareCard from '../../../../../common/screens/home/cards/HomeShareCard';
-import { padding } from '../../../../../common/styles';
+import { halfPadding } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 import { CourierDeliveriesSummary } from './CourierDeliveriesSummary';
 import { CourierHomeRequests } from './CourierHomeRequests';
@@ -31,25 +31,25 @@ export const CourierHomeCardList = ({
   onRecommendBusinessPress,
 }: Props) => {
   return (
-    <PaddedView>
+    <PaddedView half>
       <CourierHomeRequests onPress={onViewRequestsPress} />
       <HomeOngoingOrders onPress={onOngoingOrderPress} />
       <CourierDeliveriesSummary onPress={onDeliveriesSummaryPress} />
-      <TouchableOpacity onPress={onHowItworksPress} style={{ marginBottom: padding }}>
+      <TouchableOpacity onPress={onHowItworksPress} style={{ marginBottom: halfPadding }}>
         <HomeCard
           icon={<IconFwCourier />}
           title={t('Como funciona o AppJusto')}
           subtitle={t('Conheça as vantagens e entenda os benefícios que temos para você')}
         />
       </TouchableOpacity>
-      <TouchableOpacity onPress={onNeedSupportPress} style={{ marginBottom: padding }}>
+      <TouchableOpacity onPress={onNeedSupportPress} style={{ marginBottom: halfPadding }}>
         <HomeCard
           icon={<IconSupport />}
           title={t('Preciso de ajuda')}
           subtitle={t('Fale com nosso time ou faça uma denúncia')}
         />
       </TouchableOpacity>
-      <TouchableOpacity onPress={onRecommendBusinessPress} style={{ marginBottom: padding }}>
+      <TouchableOpacity onPress={onRecommendBusinessPress} style={{ marginBottom: halfPadding }}>
         <HomeCard
           icon={<IconShareGreen />}
           title={t('Indique um restaurante')}

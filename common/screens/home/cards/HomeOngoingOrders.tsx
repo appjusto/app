@@ -3,7 +3,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { getOrders } from '../../../store/order/selectors';
-import { padding } from '../../../styles';
+import { halfPadding } from '../../../styles';
 import HomeOngoingDeliveryCard from './HomeOngoingDeliveryCard';
 
 type Props = {
@@ -18,7 +18,7 @@ export const HomeOngoingOrders = ({ onPress }: Props) => {
     <View>
       {orders.map((order) => {
         return (
-          <View key={order.id} style={{ marginBottom: padding }}>
+          <View key={order.id} style={{ marginBottom: halfPadding }}>
             <HomeOngoingDeliveryCard order={order} onPress={onPress} />
           </View>
         );

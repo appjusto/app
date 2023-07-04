@@ -3,7 +3,7 @@ import { TouchableOpacity, View } from 'react-native';
 import { IconHomeCourierRequests } from '../../../../../common/icons/icon-home-courier-requests';
 import HomeCard from '../../../../../common/screens/home/cards/HomeCard';
 import { useObserveActiveRequests } from '../../../../../common/store/api/courier/hooks/useObserveActiveRequests';
-import { colors, padding } from '../../../../../common/styles';
+import { colors, halfPadding } from '../../../../../common/styles';
 import { t } from '../../../../../strings';
 
 interface Props {
@@ -16,7 +16,7 @@ export const CourierHomeRequests = ({ onPress }: Props) => {
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <View style={{ marginBottom: padding }}>
+      <View style={{ marginBottom: halfPadding }}>
         <HomeCard
           icon={<IconHomeCourierRequests />}
           title={t('Novos pedidos disponíveis')}

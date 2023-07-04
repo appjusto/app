@@ -20,9 +20,7 @@ export type CourierProfileParamList = {
   AboutApp: undefined;
   NotificationPreferences: undefined;
   // fleets
-  ChooseFleet?: {
-    fleetId: string;
-  };
+  ChooseFleet?: undefined;
   CreateFleet: undefined;
   AllFleets: undefined;
 } & ProfileEraseParamList &
