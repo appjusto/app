@@ -10,10 +10,10 @@ type Props = {
   onPress: (order: WithId<Order>, message?: ChatMessageUser) => void;
 };
 
-export default function ({ onPress }: Props) {
+export const HomeOngoingOrders = ({ onPress }: Props) => {
   const orders = useSelector(getOrders);
   // UI
-  if (!orders) return null;
+  if (!orders?.length) return null;
   return (
     <View>
       {orders.map((order) => {
@@ -25,4 +25,4 @@ export default function ({ onPress }: Props) {
       })}
     </View>
   );
-}
+};

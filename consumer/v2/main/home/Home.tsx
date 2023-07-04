@@ -14,7 +14,7 @@ import { IconLogin } from '../../../../common/icons/icon-login';
 import { IconShareGreen } from '../../../../common/icons/icon-share-green';
 import { useUpdateLocation } from '../../../../common/location/useUpdateLocation';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
-import HomeOngoingDeliveries from '../../../../common/screens/home/cards/HomeOngoingDeliveries';
+import { HomeOngoingOrders } from '../../../../common/screens/home/cards/HomeOngoingOrders';
 import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
 import { useSegmentScreen } from '../../../../common/store/api/track';
@@ -66,7 +66,7 @@ export default function ({ navigation }: Props) {
           }}
         />
         <PaddedView>
-          <HomeOngoingDeliveries
+          <HomeOngoingOrders
             onPress={(order, chatFrom) => {
               if (order.status === 'declined') {
                 navigation.navigate('OngoingOrderNavigator', {

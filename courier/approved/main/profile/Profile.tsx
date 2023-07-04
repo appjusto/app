@@ -1,6 +1,6 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
-import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
+import { StackNavigationProp, createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { Linking, ScrollView, View } from 'react-native';
 import { ApiContext } from '../../../../common/app/context';
@@ -95,15 +95,6 @@ export default function ({ navigation }: Props) {
                 subtitle={t('Tire suas dúvidas ou envie uma mensagem')}
                 onPress={() => {
                   Linking.openURL(AppJustoFreshdeskCourierURL);
-                }}
-              />
-              <ConfigItem
-                title={t('Descontos em parceiros')}
-                subtitle={t(
-                  'Veja as negociações coletivas que o AppJusto conseguir para a categoria'
-                )}
-                onPress={() => {
-                  navigation.navigate('ProfileNavigator', { screen: 'PartnersAndDiscounts' });
                 }}
               />
               <ConfigItem

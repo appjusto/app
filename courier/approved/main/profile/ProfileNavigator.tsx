@@ -4,20 +4,19 @@ import FleetDetail from '../../../../common/screens/fleet/FleetDetail';
 import { defaultScreenOptions } from '../../../../common/screens/options';
 import { AboutApp } from '../../../../common/screens/profile/AboutApp';
 import { CommonProfileEdit } from '../../../../common/screens/profile/CommonProfileEdit';
-import { NotificationPreferences } from '../../../../common/screens/profile/notifications/NotificationPreferences';
 import { PhoneVerificationScreen } from '../../../../common/screens/profile/PhoneVerificationScreen';
 import ProfileErase from '../../../../common/screens/profile/ProfileErase';
+import { NotificationPreferences } from '../../../../common/screens/profile/notifications/NotificationPreferences';
 import Terms from '../../../../common/screens/unlogged/Terms';
 import { RequestProfileEdit } from '../../../../consumer/v2/main/profile/RequestProfileEdit';
 import { t } from '../../../../strings';
+import ProfileCompany from './ProfileCompany';
 import ProfileBank from './bank/ProfileBank';
 import SelectBank from './bank/SelectBank';
 import AllFleets from './fleet/AllFleets';
 import ChooseFleet from './fleet/ChooseFleet';
 import CreateFleet from './fleet/CreateFleet';
-import { PartnersAndDiscounts } from './PartnersAndDiscounts';
 import ProfilePhotos from './photos/ProfilePhotos';
-import ProfileCompany from './ProfileCompany';
 import { CourierProfileParamList } from './types';
 
 const Stack = createStackNavigator<CourierProfileParamList>();
@@ -63,11 +62,6 @@ export default function () {
         name="AboutApp"
         component={AboutApp}
         options={{ title: t('Sobre o AppJusto') }}
-      />
-      <Stack.Screen
-        name="PartnersAndDiscounts"
-        component={PartnersAndDiscounts}
-        options={{ title: t('Descontos em parceiros') }}
       />
       <Stack.Screen
         name="ChooseFleet"
