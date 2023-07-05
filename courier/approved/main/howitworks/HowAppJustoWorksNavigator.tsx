@@ -17,7 +17,7 @@ export const HowAppJustoWorksNavigator = () => {
       <Stack.Screen
         name="HowAppJustoWorks"
         component={HowAppJustoWorks}
-        options={{ title: t('Corrida funciona o AppJusto') }}
+        options={{ title: t('Como funciona o AppJusto') }}
       />
       <Stack.Screen
         name="ApprovalProcess"

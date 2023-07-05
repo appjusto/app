@@ -2,12 +2,14 @@ import Constants from 'expo-constants';
 import { StyleSheet } from 'react-native';
 
 export const colors = {
+  primary: '#78E08F',
   white: '#FFFFFF',
   grey10: '#B8B8B8',
   grey50: '#F6F6F6',
   grey90: '#E5E5E5',
   grey500: '#C8D7CB',
   grey700: '#697667',
+  grey800: '#505A4F',
   black: '#000000',
   green50: '#F2FFE8',
   green100: '#B8E994',
