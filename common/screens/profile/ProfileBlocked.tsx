@@ -47,7 +47,7 @@ export default function ({ navigation }: Props) {
         <PaddedView>
           <DeliveryProblemCard
             title={t('Suporte AppJusto')}
-            subtitle={t('Fale com um de nossos atendentes através do nosso WhatsApp')}
+            subtitle={t('Fale com a gente através do nosso WhatsApp')}
             onPress={() => {
               track('opening whatsapp chat with backoffice');
               Linking.openURL(AppJustoAssistanceWhatsAppURL);

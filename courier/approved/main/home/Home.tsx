@@ -24,6 +24,7 @@ import { MainParamList } from '../types';
 import HomeControls from './HomeControls';
 import { LocationDisclosureModal } from './LocationDisclosureModal';
 import { CourierHomeCardList } from './cards/CourierHomeCardList';
+import { NeedHelpModal } from './help/NeedHelpModal';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<MainParamList, 'Home'>,
@@ -39,6 +40,8 @@ export default function ({ navigation }: Props) {
   const courier = useSelector(getCourier)!;
   const { status } = courier;
   const working = status === 'available' || status === 'dispatching';
+  // state
+  const [supportModalVisible, setSupportModalVisible] = React.useState(false);
   // side effects
   useNotificationToken();
   useSegmentScreen('Home');
@@ -83,7 +86,7 @@ export default function ({ navigation }: Props) {
               onHowItworksPress={() => {
                 navigation.navigate('HowAppJustoWorksNavigator', { screen: 'HowAppJustoWorks' });
               }}
-              onNeedSupportPress={() => {}}
+              onNeedSupportPress={() => setSupportModalVisible(true)}
               onRecommendBusinessPress={() => navigation.navigate('RecommendRestaurant')}
             />
           </View>
@@ -106,6 +109,7 @@ export default function ({ navigation }: Props) {
       <MaintenanceModal />
       <UpgradeVersionModal />
       <LocationDisclosureModal />
+      <NeedHelpModal visible={supportModalVisible} onClose={() => setSupportModalVisible(false)} />
     </View>
   );
 }
