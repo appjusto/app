@@ -1,13 +1,13 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useNotificationToken } from '../../../common/hooks/useNotificationToken';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { colors, doublePadding, padding, screens, texts } from '../../../common/styles';
+import { screens } from '../../../common/styles';
 import { HowAppJustoWorksContent } from '../../approved/main/howitworks/HowAppJustoWorksContent';
+import { SituationHeader } from '../../common/situation-header/SituationHeader';
 import { UnapprovedParamList } from '../types';
-import { ProfileSubmittedIcon } from './icon';
 
 type ScreenNavigationProp = StackNavigationProp<UnapprovedParamList, 'ProfileSubmitted'>;
 type ScreenRouteProp = RouteProp<UnapprovedParamList, 'ProfileSubmitted'>;
@@ -25,41 +25,7 @@ export const ProfileSubmitted = ({ navigation }: Props) => {
   return (
     <ScrollView style={{ ...screens.config }} scrollIndicatorInsets={{ right: 1 }}>
       <View>
-        <View
-          style={{
-            paddingHorizontal: padding,
-            paddingVertical: 80,
-            alignItems: 'center',
-            backgroundColor: colors.primary,
-          }}
-        >
-          <ProfileSubmittedIcon />
-          <View
-            style={{
-              paddingHorizontal: doublePadding,
-              marginTop: doublePadding,
-              alignItems: 'center',
-            }}
-          >
-            <Text
-              style={{
-                ...texts.xl,
-                marginBottom: 4,
-              }}
-            >
-              Cadastro enviado com sucesso!
-            </Text>
-            <Text
-              style={{
-                ...texts.sm,
-                color: colors.grey800,
-                textAlign: 'center',
-              }}
-            >
-              Enquanto seu cadastro não é aprovado, conheça mais sobre o AppJusto
-            </Text>
-          </View>
-        </View>
+        <SituationHeader variant="approved" />
         <HowAppJustoWorksContent navigation={navigation} />
       </View>
     </ScrollView>
