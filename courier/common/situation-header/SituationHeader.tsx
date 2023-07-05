@@ -14,7 +14,6 @@ export const SituationHeader = ({ variant }: Props) => {
   let backgroundColor: ColorValue = colors.primary;
   if (variant === 'blocked') backgroundColor = colors.yellow;
   else if (variant === 'inactive') backgroundColor = colors.grey500;
-  // icon
   // title
   let title = 'Cadastro enviado com sucesso!';
   if (variant === 'blocked') {
