@@ -36,7 +36,7 @@ export const NeedHelpModal = ({ onClose, ...props }: Props) => {
           </View>
           <DeliveryProblemCard
             title={t('Falar com nosso time')}
-            subtitle={t('Envia uma mensagem para o nosso WhatsApp')}
+            subtitle={t('Envie uma mensagem para o nosso WhatsApp')}
             onPress={() => {
               track('Falar com atendente', { screen: 'NeedHelpModal' });
               Linking.openURL(AppJustoAssistanceWhatsAppURL);
@@ -45,7 +45,7 @@ export const NeedHelpModal = ({ onClose, ...props }: Props) => {
           />
           <DeliveryProblemCard
             title={t('Realizar uma denúncia')}
-            subtitle={t('Se você sofreu algum tipo de discriminação')}
+            subtitle={t('Nos informe se você sofreu algum tipo de discriminação')}
             onPress={() => {}}
             situation="courier-problem"
           />
