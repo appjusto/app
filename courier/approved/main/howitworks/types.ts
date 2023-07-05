@@ -3,4 +3,5 @@ export type HowAppJustoWorksParams = {
   ApprovalProcess: undefined;
   RevenueProcess: undefined;
   FleetProcess: undefined;
+  BlockProcess: undefined;
 };

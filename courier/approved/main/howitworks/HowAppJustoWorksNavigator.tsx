@@ -4,6 +4,7 @@ import { defaultScreenOptions } from '../../../../common/screens/options';
 import { t } from '../../../../strings';
 import { HowAppJustoWorks } from './HowAppJustoWorks';
 import { ApprovalProcess } from './approval/ApprovalProcess';
+import { BlockProcess } from './blocks/BlockProcess';
 import { FleetProcess } from './fleets/FleetProcess';
 import { RevenueProcess } from './revenue/RevenueProcess';
 import { HowAppJustoWorksParams } from './types';
@@ -29,6 +30,11 @@ export const HowAppJustoWorksNavigator = () => {
         options={{ title: t('Recebimento') }}
       />
       <Stack.Screen name="FleetProcess" component={FleetProcess} options={{ title: t('Frotas') }} />
+      <Stack.Screen
+        name="BlockProcess"
+        component={BlockProcess}
+        options={{ title: t('Bloqueios') }}
+      />
     </Stack.Navigator>
   );
 };

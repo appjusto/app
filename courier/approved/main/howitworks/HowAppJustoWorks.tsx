@@ -76,7 +76,7 @@ export const HowAppJustoWorks = ({ navigation }: Props) => {
           />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate('ApprovalProcess')}
+          onPress={() => navigation.navigate('BlockProcess')}
           style={{ marginBottom: halfPadding }}
         >
           <HomeCard

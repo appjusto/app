@@ -11,7 +11,7 @@ import GainSimulator from '../../profile/fleet/GainSimulator';
 import { HowAppJustoWorksParams } from '../types';
 
 type ScreenNavigationProp = CompositeNavigationProp<
-  StackNavigationProp<HowAppJustoWorksParams, 'RevenueProcess'>,
+  StackNavigationProp<HowAppJustoWorksParams, 'FleetProcess'>,
   StackNavigationProp<ApprovedParamList>
 >;
 
