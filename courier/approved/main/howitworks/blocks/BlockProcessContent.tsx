@@ -10,7 +10,9 @@ interface Props {
 }
 
 export const BlockProcessContent = ({ variant }: Props) => {
+  // state
   const [selectedItemTitle, setSelectedItemTitle] = React.useState('');
+  // UI
   return (
     <PaddedView>
       {variant === 'how-it-works' ? (

@@ -7,6 +7,7 @@ import { ApprovalProcess } from './approval/ApprovalProcess';
 import { BlockProcess } from './blocks/BlockProcess';
 import { FleetProcess } from './fleets/FleetProcess';
 import { RevenueProcess } from './revenue/RevenueProcess';
+import { SafetyScreen } from './safety/SafetyScreen';
 import { HowAppJustoWorksParams } from './types';
 
 const Stack = createStackNavigator<HowAppJustoWorksParams>();
@@ -35,6 +36,7 @@ export const HowAppJustoWorksNavigator = () => {
         component={BlockProcess}
         options={{ title: t('Bloqueios') }}
       />
+      <Stack.Screen name="Safety" component={SafetyScreen} options={{ title: t('Segurança') }} />
     </Stack.Navigator>
   );
 };

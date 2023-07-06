@@ -1,11 +1,12 @@
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { Linking, Text, TouchableOpacity } from 'react-native';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import { colors, halfPadding, padding, texts } from '../../../../common/styles';
 import { t } from '../../../../strings';
+import { AppJustoFreshdeskConsumerURL } from '../../../../strings/values';
 import { ApprovedParamList } from '../../types';
 import { IconApprovalProcess } from './approval/icon';
 import { IconBlocks } from './blocks/icon';
@@ -85,7 +86,7 @@ export const HowAppJustoWorksContent = ({ navigation }: Props) => {
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => navigation.navigate('ApprovalProcess')}
+        onPress={() => navigation.navigate('Safety')}
         style={{ marginBottom: halfPadding }}
       >
         <HomeCard
@@ -95,7 +96,9 @@ export const HowAppJustoWorksContent = ({ navigation }: Props) => {
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => navigation.navigate('ApprovalProcess')}
+        onPress={() => {
+          Linking.openURL(AppJustoFreshdeskConsumerURL);
+        }}
         style={{ marginBottom: halfPadding }}
       >
         <HomeCard

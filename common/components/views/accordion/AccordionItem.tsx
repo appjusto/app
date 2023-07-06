@@ -1,7 +1,7 @@
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, Text, View, ViewProps } from 'react-native';
-import { colors, doublePadding, halfPadding, padding, texts } from '../../../styles';
+import { colors, doublePadding, padding, texts } from '../../../styles';
 
 export interface AccordionItemData {
   title: string;
@@ -55,7 +55,7 @@ export const AccordionItem = ({ data, collpased, style, onPress, ...props }: Pro
               ? body.map((item, index) => (
                   <View
                     key={item.text}
-                    style={{ marginTop: index === 0 ? halfPadding : doublePadding }}
+                    style={{ marginTop: index === 0 ? padding : doublePadding }}
                   >
                     {item.title ? (
                       <Text
