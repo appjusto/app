@@ -16,6 +16,7 @@ import GeoFirestoreApi from './GeoFirestoreApi';
 import AuthApi from './auth';
 import BusinessApi from './business';
 import BusinessesGeosearchApi from './business/geosearch/BusinessesGeosearchApi';
+import ComplaintsApi from './complaints';
 import ConsumerApi from './consumer';
 import CourierApi from './courier';
 import FilesApi from './files';
@@ -46,6 +47,7 @@ export default class Api {
   private _consumer: ConsumerApi;
   private _order: OrderApi;
   private _reviews: ReviewsApi;
+  private _complaints: ComplaintsApi;
   private _maps: MapsApi;
   private _files: FilesApi;
   private _iugu: IuguApi;
@@ -97,6 +99,7 @@ export default class Api {
     );
     this._order = new OrderApi(this._firestoreRefs, this._functionsRefs, this.firestore);
     this._reviews = new ReviewsApi(this._firestoreRefs);
+    this._complaints = new ComplaintsApi(this._firestoreRefs);
     this._maps = new MapsApi(this._functionsRefs);
     this._business = new BusinessApi(this._firestoreRefs, this._storagePaths, this._files);
     this._businessesGeosearch = new BusinessesGeosearchApi(new GeoFirestoreApi(extra));
@@ -138,6 +141,9 @@ export default class Api {
 
   reviews() {
     return this._reviews;
+  }
+  complaints() {
+    return this._complaints;
   }
 
   maps() {

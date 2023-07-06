@@ -9,6 +9,8 @@ import { RecommendRestaurant } from '../../consumer/v2/food/restaurant/recommend
 import { RecommendationFeedback } from '../../consumer/v2/food/restaurant/recommend/RecommendationFeedback';
 import { t } from '../../strings';
 import MainNavigator from './main/MainNavigator';
+import { ComplaintFeedbackScreen } from './main/complaint/ComplaintFeedbackScreen';
+import { ComplaintScreen } from './main/complaint/ComplaintScreen';
 import DeliveriesNavigator from './main/history/DeliveriesNavigator';
 import { HowAppJustoWorksNavigator } from './main/howitworks/HowAppJustoWorksNavigator';
 import PaymentNavigator from './main/payment/PaymentNavigator';
@@ -80,6 +82,16 @@ export default function () {
             name="HowAppJustoWorksNavigator"
             component={HowAppJustoWorksNavigator}
             options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ComplaintScreen"
+            component={ComplaintScreen}
+            options={{ title: t('Denúncia') }}
+          />
+          <Stack.Screen
+            name="ComplaintFeedbackScreen"
+            component={ComplaintFeedbackScreen}
+            options={{ title: t('Denúncia') }}
           />
           <Stack.Screen
             name="RecommendRestaurant"

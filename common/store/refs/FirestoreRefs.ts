@@ -11,6 +11,9 @@ export class FirestoreRefs {
   getReviewsRef = () => collection(getFirestore(), 'reviews');
   getReviewRef = (id: string) => doc(collection(getFirestore(), 'reviews'), id);
 
+  // reviews
+  getComplaintsRef = () => collection(getFirestore(), 'complaints');
+
   // platform
   getPlatformRef = () => collection(getFirestore(), 'platform');
 

@@ -9,9 +9,10 @@ import { DeliveryProblemCard } from '../../../ongoing/delivery-problem/DeliveryP
 
 interface Props extends ModalProps {
   onClose: () => void;
+  onComplainPress: () => void;
 }
 
-export const NeedHelpModal = ({ onClose, ...props }: Props) => {
+export const NeedHelpModal = ({ onClose, onComplainPress, ...props }: Props) => {
   return (
     <Modal transparent {...props}>
       <View
@@ -46,7 +47,7 @@ export const NeedHelpModal = ({ onClose, ...props }: Props) => {
           <DeliveryProblemCard
             title={t('Realizar uma denúncia')}
             subtitle={t('Nos informe se você sofreu algum tipo de discriminação')}
-            onPress={() => {}}
+            onPress={onComplainPress}
             situation="courier-problem"
           />
         </View>

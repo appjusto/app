@@ -25,6 +25,14 @@ export const birthdayFormatter = (value: string = '') => {
   }, '');
 };
 
+export const dateMask = '00/00';
+export const dateFormatter = (value: string = '') => {
+  return value.split('').reduce((result, digit, index) => {
+    if (index === 2) return `${result}/${digit}`;
+    return `${result}${digit}`;
+  }, '');
+};
+
 export const hyphenFormatter = (hyphenLocation: number) => (value: string | undefined) => {
   if (!value) return '';
   if (hyphenLocation < 0) return value;

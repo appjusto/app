@@ -24,6 +24,10 @@ export type ApprovedParamList = {
   DropOrderFeedback: undefined;
   RejectedMatchingFeedback: undefined;
   HowAppJustoWorksNavigator: NestedNavigatorParams<HowAppJustoWorksParams>;
+  ComplaintScreen?: {
+    orderId: string;
+  };
+  ComplaintFeedbackScreen: undefined;
   RecommendRestaurant?: {
     place?: Place;
     returnToHome?: boolean;

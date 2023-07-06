@@ -7,9 +7,17 @@ interface Props extends ViewProps {
   checked?: boolean;
   onPress: () => void;
   variant?: 'circle' | 'square';
+  textVariant?: 'v2';
 }
 
-export default function ({ title, checked, onPress, style, variant = 'circle', ...props }: Props) {
+export default function ({
+  title,
+  checked,
+  onPress,
+  style,
+  variant = 'circle',
+  textVariant,
+}: Props) {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View
@@ -42,7 +50,13 @@ export default function ({ title, checked, onPress, style, variant = 'circle', .
             />
           )}
         </View>
-        <Text style={{ ...texts.xs, marginLeft: halfPadding }}>{title}</Text>
+        {textVariant === 'v2' ? (
+          <Text style={{ ...texts.md, color: colors.grey800, marginLeft: halfPadding }}>
+            {title}
+          </Text>
+        ) : (
+          <Text style={{ ...texts.xs, marginLeft: halfPadding }}>{title}</Text>
+        )}
       </View>
     </TouchableWithoutFeedback>
   );

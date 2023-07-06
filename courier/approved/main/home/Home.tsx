@@ -45,6 +45,15 @@ export default function ({ navigation }: Props) {
   // side effects
   useNotificationToken();
   useSegmentScreen('Home');
+  // test only
+  // React.useEffect(() => {
+  //   setTimeout(() => {
+  //     navigation.navigate('OngoingDeliveryNavigator', {
+  //       screen: 'DeliveryCompleted',
+  //       params: { fee: 1000, orderId: '1234' },
+  //     });
+  //   }, 100);
+  // }, []);
   // location
   React.useEffect(() => {
     (async () => {
@@ -109,7 +118,16 @@ export default function ({ navigation }: Props) {
       <MaintenanceModal />
       <UpgradeVersionModal />
       <LocationDisclosureModal />
-      <NeedHelpModal visible={supportModalVisible} onClose={() => setSupportModalVisible(false)} />
+      <NeedHelpModal
+        visible={supportModalVisible}
+        onClose={() => setSupportModalVisible(false)}
+        onComplainPress={() => {
+          setSupportModalVisible(false);
+          setTimeout(() => {
+            navigation.navigate('ComplaintScreen');
+          }, 100);
+        }}
+      />
     </View>
   );
 }
