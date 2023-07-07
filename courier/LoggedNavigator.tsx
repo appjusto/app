@@ -6,8 +6,8 @@ import { getCourier } from '../common/store/courier/selectors';
 import { observeProfile } from '../common/store/user/actions';
 import { getUser } from '../common/store/user/selectors';
 import { colors, screens } from '../common/styles';
-import ApprovedNavigator from './approved/ApprovedNavigator';
 import { ProfileIssuesNavigator } from './ProfileIssuesNavigator';
+import ApprovedNavigator from './approved/ApprovedNavigator';
 import UnapprovedNavigator from './unapproved/UnapprovedNavigator';
 
 export default function () {

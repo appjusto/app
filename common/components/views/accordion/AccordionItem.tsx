@@ -20,7 +20,19 @@ export const AccordionItem = ({ data, collpased, style, onPress, ...props }: Pro
   const { title, subtitle, body, children } = data;
   return (
     <Pressable onPress={onPress}>
-      <View style={[{ padding, backgroundColor: colors.white }, style]} {...props}>
+      <View
+        style={[
+          {
+            padding,
+            backgroundColor: colors.white,
+            borderWidth: 1,
+            borderRadius: 8,
+            borderColor: collpased ? colors.grey500 : colors.grey200,
+          },
+          style,
+        ]}
+        {...props}
+      >
         <View
           style={{
             flexDirection: 'row',

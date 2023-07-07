@@ -44,13 +44,13 @@ export const NeedHelpModal = ({ onClose, onComplainPress, ...props }: Props) => 
               track('Falar com atendente', { screen: 'NeedHelpModal' });
               Linking.openURL(AppJustoAssistanceWhatsAppURL);
             }}
-            situation="chat"
+            situation="support"
           />
           <DeliveryProblemCard
             title={t('Realizar uma denúncia')}
             subtitle={t('Nos informe se você sofreu algum tipo de discriminação')}
             onPress={onComplainPress}
-            situation="courier-problem"
+            situation="complaint"
           />
         </View>
       </View>

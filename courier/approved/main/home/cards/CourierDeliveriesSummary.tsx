@@ -15,7 +15,6 @@ export const CourierDeliveriesSummary = ({ onPress }: Props) => {
   // state
   const revenue = useCourierRecentOrdersRevenue();
   // UI
-  if (!revenue) return null;
   return (
     <TouchableOpacity onPress={onPress}>
       <PaddedView
@@ -39,13 +38,13 @@ export const CourierDeliveriesSummary = ({ onPress }: Props) => {
               <View>
                 <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Hoje')}</Text>
                 <Text style={{ ...texts.md, color: colors.black }}>
-                  {formatCurrency(revenue.today)}
+                  {revenue ? formatCurrency(revenue.today) : '...'}
                 </Text>
               </View>
               <View>
                 <Text style={{ ...texts.xs, color: colors.green600 }}>{t('Semana')}</Text>
                 <Text style={{ ...texts.md, color: colors.black }}>
-                  {formatCurrency(revenue.week)}
+                  {revenue ? formatCurrency(revenue.week) : '...'}
                 </Text>
               </View>
             </View>

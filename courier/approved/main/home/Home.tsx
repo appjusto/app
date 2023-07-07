@@ -2,14 +2,14 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Linking, ScrollView, View } from 'react-native';
+import { Linking, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { MaintenanceModal } from '../../../../common/components/views/MaintenanceModal';
 import { UpgradeVersionModal } from '../../../../common/components/views/UpgradeVersionModal';
 import { useNotificationToken } from '../../../../common/hooks/useNotificationToken';
 import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { getCourier } from '../../../../common/store/courier/selectors';
-import { screens } from '../../../../common/styles';
+import { padding, screens, texts } from '../../../../common/styles';
 import {
   startLocationUpdatesTask,
   stopLocationUpdatesTask,
@@ -102,16 +102,21 @@ export default function ({ navigation }: Props) {
         ) : (
           <View style={{ flex: 1 }}>
             <SituationHeader variant="inactive" />
+            <View style={{ paddingHorizontal: padding, marginTop: padding }}>
+              <Text style={{ ...texts.xl, marginBottom: padding }}>
+                Dúvidas? Fale com o nosso suporte
+              </Text>
+              <DeliveryProblemCard
+                title={t('Suporte AppJusto')}
+                subtitle={t('Fale com um de nossos atendentes através do nosso WhatsApp')}
+                onPress={() => {
+                  track('opening whatsapp chat with backoffice');
+                  Linking.openURL(AppJustoAssistanceWhatsAppURL);
+                }}
+                situation="support"
+              />
+            </View>
             <BlockProcessContent variant="blocked" />
-            <DeliveryProblemCard
-              title={t('Suporte AppJusto')}
-              subtitle={t('Fale com um de nossos atendentes através do nosso WhatsApp')}
-              onPress={() => {
-                track('opening whatsapp chat with backoffice');
-                Linking.openURL(AppJustoAssistanceWhatsAppURL);
-              }}
-              situation="chat"
-            />
           </View>
         )}
       </ScrollView>
