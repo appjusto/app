@@ -97,7 +97,10 @@ export default function ({ navigation, route }: Props) {
               <Pill />
             </View>
             <Text style={{ ...texts.md }}>Teve algum problema com a corrida?</Text>
-            <TouchableOpacity onPress={() => setSupportModalVisible(true)}>
+            <TouchableOpacity
+              style={{ marginTop: padding }}
+              onPress={() => setSupportModalVisible(true)}
+            >
               <HomeCard
                 icon={<IconSupport />}
                 title={t('Preciso de ajuda')}

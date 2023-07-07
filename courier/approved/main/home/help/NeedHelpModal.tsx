@@ -29,7 +29,9 @@ export const NeedHelpModal = ({ onClose, onComplainPress, ...props }: Props) => 
             paddingVertical: biggerPadding,
           }}
         >
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: padding }}
+          >
             <Text style={{ ...texts.xl }}>Como podemos ajudar?</Text>
             <Pressable onPress={onClose}>
               <Feather size={28} name="x" />
