@@ -19,6 +19,8 @@ import {
 import { numbersOnlyParser } from '../../../../common/components/inputs/pattern-input/parsers';
 import { track } from '../../../../common/store/api/track';
 import { getFlavor } from '../../../../common/store/config/selectors';
+import { getConsumer } from '../../../../common/store/consumer/selectors';
+import { getCourier } from '../../../../common/store/courier/selectors';
 import { showToast } from '../../../../common/store/ui/actions';
 import { getUser } from '../../../../common/store/user/selectors';
 import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
@@ -43,6 +45,9 @@ export const ComplaintScreen = ({ navigation, route }: Props) => {
   // redux
   const user = useSelector(getUser)!;
   const flavor = useSelector(getFlavor);
+  const consumer = useSelector(getConsumer);
+  const courier = useSelector(getCourier);
+  const profile = flavor === 'courier' ? courier! : consumer!;
   // refs
   const placeRef = React.useRef<TextInput>(null);
   const againstRef = React.useRef<TextInput>(null);
@@ -67,10 +72,13 @@ export const ComplaintScreen = ({ navigation, route }: Props) => {
           date,
           description,
           contactBy,
-          flavor,
           orderId: orderId ?? null,
           status: 'pending',
-          createdBy: user.uid,
+          createdBy: {
+            id: user.uid,
+            flavor,
+            name: profile.name,
+          },
           createdAt: serverTimestamp() as Timestamp,
         });
         track('Nova denúncia');
