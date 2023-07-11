@@ -1,10 +1,4 @@
-import {
-  AdvanceReceivablesByAmountPayload,
-  AdvanceReceivablesPayload,
-  CourierOrderRequest,
-  FetchAdvanceByAmountSimulationPayload,
-} from '@appjusto/types';
-import { IuguMarketplaceAccountAdvanceSimulation } from '@appjusto/types/payment/iugu';
+import { CourierOrderRequest } from '@appjusto/types';
 import {
   Timestamp,
   Unsubscribe,
@@ -107,15 +101,6 @@ export default class CourierApi {
       })
     ).data;
   }
-  async fetchReceivables(accountId: string) {
-    return (
-      await this.functionsRef.getFetchReceivablesCallable()({
-        accountType: 'courier',
-        accountId,
-        meta: { version: getAppVersion() },
-      })
-    ).data;
-  }
   async fetchTotalWithdrawsThisMonth(accountId: string) {
     const now = new Date();
     const firstDayOfMonth = Timestamp.fromDate(
@@ -132,54 +117,7 @@ export default class CourierApi {
     );
     return withdrawsSnapshot.size;
   }
-  async fetchAdvanceSimulation(
-    accountId: string,
-    ids: number[]
-  ): Promise<IuguMarketplaceAccountAdvanceSimulation> {
-    return (
-      await this.functionsRef.getFetchAdvanceSimulationCallable()({
-        accountType: 'courier',
-        accountId,
-        ids,
-        meta: { version: getAppVersion() },
-      })
-    ).data;
-  }
-  async advanceReceivables(accountId: string, ids: number[]): Promise<any> {
-    const payload: AdvanceReceivablesPayload = {
-      accountType: 'courier',
-      accountId,
-      ids,
-      meta: { version: getAppVersion() },
-    };
-    return (await this.functionsRef.getAdvanceReceivablesCallable()(payload)).data;
-  }
-  async fetchAdvanceByAmountSimulation(accountId: string, amount: number): Promise<any> {
-    const payload: FetchAdvanceByAmountSimulationPayload = {
-      accountType: 'courier',
-      accountId,
-      amount,
-      meta: { version: getAppVersion() },
-    };
-    return (await this.functionsRef.getFetchAdvanceByAmountSimulationCallable()(payload)).data;
-  }
 
-  async advanceReceivablesByAmount(
-    accountId: string,
-    simulationId: string,
-    amount: number,
-    fee: number
-  ): Promise<any> {
-    const payload: AdvanceReceivablesByAmountPayload = {
-      accountType: 'courier',
-      accountId,
-      simulationId,
-      amount,
-      fee,
-      meta: { version: getAppVersion() },
-    };
-    return (await this.functionsRef.getAdvanceReceivablesByAmountCallable()(payload)).data;
-  }
   // storage
   // selfie
   uploadSelfie(id: string, localUri: string, progressHandler?: (progress: number) => void) {

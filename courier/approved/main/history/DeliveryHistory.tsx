@@ -1,6 +1,6 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
-import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
+import { StackNavigationProp, createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
@@ -150,44 +150,6 @@ export default function ({ navigation, route }: Props) {
                       onPress={() =>
                         navigation.navigate('DeliveriesNavigator', {
                           screen: 'DeliveryHistoryByWeek',
-                        })
-                      }
-                      variant="secondary"
-                    />
-                  </View>
-                </PaddedView>
-                {/* advance */}
-                <PaddedView
-                  style={{
-                    ...borders.default,
-                    borderColor: colors.white,
-                    backgroundColor: colors.white,
-                    marginTop: padding,
-                  }}
-                >
-                  <View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <MaterialIcons name="timer" size={20} color={colors.grey700} />
-                      <Text
-                        style={{
-                          ...texts.sm,
-                          color: colors.grey700,
-                          marginLeft: halfPadding,
-                          paddingBottom: 2,
-                        }}
-                      >
-                        {t('Disponível para antecipação')}
-                      </Text>
-                    </View>
-
-                    <Text style={{ ...texts.x4l }}>{formatCurrency(info.advanceable_value)}</Text>
-
-                    <DefaultButton
-                      style={{ marginTop: padding }}
-                      title={t('Ver detalhes')}
-                      onPress={() =>
-                        navigation.navigate('DeliveriesNavigator', {
-                          screen: 'Receivables',
                         })
                       }
                       variant="secondary"

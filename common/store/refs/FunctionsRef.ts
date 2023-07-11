@@ -6,9 +6,6 @@ import {
   Fare,
   FetchAccountInformationPayload,
   FetchAccountInformationResponse,
-  FetchAdvanceByAmountSimulationPayload,
-  FetchAdvanceSimulationPayload,
-  FetchReceivablesPayload,
   GetCancellationInfoPayload,
   GetCancellationInfoResult,
   GetOrderQuotesPayload,
@@ -23,12 +20,7 @@ import {
   SaveVRCardPayload,
   TipCourierPayload,
 } from '@appjusto/types';
-import {
-  IuguMarketplaceAccountAdvanceByAmountSimulation,
-  IuguMarketplaceAccountAdvanceSimulation,
-  IuguMarketplaceAccountReceivables,
-  IuguMarketplaceAccountWithdrawResponse,
-} from '@appjusto/types/payment/iugu';
+import { IuguMarketplaceAccountWithdrawResponse } from '@appjusto/types/payment/iugu';
 import { Functions, httpsCallable } from 'firebase/functions';
 
 export class FunctionsRef {
@@ -39,29 +31,11 @@ export class FunctionsRef {
       this.functions,
       'fetchAccountInformation'
     );
-  getFetchReceivablesCallable = () =>
-    httpsCallable<FetchReceivablesPayload, IuguMarketplaceAccountReceivables>(
-      this.functions,
-      'fetchReceivables'
-    );
-  getFetchAdvanceSimulationCallable = () =>
-    httpsCallable<FetchAdvanceSimulationPayload, IuguMarketplaceAccountAdvanceSimulation>(
-      this.functions,
-      'fetchAdvanceSimulation'
-    );
-  getFetchAdvanceByAmountSimulationCallable = () =>
-    httpsCallable<
-      FetchAdvanceByAmountSimulationPayload,
-      IuguMarketplaceAccountAdvanceByAmountSimulation
-    >(this.functions, 'fetchAdvanceByAmountSimulation');
   getRequestWithdrawCallable = () =>
     httpsCallable<RequestWithdrawPayload, IuguMarketplaceAccountWithdrawResponse>(
       this.functions,
       'requestWithdraw'
     );
-  getAdvanceReceivablesCallable = () => httpsCallable(this.functions, 'advanceReceivables');
-  getAdvanceReceivablesByAmountCallable = () =>
-    httpsCallable(this.functions, 'advanceReceivablesByAmount');
   getDeleteAccountCallable = () => httpsCallable(this.functions, 'deleteAccount');
   getServerTimeCallable = () => httpsCallable(this.functions, 'getServerTime');
   // consumer
