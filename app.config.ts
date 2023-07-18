@@ -222,7 +222,8 @@ const ios = () => ({
         }
       : {
           UIBackgroundModes: ['location'],
-          NSUserTrackingUsageDescription: '',
+          NSUserTrackingUsageDescription:
+            'Precisamos da sua localização para enviar corridas próximas e monitorar a entrega.',
           NSLocationWhenInUseUsageDescription:
             'Precisamos da sua localização para enviar corridas próximas e monitorar a entrega.',
           NSLocationAlwaysAndWhenInUseUsageDescription:
