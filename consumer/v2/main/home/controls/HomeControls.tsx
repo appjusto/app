@@ -40,7 +40,7 @@ export const HomeControls = ({ onStartOrderPress }: Props) => {
           onPress={() => onStartOrderPress('food')}
         />
         <HomeControlItem
-          title={t('Encomendas')}
+          title={t('Entregas Rápidas')}
           subtitle={t('Peça para buscar ou entregar um pacote')}
           icon={<IconSmallUser />}
           onPress={() => onStartOrderPress('p2p')}
