@@ -68,7 +68,7 @@ export const OrderSummary = ({
           />
         </View>
       ) : null}
-      <View style={{ paddingTop: tallerDevice ? padding : 0 }}>
+      <View style={{ marginTop: padding }}>
         <OrderPlacesSummary order={order} onEditStep={onEditStep} />
         {type === 'food' ? <OrderScheduling onCheckSchedules={onCheckSchedules} /> : null}
       </View>

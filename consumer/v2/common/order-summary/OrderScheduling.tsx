@@ -154,11 +154,9 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
       >
         <View>{canScheduleUI()}</View>
         <View>
-          <RectangularListItemText
-            text={t('Agendar horário')}
-            selected={false}
-            onSelect={onCheckSchedules!}
-          />
+          <Text style={{ color: colors.green600 }} onPress={onCheckSchedules}>
+            {t('Agendar horário')}
+          </Text>
         </View>
       </View>
     );
@@ -175,8 +173,6 @@ export const OrderScheduling = ({ onCheckSchedules }: Props) => {
     >
       <View
         style={{
-          borderBottomWidth: 1,
-          borderBottomColor: colors.grey500,
           marginBottom: padding,
         }}
       />

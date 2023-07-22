@@ -3,7 +3,8 @@ import React from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import DefaultButton from '../../../../common/components/buttons/DefaultButton';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
-import { colors, padding, screens, texts } from '../../../../common/styles';
+import { colors, halfPadding, padding, screens, texts } from '../../../../common/styles';
+import { formatDistance } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import { FleetListItem } from '../FleetListItem';
 import { RouteIssueCard } from './RouteIssueCard';
@@ -47,6 +48,33 @@ export const OrderAvailableFleets = ({
       : 'Frotas definem as condições de participação, como o preço ganho por km. O AppJusto não fica com nada do valor pago pela entrega.';
     return (
       <View>
+        {order.route?.distance ? (
+          <View
+            style={{
+              flexDirection: 'row',
+              alignContent: 'center',
+              marginTop: 4,
+              marginBottom: halfPadding,
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: colors.grey50,
+                paddingVertical: halfPadding,
+                paddingHorizontal: padding,
+                borderRadius: 32,
+              }}
+            >
+              <Text
+                style={{
+                  ...texts.xs,
+                }}
+              >
+                {`Distância da rota: ${formatDistance(order.route?.distance)}`}
+              </Text>
+            </View>
+          </View>
+        ) : null}
         <Text style={{ ...texts.xs, color: colors.grey700, marginBottom: 12 }}>
           {aboutFleetsText}
         </Text>

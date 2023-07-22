@@ -4,7 +4,14 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import SingleHeader from '../../../../common/components/texts/SingleHeader';
 import HR from '../../../../common/components/views/HR';
-import { borders, colors, padding, texts } from '../../../../common/styles';
+import {
+  borders,
+  colors,
+  doublePadding,
+  halfPadding,
+  padding,
+  texts,
+} from '../../../../common/styles';
 import { formatCurrency } from '../../../../common/utils/formatters';
 import { t } from '../../../../strings';
 import { OrderItemModal } from './OrderItemModal';
@@ -26,7 +33,7 @@ export const OrderItems = ({ order, onEditItemPress, onAddItemsPress }: Props) =
       {order.items?.map((item) => (
         <View key={item.id}>
           <TouchableOpacity onPress={() => setSelectedItem(item.id)}>
-            <View style={{ paddingHorizontal: padding, paddingBottom: 12, paddingTop: 4 }}>
+            <View style={{ padding }}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -34,33 +41,76 @@ export const OrderItems = ({ order, onEditItemPress, onAddItemsPress }: Props) =
                   alignItems: 'center',
                 }}
               >
-                <Text style={[texts.sm]}>{item.product.name}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View
+                    style={{
+                      backgroundColor: colors.green700,
+                      width: 25,
+                      height: 25,
+                      borderRadius: 25 / 2,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Text style={{ color: colors.white }}>{item.quantity}</Text>
+                  </View>
+                  <View style={{ marginLeft: halfPadding }}>
+                    <Text style={{ ...texts.sm, color: colors.green700 }}>{item.product.name}</Text>
+                    <Text style={{ ...texts.x2s, ...texts.bold, color: colors.green700 }}>{`${
+                      item.quantity
+                    }x ${formatCurrency(item.product.price)}`}</Text>
+                  </View>
+                </View>
                 <Feather
                   name="edit-3"
                   size={12}
                   style={{ ...borders.default, borderColor: colors.grey50, padding: 8 }}
                 />
               </View>
-              <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                <Text style={{ ...texts.xs, color: colors.green600 }}>{`${item.quantity}x `}</Text>
-                <Text style={{ ...texts.xs, color: colors.grey700 }}>
-                  {formatCurrency(item.product.price)}
-                </Text>
-              </View>
               {item.complements?.map((complement) => (
-                <View key={complement.complementId}>
-                  <Text
-                    style={{ ...texts.xs, color: colors.grey700 }}
-                  >{`+ ${complement.name}`}</Text>
-                  <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                    <Text style={{ ...texts.xs, color: colors.green600 }}>{`${
-                      complement.quantity * item.quantity
-                    }x `}</Text>
-                    <Text style={{ ...texts.xs, color: colors.grey700 }}>
-                      {formatCurrency(complement.price)}
+                <View
+                  key={complement.complementId}
+                  style={{
+                    marginLeft: doublePadding,
+                    marginTop: halfPadding,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
+                >
+                  <View
+                    style={{
+                      backgroundColor: colors.grey500,
+                      width: 25,
+                      height: 25,
+                      borderRadius: 25 / 2,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Text style={{ color: colors.white }}>
+                      {complement.quantity * item.quantity}
                     </Text>
                   </View>
+                  <View style={{ marginLeft: halfPadding }}>
+                    <Text style={{ ...texts.sm, color: colors.green700 }}>{complement.name}</Text>
+                    <Text style={{ ...texts.x2s, ...texts.bold, color: colors.green700 }}>{`${
+                      complement.quantity * item.quantity
+                    }x ${formatCurrency(complement.price)}`}</Text>
+                  </View>
                 </View>
+                // <View key={complement.complementId}>
+                //   <Text
+                //     style={{ ...texts.xs, color: colors.grey700 }}
+                //   >{`+ ${complement.name}`}</Text>
+                //   <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
+                //     <Text style={{ ...texts.xs, color: colors.green600 }}>{`${
+                //       complement.quantity * item.quantity
+                //     }x `}</Text>
+                //     <Text style={{ ...texts.xs, color: colors.grey700 }}>
+                //       {formatCurrency(complement.price)}
+                //     </Text>
+                //   </View>
+                // </View>
               ))}
             </View>
             <HR />
@@ -79,9 +129,9 @@ export const OrderItems = ({ order, onEditItemPress, onAddItemsPress }: Props) =
           <Text
             style={{
               ...texts.sm,
+              backgroundColor: colors.yellow,
               paddingHorizontal: padding,
               paddingVertical: 12,
-              color: colors.green600,
             }}
           >
             {t('+ Adicionar mais itens')}
