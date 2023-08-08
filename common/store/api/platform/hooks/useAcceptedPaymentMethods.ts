@@ -10,6 +10,12 @@ export const useAcceptedPaymentMethods = (): PayableWith[] => {
   const order = useContextActiveOrder();
   const business = useObserveBusiness(order?.business?.id);
   const consumer = useSelector(getConsumer)!;
+  if (consumer.tags?.includes('unsafe')) {
+    return ['pix'];
+  }
+  if (consumer.tags?.includes('staff')) {
+    return ['credit_card', 'pix', 'vr-alimentação', 'vr-refeição', 'credits'];
+  }
   if (!order) {
     return acceptedPaymentMethods;
   }
@@ -17,9 +23,6 @@ export const useAcceptedPaymentMethods = (): PayableWith[] => {
     return acceptedPaymentMethods.filter(
       (value) => value !== 'vr-alimentação' && value !== 'vr-refeição'
     );
-  }
-  if (consumer.tags?.includes('staff')) {
-    return ['credit_card', 'pix', 'vr-alimentação', 'vr-refeição', 'credits'];
   }
   return (business.acceptedPaymentMethods ?? []).filter((mode) =>
     acceptedPaymentMethods.includes(mode)
