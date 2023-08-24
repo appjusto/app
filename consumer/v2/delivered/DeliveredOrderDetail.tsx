@@ -26,10 +26,10 @@ import {
 } from '../../../common/utils/formatters';
 import { t } from '../../../strings';
 import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
-import { OrderCostBreakdown } from '../common/breakdown/OrderCostBreakdown';
 import { DeliveredItems } from '../common/DeliveredItems';
-import { ReviewBox } from '../common/review/ReviewBox';
 import TipControl from '../common/TipControl';
+import { OrderCostBreakdown } from '../common/breakdown/OrderCostBreakdown';
+import { ReviewBox } from '../common/review/ReviewBox';
 import { DeliveredOrderNavigatorParamList } from './types';
 
 type ScreenNavigationProp = StackNavigationProp<
@@ -54,6 +54,9 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
   const [tipLoading, setTipLoading] = React.useState(false);
   const [tipSent, setTipSent] = React.useState(false);
   const showChatButton = useChatIsEnabled(order);
+  const total = order?.fare?.total
+    ? order.fare.total - (order.fare.credits ?? 0) + +(order.tip?.value ?? 0)
+    : 0;
   // tracking
   useSegmentScreen('DeliveredOrderDetail');
   // effects
@@ -173,9 +176,7 @@ export const DeliveredOrderDetail = ({ navigation, route }: Props) => {
               }}
             >
               <SingleHeader title={t('Total pago')} />
-              <Text style={{ ...texts.xl }}>
-                {formatCurrency((order.fare?.total ?? 0) + (order.tip?.value ?? 0))}
-              </Text>
+              <Text style={{ ...texts.xl }}>{formatCurrency(total)}</Text>
             </View>
             <HR height={padding} />
             <View style={{ paddingTop: halfPadding }}>

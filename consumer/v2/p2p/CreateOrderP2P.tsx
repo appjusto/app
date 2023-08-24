@@ -70,6 +70,7 @@ export default function ({ navigation, route }: Props) {
   const issues = useCheckoutIssues(selectedPaymentMethod, card);
   const canSubmit = issues.length === 0 && Boolean(selectedFare) && !isLoading;
   const quotes = useQuotes(order?.id, selectedPaymentMethod);
+  const total = selectedFare?.total ? selectedFare.total - (selectedFare.credits ?? 0) : 0;
   // side effects
   // whenever quotes are updated
   // select first fare and subscribe to involved fleets updates
@@ -293,7 +294,7 @@ export default function ({ navigation, route }: Props) {
             returnScreen: 'CreateOrderP2P',
           })
         }
-        total={selectedFare?.total ?? 0}
+        total={total}
         navigateToCompleteProfile={navigateToCompleteProfile}
         navigateToSelectPayment={() =>
           navigation.navigate('SelectPaymentMethod', {

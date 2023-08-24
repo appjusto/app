@@ -1,8 +1,9 @@
-import { Card, WithId } from '@appjusto/types';
+import { Card, LedgerEntry, WithId } from '@appjusto/types';
 import { CancelToken } from 'axios';
-import { onSnapshot, query, where } from 'firebase/firestore';
+import { getDocs, onSnapshot, query, where } from 'firebase/firestore';
 import { trim } from 'lodash';
 import * as Sentry from 'sentry-expo';
+import { LedgerEntryStatus } from '../../../../../types';
 import { CardInfo } from '../../../../consumer/v2/main/profile/cards/types';
 import { t } from '../../../../strings';
 import { getAppVersion } from '../../../utils/version';
@@ -116,5 +117,18 @@ export default class ConsumerApi {
         !this.emulated && size ? size : undefined
       )
     );
+  }
+
+  async fetchCredits(consumerId: string) {
+    const snapshot = await getDocs(
+      query(
+        this.firestoreRefs.getLedgerRef(),
+        where('status', '==', 'approved' as LedgerEntryStatus),
+        where('to.accountType', '==', 'consumer'),
+        where('to.accountId', '==', consumerId)
+      )
+    );
+    if (snapshot.empty) return 0;
+    return documentsAs<LedgerEntry>(snapshot.docs).reduce((total, entry) => total + entry.value, 0);
   }
 }

@@ -79,6 +79,9 @@ export class FirestoreRefs {
   getOrderConfirmationRef = (id: string) => doc(this.getOrderPrivateRef(id), 'confirmation');
   getOrderLogsRef = (id: string) => collection(this.getOrderRef(id), 'logs');
 
+  // ledger
+  getLedgerRef = () => collection(getFirestore(), 'ledger');
+
   // invoices
   /** @deprecated */
   getInvoicesRef = () => collection(getFirestore(), 'invoices');

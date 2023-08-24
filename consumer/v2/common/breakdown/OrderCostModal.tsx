@@ -99,6 +99,25 @@ export const OrderCostModal = ({ fare, visible, setModalVisible }: Props) => {
                 </Text>
               </View>
             ) : null}
+            {fare?.credits ? (
+              <View>
+                <View
+                  style={{
+                    marginTop: padding,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <Text style={{ ...texts.sm }}>Crédito</Text>
+                  <Text style={{ ...texts.sm }}>{formatCurrency(fare.credits)}</Text>
+                </View>
+                <Text style={{ marginTop: halfPadding, ...texts.xs, color: colors.grey700 }}>
+                  Crédito referente à diferença do valor da corrida rede appjusto vs corrida fora da
+                  rede. Como exceção, precisamos às vezes contar com entregadores externos - e
+                  estamos trabalhando pra que isso aconteça cada vez menos!
+                </Text>
+              </View>
+            ) : null}
             <DefaultButton
               style={{ marginTop: padding }}
               title="Fechar"

@@ -122,6 +122,7 @@ export default function ({ navigation, route }: Props) {
       </View>
     );
   }
+  const total = order.fare?.total ? order.fare.total - (order.fare.credits ?? 0) : 0;
   // UI handlers
 
   const navigateToOrderProblem = () => {
@@ -185,7 +186,7 @@ export default function ({ navigation, route }: Props) {
             }}
           >
             <Text style={{ ...texts.md, ...texts.bold }}>{t('Total')}</Text>
-            <Text style={{ ...texts.xl }}>{formatCurrency(order.fare?.total ?? 0)}</Text>
+            <Text style={{ ...texts.xl }}>{formatCurrency(total)}</Text>
           </View>
         </View>
         <View style={{ paddingBottom: 24 }}>

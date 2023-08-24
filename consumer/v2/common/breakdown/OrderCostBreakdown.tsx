@@ -132,6 +132,21 @@ export const OrderCostBreakdown = ({ order, selectedFare, hideItems }: Props) =>
               <Text style={{ ...texts.sm }}>{formatCurrency(deliveryValue)}</Text>
             </View>
           ) : null}
+          {flavor === 'consumer' && selectedFare?.credits ? (
+            <View
+              style={{
+                marginTop: halfPadding,
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text style={{ ...texts.sm, color: colors.green600 }}>{t('Crédito')}</Text>
+              <Text style={{ ...texts.sm, color: colors.green600 }}>
+                -{formatCurrency(selectedFare.credits)}
+              </Text>
+            </View>
+          ) : null}
           {flavor === 'consumer' && otherDeliveryFees ? (
             <View
               style={{

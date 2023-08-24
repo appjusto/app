@@ -12,6 +12,7 @@ interface Props extends ViewProps {
 
 export const DestinationAndPay = ({ order, style }: Props) => {
   if (!order) return null;
+  const total = order.fare?.total ? order.fare.total - (order.fare.credits ?? 0) : 0;
   return (
     <View style={style}>
       <SingleHeader title={t('Destino do pedido')} />
@@ -29,7 +30,7 @@ export const DestinationAndPay = ({ order, style }: Props) => {
         </Text>
         <Text style={{ ...texts.md, marginTop: 4 }}>
           {t('Total pago: ')}
-          <Text style={texts.bold}>{formatCurrency(order.fare!.total)}</Text>
+          <Text style={texts.bold}>{formatCurrency(total)}</Text>
         </Text>
         {/* for now, this doesn't change */}
         <Text style={{ ...texts.md, marginTop: 4 }}>
