@@ -52,9 +52,6 @@ export const OngoingOrderProblem = ({ navigation, route }: Props) => {
       if (status === 'delivered') {
         navigateToReportIssue('consumer-delivered-food-order', orderId);
       }
-      if (status === 'confirmed' || status === 'preparing' || status === 'ready') {
-        navigateToReportIssue('consumer-going-pickup-food', orderId);
-      }
       if (dispatchingState === 'going-pickup' || dispatchingState === 'arrived-pickup') {
         navigateToReportIssue('consumer-going-pickup-food', orderId);
       } else if (dispatchingState === 'going-destination') {
