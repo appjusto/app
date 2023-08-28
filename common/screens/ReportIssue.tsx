@@ -1,4 +1,4 @@
-import { Issue, IssueType, WithId } from '@appjusto/types';
+import { Issue, IssueType } from '@appjusto/types';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
@@ -53,7 +53,7 @@ export const ReportIssue = ({ route, navigation }: Props) => {
   const user = useSelector(getUser)!;
   const flavor = useSelector(getFlavor);
   const issues = useIssues(issueType);
-  const [selectedIssue, setSelectedIssue] = React.useState<WithId<Issue>>();
+  const [selectedIssue, setSelectedIssue] = React.useState<Issue>();
   const [comment, setComment] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
   // side effects

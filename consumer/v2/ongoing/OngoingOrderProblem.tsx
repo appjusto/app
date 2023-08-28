@@ -51,9 +51,6 @@ export const OngoingOrderProblem = ({ navigation, route }: Props) => {
     if (type === 'food') {
       if (status === 'delivered') {
         navigateToReportIssue('consumer-delivered-food-order', orderId);
-      }
-      if (dispatchingState === 'going-pickup' || dispatchingState === 'arrived-pickup') {
-        navigateToReportIssue('consumer-going-pickup-food', orderId);
       } else if (dispatchingState === 'going-destination') {
         navigateToReportIssue('consumer-ongoing-food', orderId);
       } else if (dispatchingState === 'arrived-destination') {
@@ -61,13 +58,9 @@ export const OngoingOrderProblem = ({ navigation, route }: Props) => {
       } else {
         navigateToReportIssue('consumer-going-pickup-food', orderId);
       }
-    }
-    if (type === 'p2p') {
+    } else if (type === 'p2p') {
       if (status === 'delivered') {
         navigateToReportIssue('consumer-delivered-p2p-order', orderId);
-      }
-      if (dispatchingState === 'going-pickup' || dispatchingState === 'arrived-pickup') {
-        navigateToReportIssue('consumer-going-pickup-p2p', orderId);
       } else if (dispatchingState === 'going-destination') {
         navigateToReportIssue('consumer-ongoing-p2p', orderId);
       } else if (dispatchingState === 'arrived-destination') {
