@@ -15,7 +15,7 @@
     "postversion": "git push && git push --tags && git fetch"
   },
   "dependencies": {
-    "@appjusto/dates": "^0.8.0",
+    "@appjusto/dates": "^1.0.3",
     "@appjusto/menu": "^0.1.4",
     "@appjusto/types": "^23.4.0",
     "@expo/react-native-action-sheet": "^3.13.0",
