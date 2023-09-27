@@ -32,7 +32,7 @@ export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) 
   // props
   const { courier, type } = order;
   // state
-  const existingReview = useOrderReview(order.id);
+  const existingReview = useOrderReview(order.id, order.consumer.id);
   const [orderConsumerReview, setOrderConsumerReview] =
     React.useState<Partial<OrderConsumerReview>>();
   const [isLoading, setLoading] = React.useState(false);
@@ -175,7 +175,7 @@ export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) 
               ...orderConsumerReview,
               courier: {
                 ...orderConsumerReview?.courier,
-                id: courier ? courier.id : null,
+                id: courier?.id ? courier.id : null,
                 rating: type,
               },
             });
@@ -184,7 +184,7 @@ export const ReviewBox = ({ order, children, onCompleteReview, screen }: Props) 
             setOrderConsumerReview({
               ...orderConsumerReview,
               courier: {
-                id: courier ? courier.id : null,
+                id: courier?.id ? courier.id : null,
                 rating: orderConsumerReview?.courier?.rating!,
                 tags: tags ?? null,
               },

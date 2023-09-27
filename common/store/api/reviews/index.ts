@@ -15,9 +15,14 @@ export default class ReviewsApi {
     await setDoc(reviewRef, { ...review, reviewedOn: serverTimestamp() }, { merge: true });
     return reviewRef;
   }
-  async fetchOrderReview(orderId: string) {
+  async fetchOrderReview(orderId: string, consumerId: string) {
     const snapshot = await getDocs(
-      query(this.firestoreRefs.getReviewsRef(), where('orderId', '==', orderId), limit(1))
+      query(
+        this.firestoreRefs.getReviewsRef(),
+        where('orderId', '==', orderId),
+        where('consumer.id', '==', consumerId),
+        limit(1)
+      )
     );
     if (snapshot.empty) return null;
     return documentAs<OrderConsumerReview>(snapshot.docs.find(() => true)!);
