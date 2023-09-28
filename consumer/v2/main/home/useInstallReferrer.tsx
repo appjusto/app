@@ -12,20 +12,22 @@ export const useInstallReferrer = () => {
   const api = useContext(ApiContext);
   const consumer = useSelector(getConsumer);
   const consumerId = consumer?.id;
-  const installReferrer = consumer?.installReferrer;
+  const installReferrer = `${consumer?.installReferrer?.utm_medium};${consumer?.installReferrer?.utm_source}`;
   // side effects
   useEffect(() => {
     if (!consumerId) return;
-    if (installReferrer === undefined) {
+    if (installReferrer !== null) {
       Application.getInstallReferrerAsync()
         .then((value) => {
           try {
             const utm = queryString.parse(value);
+            if (!utm) return;
+            const ir = `${utm.utm_medium};${utm.utm_source}`;
+            if (installReferrer === ir) return;
             api
               .profile()
               .updateProfile(consumerId, {
-                installReferrer: utm ?? null,
-                updatedOn: serverTimestamp(),
+                installReferrer: utm ? { ...utm, updatedAt: serverTimestamp() } : null,
               })
               .then(null);
           } catch (error) {
