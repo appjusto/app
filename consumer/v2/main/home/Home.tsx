@@ -24,6 +24,7 @@ import { t } from '../../../../strings';
 import { LoggedNavigatorParamList } from '../../types';
 import { MainNavigatorParamList } from '../types';
 import { HomeControls } from './controls/HomeControls';
+import { useInstallReferrer } from './useInstallReferrer';
 
 type ScreenNavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<MainNavigatorParamList, 'Home'>,
@@ -41,6 +42,7 @@ export default function ({ navigation }: Props) {
   useNotificationToken();
   useBusinessDeeplink();
   useFacebookAds();
+  useInstallReferrer();
   //tracking
   useSegmentScreen('Home');
   // handler
