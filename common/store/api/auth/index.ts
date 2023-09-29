@@ -2,18 +2,19 @@ import { DeleteAccountPayload } from '@appjusto/types';
 import {
   ApplicationVerifier,
   Auth,
+  PhoneAuthProvider,
+  Unsubscribe,
+  User,
   isSignInWithEmailLink,
   linkWithCredential,
   onAuthStateChanged,
-  PhoneAuthProvider,
   sendSignInLinkToEmail,
   signInWithCredential,
+  signInWithCustomToken,
   signInWithEmailAndPassword,
   signInWithEmailLink,
   signInWithPhoneNumber,
   unlink,
-  Unsubscribe,
-  User,
 } from 'firebase/auth';
 import { addDoc, serverTimestamp } from 'firebase/firestore';
 import * as Sentry from 'sentry-expo';
@@ -115,6 +116,20 @@ export default class AuthApi {
     } else {
       await signInWithCredential(this.auth, credential);
     }
+  }
+
+  async loginWithAccessCode(phone: string, accessCode: string) {
+    return (
+      await this.functionsRef.getloginWithAccessCodeCallable()({
+        phone,
+        accessCode,
+        meta: { version: getAppVersion() },
+      })
+    ).data;
+  }
+
+  async signInWithCustomToken(token: string) {
+    await signInWithCustomToken(this.auth, token);
   }
 
   getUserId() {
