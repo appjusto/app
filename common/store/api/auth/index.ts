@@ -118,9 +118,18 @@ export default class AuthApi {
     }
   }
 
+  async requestAccessCode(phone: string) {
+    return (
+      await this.functionsRef.getRequestAccessCodeCallable()({
+        phone,
+        meta: { version: getAppVersion() },
+      })
+    ).data;
+  }
+
   async loginWithAccessCode(phone: string, accessCode: string) {
     return (
-      await this.functionsRef.getloginWithAccessCodeCallable()({
+      await this.functionsRef.getLoginWithAccessCodeCallable()({
         phone,
         accessCode,
         meta: { version: getAppVersion() },

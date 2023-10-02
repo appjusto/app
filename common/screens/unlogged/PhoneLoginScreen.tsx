@@ -3,12 +3,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import { ConfirmationResult } from 'firebase/auth';
 import React, { useState } from 'react';
-import { ActivityIndicator, Keyboard, Linking, Modal, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Modal, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { CodeInput } from '../../../courier/approved/ongoing/code-input/CodeInput';
 import { t } from '../../../strings';
-import { AppJustoAssistanceWhatsAppURL } from '../../../strings/values';
 import { ApiContext, AppDispatch } from '../../app/context';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import PaddedView from '../../components/containers/PaddedView';
@@ -94,9 +93,12 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
   const verifyCodeHandler = () => {
     (async () => {
       try {
+        setLoading(true);
         setState('verifying-code');
         await api.auth().confirmPhoneSignIn(confirmationResult!.verificationId, verificationCode);
+        setLoading(false);
       } catch (err: any) {
+        setLoading(false);
         let message: string = err.message;
         if (message.indexOf('linked to one identity') > 0) {
           message = t(
@@ -108,6 +110,25 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
           setState('error');
         }
         setError(message);
+      }
+    })();
+  };
+  const requestAccessCode = () => {
+    setModalVisible(false);
+    setState('access-code');
+    (async () => {
+      try {
+        setLoading(true);
+        await api.auth().requestAccessCode(phone);
+        setLoading(false);
+        dispatch(
+          showToast('Pronto! O SMS com o código deve chegar em alguns segundos.', 'success')
+        );
+      } catch (err: any) {
+        setLoading(false);
+        if ('message' in err) {
+          dispatch(showToast(err.message, 'error'));
+        }
       }
     })();
   };
@@ -153,28 +174,13 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
           >
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
               {t(
-                'Se você estiver com dificuldades em receber o código via SMS, entre em contato com nosso suporte para solicitar um código de acesso.'
+                'Se você estiver com dificuldades em receber o código via SMS, clique no botão abaixo para solictar o código por um mecanismo alternativo.'
               )}
             </Text>
             <DefaultButton
               style={{ marginTop: padding }}
               title="Solicitar código de acesso"
-              onPress={() =>
-                Linking.openURL(
-                  `${AppJustoAssistanceWhatsAppURL}?text=${encodeURIComponent(
-                    'Não estou recebendo SMS e gostaria de solicitar um código de acesso.'
-                  )}`
-                )
-              }
-            />
-            <DefaultButton
-              style={{ marginTop: padding }}
-              title="Estou com o código de acesso"
-              onPress={() => {
-                setModalVisible(false);
-                setState('access-code');
-              }}
-              variant="secondary"
+              onPress={requestAccessCode}
             />
             <DefaultButton
               style={{ marginTop: padding }}
