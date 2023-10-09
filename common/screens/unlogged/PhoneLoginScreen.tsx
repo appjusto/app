@@ -174,7 +174,7 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
           >
             <Text style={{ ...texts.sm, color: colors.grey700 }}>
               {t(
-                'Se você estiver com dificuldades em receber o código via SMS, clique no botão abaixo para solictar o código por um mecanismo alternativo.'
+                'Se você estiver com dificuldades em receber o código via SMS, clique no botão abaixo para solicitar outro código por SMS.'
               )}
             </Text>
             <DefaultButton
@@ -245,7 +245,7 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
         <View>
           <Text style={{ ...texts.x2l }}>{t('Digite o código de acesso')}</Text>
           <Text style={{ ...texts.sm, color: colors.grey700, marginTop: padding }}>
-            {t(`Digite o código de acesso que você recebeu do nosso suporte:`)}
+            {t(`Digite o código de acesso que você recebeu por SMS:`)}
           </Text>
           <CodeInput
             style={{ marginTop: biggerPadding }}
@@ -257,6 +257,7 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
           <DefaultButton
             style={{ marginVertical: doublePadding }}
             title={t('Validar')}
+            activityIndicator={loading}
             onPress={loginWithAccessCode}
           />
         </View>
