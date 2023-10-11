@@ -37,6 +37,13 @@ export class FunctionsRef {
       'requestWithdraw'
     );
   getDeleteAccountCallable = () => httpsCallable(this.functions, 'deleteAccount');
+  getRequestAccessCodeCallable = () =>
+    httpsCallable<{ phone: string; meta: any }, void>(this.functions, 'requestAccessCode');
+  getLoginWithAccessCodeCallable = () =>
+    httpsCallable<{ phone: string; accessCode: string; meta: any }, string>(
+      this.functions,
+      'loginWithAccessCode'
+    );
   getServerTimeCallable = () => httpsCallable(this.functions, 'getServerTime');
   // consumer
   getSaveCardCallable = () =>

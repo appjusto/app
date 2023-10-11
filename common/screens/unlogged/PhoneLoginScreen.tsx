@@ -2,8 +2,8 @@ import { RouteProp } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import { ConfirmationResult } from 'firebase/auth';
-import React from 'react';
-import { ActivityIndicator, Keyboard, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { ActivityIndicator, Keyboard, Modal, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import * as Sentry from 'sentry-expo';
 import { CodeInput } from '../../../courier/approved/ongoing/code-input/CodeInput';
@@ -14,7 +14,15 @@ import PaddedView from '../../components/containers/PaddedView';
 import { phoneFormatter } from '../../components/inputs/pattern-input/formatters';
 import { track, useSegmentScreen } from '../../store/api/track';
 import { showToast } from '../../store/ui/actions';
-import { biggerPadding, colors, doublePadding, padding, screens, texts } from '../../styles';
+import {
+  biggerPadding,
+  colors,
+  doublePadding,
+  halfPadding,
+  padding,
+  screens,
+  texts,
+} from '../../styles';
 import { getFirebaseAuthErrorMessages } from '../profile/getFirebaseAuthErrorMessages';
 import { UnloggedParamList } from './types';
 
@@ -33,7 +41,8 @@ type State =
   | 'verifying-code'
   | 'error'
   | 'unrecoverable-error'
-  | 'success';
+  | 'success'
+  | 'access-code';
 
 export const PhoneLoginScreen = ({ navigation, route }: Props) => {
   // params
@@ -45,7 +54,9 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
   const [state, setState] = React.useState<State>('initial');
   const [confirmationResult, setConfirmationResult] = React.useState<ConfirmationResult>();
   const [verificationCode, setVerificationCode] = React.useState('');
+  const [loading, setLoading] = useState(false);
   const [error, setError] = React.useState<string>();
+  const [modalVisible, setModalVisible] = useState(false);
   // refs
   const recaptchaRef = React.useRef(null);
   // effects
@@ -82,9 +93,12 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
   const verifyCodeHandler = () => {
     (async () => {
       try {
+        setLoading(true);
         setState('verifying-code');
         await api.auth().confirmPhoneSignIn(confirmationResult!.verificationId, verificationCode);
+        setLoading(false);
       } catch (err: any) {
+        setLoading(false);
         let message: string = err.message;
         if (message.indexOf('linked to one identity') > 0) {
           message = t(
@@ -99,6 +113,40 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
       }
     })();
   };
+  const requestAccessCode = () => {
+    setModalVisible(false);
+    setState('access-code');
+    (async () => {
+      try {
+        setLoading(true);
+        await api.auth().requestAccessCode(phone);
+        setLoading(false);
+        dispatch(
+          showToast('Pronto! O SMS com o código deve chegar em alguns segundos.', 'success')
+        );
+      } catch (err: any) {
+        setLoading(false);
+        if ('message' in err) {
+          dispatch(showToast(err.message, 'error'));
+        }
+      }
+    })();
+  };
+  const loginWithAccessCode = () => {
+    (async () => {
+      try {
+        setLoading(true);
+        const token = await api.auth().loginWithAccessCode(phone, verificationCode);
+        await api.auth().signInWithCustomToken(token);
+        setLoading(false);
+      } catch (err: any) {
+        setLoading(false);
+        if ('message' in err) {
+          dispatch(showToast(err.message, 'error'));
+        }
+      }
+    })();
+  };
   // UI
   return (
     <PaddedView
@@ -107,6 +155,42 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
         backgroundColor: colors.grey50,
       }}
     >
+      <Modal visible={modalVisible} transparent animationType="slide">
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          }}
+        >
+          <View
+            style={{
+              marginHorizontal: doublePadding,
+              backgroundColor: colors.white,
+              padding: doublePadding,
+              borderRadius: halfPadding,
+            }}
+          >
+            <Text style={{ ...texts.sm, color: colors.grey700 }}>
+              {t(
+                'Se você estiver com dificuldades em receber o código via SMS, clique no botão abaixo para solicitar outro código por SMS.'
+              )}
+            </Text>
+            <DefaultButton
+              style={{ marginTop: padding }}
+              title="Solicitar código de acesso"
+              onPress={requestAccessCode}
+            />
+            <DefaultButton
+              style={{ marginTop: padding }}
+              title="Cancelar"
+              onPress={() => setModalVisible(false)}
+              variant="secondary"
+            />
+          </View>
+        </View>
+      </Modal>
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaRef}
         firebaseConfig={api.getFirebaseOptions()}
@@ -144,9 +228,37 @@ export const PhoneLoginScreen = ({ navigation, route }: Props) => {
           ) : null}
           <View style={{ flex: 1 }} />
           <DefaultButton
-            style={{ marginVertical: doublePadding }}
+            style={{ marginTop: doublePadding }}
             title={state !== 'error' ? t('Validar') : t('Tentar novamente')}
             onPress={verifyCodeHandler}
+          />
+          <DefaultButton
+            style={{ marginTop: padding, marginBottom: doublePadding }}
+            title={t('Não recebi o código')}
+            activityIndicator={loading}
+            onPress={() => setModalVisible(true)}
+            variant="secondary"
+          />
+        </View>
+      ) : null}
+      {state === 'access-code' ? (
+        <View>
+          <Text style={{ ...texts.x2l }}>{t('Digite o código de acesso')}</Text>
+          <Text style={{ ...texts.sm, color: colors.grey700, marginTop: padding }}>
+            {t(`Digite o código de acesso que você recebeu por SMS:`)}
+          </Text>
+          <CodeInput
+            style={{ marginTop: biggerPadding }}
+            value={verificationCode}
+            onChange={setVerificationCode}
+            length={6}
+          />
+          <View style={{ flex: 1 }} />
+          <DefaultButton
+            style={{ marginVertical: doublePadding }}
+            title={t('Validar')}
+            activityIndicator={loading}
+            onPress={loginWithAccessCode}
           />
         </View>
       ) : null}
