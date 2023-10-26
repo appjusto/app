@@ -2,6 +2,7 @@ import * as Application from 'expo-application';
 import { serverTimestamp } from 'firebase/firestore';
 import queryString from 'query-string';
 import { useContext, useEffect } from 'react';
+import { Platform } from 'react-native';
 import { useSelector } from 'react-redux';
 import { ApiContext } from '../../../../common/app/context';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
@@ -16,6 +17,7 @@ export const useInstallReferrer = () => {
   // side effects
   useEffect(() => {
     if (!consumerId) return;
+    if (Platform.OS !== 'android') return;
     if (installReferrer !== null) {
       Application.getInstallReferrerAsync()
         .then((value) => {
