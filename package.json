@@ -1,5 +1,5 @@
 {
-  "version": "12.5.9",
+  "version": "12.5.10",
   "license": "Apache-2.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
