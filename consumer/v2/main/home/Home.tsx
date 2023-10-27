@@ -115,7 +115,9 @@ export default function ({ navigation }: Props) {
             }
             // style={{ marginTop: padding }}
           >
-            <Image source={homePromo} style={{ height: 97, width: '100%' }} />
+            <View style={{ height: 97, width: '100%', borderRadius: 8 }}>
+              <Image source={homePromo} style={{ height: 97, width: '100%' }} />
+            </View>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() =>
