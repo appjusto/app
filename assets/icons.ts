@@ -38,6 +38,7 @@ const iconCrowdFunding = require('./icons/crowd-funding.png');
 const iconHeaderMenu = require('./icons/icon-menu-horizontal.png');
 const iconVRAlimentacao = require('./icons/svg-vr-alimentacao.png');
 const iconVRRefeicao = require('./icons/svg-vr-refeicao.png');
+const iconHomePromo = require('./promo/home-promo.png');
 
 export const VRAlimentacaoIcon = iconVRAlimentacao;
 export const VRRefeicaoIcon = iconVRRefeicao;
@@ -79,6 +80,7 @@ export const ordersFocused = iconOrdersFocused;
 export const userFocused = iconUserFocused;
 export const crowdFunding = iconCrowdFunding;
 export const headerMenu = iconHeaderMenu;
+export const homePromo = iconHomePromo;
 
 export default [
   checklistTick,

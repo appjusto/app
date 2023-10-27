@@ -2,8 +2,9 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
+import { homePromo } from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { MaintenanceModal } from '../../../../common/components/views/MaintenanceModal';
 import { UpgradeVersionModal } from '../../../../common/components/views/UpgradeVersionModal';
@@ -15,7 +16,6 @@ import { IconShareGreen } from '../../../../common/icons/icon-share-green';
 import { useUpdateLocation } from '../../../../common/location/useUpdateLocation';
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import { HomeOngoingOrders } from '../../../../common/screens/home/cards/HomeOngoingOrders';
-import HomeShareCard from '../../../../common/screens/home/cards/HomeShareCard';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
@@ -106,10 +106,17 @@ export default function ({ navigation }: Props) {
             </TouchableOpacity>
           ) : null}
           {!consumer ? <View style={{ height: padding }} /> : null}
-          <HomeShareCard
-            title="Divulgue o AppJusto"
-            subtitle="Compartilhe esse movimento por uma economia mais justa"
-          />
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('FoodOrderNavigator', {
+                screen: 'RestaurantSearch',
+                params: { filters: [{ type: 'consumer-home', value: 'consumer-home' }] },
+              })
+            }
+            // style={{ marginTop: padding }}
+          >
+            <Image source={homePromo} style={{ height: 97, width: '100%' }} />
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() =>
               navigation.navigate('FoodOrderNavigator', {

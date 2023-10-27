@@ -1,4 +1,5 @@
 import { BusinessAlgolia, ProductAlgolia } from '@appjusto/types';
+import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { isEmpty } from 'lodash';
 import React from 'react';
@@ -34,12 +35,14 @@ import { FoodOrderNavigatorParamList } from '../types';
 import { FilterSelector } from './FilterSelector';
 
 type ScreenNavigationProp = StackNavigationProp<FoodOrderNavigatorParamList, 'RestaurantSearch'>;
+type ScreenRouteProp = RouteProp<FoodOrderNavigatorParamList, 'RestaurantSearch'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 };
 
-export default function ({ navigation }: Props) {
+export default function ({ navigation, route }: Props) {
   // context
   const api = React.useContext(ApiContext);
   // refs
@@ -49,7 +52,7 @@ export default function ({ navigation }: Props) {
   // redux
   const kind = useSelector(getSearchKind);
   const order = useSelector(getSearchOrder);
-  const filters = useSelector(getSearchFilters);
+  const filters = route.params?.filters ?? useSelector(getSearchFilters);
   // state
   const [search, setSearch] = React.useState<string>('');
   const [refreshing, setRefreshing] = React.useState(false);
