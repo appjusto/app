@@ -23,6 +23,12 @@ export const WithdrawOrderModal = ({
   ...props
 }: Props) => {
   const { status, type } = order;
+  const dispatchByCourier = order.tags?.includes('dispatch-by-courier') === true;
+  const showConsumerName =
+    !dispatchByCourier ||
+    order.dispatchingState === 'going-destination' ||
+    order.dispatchingState === 'arrived-destination';
+  const canDismiss = dispatchByCourier || order.status === 'dispatching';
   const title = (() => {
     if (status === 'dispatching') {
       return t('Retire o pedido');
@@ -46,15 +52,11 @@ export const WithdrawOrderModal = ({
     else return order.origin?.address.main;
   })();
   const buttonTitle = (() => {
-    if (status === 'dispatching') {
-      return t('Recebi o pedido');
+    if (canDismiss) {
+      if (dispatchByCourier) return 'Dar saída';
+      return 'Recebi o pedido';
     }
-    if (status === 'ready') {
-      return t('Aguardando retirada');
-    }
-    if (status === 'preparing') {
-      return t('Aguarde o pedido');
-    } else return t('Aguarde');
+    return 'Aguardando restaurante';
   })();
   const originInstructions = order.origin?.intructions ?? order.origin?.instructions;
   return (
@@ -123,16 +125,14 @@ export const WithdrawOrderModal = ({
                 </View>
               </View>
             )}
-            <View style={{ marginTop: padding, alignItems: 'center', marginBottom: padding }}>
-              <Text style={{ ...texts.xl, color: colors.grey700 }}>{t('Cliente')}</Text>
-              <Text style={{ ...texts.x4l }}>{order.consumer.name}</Text>
-            </View>
-            <View style={{ width: '100%' }}>
-              <DefaultButton
-                title={buttonTitle}
-                onPress={onWithdrawal}
-                disabled={order.status !== 'dispatching'}
-              />
+            {showConsumerName ? (
+              <View style={{ marginTop: padding, alignItems: 'center' }}>
+                <Text style={{ ...texts.xl, color: colors.grey700 }}>{t('Cliente')}</Text>
+                <Text style={{ ...texts.x4l }}>{order.consumer.name}</Text>
+              </View>
+            ) : null}
+            <View style={{ marginTop: padding, width: '100%' }}>
+              <DefaultButton title={buttonTitle} onPress={onWithdrawal} disabled={!canDismiss} />
               <DefaultButton
                 title={t('Tive um problema')}
                 onPress={onIssue}

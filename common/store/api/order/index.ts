@@ -498,12 +498,12 @@ export default class OrderApi {
     });
   }
 
-  async nextDispatchingState({ id, type, status, dispatchingState }: WithId<Order>) {
+  async nextDispatchingState({ id, type, status, dispatchingState, tags }: WithId<Order>) {
     let update: Partial<Order> | null = null;
     if (dispatchingState === 'going-pickup') {
       update = { dispatchingState: 'arrived-pickup' };
     } else if (dispatchingState === 'arrived-pickup') {
-      if (type === 'p2p' || status === 'dispatching') {
+      if (type === 'p2p' || status === 'dispatching' || tags?.includes('dispatch-by-courier')) {
         update = {
           dispatchingState: 'going-destination',
         };

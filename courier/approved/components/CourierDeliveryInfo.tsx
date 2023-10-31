@@ -16,7 +16,8 @@ type Props = {
 
 export const CourierDeliveryInfo = ({ order, onChat, onProblem, delivering }: Props) => {
   if (
-    (order.type === 'food' && order.dispatchingState === 'going-pickup') ||
+    (order.type === 'food' &&
+      (order.dispatchingState === 'going-pickup' || order.dispatchingState === 'arrived-pickup')) ||
     !order.dispatchingState
   )
     return null;
