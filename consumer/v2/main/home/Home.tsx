@@ -2,9 +2,8 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { homePromo } from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { MaintenanceModal } from '../../../../common/components/views/MaintenanceModal';
 import { UpgradeVersionModal } from '../../../../common/components/views/UpgradeVersionModal';
@@ -106,7 +105,7 @@ export default function ({ navigation }: Props) {
             </TouchableOpacity>
           ) : null}
           {!consumer ? <View style={{ height: padding }} /> : null}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() =>
               navigation.navigate('FoodOrderNavigator', {
                 screen: 'RestaurantSearch',
@@ -118,7 +117,7 @@ export default function ({ navigation }: Props) {
             <View style={{ height: 97, width: '100%', borderRadius: 8 }}>
               <Image source={homePromo} style={{ height: 97, width: '100%' }} />
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             onPress={() =>
               navigation.navigate('FoodOrderNavigator', {
@@ -126,7 +125,7 @@ export default function ({ navigation }: Props) {
                 params: { returnToHome: true },
               })
             }
-            style={{ marginTop: padding }}
+            // style={{ marginTop: padding }}
           >
             <HomeCard
               icon={<IconShareGreen />}
