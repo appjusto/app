@@ -114,8 +114,8 @@ export default function ({ navigation }: Props) {
               })
             }
           >
-            <View style={{ height: 97, width: '100%', borderRadius: 8 }}>
-              <Image source={homePromo} style={{ height: 97, width: '100%' }} />
+            <View style={{ height: 96, width: '100%', borderRadius: 8 }}>
+              <Image source={homePromo} style={{ height: 96, width: '100%', borderRadius: 8 }} />
             </View>
           </TouchableOpacity>
           <TouchableOpacity
