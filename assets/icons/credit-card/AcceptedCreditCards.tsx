@@ -1,4 +1,5 @@
 import { PayableWith } from '@appjusto/types';
+import { BraspagPayableWith } from '@appjusto/types/payment';
 import React from 'react';
 import { View } from 'react-native';
 import { halfPadding } from '../../../common/styles';
@@ -10,7 +11,7 @@ import { VRAlimentacao } from './vr-alimentacao';
 import { VRRefeicao } from './vr-refeicao';
 
 interface Props {
-  types?: PayableWith[];
+  types?: (PayableWith | BraspagPayableWith)[];
 }
 
 export const AcceptedCreditCards = ({ types }: Props) => {

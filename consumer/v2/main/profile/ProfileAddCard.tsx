@@ -1,4 +1,5 @@
 import { PayableWith } from '@appjusto/types';
+import { BraspagPayableWith } from '@appjusto/types/payment';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { toNumber } from 'lodash';
@@ -38,7 +39,7 @@ import { ProfileParamList } from './types';
 export type ProfileAddCardParamList = {
   ProfileAddCard?: {
     returnScreen?: 'FoodOrderCheckout' | 'CreateOrderP2P' | 'OngoingOrderDeclined';
-    types?: ('credit_card' | VRPayableWith)[];
+    types?: ('credit_card' | VRPayableWith | BraspagPayableWith)[];
   };
 };
 
@@ -96,11 +97,16 @@ export default function ({ navigation, route }: Props) {
     Keyboard.dismiss();
     try {
       setLoading(true);
-      const type = getCardType(number)?.type as PayableWith;
-      const processor = type === 'vr-alimentação' || type === 'vr-refeição' ? 'vr' : 'iugu';
+      let type = getCardType(number)?.type as PayableWith;
+      const processor = (() => {
+        if (type === 'vr-alimentação' || type === 'vr-refeição') return 'vr';
+        if (type === 'alelo' || type === 'ticket') return 'braspag';
+        return 'iugu';
+      })();
       const result = await api.consumer().saveCard(
         {
-          processor,
+          // processor,
+          processor: 'braspag',
           number,
           month,
           year: `20${year}`,
