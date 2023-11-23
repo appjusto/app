@@ -52,7 +52,7 @@ export default class SearchApi {
             return [...result, `classifications:"${filter.value}"`];
           } else if (filter.type === 'appjusto-only') {
             return [...result, `tags:${filter.value}`];
-          } else if (filter.type === 'consumer-home') {
+          } else if (filter.type === 'tag') {
             return [...result, `tags:${filter.value}`];
           }
 

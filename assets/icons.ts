@@ -39,6 +39,8 @@ const iconHeaderMenu = require('./icons/icon-menu-horizontal.png');
 const iconVRAlimentacao = require('./icons/svg-vr-alimentacao.png');
 const iconVRRefeicao = require('./icons/svg-vr-refeicao.png');
 const iconHomePromo = require('./promo/home-promo.png');
+const iconHomeBF = require('./promo/banner_app_bf.png');
+const iconHomeMousse = require('./promo/banner_app_mousse.png');
 
 export const VRAlimentacaoIcon = iconVRAlimentacao;
 export const VRRefeicaoIcon = iconVRRefeicao;
@@ -81,6 +83,8 @@ export const userFocused = iconUserFocused;
 export const crowdFunding = iconCrowdFunding;
 export const headerMenu = iconHeaderMenu;
 export const homePromo = iconHomePromo;
+export const homePromoBF = iconHomeBF;
+export const homePromoMousse = iconHomeMousse;
 
 export default [
   checklistTick,

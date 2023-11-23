@@ -70,7 +70,7 @@ export const ScheduleOrder = ({ navigation, route }: Props) => {
 
   // helpers
   const margin = 60;
-  const nextDateSlots: Date[][] = business ? getNextDateSlots(business, now, margin, 1) : [];
+  const nextDateSlots: Date[][] = business ? getNextDateSlots(business, now, margin, 4) : [];
   const realTimeDelivery =
     business?.status === 'available' &&
     business.schedules &&
