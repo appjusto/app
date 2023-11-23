@@ -1,6 +1,6 @@
-import { Card, LedgerEntry, WithId } from '@appjusto/types';
+import { Card, LedgerEntry, Place, WithId } from '@appjusto/types';
 import { CancelToken } from 'axios';
-import { getDocs, onSnapshot, query, where } from 'firebase/firestore';
+import { getDocs, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import { trim } from 'lodash';
 import * as Sentry from 'sentry-expo';
 import { LedgerEntryStatus } from '../../../../../types';
@@ -24,6 +24,26 @@ export default class ConsumerApi {
     private emulated: boolean
   ) {}
 
+  // places
+  observePlaces(consumerId: string, resultHandler: (orders: WithId<Place>[]) => void) {
+    return onSnapshot(
+      query(
+        this.firestoreRefs.getCardsRef(),
+        where('accountId', '==', consumerId),
+        orderBy('updatedAt', 'desc')
+      ),
+      (querySnapshot) => {
+        if (querySnapshot.empty) resultHandler([]);
+        else resultHandler(documentsAs<Place>(querySnapshot.docs));
+      },
+      (error) => {
+        console.error(error);
+        Sentry.Native.captureException(error);
+      }
+    );
+  }
+
+  // cards
   async observeCards(consumerId: string, resultHandler: (orders: WithId<Card>[]) => void) {
     return onSnapshot(
       query(

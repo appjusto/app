@@ -21,6 +21,7 @@ import RadioButton from '../../../common/components/buttons/RadioButton';
 import PaddedView from '../../../common/components/containers/PaddedView';
 import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
+import { usePlaces } from '../../../common/store/api/consumer/places/usePlaces';
 import { useSegmentScreen } from '../../../common/store/api/track';
 import { getConsumer } from '../../../common/store/consumer/selectors';
 import { showToast } from '../../../common/store/ui/actions';
@@ -59,6 +60,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   const consumer = useSelector(getConsumer);
   const dispatch = useDispatch<AppDispatch>();
   // state
+  const places = usePlaces() ?? [];
   const [isLoading, setLoading] = React.useState(false);
   const { coords } = useLastKnownLocation();
   const [autocompleteSession] = React.useState(nanoid());
@@ -75,7 +77,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
       ...sections,
       { title: t('Resultados da busca'), data: autocompletePredictions, key: 'search-results' },
     ];
-    const addresses = (consumer?.favoritePlaces ?? []).map((place) => place.address);
+    const addresses = places.map((place) => place.address);
     sections =
       returnScreen !== 'RecommendRestaurant'
         ? [
@@ -84,7 +86,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
           ]
         : [...sections];
     return sections;
-  }, [autocompletePredictions, consumer?.favoritePlaces, returnScreen]);
+  }, [autocompletePredictions, places, returnScreen]);
   // helpers
   // debounced callback to avoid calling the maps API more often than necessary
   // TODO: what would be a better threshold than 500ms?
@@ -166,12 +168,10 @@ export const AddressComplete = ({ navigation, route }: Props) => {
       } else Keyboard.dismiss();
       setAutoCompletePredictions([]); // clearing predictions hides the modal
       setSelectedAddress(item);
-      const favoritePlace = consumer?.favoritePlaces?.find(
-        (p) => p.address.description === item.description
-      );
+      const favoritePlace = places.find((p) => p.address.description === item.description);
       if (favoritePlace?.additionalInfo) setAdditionalInfo(favoritePlace.additionalInfo);
     },
-    [consumer?.favoritePlaces, returnScreen]
+    [places, returnScreen]
   );
 
   // confirm button callback
