@@ -42,6 +42,8 @@ export const OrderConfirmingPix = ({ order, onCancel }: Props) => {
     })();
   };
   // UI
+  const fare = order.fare;
+  const total = fare?.total ? fare.total - (fare.credits ?? 0) : 0;
   return (
     <ScrollView
       style={{ ...screens.config, ...screens.headless }}
@@ -102,7 +104,7 @@ export const OrderConfirmingPix = ({ order, onCancel }: Props) => {
               {t('Aguardando pagamento')}
             </Text>
           </View>
-          <Text style={{ ...texts.xl }}>{formatCurrency(order.fare!.total)}</Text>
+          <Text style={{ ...texts.xl }}>{formatCurrency(total)}</Text>
         </View>
         <View>
           <DefaultButton
