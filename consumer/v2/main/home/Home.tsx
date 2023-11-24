@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { homePromo, homePromoBF } from '../../../../assets/icons';
+import { homePromo, homePromoBF, homePromoMousse } from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { MaintenanceModal } from '../../../../common/components/views/MaintenanceModal';
 import { UpgradeVersionModal } from '../../../../common/components/views/UpgradeVersionModal';
@@ -17,7 +17,7 @@ import { useUpdateLocation } from '../../../../common/location/useUpdateLocation
 import HomeCard from '../../../../common/screens/home/cards/HomeCard';
 import { HomeOngoingOrders } from '../../../../common/screens/home/cards/HomeOngoingOrders';
 import { UnloggedParamList } from '../../../../common/screens/unlogged/types';
-import { useSegmentScreen } from '../../../../common/store/api/track';
+import { track, useSegmentScreen } from '../../../../common/store/api/track';
 import { getConsumer } from '../../../../common/store/consumer/selectors';
 import { padding, screens } from '../../../../common/styles';
 import { t } from '../../../../strings';
@@ -107,25 +107,27 @@ export default function ({ navigation }: Props) {
           ) : null}
           {!consumer ? <View style={{ height: padding }} /> : null}
           <TouchableOpacity
-            onPress={() =>
+            onPress={() => {
+              track('consumer-home-bf');
               navigation.navigate('FoodOrderNavigator', {
                 screen: 'RestaurantSearch',
                 params: { filters: [{ type: 'tag', value: 'consumer-home-bf' }] },
-              })
-            }
+              });
+            }}
           >
             <View style={{ height: 96, width: '100%', borderRadius: 8 }}>
               <Image source={homePromoBF} style={{ height: 96, width: '100%', borderRadius: 8 }} />
             </View>
           </TouchableOpacity>
-          {/* <TouchableOpacity
+          <TouchableOpacity
             style={{ marginTop: padding }}
-            onPress={() =>
+            onPress={() => {
+              track('consumer-home-mousse');
               navigation.navigate('FoodOrderNavigator', {
                 screen: 'RestaurantSearch',
                 params: { filters: [{ type: 'tag', value: 'consumer-home-mousse' }] },
-              })
-            }
+              });
+            }}
           >
             <View style={{ height: 96, width: '100%', borderRadius: 8 }}>
               <Image
@@ -133,15 +135,16 @@ export default function ({ navigation }: Props) {
                 style={{ height: 96, width: '100%', borderRadius: 8 }}
               />
             </View>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
           <TouchableOpacity
             style={{ marginTop: padding }}
-            onPress={() =>
+            onPress={() => {
+              track('consumer-home');
               navigation.navigate('FoodOrderNavigator', {
                 screen: 'RestaurantSearch',
                 params: { filters: [{ type: 'tag', value: 'consumer-home' }] },
-              })
-            }
+              });
+            }}
           >
             <View style={{ height: 96, width: '100%', borderRadius: 8 }}>
               <Image source={homePromo} style={{ height: 96, width: '100%', borderRadius: 8 }} />
