@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { homePromo, homePromoBF, homePromoMousse } from '../../../../assets/icons';
+import { homePromo, homePromoMousse } from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { MaintenanceModal } from '../../../../common/components/views/MaintenanceModal';
 import { UpgradeVersionModal } from '../../../../common/components/views/UpgradeVersionModal';
@@ -107,20 +107,6 @@ export default function ({ navigation }: Props) {
           ) : null}
           {!consumer ? <View style={{ height: padding }} /> : null}
           <TouchableOpacity
-            onPress={() => {
-              track('consumer-home-bf');
-              navigation.navigate('FoodOrderNavigator', {
-                screen: 'RestaurantSearch',
-                params: { filters: [{ type: 'tag', value: 'consumer-home-bf' }] },
-              });
-            }}
-          >
-            <View style={{ height: 96, width: '100%', borderRadius: 8 }}>
-              <Image source={homePromoBF} style={{ height: 96, width: '100%', borderRadius: 8 }} />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{ marginTop: padding }}
             onPress={() => {
               track('consumer-home-mousse');
               navigation.navigate('FoodOrderNavigator', {
