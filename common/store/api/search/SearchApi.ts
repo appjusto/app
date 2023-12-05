@@ -54,6 +54,13 @@ export default class SearchApi {
             return [...result, `tags:${filter.value}`];
           } else if (filter.type === 'tag') {
             return [...result, `tags:${filter.value}`];
+          } else if (filter.type === 'paymentMethod') {
+            if (filter.value === 'vr') {
+              return [
+                ...result,
+                `(acceptedPaymentMethods:vr-alimentação OR acceptedPaymentMethods:vr-refeição)`,
+              ];
+            }
           }
 
           return result;

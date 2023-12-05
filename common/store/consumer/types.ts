@@ -18,6 +18,6 @@ export type SearchOrder =
   | 'average-discount'
   | 'reviews';
 export type SearchFilter = {
-  type: 'cuisine' | 'classification' | 'appjusto-only' | 'tag';
+  type: 'cuisine' | 'classification' | 'appjusto-only' | 'tag' | 'paymentMethod';
   value: string;
 };
