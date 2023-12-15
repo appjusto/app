@@ -95,6 +95,9 @@ export class FirestoreRefs {
   // cards
   getCardsRef = () => collection(getFirestore(), 'cards');
 
+  // places
+  getPlacesRef = () => collection(getFirestore(), 'places');
+
   // chats
   getChatsRef = () => collection(getFirestore(), 'chats');
   getChatMessageRef = (messageId: string) => doc(this.getChatsRef(), messageId);

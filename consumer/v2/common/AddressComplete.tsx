@@ -14,7 +14,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ApiContext, AppDispatch } from '../../../common/app/context';
 import DefaultButton from '../../../common/components/buttons/DefaultButton';
 import RadioButton from '../../../common/components/buttons/RadioButton';
@@ -23,7 +23,6 @@ import DefaultInput from '../../../common/components/inputs/DefaultInput';
 import useLastKnownLocation from '../../../common/location/useLastKnownLocation';
 import { usePlaces } from '../../../common/store/api/consumer/places/usePlaces';
 import { useSegmentScreen } from '../../../common/store/api/track';
-import { getConsumer } from '../../../common/store/consumer/selectors';
 import { showToast } from '../../../common/store/ui/actions';
 import { colors, halfPadding, padding, screens, texts } from '../../../common/styles';
 import { formatAddress } from '../../../common/utils/formatters';
@@ -57,10 +56,9 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   const { value, returnScreen, returnParam, returnToHome } = route.params;
   // context
   const api = React.useContext(ApiContext);
-  const consumer = useSelector(getConsumer);
   const dispatch = useDispatch<AppDispatch>();
   // state
-  const places = usePlaces() ?? [];
+  const places = usePlaces();
   const [isLoading, setLoading] = React.useState(false);
   const { coords } = useLastKnownLocation();
   const [autocompleteSession] = React.useState(nanoid());
@@ -77,9 +75,9 @@ export const AddressComplete = ({ navigation, route }: Props) => {
       ...sections,
       { title: t('Resultados da busca'), data: autocompletePredictions, key: 'search-results' },
     ];
-    const addresses = places.map((place) => place.address);
+    const addresses = places?.map((place) => place.address);
     sections =
-      returnScreen !== 'RecommendRestaurant'
+      addresses && returnScreen !== 'RecommendRestaurant'
         ? [
             ...sections,
             { title: t('Últimos endereços utilizados'), data: addresses, key: 'last-used-address' },

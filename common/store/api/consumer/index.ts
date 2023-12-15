@@ -28,7 +28,7 @@ export default class ConsumerApi {
   observePlaces(consumerId: string, resultHandler: (orders: WithId<Place>[]) => void) {
     return onSnapshot(
       query(
-        this.firestoreRefs.getCardsRef(),
+        this.firestoreRefs.getPlacesRef(),
         where('accountId', '==', consumerId),
         orderBy('updatedAt', 'desc')
       ),
