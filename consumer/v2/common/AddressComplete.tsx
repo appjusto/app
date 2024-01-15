@@ -137,7 +137,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
   // handlers
   // fires whenever use change the input text
   const textChangeHandler = React.useCallback(
-    (text) => {
+    (text: string) => {
       if (text === searchText) return; // avoid searching when user selects from suggestion list
       setSearchText(text); // update source text
       setSelectedAddress(null); // so we know text is freshier than what it was selected
@@ -166,7 +166,7 @@ export const AddressComplete = ({ navigation, route }: Props) => {
       } else Keyboard.dismiss();
       setAutoCompletePredictions([]); // clearing predictions hides the modal
       setSelectedAddress(item);
-      const favoritePlace = places.find((p) => p.address.description === item.description);
+      const favoritePlace = (places ?? []).find((p) => p.address.description === item.description);
       if (favoritePlace?.additionalInfo) setAdditionalInfo(favoritePlace.additionalInfo);
     },
     [places, returnScreen]
@@ -193,6 +193,9 @@ export const AddressComplete = ({ navigation, route }: Props) => {
       returnScreen !== 'RecommendRestaurant'
         ? { address: selectedAddress, additionalInfo }
         : { address: selectedAddress };
+    if (returnScreen !== 'RecommendRestaurant') {
+      selectedAddress.googlePlaceId;
+    }
     navigation.navigate(returnScreen, { [returnParam]: place, returnToHome });
   }, [
     selectedAddress,

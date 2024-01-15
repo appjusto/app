@@ -8,7 +8,7 @@ const { flavor } = getExtra();
 
 export default class MapsApi {
   constructor(private functionsRefs: FunctionsRef) {}
-  async googlePlacesAutocomplete(input: string, sessionToken: string, coords?: LatLng) {
+  async googlePlacesAutocomplete(input: string, sessionToken: string, coords?: LatLng | null) {
     console.warn('MapsApi.googlePlacesAutocomplete: ', input, coords);
 
     try {
@@ -18,7 +18,7 @@ export default class MapsApi {
           flavor,
           input,
           sessionToken,
-          coords,
+          coords: coords ?? undefined,
           meta: { version: getAppVersion() },
         })
       ).data as Address[];
