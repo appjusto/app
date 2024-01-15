@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { homePromo, homePromoMousse, homePromoVR } from '../../../../assets/icons';
+import { homePromo, homePromoVR } from '../../../../assets/icons';
 import PaddedView from '../../../../common/components/containers/PaddedView';
 import { MaintenanceModal } from '../../../../common/components/views/MaintenanceModal';
 import { UpgradeVersionModal } from '../../../../common/components/views/UpgradeVersionModal';
@@ -106,7 +106,7 @@ export default function ({ navigation }: Props) {
             </TouchableOpacity>
           ) : null}
           {!consumer ? <View style={{ height: padding }} /> : null}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               track('consumer-home-mousse');
               navigation.navigate('FoodOrderNavigator', {
@@ -121,9 +121,9 @@ export default function ({ navigation }: Props) {
                 style={{ height: 96, width: '100%', borderRadius: 8 }}
               />
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
-            style={{ marginTop: padding }}
+            // style={{ marginTop: padding }}
             onPress={() => {
               track('consumer-home');
               navigation.navigate('FoodOrderNavigator', {
