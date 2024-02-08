@@ -19,5 +19,10 @@
     "**/.expo-shared": true,
     "**/node_modules": true
   },
-  "dotenv.enableAutocloaking": true
+  "dotenv.enableAutocloaking": true,
+  "[typescript][typescriptreact]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  }
 }

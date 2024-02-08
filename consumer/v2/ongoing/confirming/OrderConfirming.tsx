@@ -2,6 +2,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { useObserveBusiness } from '../../../../common/store/api/business/hooks/useObserveBusiness';
 import { useObserveOrder } from '../../../../common/store/api/order/hooks/useObserveOrder';
 import { useSegmentScreen } from '../../../../common/store/api/track';
 import { colors, screens } from '../../../../common/styles';
@@ -27,12 +28,15 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
   const { orderId } = route.params;
   // screen state
   const order = useObserveOrder(orderId);
+  const businessPhone = useObserveBusiness(order?.business?.id)?.phones?.find(
+    ({ type }) => type === 'desk'
+  )?.number;
   // side effects
   React.useEffect(() => {
     if (!order) return;
     if (order.status === 'canceled' || order.status === 'rejected') {
       navigation.replace('OrderCanceled', { orderId });
-    } else if (order.status === 'confirmed' || order.status === 'scheduled') {
+    } else if (order.status === 'preparing' || order.status === 'scheduled') {
       if (order.type === 'food') {
         navigation.replace('OngoingOrder', {
           orderId,
@@ -86,6 +90,8 @@ export const OrderConfirming = ({ navigation, route }: Props) => {
         }}
         scheduledOrder={!!scheduledTo}
         fulfillment={fulfillment}
+        status={order.status}
+        businessPhone={businessPhone}
       />
     );
   }

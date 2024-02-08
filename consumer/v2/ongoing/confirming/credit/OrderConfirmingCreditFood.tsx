@@ -1,5 +1,6 @@
-import { Fulfillment } from '@appjusto/types';
+import { Fulfillment, OrderStatus } from '@appjusto/types';
 import React from 'react';
+import { Linking } from 'react-native';
 import motocycleJson from '../../../../../assets/lottie-icons/motocycle.json';
 import DefaultButton from '../../../../../common/components/buttons/DefaultButton';
 import { Lottie } from '../../../../../common/components/icons/Lottie';
@@ -13,6 +14,8 @@ interface Props {
   onGoHome: () => void;
   scheduledOrder: boolean;
   fulfillment?: Fulfillment;
+  businessPhone?: string;
+  status: OrderStatus;
 }
 
 export const OrderConfirmingCreditFood = ({
@@ -20,27 +23,27 @@ export const OrderConfirmingCreditFood = ({
   onGoHome,
   scheduledOrder,
   fulfillment,
+  businessPhone,
+  status,
 }: Props) => {
   // helpers
-  let header;
-  let description;
-  let buttonTitle;
-  if (scheduledOrder) {
+  let header = t('Criando seu pedido...');
+  let description = t(randomConfirmingString);
+  let buttonTitle = t('Cancelar pedido');
+  if (status === 'confirmed') {
+    header = t('Aguardando aceite do restaurante...');
+    description = t('Se demorar, você pode ligar para o restaurante para solicitar o aceite.');
+  } else if (scheduledOrder) {
     header = t('Agendando seu pedido...');
     description = t(
       'O restaurante tem até um dia para aceitar o seu pedido, mas a cobrança será efetuada na data de hoje. Mas não se preocupe: caso haja cancelamento, será realizado o estorno do valor.'
     );
     buttonTitle = t('Cancelar agendamento');
-  }
-  if (fulfillment === 'take-away') {
+  } else if (fulfillment === 'take-away') {
     header = t('Criando seu pedido...');
     description = t(
       'Quando receber o aviso de que seu pedido está pronto, dirija-se ao restaurante para efetuar a retirada.'
     );
-    buttonTitle = t('Cancelar pedido');
-  } else {
-    header = t('Criando seu pedido...');
-    description = t(randomConfirmingString);
     buttonTitle = t('Cancelar pedido');
   }
   return (
@@ -50,6 +53,18 @@ export const OrderConfirmingCreditFood = ({
       icon={<Lottie animationObject={motocycleJson} iconStyle={{ width: 115, height: 114 }} />}
       background={colors.white}
     >
+      {status === 'confirmed' && businessPhone ? (
+        <DefaultButton
+          style={{
+            ...borders.default,
+            marginBottom: padding,
+            borderColor: colors.black,
+            backgroundColor: 'white',
+          }}
+          title={t('Ligar para o restaurante')}
+          onPress={() => Linking.openURL(`tel:${businessPhone}`)}
+        />
+      ) : null}
       <DefaultButton
         title={buttonTitle}
         onPress={onCancel}
